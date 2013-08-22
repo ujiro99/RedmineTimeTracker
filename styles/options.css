@@ -1,0 +1,240 @@
+body{
+  font-family:      'Lucida Grande', sans-serif;
+  color: #383838;
+  cursor: default;
+  font-size: 75%;
+  margin: 0px;
+}
+
+h1{
+  font-size:      1.5em;
+  font-family:    'Lucida Grande', sans-serif;
+  color:          rgb(92, 97, 102);
+  -webkit-user-select: none;
+  font-weight: normal;
+  line-height: 1;
+  cursor:                 default;
+}
+
+header > h1::after {
+  -webkit-margin-end: 20px;
+  background-color: #eee;
+  content: ' ';
+  display: block;
+  height: 1px;
+  position: relative;
+  top: 13px;
+}
+
+#navigation {
+  position:       absolute;
+  left:           0;
+  right:          15px;
+
+  margin-top:     15px;
+
+  height:         100%;
+  width:          155px;
+
+
+  z-index:        3;
+}
+
+.page{
+  margin-top:           15px;
+  -webkit-margin-end:   24px;
+  min-width:            576px;
+  padding-bottom:       20px;
+}
+
+.page > header {
+  position:             fixed;
+  -webkit-margin-end:   25px;
+
+  min-width:            775px;
+  z-index:              3;
+}
+
+
+#navigation h1 {
+  -webkit-margin-after:   1em;
+  -webkit-margin-start:   23px;
+}
+
+#navigation ul{
+  margin-top:       30px;
+}
+
+ul {
+  list-style-type:  none;
+  padding:          0;
+}
+
+li {
+  -webkit-border-start:   6px solid transparent;
+  -webkit-padding-start:  18px;
+  -webkit-user-select:    none;
+  cursor:                 pointer;
+}
+
+li.selected {
+  -webkit-border-start-color:   rgb(78, 87, 100);
+  cursor:                       default;
+  pointer-events:               none;
+}
+
+button {
+  background-color:     white;
+  border:               0;
+  color:                #999;
+  cursor:               pointer;
+  font:                 inherit;
+  line-height:          17px;
+  margin:               6px 0;
+  padding:              0;
+}
+
+.selected > button {
+  color:                rgb(70, 78, 90);
+}
+
+.page{
+  display:              none;
+
+  position:             absolute;
+  top:                  0px;
+  left:                 155px;
+  -webkit-margin-end:   25px;
+
+  min-width:            775px;
+}
+
+.pageSelected{
+  display:              block;
+}
+
+.extension-settings-list{
+  margin-top:     65px;
+}
+
+.settings-section{
+  width:                775px;
+  margin-bottom:        25px;
+  display:              -webkit-box;
+}
+
+.settings-section h3 {
+  font-weight:    bold;
+  font-size:      14px;
+}
+
+.setting-name-and-description {
+  width:          550px;
+}
+
+.setting-name-value {
+  margin-left:    15px;
+}
+
+.setting-description {
+  color:          rgb(151, 156, 160);
+  white-space:    normal;
+  font-size:      13px;
+}
+
+.setting-description em {
+  font-weight:    bold;
+}
+
+.warning {
+  color:          red;
+}
+
+.setting-options {
+  position:             relative;
+  -webkit-margin-end:   20px;
+  width:                200px;
+}
+
+.setting-options > * {
+  display:              inline;
+  float:                right;
+}
+
+.enabled-text{
+  font-weight:    bold;
+}
+
+input:required{
+
+}
+
+input:focus:required:invalid {
+  /*background: pink url(ico_validation.png) 379px 3px no-repeat;*/
+  background: pink;
+}
+input:required:valid {
+  background-color: #fff;
+  background-position: 379px -61px;
+}
+
+.checkbox{
+  display: inline-block;
+}
+
+label{
+  display: -webkit-inline-box;
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+
+input[type='checkbox'] {
+  bottom: 2px;
+  height: 13px;
+  position: relative;
+  vertical-align: middle;
+  width: 13px;
+}
+
+:-webkit-any(button, input[type='button'], input[type='submit']):not(.custom-appearance):not(.link-button), select, input[type='checkbox'], input[type='radio'] {
+  -webkit-appearance: none;
+  -webkit-user-select: none;
+  background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
+  color: #444;
+  font: inherit;
+  margin: 0 1px 0 0;
+  text-shadow: 0 1px 0 rgb(240, 240, 240);
+}
+
+input[type='checkbox']:checked::before {
+  -webkit-user-select: none;
+  background-image: -webkit-image-set(url('../images/options/checkbox-enabled.png') 1x, url('../images/options/checkmark.png') 2x);
+  background-size: 100% 100%;
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+input[type='checkbox']:checked ~ .enabled-text{
+  display:            inline;
+}
+
+input[type='checkbox']:checked ~ .disabled-text{
+  display:            none;
+}
+
+input[type='checkbox'] ~ .disabled-text{
+  display:            inline;
+}
+
+input[type='checkbox'] ~ .enabled-text{
+  display:            none;
+}
+
+
+
+

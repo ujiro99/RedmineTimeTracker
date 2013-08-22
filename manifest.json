@@ -1,0 +1,47 @@
+{
+  "name": "__MSG_extName__",
+  "version": "0.0.1",
+  "manifest_version": 2,
+
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
+
+  "icons": {
+    "128": "images/toolbar_icons/extension_icon_128.png",
+    "48": "images/toolbar_icons/extension_icon_48.png",
+    "16":"images/toolbar_icons/extension_icon_16.png"
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "38": "images/toolbar_icons/browser_action_icon_38.png",
+      "19": "images/toolbar_icons/browser_action_icon_19.png"
+    },
+    "default_title": "Example Browser Action",
+    "default_popup": "views/popup.html"
+  },
+
+  "background": {
+    "scripts": ["scripts/background.js"],
+    "persistent": false
+   },
+
+  "options_page": "views/options.html",
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "js": ["scripts/content_script.js"],
+      "run_at" : "document_idle",
+      "all_frames" : false
+    }
+  ],
+
+  "permissions": [
+    "http://*/*",
+    "tabs",
+    "storage"
+  ],
+
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+}
