@@ -1,109 +1,32 @@
 <!doctype html>
 <html>
   <head>
-    <title>Xda Gallery Options</title>
+    <title>Redmine Time Tracker Options</title>
 
     <link rel="stylesheet" href="../styles/options.css">
 
   </head>
   <body>
-    <div id="navigation" data-width="155" class="changing-content">
-      <h1>Xda Gallery</h1>
-      <ul>
-        <li id="navGeneral" controls="general" class="selected">
-          <button class="custom-appearance">General</button>
-        </li>
 
-        <li id="navAdvanced" controls="advanced">
-          <button class="custom-appearance">Advanced</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- ------------------------------------------------ -->
-    <!-- GENERAL SECTION                                  -->
     <div id="general" class="page pageSelected">
       <header id="page-header">
         <h1>General Settings</h1>
       </header>
 
-      <!-- Number of Images to fetch per request -->
-      <div class="extension-settings-list">
-        <div id="imagesToFetchSettingsSection" class="settings-section">
-
-          <div class="setting-name-and-description">
-            <h3>Number of images to fetch per request: <span class='setting-name-value'>15</span></h3>
-            <span class="setting-description">
-              Will continue fetching images until finding this amount, loading one pages worth at a minumum.
-            </span>
-          </div>
-
-          <div class="setting-options">
-            <input id="imagesToFetchInput" type="range" min="10" max="100" step="10" value="15">
-          </div>
-
-        </div>
-      </div>
-
       <!-- Debug toggle -->
         <div id="debugModeSettingSection" class="settings-section">
 
-          <div class="setting-name-and-description">
-            <h3>Debug Mode: <span class='setting-name-value'>Off</span></h3>
-            <span class="setting-description">
-              Enabling will turn on Chrome's console logging, should only be enabled to troubleshoot issues.
-            </span>
-          </div>
+          <h3>Api Key</h3>
+          <span class="setting-description">
+            Please input your Redmine Api Key.
+          </span>
 
-          <div class="setting-options">
-            <div class="checkbox">
-              <label>
-                <input id="debugModeInput" type="checkbox">
-                    <span class="enabled-text">Enabled</span>
-                    <span class="disabled-text">Disabled</span>
-                </input>
-              </label>
-            </div>
+          <div class="setting-value">
+            <input id="apiKey" type="text" name="apiKey">
           </div>
 
         </div><!-- END Extension settings for General Page -->
-
     </div><!-- END GENERAL SECTION -->
-
-    <!-- ------------------------------------------------ -->
-    <!-- GENERAL SECTION                                  -->
-    <div id="advanced" class="page">
-      <header id="page-header">
-        <h1>Advanced Settings</h1>
-      </header>
-
-      <div class="extension-settings-list">
-      <!-- Debug toggle -->
-        <div id="overrideNumImageFetchSettingSection" class="settings-section">
-
-          <div class="setting-name-and-description">
-            <h3>Fetch all images: <span class='setting-name-value'>Off</span></h3>
-            <span class="setting-description warning">
-              Enabling will fetch all images in a thread ignoring the number set in the General settings section.  <em>NOTE: This can cause problems such as really long fetch times, not displaying images, possibly locking up the tab( just have to close the gallery tab if so), etc... Use at your own risk.</em>
-            </span>
-          </div>
-
-          <div class="setting-options">
-            <div class="checkbox">
-              <label>
-                <input id="overrideNumImageFetchInput" type="checkbox">
-                    <span class="enabled-text">Enabled</span>
-                    <span class="disabled-text">Disabled</span>
-                </input>
-              </label>
-            </div>
-          </div>
-
-        </div>
-
-      </div><!-- END Extension settings for Advanced Page -->
-
-    </div><!-- END ADVANCED SECTION -->
 
     <script src="../javascript/options.js"></script>
   </body>
