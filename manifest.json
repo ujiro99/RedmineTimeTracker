@@ -21,21 +21,7 @@
     "default_popup": "views/popup.html"
   },
 
-  "background": {
-    "scripts": ["scripts/background.js"],
-    "persistent": false
-   },
-
   "options_page": "views/options.html",
-
-  "content_scripts": [
-    {
-      "matches": ["http://*/*"],
-      "js": ["scripts/content_script.js"],
-      "run_at" : "document_idle",
-      "all_frames" : false
-    }
-  ],
 
   "permissions": [
     "http://*/*",
