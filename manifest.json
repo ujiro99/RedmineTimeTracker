@@ -17,7 +17,7 @@
       "38": "images/toolbar_icons/browser_action_icon_38.png",
       "19": "images/toolbar_icons/browser_action_icon_19.png"
     },
-    "default_title": "Example Browser Action",
+    "default_title": "Redmine Time Tracker",
     "default_popup": "views/popup.html"
   },
 

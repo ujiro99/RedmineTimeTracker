@@ -4,10 +4,17 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" href="/styles/popup.css"/>
 </head>
+
 <body>
-  <button id="buttonLogin">Login</button>
+  <div id="issueForm">
+    <form action="#" method="POST" name="time_entry">
+      <select id="issueSelect" name="time_entry[issue_id]"></select>
+      <button id="submitButton">button</button>
+    </form>
+  </div>
+
   <script src="/scripts/jquery.js"></script>
-  <script src="/scripts/popup.js"></script>
+  <script src="/scripts/timer.js"></script>
   <script src="/scripts/analytics.js"></script>
 </body>
 </html>
