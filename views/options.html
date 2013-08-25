@@ -1,33 +1,95 @@
 <!doctype html>
 <html>
   <head>
-    <title>Redmine Time Tracker Options</title>
-
-    <link rel="stylesheet" href="../styles/options.css">
-
+    <title>Redmine Time Tracke Options</title>
+    <link rel="stylesheet" href="/styles/bootstrap.css">
+    <link rel="stylesheet" href="/styles/options.css">
   </head>
   <body>
+    <script src="/scripts/analytics.js"></script>
+    <div id="wrap">
+      <div id="navigation" data-width="155" class="changing-content">
+        <h1 id="navHeader">Options</h1>
+        <ul>
+          <li id="navGeneral" controls="general" class="selected">
+            <button id="navGeneralButton" class="custom-appearance">General</button>
+          </li>
+          <li id="navAbout" controls="about">
+            <button id="navAboutButton" class="custom-appearance">About</button>
+          </li>
+        </ul>
+      </div>
 
-    <div id="general" class="page pageSelected">
-      <header id="page-header">
-        <h1>General Settings</h1>
-      </header>
+      <!-- GENERAL SECTION start -->
+      <div id="general" class="page pageSelected">
+        <header id="page-header">
+          <h1>General Settings</h1>
+        </header>
 
-      <!-- Debug toggle -->
-        <div id="debugModeSettingSection" class="settings-section">
+        <div class="extension-settings-list">
 
-          <h3>Api Key</h3>
-          <span class="setting-description">
-            Please input your Redmine Api Key.
-          </span>
-
-          <div class="setting-value">
-            <input id="apiKey" type="text" name="apiKey">
+          <!-- Host -->
+          <div class="settings-section form-group">
+            <div class="setting-labels">
+              <label class="control-label" id="labelHost">
+                Host
+              </label>
+              <span class="setting-description" id="descHost">
+                Host Address of the Redmine server which send the time entry.
+              </span>
+            </div>
+            <div class="setting-options">
+              <input class="form-control" type="text" id="Host" placeholder="ex) http://www.redmine.org/">
+            </div>
           </div>
 
-        </div><!-- END Extension settings for General Page -->
-    </div><!-- END GENERAL SECTION -->
+          <!-- Api key -->
+          <div class="settings-section form-group">
+            <div class="setting-labels">
+              <label class="control-label" id="labelApiKey">
+                API key
+              </label>
+              <span class="setting-description" id="descApiKey">
+                Will continue fetching images until finding this amount, loading one pages worth at a minumum.
+              </span>
+            </div>
+            <div class="setting-options">
+              <input class="form-control" type="text" id="ApiKey" placeholder="ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5">
+            </div>
+          </div>
 
-    <script src="../javascript/options.js"></script>
+          <!-- Save Button -->
+          <div><button id="saveButton">Save</button></div>
+          <div><p id="status"></p></div>
+
+        </div>
+      </div>
+      <!-- GENERAL SECTION end -->
+
+
+      <!-- ABOUT SECTION start -->
+      <section id="about" class="page">
+        <header id="page-header">
+          <h1>About</h1>
+        </header>
+        <div id="about-description">
+          <p class="lead" id="optApplicationName">
+            Redmine Time Tracker
+          </p>
+          <p class="privacy" id="optPrivacy">
+            This extension is using Google Analytics, Cookie has been used for the collection of tracking data.
+          </p>
+        </div>
+        <footer>
+          <p class="muted">
+            Copyright 2013 Yujiro Takeda All rights reserved.
+          </p>
+        </footer>
+      </section>
+      <!-- ABOUT SECTION end -->
+
+    </div>
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/options.js"></script>
   </body>
 </html>

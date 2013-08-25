@@ -6,8 +6,19 @@ body{
   margin: 0px;
 }
 
+
+#wrap {
+  width: 100%;
+  position: relative;
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto -60px;
+}
+
+
 h1{
-  font-size:      1.5em;
+  font-size:      2.4em;
   font-family:    'Lucida Grande', sans-serif;
   color:          rgb(92, 97, 102);
   -webkit-user-select: none;
@@ -15,6 +26,12 @@ h1{
   line-height: 1;
   cursor:                 default;
 }
+
+header > h1 {
+  margin-top: 0px;
+  padding-top: 21px;
+}
+
 
 header > h1::after {
   -webkit-margin-end: 20px;
@@ -28,7 +45,8 @@ header > h1::after {
 
 #navigation {
   position:       absolute;
-  left:           0;
+  top:            0px;
+  left:           0px;
   right:          15px;
 
   margin-top:     15px;
@@ -41,7 +59,6 @@ header > h1::after {
 }
 
 .page{
-  margin-top:           15px;
   -webkit-margin-end:   24px;
   min-width:            576px;
   padding-bottom:       20px;
@@ -58,11 +75,14 @@ header > h1::after {
 
 #navigation h1 {
   -webkit-margin-after:   1em;
+  -webkit-margin-before:  21px;
   -webkit-margin-start:   23px;
+  margin-top: 0px;
+  padding-top: 6px;
 }
 
 #navigation ul{
-  margin-top:       30px;
+  font-size:       12px;
 }
 
 ul {
@@ -115,21 +135,13 @@ button {
 
 .extension-settings-list{
   margin-top:     65px;
+  position:       absolute;
 }
 
 .settings-section{
   width:                775px;
   margin-bottom:        25px;
   display:              -webkit-box;
-}
-
-.settings-section h3 {
-  font-weight:    bold;
-  font-size:      14px;
-}
-
-.setting-name-and-description {
-  width:          550px;
 }
 
 .setting-name-value {
@@ -140,6 +152,7 @@ button {
   color:          rgb(151, 156, 160);
   white-space:    normal;
   font-size:      13px;
+  display:        block;
 }
 
 .setting-description em {
@@ -153,12 +166,16 @@ button {
 .setting-options {
   position:             relative;
   -webkit-margin-end:   20px;
-  width:                200px;
+  width:                330px;
+  padding-top:          15px;
 }
 
 .setting-options > * {
-  display:              inline;
   float:                right;
+}
+
+.setting-options input {
+  font-size:   11px;
 }
 
 .enabled-text{
@@ -184,8 +201,13 @@ input:required:valid {
 
 label{
   display: -webkit-inline-box;
-  padding-bottom: 7px;
   padding-top: 7px;
+  font-size: 1.8em;
+  font-weight: normal;
+}
+
+.setting-labels {
+  width:  60%;
 }
 
 input[type='checkbox'] {
@@ -235,6 +257,22 @@ input[type='checkbox'] ~ .enabled-text{
   display:            none;
 }
 
+#about-description {
+  margin-top: 100px;
+}
 
+#optApplicationName {
+  font-size:   4em;
+}
 
+#optPrivacy {
+  font-size:   2em;
+  margin-bottom: 30px;
+}
+
+#status {
+  color:        rgb(151, 156, 160);
+  white-space:  normal;
+  font-size:    13px;
+}
 
