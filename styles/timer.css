@@ -1,0 +1,66 @@
+
+#submitButton {
+  background-color: transparent;
+  border-color: transparent;
+  font-size: 27px;
+  padding: 0 0;
+}
+
+.icon-play-sign {
+  color: #F56F6B;
+}
+
+.icon-play-sign:hover {
+  color: #d2322d;
+}
+
+.icon-stop {
+  color: #aaaaaa;
+  font-size: 25px;
+}
+
+.icon-stop:hover {
+  color: #c0c0c0;
+}
+
+#select {
+  display: inline-block;
+  padding-top: 0;
+  padding-left: 7px;
+}
+
+#issueSelect {
+  width: 220px;
+}
+
+#comment {
+  margin: 2px 0 0 7px;
+  width: 95%;
+}
+
+#commentCount {
+  position: relative;
+  top: -20px;
+  right: -7px;
+}
+
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em
+}
+
+.label-info {
+  background-color: rgba(91, 192, 222, 0.36);
+}
+
+.label-danger {
+  background-color: rgba(217, 83, 79, 0.46);
+}

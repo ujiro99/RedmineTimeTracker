@@ -9,8 +9,8 @@
       return chrome.windows.create({
         url: "/views/timer.html",
         type: "popup",
-        width: 400,
-        height: 400
+        width: 263,
+        height: 50
       }, function(window) {
         return console.log("open timer");
       });

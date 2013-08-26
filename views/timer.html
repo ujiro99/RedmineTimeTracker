@@ -2,14 +2,24 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" href="/styles/popup.css"/>
+  <title>Redmine Time Tracker</title>
+  <link rel="stylesheet" href="/styles/bootstrap.css"/>
+  <link rel="stylesheet" href="/styles/timer.css"/>
+  <link rel="stylesheet" href="/css/font-awesome.css">
 </head>
 
 <body>
   <div id="issueForm">
     <form action="#" method="POST" name="time_entry">
-      <select id="issueSelect" name="time_entry[issue_id]"></select>
-      <button type="button" id="submitButton"></button>
+      <div id="select">
+        <select id="issueSelect" name="time_entry[issue_id]" class="form-control input-sm"></select>
+        <img id="issueLoading" src="/images/animation/loading-bar.gif" alt="" style="display: none;"/>
+      </div>
+      <button type="button" id="submitButton" class="btn">
+        <i id="buttonIcon" class="icon-play-sign"></i>
+      </button>
+      <textarea name="comment" rows="2" id="comment" class="form-control" placeholder="comments..."></textarea>
+      <span id="commentCount" class="label label-info">0</span>
     </form>
   </div>
 
