@@ -1,11 +1,11 @@
 {
-	"extName":  {
-    	"message": "Chrome Extension Bootstrap",
-    	"description": "Chrome extension name."
-  	},
-  	"extDescription": {
-    	"message": "Bootstrap layout for a Chrome Extension that has a lot of basic functionality to get up and running quickly.",
-    	"description": "Chrome extension description."
-  	}
+  "extName":  {
+      "message": "Redmine Time Tracker",
+      "description": "Chrome extension name."
+    },
+    "extDescription": {
+      "message": "Track your work time, and posts to Redmine server.",
+      "description": "Chrome extension description."
+    }
 }
 
