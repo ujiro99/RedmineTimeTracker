@@ -81,7 +81,6 @@
 
     saveSucess = function(res) {
       var status;
-
       localStorage[API_KEY] = res.apiKey;
       localStorage[HOST] = res.host;
       localStorage[ID] = res.id;
@@ -99,7 +98,6 @@
 
     saveFail = function(res) {
       var status;
-
       status = $("#status");
       status.html("Save Failed. " + res);
       return setTimeout(function() {
@@ -114,7 +112,6 @@
 
     restoreOptions = function() {
       var apiKey, host;
-
       apiKey = localStorage[API_KEY];
       host = localStorage[HOST];
       if ((apiKey == null) || (host == null)) {
@@ -131,7 +128,6 @@
 
     loadUser = function(host, apiKey) {
       var d;
-
       d = new $.Deferred;
       $.ajax({
         type: "GET",
@@ -143,7 +139,6 @@
         timeout: AJAX_TIME_OUT
       }).then(function(msg) {
         var _ref;
-
         if ((msg != null ? (_ref = msg.user) != null ? _ref.id : void 0 : void 0) != null) {
           return d.resolve({
             host: host,
@@ -165,7 +160,6 @@
 
   $(function() {
     var extensionOptions;
-
     extensionOptions = new ExtensionOptions();
     return extensionOptions.init();
   });
