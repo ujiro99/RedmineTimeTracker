@@ -6,11 +6,12 @@
       return $("#buttonLogin").click(openTimer);
     });
     return openTimer = function() {
-      return chrome.windows.create({
+
+      chrome.windows.create({
         url: "/views/timer.html",
         type: "popup",
-        width: 263,
-        height: 50
+        width: 300,
+        height: 142
       }, function(window) {
         return console.log("open timer");
       });
