@@ -9,6 +9,8 @@
     CONTENT_TYPE = "application/json";
     ONE_MINUTE = 1000 * 60;
     CHARACTERS_MAX = 255;
+    MESSAGE_DURATION = 2000;
+    AJAX_TIME_OUT = 30 * 1000;
     postData = {
       "time_entry": {
         "issue_id": 0,
@@ -127,9 +129,26 @@
         },
         data: JSON.stringify(postData),
         dataType: "json",
+        timeout: AJAX_TIME_OUT,
         success: function(msg) {
           var _ref;
-          return console.log('time_entry id: ' + (msg != null ? (_ref = msg.time_entry) != null ? _ref.id : void 0 : void 0));
+          var userMessage = "";
+          if (msg != null ? (_ref = msg.time_entry) != null ? _ref.id : void 0 : void 0) {
+            userMessage = "Time Entry Saved.";
+          } else {
+            userMessage = "Save Failed.";
+          };
+          $('#message').html(userMessage);
+          setTimeout(function() {
+            return $('#message').html("");
+          }, MESSAGE_DURATION);
+        },
+        error: function(msg) {
+          var userMessage = "Save Failed.";
+          $('#message').html(userMessage);
+          setTimeout(function() {
+            return $('#message').html("");
+          }, MESSAGE_DURATION);
         }
       });
     };

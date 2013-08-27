@@ -33,14 +33,14 @@
   width: 220px;
 }
 
-#comment {
+#comment textarea {
   margin: 2px 0 0 7px;
   width: 95%;
 }
 
 #commentCount {
   position: relative;
-  top: -20px;
+  top: -21px;
   right: -7px;
 }
 
@@ -54,7 +54,7 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em
+  border-radius: 4px
 }
 
 .label-info {
