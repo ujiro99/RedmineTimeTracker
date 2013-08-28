@@ -17,8 +17,12 @@
       "38": "images/toolbar_icons/browser_action_icon_38.png",
       "19": "images/toolbar_icons/browser_action_icon_19.png"
     },
-    "default_title": "Redmine Time Tracker",
-    "default_popup": "views/popup.html"
+    "default_title": "Redmine Time Tracker"
+  },
+
+  "background": {
+    "scripts": ["/scripts/eventPage.js"],
+    "persistent": false
   },
 
   "options_page": "views/options.html",
