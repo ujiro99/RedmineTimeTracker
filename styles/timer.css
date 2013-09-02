@@ -31,10 +31,12 @@
 #select {
   display: inline-block;
   padding-top: 0;
+  width: 100%;
+  margin-right: -30px;
+  padding-right: 30px;
 }
 
 #issueSelect {
-  width: 220px;
 }
 
 #comment textarea {
@@ -69,10 +71,12 @@
 }
 
 #inputIssueNumber {
-  width: 180px;
   display: inline-block;
 }
 
 #issue {
   display: inline-block;
+  width: 100%;
+  margin-right: -65px;
+  padding-right: 65px;
 }
