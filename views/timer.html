@@ -15,7 +15,9 @@
       <form action="#" method="POST" name="time_entry">
         <div id="select">
           <select id="issueSelect" name="time_entry[issue_id]" class="form-control input-sm"></select>
-          <img id="issueLoading" src="/images/animation/loading-bar.gif" alt="" style="display: none;"/>
+          <div id="issueLoading" class="progress progress-striped active" style="display: none;">
+            <div class="progress-bar progress-bar-info" style="width:100%"></div>
+          </div>
         </div>
         <button type="button" id="submitButton" class="btn">
           <i id="buttonIcon" class="icon-play-sign"></i>
