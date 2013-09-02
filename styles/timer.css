@@ -1,4 +1,9 @@
 
+#wrap {
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
 #submitButton {
   background-color: transparent;
   border-color: transparent;
@@ -26,7 +31,6 @@
 #select {
   display: inline-block;
   padding-top: 0;
-  padding-left: 7px;
 }
 
 #issueSelect {
@@ -34,14 +38,13 @@
 }
 
 #comment textarea {
-  margin: 2px 0 0 7px;
-  width: 95%;
+  margin: 2px 0 0 0px;
+  width: 100%;
 }
 
 #commentCount {
   position: relative;
   top: -21px;
-  right: -7px;
 }
 
 .label {
@@ -63,4 +66,13 @@
 
 .label-danger {
   background-color: rgba(217, 83, 79, 0.46);
+}
+
+#inputIssueNumber {
+  width: 180px;
+  display: inline-block;
+}
+
+#issue {
+  display: inline-block;
 }

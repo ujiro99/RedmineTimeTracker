@@ -9,25 +9,49 @@
 </head>
 
 <body>
-  <div id="issueForm">
-    <form action="#" method="POST" name="time_entry">
-      <div id="select">
-        <select id="issueSelect" name="time_entry[issue_id]" class="form-control input-sm"></select>
-        <img id="issueLoading" src="/images/animation/loading-bar.gif" alt="" style="display: none;"/>
+
+  <div id="wrap">
+    <section id="timeForm">
+      <form action="#" method="POST" name="time_entry">
+        <div id="select">
+          <select id="issueSelect" name="time_entry[issue_id]" class="form-control input-sm"></select>
+          <img id="issueLoading" src="/images/animation/loading-bar.gif" alt="" style="display: none;"/>
+        </div>
+        <button type="button" id="submitButton" class="btn">
+          <i id="buttonIcon" class="icon-play-sign"></i>
+        </button>
+        <div id="comment">
+          <textarea name="comment" rows="2" class="form-control" placeholder="comments..."></textarea>
+          <span id="commentCount" class="label label-info">0</span>
+        </div>
+        <div id="message"></div>
+      </form>
+    </section>
+
+    <section id="issueForm">
+      <form action="#" class="form-inline" role="form">
+        <div id="issue">
+          <label class="sr-only" for="inputIssueNumber">Search</label>
+          <input type="search" class="form-control input-sm" id="inputIssueNumber" placeholder="# ticket number">
+        </div>
+        <button type="submit" class="btn btn-default btn-sm">Search</button>
+      </form>
+      <div class="result">
+          <ul id="issueList">
+          </ul>
       </div>
-      <button type="button" id="submitButton" class="btn">
-        <i id="buttonIcon" class="icon-play-sign"></i>
-      </button>
-      <div id="comment">
-        <textarea name="comment" rows="2" class="form-control" placeholder="comments..."></textarea>
-        <span id="commentCount" class="label label-info">0</span>
-      </div>
-      <div id="message"></div>
-    </form>
+    </section>
+
+    <section id="accountForm">
+
+    </section>
   </div>
 
-  <script src="/scripts/jquery.js"></script>
-  <script src="/scripts/timer.js"></script>
-  <script src="/scripts/analytics.js"></script>
+  <div class="src">
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/timer.js"></script>
+    <script src="/scripts/analytics.js"></script>
+  </div>
+
 </body>
 </html>
