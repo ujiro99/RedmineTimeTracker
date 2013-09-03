@@ -3,7 +3,7 @@ $ ->
   API_KEY = "ApiKey"
   HOST = "Host"
   USER_ID = "userId"
-  ISSUES = "/issues.json?status_id=open&assigned_to_id="
+  ASSIGNED_ISSUES = "/issues.json?status_id=open&assigned_to_id="
   CONTENT_TYPE = "application/json"
   ONE_MINUTE = 1000 * 60
   CHARACTERS_MAX = 255
@@ -44,6 +44,7 @@ $ ->
     loadOpenAssignedIssues(host, apiKey, userId)
     $("#submitButton").click -> onClickSubmit(host, apiKey, userId)
     $("#comment").keyup onKeyDownComment
+    $("#issueSearchButton").click -> onClickIssueSearch(host, apiKey)
 
 
   ###
@@ -53,7 +54,7 @@ $ ->
     console.log "load open assigned issues for " + userId
     $.ajax
       type: "GET"
-      url: host + ISSUES + userId
+      url: host + ASSIGNED_ISSUES + userId
       contentType: CONTENT_TYPE
       headers:
         "X-Redmine-API-Key": apiKey
@@ -145,3 +146,23 @@ $ ->
     else
       $('#commentCount').addClass "label-info"
       $('#commentCount').removeClass "label-danger"
+
+
+  onClickIssueSearch = (host, apiKey) ->
+    number = $("#inputIssueNumber").val()
+    $("#issueSearchButton").button('loading')
+    $.ajax
+      type: "GET"
+      url: host + "/issues/#{number}.json"
+      contentType: CONTENT_TYPE
+      headers:
+        "X-Redmine-API-Key": apiKey
+      success: issueSearchSuccess
+      error: issueSearchError
+
+  issueSearchSuccess = (res) ->
+    $("#issueSearchButton").button('reset')
+    $("#issueList").append("""<li>##{res.issue.id} #{res.issue.subject}</li>""")
+
+  issueSearchError = (msg) ->
+    $("#issueSearchButton").button('reset')

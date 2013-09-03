@@ -36,11 +36,10 @@
           <label class="sr-only" for="inputIssueNumber">Search</label>
           <input type="search" class="form-control input-sm" id="inputIssueNumber" placeholder="# ticket number">
         </div>
-        <button type="submit" class="btn btn-default btn-sm">Search</button>
+        <button type="submit" class="btn btn-default btn-sm" id="issueSearchButton" data-loading-text="Loading...">Search</button>
       </form>
       <div class="result">
-          <ul id="issueList">
-          </ul>
+        <ul id="issueList"></ul>
       </div>
     </section>
 
@@ -51,6 +50,7 @@
 
   <div class="src">
     <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/bootstrap.js"></script>
     <script src="/scripts/timer.js"></script>
     <script src="/scripts/analytics.js"></script>
   </div>

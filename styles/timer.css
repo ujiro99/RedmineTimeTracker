@@ -86,3 +86,8 @@
   margin-right: -66px;
   padding-right: 68px;
 }
+
+#issueList li {
+  list-style-type: none;
+}
+
