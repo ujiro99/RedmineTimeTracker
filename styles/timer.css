@@ -22,6 +22,7 @@
 .icon-stop {
   color: #aaaaaa;
   font-size: 25px;
+  vertical-align: middle;
 }
 
 .icon-stop:hover {
