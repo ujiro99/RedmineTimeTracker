@@ -43,8 +43,9 @@ $ ->
 
     loadOpenAssignedIssues(host, apiKey, userId)
     $("#submitButton").click -> onClickSubmit(host, apiKey, userId)
-    $("#comment").keyup onKeyDownComment
+    $("#comment textarea").keyup onKeyDownComment
     $("#issueSearchButton").click -> onClickIssueSearch(host, apiKey)
+    $("#issueAddButton").click onClickIssueAdd
 
 
   ###
@@ -162,7 +163,13 @@ $ ->
 
   issueSearchSuccess = (res) ->
     $("#issueSearchButton").button('reset')
-    $("#issueList").append("""<li>##{res.issue.id} #{res.issue.subject}</li>""")
+    $("#issueList").append("""<label><input type="checkbox" value="#{res.issue.id}"/>##{res.issue.id} #{res.issue.subject}</label>""")
 
   issueSearchError = (msg) ->
     $("#issueSearchButton").button('reset')
+
+  onClickIssueAdd = ->
+    arr = $.map $('#issueList input:checked'), (issue) ->
+      issue = $(issue)
+      """<option value="#{issue.val()}">#{issue.parent().get(0).innerText}</option>"""
+    $("#issueSelect").append(arr.join(""))

@@ -19,10 +19,13 @@
   color: #d2322d;
 }
 
+#buttonIcon {
+  vertical-align: middle;
+}
+
 .icon-stop {
   color: #aaaaaa;
   font-size: 25px;
-  vertical-align: middle;
 }
 
 .icon-stop:hover {
