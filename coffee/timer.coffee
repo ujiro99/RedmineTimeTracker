@@ -19,7 +19,7 @@ $ ->
   hours = 0
   isTracking = false
   start = null
-  $buttonIcon = $('#buttonIcon')
+  $buttonTimer = $('#buttonTimer')
   $issueSelect = $('#issueSelect')
   $issueLoading = $('#issueLoading')
 
@@ -82,17 +82,18 @@ $ ->
       if millisec > ONE_MINUTE
         hours = millisec / 1000 / 60 / 60
         submitTimeEntry(host, apiKey, userId, hours)
+        $('#Log').append("""<p>start #{start.getHours()}:#{start.getMinutes()} end #{end.getHours()}:#{end.getMinutes()}: #{hours}</p>""")
       else
-        console.log "Too short time entry."
-      $buttonIcon.addClass('icon-play-sign')
-      $buttonIcon.removeClass('icon-stop')
+        console.log 'Too short time entry.'
+      $buttonTimer.addClass('icon-play-sign')
+      $buttonTimer.removeClass('icon-stop')
       $issueSelect.show()
       $issueLoading.hide()
     else
       isTracking = true
       start = new Date()
-      $buttonIcon.removeClass('icon-play-sign')
-      $buttonIcon.addClass('icon-stop')
+      $buttonTimer.removeClass('icon-play-sign')
+      $buttonTimer.addClass('icon-stop')
       $issueSelect.hide()
       $issueLoading.show()
 
@@ -172,4 +173,5 @@ $ ->
     arr = $.map $('#issueList input:checked'), (issue) ->
       issue = $(issue)
       """<option value="#{issue.val()}">#{issue.parent().get(0).innerText}</option>"""
-    $("#issueSelect").append(arr.join(""))
+    if arr?.length > 0
+      $("#issueSelect").append(arr.join(""))

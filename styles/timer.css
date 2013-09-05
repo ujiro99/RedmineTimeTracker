@@ -5,10 +5,22 @@
 }
 
 #submitButton {
-  background-color: transparent;
-  border-color: transparent;
   font-size: 24px;
   padding: 0 0;
+}
+
+.iconButton {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.iconButton i {
+  vertical-align: middle;
+}
+
+.iconButton:active {
+  -webkit-box-shadow: 0px 0px;
+  box-shadow: 0px 0px;
 }
 
 .icon-play-sign {
@@ -17,10 +29,6 @@
 
 .icon-play-sign:hover {
   color: #d2322d;
-}
-
-#buttonIcon {
-  vertical-align: middle;
 }
 
 .icon-stop {
