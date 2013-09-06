@@ -1,6 +1,9 @@
 module.exports = (grunt) ->
 
+  # configure
   grunt.initConfig
+
+    pkg: grunt.file.readJSON('package.json')
 
     connect:
       server:
@@ -12,10 +15,20 @@ module.exports = (grunt) ->
       coffee:
         files: "coffee/**/*.coffee",
         tasks: ["coffee"]
+        options:
+          livereload: true
 
       coffee_with_test:
         files: ["coffee/**/*.coffee", 'test/**/*_test.coffee'],
         tasks: ["coffee:compile", 'simplemocha']
+
+      stylus:
+        files: "stylus/**/*.styl",
+        tasks: ["stylus"]
+
+      jade:
+        files: "jade/**/*.jade",
+        tasks: ["jade"]
 
     coffee:
       compile:
@@ -33,8 +46,18 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'stylus/'
           src: ['**/*.styl']
-          dest: 'styles/'
+          dest: 'css/'
           ext: '.css'
+        ]
+
+    jade:
+      compile:
+        files: [
+          expand: true
+          cwd: 'jade/'
+          src: ['**/*.jade']
+          dest: 'views/'
+          ext: '.html'
         ]
 
     simplemocha:
@@ -48,8 +71,10 @@ module.exports = (grunt) ->
       all:
         src: 'test/**/*.coffee'
 
+  # plugins
   grunt.loadNpmTasks 'grunt-contrib'
   grunt.loadNpmTasks 'grunt-simple-mocha'
 
-  grunt.registerTask "run", ["coffee","connect", "watch:coffee"]
-  grunt.registerTask "run_with_test", ["coffee","connect", "watch:coffee_with_test"]
+  # tasks
+  grunt.registerTask "run", ["connect", "watch:coffee"]
+  grunt.registerTask "run_with_test", ["coffee", "connect", "watch:coffee_with_test"]
