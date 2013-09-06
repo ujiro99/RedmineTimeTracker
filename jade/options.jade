@@ -1,0 +1,60 @@
+!!! 5
+html
+  head
+    title Redmine Time Tracke Options
+    link(rel='stylesheet', href='/styles/bootstrap.css')
+    link(rel='stylesheet', href='/styles/options.css')
+  body
+    script(src='/scripts/analytics.js')
+    #wrap
+      #navigation.changing-content(data-width='155')
+        h1#navHeader Options
+        ul
+          li#navGeneral.selected(controls='general')
+            button#navGeneralButton.custom-appearance General
+          li#navAbout(controls='about')
+            button#navAboutButton.custom-appearance About
+      // GENERAL SECTION start
+      #general.page.pageSelected
+        header#page-header
+          h1 General Settings
+        .extension-settings-list
+          // Host
+          .settings-section.form-group
+            .setting-labels
+              label#labelHost.control-label
+                | Host
+              span#descHost.setting-description
+                | Host Address of the Redmine server which send the time entry&period;
+            .setting-options
+              input#Host.form-control(type='text', placeholder='ex) http://www.redmine.org/')
+          // Api key
+          .settings-section.form-group
+            .setting-labels
+              label#labelApiKey.control-label
+                | API key
+              span#descApiKey.setting-description
+                | Will continue fetching images until finding this amount&comma; loading one pages worth at a minumum&period;
+            .setting-options
+              input#ApiKey.form-control(type='text', placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5')
+          // Save Button
+          div
+            button#saveButton Save
+          div
+            p#status
+      // GENERAL SECTION end
+      // ABOUT SECTION start
+      section#about.page
+        header#page-header
+          h1 About
+        #about-description
+          p#optApplicationName.lead
+            | Redmine Time Tracker
+          p#optPrivacy.privacy
+            | This extension is using Google Analytics&comma; Cookie has been used for the collection of tracking data&period;
+        footer
+          p.muted
+            | Copyright 2013 Yujiro Takeda All rights reserved&period;
+      // ABOUT SECTION end
+    script(src='/scripts/jquery.js')
+    script(src='/scripts/options.js')

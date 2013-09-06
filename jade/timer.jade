@@ -1,0 +1,38 @@
+!!! 5
+html
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    title Redmine Time Tracker
+    link(rel='stylesheet', href='/styles/bootstrap.css')
+    link(rel='stylesheet', href='/styles/timer.css')
+    link(rel='stylesheet', href='/css/font-awesome.css')
+  body
+    #wrap
+      section#timeForm
+        form(action='#', method='POST', name='time_entry')
+          #select
+            select#issueSelect.form-control.input-sm(name='time_entry[issue_id]')
+            #issueLoading.progress.progress-striped.active(style='display: none;')
+              .progress-bar.progress-bar-info(style='width:100%')
+          button#submitButton.btn.iconButton(type='button')
+            i#buttonTimer.icon-play-sign
+          #comment
+            textarea.form-control(name='comment', rows='2', placeholder='comments...')
+            span#commentCount.label.label-info 0
+          #message
+      section#issueForm
+        form.form-inline(action='#', role='form')
+          #issue
+            label.sr-only(for='inputIssueNumber') Search
+            input#inputIssueNumber.form-control.input-sm(type='search', placeholder='# ticket number')
+          button#issueSearchButton.btn.btn-default.btn-sm(type='submit', data-loading-text='Loading') Search
+        form(action='#', role='form')
+          #issueList.result.checkbox
+          button#issueAddButton.btn.iconButton(type='submit')
+            i.icon-plus-sign
+    section#Log
+    .src
+      script(src='/scripts/jquery.js')
+      script(src='/scripts/bootstrap.js')
+      script(src='/scripts/timer.js')
+      script(src='/scripts/analytics.js')
