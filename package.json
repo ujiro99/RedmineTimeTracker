@@ -7,7 +7,7 @@
     "grunt": "~0.4.1"
   },
   "devDependencies": {
-    "grunt-contrib": "~0.7.0",
+    "grunt-contrib": "~0.7.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
