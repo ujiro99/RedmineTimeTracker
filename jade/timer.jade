@@ -1,28 +1,33 @@
 !!! 5
-html
+html(ng-app)
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     title Redmine Time Tracker
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/timer.css')
     link(rel='stylesheet', href='/css/font-awesome.css')
+    script(src='/scripts/angular.min.js')
 
   body
 
     #wrap
 
+      // time track
       section#timeForm
         form(action='#', method='POST', name='time_entry')
-          #select
-            select#issueSelect.form-control.input-sm(name='time_entry[issue_id]')
-            #issueLoading.progress.progress-striped.active(style='display: none;')
-              .progress-bar.progress-bar-info(style='width:100%')
-          button#submitButton.btn.iconButton(type='button')
-            i#buttonTimer.icon-play-sign
+          div
+            #select
+              select#issueSelect.form-control.input-sm(name='time_entry[issue_id]')
+              #issueLoading.progress.progress-striped.active(style='display: none;')
+                .progress-bar.progress-bar-info(style='width:100%')
+            button#submitButton.btn.iconButton(type='button')
+              i#buttonTimer.icon-play-sign
           #comment
             textarea.form-control(name='comment', rows='2', placeholder='comments...')
             span#commentCount.label.label-info 0
           #message
+
+      // ticket
       section#issueForm
         form.form-inline(action='#', role='form')
           #issue
@@ -33,7 +38,13 @@ html
           #issueList.result.checkbox
           button#issueAddButton.btn.iconButton(type='submit')
             i.icon-plus-sign
-    section#Log
+
+      // account
+      section#account
+
+      // log
+      section#Log
+
     .src
       script(src='/scripts/jquery.js')
       script(src='/scripts/bootstrap.js')
