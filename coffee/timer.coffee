@@ -175,3 +175,12 @@ $ ->
       """<option value="#{issue.val()}">#{issue.parent().get(0).innerText}</option>"""
     if arr?.length > 0
       $("#issueSelect").append(arr.join(""))
+
+
+TimerCtrl = ($scope) ->
+  $scope.tickets = [
+    { id: 0, name: "test", project: "plugin" }
+    { id: 1, name: "dev", project: "plugin" }
+    { id: 2, name: "design", project: "web" }
+  ]
+

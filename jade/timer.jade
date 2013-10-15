@@ -10,14 +10,14 @@ html(ng-app)
 
   body
 
-    #wrap
+    #wrap(ng-controller="TimerCtrl")
 
       // time track
       section#timeForm
         form(action='#', method='POST', name='time_entry')
           div
             #select
-              select#issueSelect.form-control.input-sm(name='time_entry[issue_id]')
+              select#issueSelect.form-control.input-sm(name='time_entry[issue_id]', ng-model="selectedTicket", ng-options="# ticket.name for ticket in tickets")
               #issueLoading.progress.progress-striped.active(style='display: none;')
                 .progress-bar.progress-bar-info(style='width:100%')
             button#submitButton.btn.iconButton(type='button')

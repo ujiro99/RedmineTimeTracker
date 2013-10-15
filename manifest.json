@@ -12,25 +12,14 @@
     "16":"images/toolbar_icons/extension_icon_16.png"
   },
 
-  "browser_action": {
-    "default_icon": {
-      "38": "images/toolbar_icons/browser_action_icon_38.png",
-      "19": "images/toolbar_icons/browser_action_icon_19.png"
-    },
-    "default_title": "Redmine Time Tracker"
+  "app": {
+    "background": {
+      "scripts": ["/scripts/eventPage.js"]
+    }
   },
-
-  "background": {
-    "scripts": ["/scripts/eventPage.js"],
-    "persistent": false
-  },
-
-  "options_page": "views/options.html",
 
   "permissions": [
-    "http://*/*",
-    "tabs"
-  ],
+    "http://*/*"
+  ]
 
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }
