@@ -19,7 +19,9 @@
   },
 
   "permissions": [
-    "http://*/*"
+    "http://*/*",
+    "https://www.google-analytics.com/",
+    "storage"
   ]
 
 }
