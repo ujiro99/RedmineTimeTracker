@@ -72,7 +72,10 @@ module.exports = (grunt) ->
         src: 'test/**/*.coffee'
 
   # plugins
-  grunt.loadNpmTasks 'grunt-contrib'
+  grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-contrib-jade'
+  grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-simple-mocha'
 
   # tasks
