@@ -1,12 +1,11 @@
 !!! 5
-html(ng-app)
+html(ng-app='myApp', ng-csp="")
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     title Redmine Time Tracker
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/timer.css')
     link(rel='stylesheet', href='/css/font-awesome.css')
-    script(src='/scripts/angular.min.js')
 
   body
 
@@ -17,7 +16,7 @@ html(ng-app)
         form(action='#', method='POST', name='time_entry')
           div
             #select
-              select#issueSelect.form-control.input-sm(name='time_entry[issue_id]', ng-model="selectedTicket", ng-options="# ticket.name for ticket in tickets")
+              select#issueSelect.form-control.input-sm(name='time_entry[issue_id]', ng-model="selectedTicket", ng-options="ticket.name for ticket in tickets")
               #issueLoading.progress.progress-striped.active(style='display: none;')
                 .progress-bar.progress-bar-info(style='width:100%')
             button#submitButton.btn.iconButton(type='button')
@@ -48,6 +47,8 @@ html(ng-app)
     .src
       script(src='/scripts/jquery.js')
       script(src='/scripts/bootstrap.js')
+      script(src='/scripts/angular.min.js')
+      script(src='/scripts/ui-bootstrap-0.6.0.min.js')
       script(src='/scripts/timer.js')
       script(src='/scripts/google-analytics-bundle.js')
       script(src='/scripts/analytics.js')

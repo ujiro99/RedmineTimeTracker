@@ -1,4 +1,5 @@
-$ ->
+@myApp = angular.module('myApp', ['ui.bootstrap'])
+myApp.controller('TimerCtrl', ['$scope', '$http', ($scope, $http) ->
 
   API_KEY = "ApiKey"
   HOST = "Host"
@@ -177,10 +178,10 @@ $ ->
       $("#issueSelect").append(arr.join(""))
 
 
-TimerCtrl = ($scope) ->
   $scope.tickets = [
     { id: 0, name: "test", project: "plugin" }
     { id: 1, name: "dev", project: "plugin" }
     { id: 2, name: "design", project: "web" }
   ]
 
+])
