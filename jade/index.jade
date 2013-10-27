@@ -13,9 +13,9 @@ html(ng-app='timeTracker', ng-csp="")
 
     .wrap
 
-      section(ng-controller='TimerCtrl', ng-include="'timeTrack.html'")
-      section(ng-controller='IssueCtrl', ng-include="'issue.html'")
-      section(ng-controller='OptionCtrl', ng-include="'options.html'")
+      section(ng-include="'timeTrack.html'")
+      section(ng-include="'issue.html'")
+      section(ng-include="'options.html'")
       section(ng-include="'about.html'")
 
       section(ng-include="'message.html'")
@@ -27,7 +27,10 @@ html(ng-app='timeTracker', ng-csp="")
       script(src='/scripts/angular-resource.min.js')
       script(src='/scripts/ui-bootstrap-0.6.0.min.js')
       script(src='/scripts/main.js')
-      script(src='/scripts/options.js')
+      script(src='/scripts/account.js')
+      script(src='/scripts/timerCtrl.js')
+      script(src='/scripts/issueCtrl.js')
+      script(src='/scripts/optionCtrl.js')
       script(src='/scripts/google-analytics-bundle.js')
       script(src='/scripts/analytics.js')
 

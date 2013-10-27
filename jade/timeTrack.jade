@@ -1,22 +1,31 @@
-form#timer(action='#', method='POST', name='time_entry')
+div#timer(ng-controller='TimerCtrl')
 
-  div.select
-    div.inputWidhButton
-      select.form-control.input-sm(name='time_entry'
-        , ng-model="selectedTicket"
-        , ng-options="'#' + ticket.id + ' ' + ticket.subject group by ticket.project.name for ticket in tickets"
-        , ng-hide="isTracking")
-      div.progress.progress-striped.active(ng-show="isTracking")
-        .progress-bar.progress-bar-info(style='width:100%')
-    button.btn.iconButton(type='button', ng-click='clickSubmitButton()')
-      i(ng-class="{'icon-play-sign': !isTracking, 'icon-stop': isTracking}")
+  form(action='#', method='POST', name='time_entry')
 
-  div.comment
-    textarea.form-control(name='comment'
-      , rows='2'
-      , ng-model='comment'
-      , ng-maxlength='commentMaxLength'
-      , placeholder='comments...'
-      , ng-change='commentRemain = commentMaxLength - comment.length')
-    div
-      span.label(ng-class="{'label-info': commentRemain >= 0, 'label-danger': commentRemain < 0}") {{commentRemain}}
+    div.select
+      div.inputWidhButton
+
+        // ticket
+        select.form-control.input-sm(name='time_entry'
+          , ng-model="selectedTicket"
+          , ng-options="'#' + ticket.id + ' ' + ticket.subject group by ticket.project.name for ticket in tickets"
+          , ng-hide="isTracking")
+
+        // progress
+        div.progress.progress-striped.active(ng-show="isTracking")
+          .progress-bar.progress-bar-info(style='width:100%')
+
+      // button
+      button.btn.iconButton(type='button', ng-click='clickSubmitButton()')
+        i(ng-class="{'icon-play-sign': !isTracking, 'icon-stop': isTracking}")
+
+    // comment
+    div.comment
+      textarea.form-control(name='comment'
+        , rows='2'
+        , ng-model='comment'
+        , ng-maxlength='commentMaxLength'
+        , placeholder='comments...'
+        , ng-change='commentRemain = commentMaxLength - comment.length')
+      div
+        span.label(ng-class="{'label-info': commentRemain >= 0, 'label-danger': commentRemain < 0}") {{commentRemain}}

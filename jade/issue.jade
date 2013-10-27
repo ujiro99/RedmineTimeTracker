@@ -1,18 +1,21 @@
-form#issue.form-inline(action='#', role='form')
+div#issue(ng-controller='IssueCtrl')
 
-  div.inputWidhButton
+  form.form-inline(action='#', role='form')
 
-    div.form-group.project
-      label.sr-only(for='selectProject') Project
-      select#selectProject.form-control.input-sm(ng-model='selectedProject'
-        , ng-options='project as project.name group by project.account.host for project in projects')
+    div.inputWidhButton
 
-    div.form-group.issueNumber
-      label.sr-only(for='inputIssueNumber') Ticket Number
-      input#inputIssueNumber.form-control.input-sm(type='search', placeholder='search')
-  
-  pre {{selectedProject.name|json}}
+      // project
+      div.form-group.project
+        label.sr-only(for='selectProject') Project
+        select#selectProject.form-control.input-sm(ng-model='selectedProject'
+          , ng-options='project as project.name group by project.account.host for project in projects')
 
-  button.btn.iconButton(type='button', ng-click='onClickIssueAdd()')
-    i.icon-plus-sign
+      // number
+      div.form-group.issueNumber
+        label.sr-only(for='inputIssueNumber') Ticket Number
+        input#inputIssueNumber.form-control.input-sm(type='search', placeholder='search')
+
+    // add button
+    button.btn.iconButton(type='button', ng-click='onClickIssueAdd()')
+      i.icon-plus-sign
 
