@@ -1,14 +1,79 @@
-@myApp = angular.module('myApp', ['ui.bootstrap'])
-myApp.controller('TimerCtrl', ['$scope', '$http', ($scope, $http) ->
+@timeTracker = angular.module('timeTracker', ['ngResource'])
+timeTracker.factory("accountService", () ->
 
-  API_KEY = "ApiKey"
-  HOST = "Host"
-  USER_ID = "userId"
+  ACCOUNTS = "ACCOUNTS"
+  HOST     = "HOST"
+  API_KEY  = "API_KEY"
+  USER_ID  = "USER_ID"
+  NULLFUNC = () ->
+
+  return {
+
+    getAccounts: (callback) ->
+      callback = callback or NULLFUNC
+      chrome.storage.sync.get ACCOUNTS, (item) ->
+        if chrome.runtime.lastError? or not item[ACCOUNTS]?
+          callback null
+        else
+          callback item[ACCOUNTS]
+
+
+    addAccount: (account, callback) ->
+      if not account? then return
+      callback = callback or NULLFUNC
+      @getAccounts (accounts) ->
+        accounts = accounts or []
+        newArry = []
+        for a in accounts when a.host isnt account.host
+          newArry.push a
+        accounts = newArry
+        accounts.push account
+        chrome.storage.sync.set ACCOUNTS: accounts, () ->
+          if chrome.runtime.lastError?
+            callback false
+          else
+            callback true
+
+
+    clearAccount: (callback) ->
+      callback = callback or NULLFUNC
+      chrome.storage.sync.clear () ->
+        if chrome.runtime.lastError?
+          callback false
+        else
+          callback true
+  }
+)
+
+
+timeTracker.factory("$message", ['$rootScope', ($rootScope) ->
+
+  MESSAGE_DURATION = 2000
+
+  return {
+    toast: (msg, duration) ->
+      duration = duration or MESSAGE_DURATION
+      $rootScope.message = msg
+      if not $rootScope.$$phase then $rootScope.$apply()
+      setTimeout ->
+        $rootScope.message = ""
+        if not $rootScope.$$phase then $rootScope.$apply()
+      , duration
+  }
+])
+
+timeTracker.controller('MainCtrl', ['$rootScope', '$scope', ($rootScope, $scope) ->
+  $rootScope.message = ""
+  $scope.tickets = {}
+])
+
+timeTracker.controller('TimerCtrl', ['$scope', '$http', 'accountService', '$message', ($scope, $http, accountService, $message) ->
+
   ASSIGNED_ISSUES = "/issues.json?status_id=open&assigned_to_id="
   CONTENT_TYPE = "application/json"
-  ONE_MINUTE = 1000 * 60
-  CHARACTERS_MAX = 255
-  MESSAGE_DURATION = 2000
+  # ONE_MINUTE = 1000 * 60
+  ONE_MINUTE = 1000 * 5
+  COMMENT_MAX = 255
   AJAX_TIME_OUT = 30 * 1000
 
   postData =
@@ -17,36 +82,30 @@ myApp.controller('TimerCtrl', ['$scope', '$http', ($scope, $http) ->
       "hours": 0
       "activity_id": 8
       "comments": ""
+
   hours = 0
-  isTracking = false
   start = null
-  $buttonTimer = $('#buttonTimer')
-  $issueSelect = $('#issueSelect')
-  $issueLoading = $('#issueLoading')
+
+  $scope.isTracking = false
+  $scope.comment = ""
+  $scope.commentMaxLength = COMMENT_MAX
+  $scope.commentRemain = COMMENT_MAX
+  $scope.message = ""
+  $scope.clickSubmitButton = ->
 
 
   ###
-   On ready document, init.
-  ###
-  $(document).ready ->
-    init()
-
-
-  ###
-   get data from localStorage, then init.
+   get data from sync Storage, then init.
   ###
   init = ->
-    host   = localStorage[HOST]
-    apiKey = localStorage[API_KEY]
-    userId = localStorage[USER_ID]
-
-    if not apiKey? or not host? or not userId? then return
-
-    loadOpenAssignedIssues(host, apiKey, userId)
-    $("#submitButton").click -> onClickSubmit(host, apiKey, userId)
-    $("#comment textarea").keyup onKeyDownComment
-    $("#issueSearchButton").click -> onClickIssueSearch(host, apiKey)
-    $("#issueAddButton").click onClickIssueAdd
+    accountService.getAccounts (accounts) ->
+      if not accounts? or not accounts?[0]? then return
+      host   = accounts[0].host
+      apiKey = accounts[0].apiKey
+      userId = accounts[0].userId
+      $scope.$apply ->
+        loadOpenAssignedIssues(host, apiKey, userId)
+        $scope.clickSubmitButton = -> onClickSubmit(host, apiKey, userId)
 
 
   ###
@@ -54,134 +113,146 @@ myApp.controller('TimerCtrl', ['$scope', '$http', ($scope, $http) ->
   ###
   loadOpenAssignedIssues = (host, apiKey, userId) ->
     console.log "load open assigned issues for " + userId
-    $.ajax
-      type: "GET"
+    config =
+      method: "GET"
       url: host + ASSIGNED_ISSUES + userId
-      contentType: CONTENT_TYPE
       headers:
         "X-Redmine-API-Key": apiKey
-      success: setSelectOption
+        "Content-Type": CONTENT_TYPE
+      timeout: AJAX_TIME_OUT
+    $http(config)
+      .success(setSelectOptions)
 
 
   ###
    Set options to the issue select form.
   ###
-  setSelectOption = (res) ->
-    arr = $.map res.issues, (issue) ->
-      """<option value="#{issue.id}">##{issue.id} #{issue.subject}</option>"""
-    $("#issueSelect").html(arr.join(""))
+  setSelectOptions = (res) ->
+    if res?.issues?
+      $scope.tickets = res.issues
+      $scope.selectedTicket = res.issues[0]
 
 
   ###
    Start or End Time tracking
   ###
   onClickSubmit = (host, apiKey, userId) ->
-    if isTracking
-      isTracking = false
+    if $scope.isTracking
+      $scope.isTracking = false
       end = new Date()
       millisec = end.getTime() - start.getTime()
       if millisec > ONE_MINUTE
         hours = millisec / 1000 / 60 / 60
         submitTimeEntry(host, apiKey, userId, hours)
-        $('#Log').append("""<p>start #{start.getHours()}:#{start.getMinutes()} end #{end.getHours()}:#{end.getMinutes()}: #{hours}</p>""")
+        $message.toast """start #{start.getHours()}:#{start.getMinutes()} end #{end.getHours()}:#{end.getMinutes()}: #{hours}"""
       else
-        console.log 'Too short time entry.'
-      $buttonTimer.addClass('icon-play-sign')
-      $buttonTimer.removeClass('icon-stop')
-      $issueSelect.show()
-      $issueLoading.hide()
+        $message.toast 'Too short time entry.'
     else
-      isTracking = true
+      $scope.isTracking = true
       start = new Date()
-      $buttonTimer.removeClass('icon-play-sign')
-      $buttonTimer.addClass('icon-stop')
-      $issueSelect.hide()
-      $issueLoading.show()
 
 
   ###
    submit to redmine server.
   ###
   submitTimeEntry = (host, apiKey, userId, hours) ->
-    issueId = $('#issueSelect').val()
-    comments = $('#comment').val()
-    if comments.length > CHARACTERS_MAX
-      comments = comments.substring(0, CHARACTERS_MAX - 1)
-    postData.time_entry.issue_id = issueId
+    postData.time_entry.issue_id = $scope.selectedTicket.id
     postData.time_entry.hours = hours
-    postData.time_entry.comments = comments
+    postData.time_entry.comments = $scope.comment
 
-    $.ajax
-      type: "POST"
-      url: host + "/issues/#{issueId}/time_entries.json"
-      contentType: CONTENT_TYPE
+    config =
+      method: "POST"
+      url: host + "/issues/#{postData.time_entry.issue_id}/time_entries.json"
       headers:
         "X-Redmine-API-Key": apiKey
+        "Content-Type": CONTENT_TYPE
       data: JSON.stringify(postData)
-      dataType: "json"
       timeout: AJAX_TIME_OUT
-      success: (msg) ->
-        userMessage = ""
-        if msg?.time_entry?.id?
-          userMessage = "Time Entry Saved."
-        else
-          userMessage = "Save Failed."
-        $('#message').html(userMessage)
-        setTimeout ->
-          $('#message').html("")
-        , MESSAGE_DURATION
-      error: (msg) ->
-        userMessage = "Save Failed."
-        $('#message').html(userMessage)
-        setTimeout ->
-          return $('#message').html("")
-        , MESSAGE_DURATION
+
+    $http(config)
+      .success(submitSuccess)
+      .error(submitError)
+
 
   ###
-   check comment length
+   show success message.
   ###
-  onKeyDownComment = ->
-    thisValueLength = $(this).val().length
-    $('#commentCount').html(thisValueLength)
-    if thisValueLength > CHARACTERS_MAX
-      $('#commentCount').addClass "label-danger"
-      $('#commentCount').removeClass "label-info"
+  submitSuccess = (msg) ->
+    if msg?.time_entry?.id?
+      $message.toast "Time Entry Saved."
     else
-      $('#commentCount').addClass "label-info"
-      $('#commentCount').removeClass "label-danger"
+      submitError msg
 
 
-  onClickIssueSearch = (host, apiKey) ->
-    number = $("#inputIssueNumber").val()
-    $("#issueSearchButton").button('loading')
-    $.ajax
-      type: "GET"
-      url: host + "/issues/#{number}.json"
-      contentType: CONTENT_TYPE
-      headers:
-        "X-Redmine-API-Key": apiKey
-      success: issueSearchSuccess
-      error: issueSearchError
+  ###
+   show failed message.
+  ###
+  submitError = (msg) ->
+    $message.toast "Save Failed."
 
-  issueSearchSuccess = (res) ->
-    $("#issueSearchButton").button('reset')
-    $("#issueList").append("""<label><input type="checkbox" value="#{res.issue.id}"/>##{res.issue.id} #{res.issue.subject}</label>""")
+  ###
+   Initialize
+  ###
+  init()
 
-  issueSearchError = (msg) ->
-    $("#issueSearchButton").button('reset')
-
-  onClickIssueAdd = ->
-    arr = $.map $('#issueList input:checked'), (issue) ->
-      issue = $(issue)
-      """<option value="#{issue.val()}">#{issue.parent().get(0).innerText}</option>"""
-    if arr?.length > 0
-      $("#issueSelect").append(arr.join(""))
+])
 
 
-  $scope.tickets = [
-    { id: 0, name: "test", project: "plugin" }
-    { id: 1, name: "dev", project: "plugin" }
-    { id: 2, name: "design", project: "web" }
-  ]
+timeTracker.controller('IssueCtrl', ['$scope', '$http', '$resource', 'accountService', "$message", ($scope, $http, $resource, accountService, $message ) ->
+
+  resource = {"resource": "issues.json"}
+  CONTENT_TYPE = "application/json"
+  AJAX_TIME_OUT = 30 * 1000
+  $scope.accounts = []
+  $scope.projects = []
+
+
+  init = () ->
+    accountService.getAccounts (accounts) ->
+      if not accounts? or not accounts?[0]? then return
+      $scope.accounts = accounts
+      config =
+        method: "GET"
+        url: accounts[0].host + "/projects.json"
+        headers:
+          "X-Redmine-API-Key": accounts[0].apiKey
+          "Content-Type": CONTENT_TYPE
+        timeout: AJAX_TIME_OUT
+      $http(config)
+        .success(loadProjectSuccess)
+        .error(loadProjectError)
+
+
+  loadProjectSuccess = (msg) ->
+    if msg.projects?
+      msg.projects = for prj in msg.projects
+        prj.account = $scope.accounts[0]
+        prj
+      $scope.projects = msg.projects
+      $scope.selectedProject = msg.projects[0]
+    else
+      loadProjectError msg
+
+
+  loadProjectError = (msg) ->
+    $message.toast "Load Project Failed."
+
+
+  $scope.onClickIssueAdd = ->
+    Issue = $resource $scope.selectedProject.account.host + "/:resource"
+    , resource
+    , get:
+        method: "GET"
+        headers:
+          "X-Redmine-API-Key": $scope.selectedProject.account.apiKey
+          "Content-Type": CONTENT_TYPE
+    res = Issue.get "project_id": $scope.selectedProject.id, () ->
+      $message.toast res.issues[0].subject
+
+
+  ###
+   Initialize
+  ###
+  init()
 
 ])

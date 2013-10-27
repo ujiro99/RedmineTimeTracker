@@ -1,122 +1,80 @@
-class ExtensionOptions
+timeTracker.controller('OptionCtrl', ['$scope', '$http', 'accountService', '$message', ($scope, $http, accountService, $message) ->
 
-  API_KEY = "ApiKey"
-  HOST = "Host"
-  ID = "userId"
-  USER = "/users/current.json"
+  USER = "/users/current.json?include=memberships"
   AJAX_TIME_OUT = 30 * 1000
-  MESSAGE_DURATION = 2000
+
+  $scope.status = ""
+  $scope.option = { apiKey:'', host:'' }
+
 
   ###
    Initialize Option page.
   ###
-  init: ->
-    setupEventBinding()
-    restoreOptions()
-
-
-  ###
-   Setup page navigation events
-  ###
-  setupEventBinding = ->
-    $("#navigation").on "click", "li", ->
-      showSettingsPage @attributes.getNamedItem("controls").value
-    $("#saveButton").on "click", ->
-      saveOptions()
-
-
-  ###
-   Show settig page which clicked by user
-  ###
-  showSettingsPage = (controlsAttribute) ->
-    if controlsAttribute is "general"
-      $("#general").addClass "pageSelected"
-      $("#about").removeClass "pageSelected"
-      $("#navGeneral").addClass "selected"
-      $("#navAbout").removeClass "selected"
-    else if controlsAttribute is "about"
-      $("#about").addClass "pageSelected"
-      $("#general").removeClass "pageSelected"
-      $("#navAbout").addClass "selected"
-      $("#navGeneral").removeClass "selected"
-
-
-  ###
-   save
-  ###
-  saveOptions = () ->
-    apiKey = $("##{API_KEY}").val()
-    host = $("##{HOST}").val()
-    loadUser(host, apiKey)
-    .then(saveSucess, saveFail)
-
-
-  ###
-   sucess to save
-  ###
-  saveSucess = (res) ->
-    localStorage[API_KEY] = res.apiKey
-    localStorage[HOST] = res.host
-    localStorage[ID] = res.id
-    status = $("#status")
-    status.html "Options Saved."
-    setTimeout ->
-      status.html ""
-    , MESSAGE_DURATION
-
-
-  ###
-   fail to save
-  ###
-  saveFail = (res) ->
-    status = $("#status")
-    status.html "Save Failed. #{res}"
-    setTimeout ->
-      status.html ""
-    , MESSAGE_DURATION
-
-
-  ###
-   restore
-  ###
-  restoreOptions = () ->
-    apiKey = localStorage[API_KEY]
-    host = localStorage[HOST]
-
-    if not apiKey? or not host? then return
-
-    $("##{API_KEY}").val apiKey
-    $("##{HOST}").val host
+  init = ->
+    # restore accounts
+    accountService.getAccounts (accounts) ->
+      if not accounts? or not accounts[0]? then return
+      host   = accounts[0].host
+      apiKey = accounts[0].apiKey
+      $scope.$apply ->
+        $scope.option.host   = host
+        $scope.option.apiKey = apiKey
 
 
   ###
    Load the user ID associated to Api Key.
   ###
-  loadUser = (host, apiKey) ->
-    d = new $.Deferred
-    $.ajax(
-      type: "GET"
-      url: host + USER
-      contentType: "application/json"
+  $scope.saveOptions = () ->
+    config =
+      method: "GET"
+      url: $scope.option.host + USER
       headers:
-        "X-Redmine-API-Key": apiKey
+        "X-Redmine-API-Key": $scope.option.apiKey
       timeout: AJAX_TIME_OUT
-    ).then( (msg) ->
-        if msg?.user?.id?
-          d.resolve {
-            host: host
-            apiKey: apiKey
-            id: msg.user.id
-          }
+    $http(config)
+      .success(saveSucess)
+      .error(saveFail)
+
+
+  ###
+   sucess to save
+  ###
+  saveSucess = (msg) ->
+    if msg?.user?.id?
+      account =
+        apiKey: $scope.option.apiKey
+        host: $scope.option.host
+        userId: msg.user.id
+      accountService.addAccount account, (result) ->
+        if result
+          $message.toast "Options Saved."
         else
-          d.reject(msg)
-      , (msg) ->
-         d.reject("faild to load user")
-    )
-    return d.promise()
+          saveFail null
+    else
+      saveFail msg
 
 
-$ ->
-  extensionOptions = new ExtensionOptions()
-  extensionOptions.init()
+  ###
+   fail to save
+  ###
+  saveFail = (msg) ->
+    $message.toast "Save Failed. #{msg}"
 
+
+  ###
+   clear all account data.
+  ###
+  $scope.clearOptions = () ->
+    accountService.clearAccount (result) ->
+      if result
+        $message.toast "Options Cleared."
+      else
+        $message.toast "Clear Failed."
+
+
+  ###
+   Initialize
+  ###
+  init()
+
+])

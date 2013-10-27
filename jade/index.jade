@@ -1,5 +1,6 @@
 !!! 5
-html(ng-app='myApp', ng-csp="")
+html(ng-app='timeTracker', ng-csp="")
+
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     title Redmine Time Tracker
@@ -7,48 +8,26 @@ html(ng-app='myApp', ng-csp="")
     link(rel='stylesheet', href='/css/timer.css')
     link(rel='stylesheet', href='/css/font-awesome.css')
 
-  body
 
-    #wrap(ng-controller="TimerCtrl")
+  body(ng-controller='MainCtrl')
 
-      // time track
-      section#timeForm
-        form(action='#', method='POST', name='time_entry')
-          div
-            #select
-              select#issueSelect.form-control.input-sm(name='time_entry[issue_id]', ng-model="selectedTicket", ng-options="ticket.name for ticket in tickets")
-              #issueLoading.progress.progress-striped.active(style='display: none;')
-                .progress-bar.progress-bar-info(style='width:100%')
-            button#submitButton.btn.iconButton(type='button')
-              i#buttonTimer.icon-play-sign
-          #comment
-            textarea.form-control(name='comment', rows='2', placeholder='comments...')
-            span#commentCount.label.label-info 0
-          #message
+    .wrap
 
-      // ticket
-      section#issueForm
-        form.form-inline(action='#', role='form')
-          #issue
-            label.sr-only(for='inputIssueNumber') Search
-            input#inputIssueNumber.form-control.input-sm(type='search', placeholder='# ticket number')
-          button#issueSearchButton.btn.btn-default.btn-sm(type='submit', data-loading-text='Loading') Search
-        form(action='#', role='form')
-          #issueList.result.checkbox
-          button#issueAddButton.btn.iconButton(type='submit')
-            i.icon-plus-sign
+      section(ng-controller='TimerCtrl', ng-include="'timeTrack.html'")
+      section(ng-controller='IssueCtrl', ng-include="'issue.html'")
+      section(ng-controller='OptionCtrl', ng-include="'options.html'")
+      section(ng-include="'about.html'")
 
-      // account
-      section#account
-
-      // log
-      section#Log
+      section(ng-include="'message.html'")
 
     .src
       script(src='/scripts/jquery.js')
       script(src='/scripts/bootstrap.js')
       script(src='/scripts/angular.min.js')
+      script(src='/scripts/angular-resource.min.js')
       script(src='/scripts/ui-bootstrap-0.6.0.min.js')
       script(src='/scripts/main.js')
+      script(src='/scripts/options.js')
       script(src='/scripts/google-analytics-bundle.js')
       script(src='/scripts/analytics.js')
+

@@ -1,3 +1,3 @@
 chrome.app.runtime.onLaunched.addListener () ->
   chrome.app.window.create '/views/index.html',
-    'bounds': { 'width': 280, 'height': 100 }
+    'bounds': { 'width': 280, 'height': 300 }
