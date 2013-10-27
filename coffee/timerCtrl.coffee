@@ -3,7 +3,7 @@ timeTracker.controller('TimerCtrl', ['$scope', '$http', '$account', '$message', 
   ASSIGNED_ISSUES = "/issues.json?status_id=open&assigned_to_id="
   CONTENT_TYPE = "application/json"
   # ONE_MINUTE = 1000 * 60
-  ONE_MINUTE = 1000 * 5
+  ONE_MINUTE = 1000 * 5 # for develop
   COMMENT_MAX = 255
   AJAX_TIME_OUT = 30 * 1000
 
@@ -75,7 +75,7 @@ timeTracker.controller('TimerCtrl', ['$scope', '$http', '$account', '$message', 
       if millisec > ONE_MINUTE
         hours = millisec / 1000 / 60 / 60
         submitTimeEntry(host, apiKey, userId, hours)
-        $message.toast """start #{start.getHours()}:#{start.getMinutes()} end #{end.getHours()}:#{end.getMinutes()}: #{hours}"""
+        $message.toast "Submitting #{$scope.selectedTicket.subject} : #{hours} hr"
       else
         $message.toast 'Too short time entry.'
     else
