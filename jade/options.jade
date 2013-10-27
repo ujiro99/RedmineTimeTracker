@@ -3,27 +3,27 @@ div#options(ng-controller='OptionCtrl')
   // Host
   .settings-section.form-group
     .setting-labels
-      label#labelHost.control-label
+      label.control-label
         | Host
-      span#descHost.setting-description
-        | Host Address of the Redmine server which send the time entry.
+      p
+        span.setting-description
+          | Host Address of the Redmine server which send the time entry.
     .setting-options
       input.form-control.input-sm(type='text', ng-model='option.host', placeholder='ex) http://www.redmine.org/')
 
    // Api key
   .settings-section.form-group
     .setting-labels
-      label#labelApiKey.control-label
+      label.control-label
         | API key
-      span#descApiKey.setting-description
-        | Your API key to access the Redmine server.
+      p
+        span.setting-description
+          | Your API key to access the Redmine server.
     .setting-options
       input.form-control.input-sm(type='text', ng-model='option.apiKey', placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5')
 
    // Save Button
-  div
-    button(ng-click='saveOptions()') Save
+  div.pull-right
+    button.btn.btn-default.btn-xs(ng-click='saveOptions()') Save
+    button.btn.btn-default.btn-xs(ng-click='clearOptions()') Clear
 
-   // Clear Button
-  div
-    button(ng-click='clearOptions()') Clear
