@@ -1,11 +1,6 @@
-timeTracker.controller('OptionCtrl', ['$scope', '$http', '$account', '$message', ($scope, $http, $account, $message) ->
+timeTracker.controller('OptionCtrl', ['$scope', '$redmine', '$account', '$message', ($scope, $redmine, $account, $message) ->
 
-  USER = "/users/current.json?include=memberships"
-  AJAX_TIME_OUT = 30 * 1000
-
-  $scope.status = ""
-  $scope.option = { apiKey:'', host:'' }
-
+  $scope.option = { apiKey:'', url:'' }
 
   ###
    Initialize Option page.
@@ -14,10 +9,10 @@ timeTracker.controller('OptionCtrl', ['$scope', '$http', '$account', '$message',
     # restore accounts
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts[0]? then return
-      host   = accounts[0].host
+      url    = accounts[0].url
       apiKey = accounts[0].apiKey
       $scope.$apply ->
-        $scope.option.host   = host
+        $scope.option.url    = url
         $scope.option.apiKey = apiKey
 
 
@@ -25,15 +20,9 @@ timeTracker.controller('OptionCtrl', ['$scope', '$http', '$account', '$message',
    Load the user ID associated to Api Key.
   ###
   $scope.saveOptions = () ->
-    config =
-      method: "GET"
-      url: $scope.option.host + USER
-      headers:
-        "X-Redmine-API-Key": $scope.option.apiKey
-      timeout: AJAX_TIME_OUT
-    $http(config)
-      .success(saveSucess)
-      .error(saveFail)
+    url = $scope.option.url
+    apiKey = $scope.option.apiKey
+    $redmine(url, apiKey).user.get(saveSucess, saveFail)
 
 
   ###
@@ -43,11 +32,12 @@ timeTracker.controller('OptionCtrl', ['$scope', '$http', '$account', '$message',
     if msg?.user?.id?
       account =
         apiKey: $scope.option.apiKey
-        host: $scope.option.host
+        url:    $scope.option.url
         userId: msg.user.id
       $account.addAccount account, (result) ->
         if result
-          $message.toast "Options Saved."
+          $message.toast "Option Saved."
+          $message.toast "Your user ID is #{msg.user.id}."
         else
           saveFail null
     else

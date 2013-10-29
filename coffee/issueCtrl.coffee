@@ -1,29 +1,26 @@
-timeTracker.controller('IssueCtrl', ['$scope', '$http', '$resource', '$account', "$message", ($scope, $http, $resource, $account, $message ) ->
+timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message", ($scope, $redmine, $account, $message ) ->
 
-  resource = {"resource": "issues.json"}
-  CONTENT_TYPE = "application/json"
-  AJAX_TIME_OUT = 30 * 1000
   $scope.accounts = []
   $scope.projects = []
 
 
   ###
-   load project
+   Initialize
   ###
   init = () ->
+    loadProject()
+
+
+  ###
+   load project
+  ###
+  loadProject = () ->
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
       $scope.accounts = accounts
-      config =
-        method: "GET"
-        url: accounts[0].host + "/projects.json"
-        headers:
-          "X-Redmine-API-Key": accounts[0].apiKey
-          "Content-Type": CONTENT_TYPE
-        timeout: AJAX_TIME_OUT
-      $http(config)
-        .success(loadProjectSuccess)
-        .error(loadProjectError)
+      url = accounts[0].url
+      apiKey = accounts[0].apiKey
+      $redmine(url, apiKey).projects.get(loadProjectSuccess, loadProjectError)
 
 
   ###
@@ -36,6 +33,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$http', '$resource', '$account',
         prj
       $scope.projects = msg.projects
       $scope.selectedProject = msg.projects[0]
+      loadIssues()
     else
       loadProjectError msg
 
@@ -47,23 +45,46 @@ timeTracker.controller('IssueCtrl', ['$scope', '$http', '$resource', '$account',
     $message.toast "Load Project Failed."
 
 
-  ###
-   add selected project
-  ###
-  $scope.onClickIssueAdd = ->
-    Issue = $resource $scope.selectedProject.account.host + "/:resource"
-    , resource
-    , get:
-        method: "GET"
-        headers:
-          "X-Redmine-API-Key": $scope.selectedProject.account.apiKey
-          "Content-Type": CONTENT_TYPE
-    res = Issue.get "project_id": $scope.selectedProject.id, () ->
-      $message.toast res.issues[0].subject
+  loadIssues = ->
+    url = $scope.selectedProject.account.url
+    apiKey = $scope.selectedProject.account.apiKey
+    projectId = $scope.selectedProject.id
+    $redmine(url, apiKey).issues.getOnProject(projectId, loadIssuesSuccess, loadIssuesError)
+
+
+  loadIssuesSuccess = (data) ->
+    url = $scope.selectedProject.account.url
+    sameUrlTickets = (ticket for ticket in $scope.tickets when ticket.url is url)
+    for issue in data.issues
+      for ticket in sameUrlTickets
+        issue.added = issue.added or (issue.id is ticket.id)
+    $scope.issues = data.issues
+
+
+  loadIssuesError = () ->
+    $message.toast 'Failed to load issues'
+
+
+  $scope.onProjectChange = ->
+    loadIssues()
 
 
   ###
-   Initialize
+   add selected issue
+  ###
+  $scope.onClickIssueAdd = (issue) ->
+    $message.toast issue.subject
+
+
+  ###
+   remove selected issue
+  ###
+  $scope.onClickIssueRemove = (issue) ->
+    $message.toast issue.subject
+
+
+  ###
+   execute initialize
   ###
   init()
 

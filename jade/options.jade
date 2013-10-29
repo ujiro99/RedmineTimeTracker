@@ -4,12 +4,12 @@ div#options(ng-controller='OptionCtrl')
   .settings-section.form-group
     .setting-labels
       label.control-label
-        | Host
+        | URL
       p
         span.setting-description
           | Host Address of the Redmine server which send the time entry.
     .setting-options
-      input.form-control.input-sm(type='text', ng-model='option.host', placeholder='ex) http://www.redmine.org/')
+      input.form-control.input-sm(type='text', ng-model='option.url', placeholder='ex) http://www.redmine.org')
 
    // Api key
   .settings-section.form-group
