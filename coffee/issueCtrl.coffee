@@ -82,21 +82,21 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message
 
 
   ###
-   add selected issue
+   add selected issue.
   ###
   $scope.onClickIssueAdd = (issue) ->
     $message.toast issue.subject
 
 
   ###
-   remove selected issue
+   remove selected issue.
   ###
   $scope.onClickIssueRemove = (issue) ->
     $message.toast issue.subject
 
 
   ###
-   execute initialize
+   execute initialize.
   ###
   init()
 
