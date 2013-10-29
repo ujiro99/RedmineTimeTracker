@@ -45,6 +45,9 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message
     $message.toast "Load Project Failed."
 
 
+  ###
+   load issues according selected project.
+  ###
   loadIssues = ->
     url = $scope.selectedProject.account.url
     apiKey = $scope.selectedProject.account.apiKey
@@ -52,6 +55,9 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message
     $redmine(url, apiKey).issues.getOnProject(projectId, loadIssuesSuccess, loadIssuesError)
 
 
+  ###
+   on loading success, update issue list
+  ###
   loadIssuesSuccess = (data) ->
     url = $scope.selectedProject.account.url
     sameUrlTickets = (ticket for ticket in $scope.tickets when ticket.url is url)
@@ -61,10 +67,16 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message
     $scope.issues = data.issues
 
 
+  ###
+   show fail message.
+  ###
   loadIssuesError = () ->
     $message.toast 'Failed to load issues'
 
 
+  ###
+   on project selection change, load issue on the project.
+  ###
   $scope.onProjectChange = ->
     loadIssues()
 
