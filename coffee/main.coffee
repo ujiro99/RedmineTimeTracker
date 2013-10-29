@@ -20,7 +20,22 @@ timeTracker.factory("$message", ['$rootScope', ($rootScope) ->
   }
 ])
 
-timeTracker.controller('MainCtrl', ['$rootScope', '$scope', ($rootScope, $scope) ->
+timeTracker.controller('MainCtrl', ['$rootScope', '$ticket', ($rootScope, $ticket) ->
+
+  TICKET_SYNC = "TICKET_SYNC"
+  MINUTE_5 = 5
+
   $rootScope.message = ""
-  $scope.tickets = {}
+
+  $ticket.load (tickets) ->
+    $ticket.tickets = tickets
+
+  alarmInfo =
+    when: Date.now() + 1
+    periodInMinutes: MINUTE_5
+  chrome.alarms.create(TICKET_SYNC, alarmInfo)
+  chrome.alarms.onAlarm.addListener (alarm) ->
+    if alarm.name is TICKET_SYNC
+      $ticket.sync()
+
 ])

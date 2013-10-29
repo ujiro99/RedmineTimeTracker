@@ -1,8 +1,9 @@
-timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message", ($scope, $redmine, $account, $message ) ->
+timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket', "$message", ($scope, $redmine, $account, $ticket, $message ) ->
+
+  SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   $scope.accounts = []
   $scope.projects = []
-
 
   ###
    Initialize
@@ -60,10 +61,11 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message
   ###
   loadIssuesSuccess = (data) ->
     url = $scope.selectedProject.account.url
-    sameUrlTickets = (ticket for ticket in $scope.tickets when ticket.url is url)
+    sameUrlTickets = (ticket for ticket in $ticket.tickets when ticket.url is url)
     for issue in data.issues
-      for ticket in sameUrlTickets
-        issue.added = issue.added or (issue.id is ticket.id)
+      for ticket in sameUrlTickets when issue.id is ticket.id
+        issue.show = ticket.show isnt SHOW.NOT
+        break
     $scope.issues = data.issues
 
 
@@ -85,14 +87,28 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', "$message
    add selected issue.
   ###
   $scope.onClickIssueAdd = (issue) ->
-    $message.toast issue.subject
+    found = $ticket.tickets.some (ticket) ->
+      if issue.url is ticket.url and issue.id is ticket.id
+        ticket.show = SHOW.SHOW
+        issue.show = true
+        return true
+    if not found then $ticket.tickets.push issue
+    $message.toast "#{issue.subject} added"
 
 
   ###
    remove selected issue.
   ###
   $scope.onClickIssueRemove = (issue) ->
-    $message.toast issue.subject
+    for ticket in $ticket.tickets
+      if issue.url is ticket.url and issue.id is ticket.id
+        ticket.show = SHOW.NOT
+        issue.show = false
+        break
+    for ticket in $ticket.tickets when ticket.show is SHOW.SHOW
+      $scope.selectedTicket = ticket
+      break
+    $message.toast "#{issue.subject} removed"
 
 
   ###

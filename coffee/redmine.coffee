@@ -2,6 +2,7 @@ timeTracker.factory("$redmine", ['$http', ($http) ->
 
   CONTENT_TYPE = "application/json"
   AJAX_TIME_OUT = 30 * 1000
+  SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
   NULLFUNC = () ->
 
   timeEntryData =
@@ -34,7 +35,13 @@ timeTracker.factory("$redmine", ['$http', ($http) ->
           params: params
           timeout: AJAX_TIME_OUT
         $http(config)
-          .success(success or NULLFUNC)
+          .success( (data, status, headers, config) ->
+            if data?.issues?
+              data.issues = for issue in data.issues
+                issue.show = SHOW.DEFAULT
+                issue.url = url
+                issue
+            success?(data, status, headers, config))
           .error(error or NULLFUNC)
 
 

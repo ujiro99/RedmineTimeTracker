@@ -3,26 +3,32 @@ timeTracker.factory("$ticket", () ->
   TICKET = "TICKET"
   PROJECT = "PROJECT"
 
+  TICKET_ID      = 0
+  TICKET_SUBJECT = 1
+  TICKET_PRJ_URL = 2
+  TICKET_PRJ_ID  = 3
+  TICKET_SHOW    = 4
+
   #
   # - in this app,
   #
   #     ticket = {
   #       id: ,
   #       subject: ,
+  #       url: ,
   #       project: ,
-  #         url: ,
   #         id: ,
-  #         name:
+  #         name: ,
+  #       show:
   #     }
   #
   # - in chrome sync,
   #
-  #     ticket = [ id, subject, project_url, project_id ]
+  #     ticket = [ id, subject, project_url, project_id, show ]
   #
 
 
   return {
-
 
     ###
      ticket using this app
@@ -44,29 +50,26 @@ timeTracker.factory("$ticket", () ->
           tmp = []
           for t in tickets[TICKET]
             tmp.push {
-              id:      t[0]
-              subject: t[1]
+              id:      t[TICKET_ID]
+              subject: t[TICKET_SUBJECT]
+              url:   t[TICKET_PRJ_URL]
               project:
-                url:   t[2]
-                id:    t[3]
-                name:  projects[t[2]]?[t[3]]
+                id:    t[TICKET_PRJ_ID]
+                name:  projects[PROJECT][t[TICKET_PRJ_URL]][t[TICKET_PRJ_ID]]
+              show:    t[TICKET_SHOW]
             }
 
-          @tickets = tmp
-          callback? tickets
+          callback? tmp
 
 
     ###
-     set all tickets to chrome sync
+     sync all tickets to chrome sync
     ###
-    submit: (tickets, callback) ->
-      if not tickets? then callback? false; return
-
-      @tickets = tickets
+    sync: (callback) ->
 
       ticketArray = []
-      for t in tickets
-        ticketArray.push [t.id, t.subject, t.url, t.project.id]
+      for t in @tickets
+        ticketArray.push [t.id, t.subject, t.url, t.project.id, t.show]
       chrome.storage.sync.set TICKET: ticketArray, () ->
         if chrome.runtime.lastError?
           callback? false
@@ -74,7 +77,7 @@ timeTracker.factory("$ticket", () ->
           callback? true
 
       projectObj = {}
-      for t in tickets
+      for t in @tickets
         projectObj[t.url] = projectObj[t.url] or {}
         projectObj[t.url][t.project.id] = t.project.name
       chrome.storage.sync.set PROJECT: projectObj

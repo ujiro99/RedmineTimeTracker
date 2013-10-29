@@ -21,7 +21,8 @@
   "permissions": [
     "http://*/*",
     "https://www.google-analytics.com/",
-    "storage"
+    "storage",
+    "alarms"
   ]
 
 }

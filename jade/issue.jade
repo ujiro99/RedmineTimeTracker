@@ -22,8 +22,8 @@ div#issue(ng-controller='IssueCtrl')
         li(ng-repeat='issue in issues')
           span.id {{issue.id}}
           span.subject {{issue.subject}}
-          button.btn(type='button', ng-click='onClickIssueAdd(issue)', ng-hide='issue.added')
+          button.btn(type='button', ng-click='onClickIssueAdd(issue)', ng-hide='issue.show')
             i.icon-plus-sign
-          button.btn(type='button', ng-click='onClickIssueRemove(issue)', ng-show='issue.added')
+          button.btn(type='button', ng-click='onClickIssueRemove(issue)', ng-show='issue.show')
             i.icon-minus-sign
 
