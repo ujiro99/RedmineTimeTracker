@@ -1,4 +1,4 @@
-timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$message', ($scope, $account, $redmine, $message) ->
+timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', ($scope, $account, $redmine, $ticket, $message) ->
 
   # ONE_MINUTE = 1000 * 60
   ONE_MINUTE = 1000 * 5 # for develop
@@ -36,7 +36,8 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$message
       tickets = for issue in data.issues
         issue.url = url
         issue
-      $scope.tickets = tickets
+      $ticket.submit tickets
+      $scope.tickets = $ticket.tickets
       $scope.selectedTicket = $scope.tickets[0]
 
 
