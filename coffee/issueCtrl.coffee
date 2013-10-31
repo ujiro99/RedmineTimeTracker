@@ -60,12 +60,9 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
    on loading success, update issue list
   ###
   loadIssuesSuccess = (data) ->
-    url = $scope.selectedProject.account.url
-    sameUrlTickets = (ticket for ticket in $ticket.tickets when ticket.url is url)
     for issue in data.issues
-      for ticket in sameUrlTickets when issue.id is ticket.id
-        issue.show = ticket.show isnt SHOW.NOT
-        break
+      for t in $ticket.get() when t.url is issue.url and t.id is issue.id
+        issue.show = t.show
     $scope.issues = data.issues
 
 
@@ -87,12 +84,9 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
    add selected issue.
   ###
   $scope.onClickIssueAdd = (issue) ->
-    found = $ticket.tickets.some (ticket) ->
-      if issue.url is ticket.url and issue.id is ticket.id
-        ticket.show = SHOW.SHOW
-        issue.show = true
-        return true
-    if not found then $ticket.tickets.push issue
+    issue.show = SHOW.SHOW
+    $ticket.add issue
+    $ticket.setParam issue.url, issue.id, {show: SHOW.SHOW}
     $message.toast "#{issue.subject} added"
 
 
@@ -100,15 +94,14 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
    remove selected issue.
   ###
   $scope.onClickIssueRemove = (issue) ->
-    for ticket in $ticket.tickets
-      if issue.url is ticket.url and issue.id is ticket.id
-        ticket.show = SHOW.NOT
-        issue.show = false
-        break
-    for ticket in $ticket.tickets when ticket.show is SHOW.SHOW
-      $scope.selectedTicket = ticket
-      break
+    issue.show = SHOW.NOT
+    $ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
+    $scope.selectedTicket = $ticket.getSelectable()[0]
     $message.toast "#{issue.subject} removed"
+
+
+  $scope.isAdded = (issue) ->
+    return issue.show isnt SHOW.NOT
 
 
   ###

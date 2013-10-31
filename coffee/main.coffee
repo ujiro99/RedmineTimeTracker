@@ -20,7 +20,7 @@ timeTracker.factory("$message", ['$rootScope', ($rootScope) ->
   }
 ])
 
-timeTracker.controller('MainCtrl', ['$rootScope', '$ticket', ($rootScope, $ticket) ->
+timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootScope, $scope, $ticket) ->
 
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
@@ -28,7 +28,7 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$ticket', ($rootScope, $ticke
   $rootScope.message = ""
 
   $ticket.load (tickets) ->
-    $ticket.tickets = tickets
+    $ticket.addArray tickets
 
   alarmInfo =
     when: Date.now() + 1

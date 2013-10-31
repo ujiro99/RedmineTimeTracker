@@ -1,12 +1,3 @@
-timeTracker.filter('ticketShow', () ->
-
-  SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
-
-  return (tickets) ->
-    if not tickets? then return []
-    return (ticket for ticket in tickets when ticket.show isnt SHOW.NOT)
-)
-
 timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', ($scope, $account, $redmine, $ticket, $message) ->
 
   # ONE_MINUTE = 1000 * 60
@@ -40,36 +31,9 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
    merge ticket on strage, and update view
   ###
   successGetIssues = (data, status, headers, config) ->
-    if data?.issues?
-      merged = mergeIssues(data.issues, util.getUrl config.url)
-      setSelectOptions(merged)
-
-
-  ###
-   merge issue chrome.storage and redmine.
-  ###
-  mergeIssues = (issues, url) ->
-
-    ticketsOnRedmine = issues
-    ticketsOnStorage = $ticket.tickets
-
-    # merge
-    for x in ticketsOnStorage
-      found = ticketsOnRedmine.some (ele) ->
-        if x.id is ele.id and x.url is ele.url
-          ele.show = x.show
-          return true
-      if not found then ticketsOnRedmine.push x
-
-    return ticketsOnRedmine
-
-
-  ###
-   Set options to the issue select form.
-  ###
-  setSelectOptions = (tickets) ->
-    $ticket.tickets = tickets
-    $scope.tickets = $ticket.tickets
+    if not data?.issues? then return
+    $ticket.addArray data.issues
+    $scope.tickets = $ticket.getSelectable()
     $scope.selectedTicket = $scope.tickets[0]
     $ticket.sync()
 
