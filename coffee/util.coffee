@@ -13,6 +13,14 @@ if not ('isBlank' in String.prototype)
   String.prototype.isBlank = () ->
     return !this? || this.trim?() is ''
 
+###
+ clear array.
+###
+if not ('clear' in Array.prototype)
+  Array.prototype.clear = () ->
+    while (this.length > 0) then this.pop()
+    return
+
 
 @util = {
 
