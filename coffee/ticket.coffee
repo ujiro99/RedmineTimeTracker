@@ -163,7 +163,7 @@ timeTracker.factory("$ticket", () ->
               return
 
             tmp = []
-            for t in tickets[TICKET]
+            for t in tickets[TICKET] when t?
               url = index[INDEX][t[TICKET_URL_INDEX]]
               tmp.push {
                 id:      t[TICKET_ID]
