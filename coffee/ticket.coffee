@@ -97,6 +97,24 @@ timeTracker.factory("$ticket", () ->
 
 
     ###
+     set tickets.
+    ###
+    set: (ticketslist) ->
+      if not ticketslist? then return
+
+      tickets.clear()
+
+      for t in ticketslist
+        tickets.push t
+        if t.show is SHOW.NOT then return
+        selectableTickets.push t
+
+      selectableTickets.sortById()
+      if selectableTickets.length isnt 0
+        selectedTickets[0] = selectableTickets[0]
+
+
+    ###
      add ticket.
      if ticket can be shown, it's added to selectable.
     ###

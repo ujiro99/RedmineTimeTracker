@@ -28,7 +28,7 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootSco
   $rootScope.message = ""
 
   $ticket.load (tickets) ->
-    $ticket.addArray tickets
+    $ticket.set tickets
 
   alarmInfo =
     when: Date.now() + 1
