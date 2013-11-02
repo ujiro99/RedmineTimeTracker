@@ -14,7 +14,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
 
 
   ###
-   load project
+   load project.
   ###
   loadProject = () ->
     $account.getAccounts (accounts) ->
@@ -100,7 +100,10 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
     $message.toast "#{issue.subject} removed"
 
 
-  $scope.isAdded = (issue) ->
+  ###
+   check issue was contained in selectableTickets.
+  ###
+  $scope.isContained = (issue) ->
     selectable = $ticket.getSelectable()
     found = selectable.some (ele) ->
       return issue.id is ele.id and issue.url is ele.url
