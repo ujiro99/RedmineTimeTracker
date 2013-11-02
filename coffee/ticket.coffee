@@ -127,12 +127,15 @@ timeTracker.factory("$ticket", () ->
 
     ###
      set any parameter to ticket.
-     if ticket cannot be shown, it's deleted from selectable.
+     if ticket can be shown, it be added to selectable.
+     if ticket cannot be shown, it be deleted from selectable.
     ###
     setParam: (url, id, param) ->
       if not url? or not url? or not id? then return
       for t in tickets when equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
+        if t.show isnt SHOW.NOT
+          selectableTickets.push t
         break
       for t, i in selectableTickets when equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
