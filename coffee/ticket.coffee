@@ -2,12 +2,13 @@ timeTracker.factory("$ticket", () ->
 
   TICKET = "TICKET"
   PROJECT = "PROJECT"
+  INDEX = "INDEX"
 
-  TICKET_ID      = 0
-  TICKET_SUBJECT = 1
-  TICKET_PRJ_URL = 2
-  TICKET_PRJ_ID  = 3
-  TICKET_SHOW    = 4
+  TICKET_ID        = 0
+  TICKET_SUBJECT   = 1
+  TICKET_URL_INDEX = 2
+  TICKET_PRJ_ID    = 3
+  TICKET_SHOW      = 4
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
@@ -26,7 +27,14 @@ timeTracker.factory("$ticket", () ->
   #
   # - in chrome sync,
   #
-  #     ticket = [ id, subject, project_url, project_id, show ]
+  #     ticket = [ id, subject, project_url_index, project_id, show ]
+  #
+  #     project = {
+  #       url:
+  #         id: name
+  #     }
+  #
+  #     index = [ project_url ]
   #
 
 
@@ -145,19 +153,26 @@ timeTracker.factory("$ticket", () ->
         chrome.storage.sync.get PROJECT, (projects) ->
           if chrome.runtime.lastError? then callback? null; return
 
-          tmp = []
-          for t in tickets[TICKET]
-            tmp.push {
-              id:      t[TICKET_ID]
-              subject: t[TICKET_SUBJECT]
-              url:   t[TICKET_PRJ_URL]
-              project:
-                id:    t[TICKET_PRJ_ID]
-                name:  projects[PROJECT][t[TICKET_PRJ_URL]][t[TICKET_PRJ_ID]]
-              show:    t[TICKET_SHOW]
-            }
+          chrome.storage.sync.get INDEX, (index) ->
+            if chrome.runtime.lastError? then callback? null; return
+            if not (tickets[TICKET]? and index[INDEX]? and projects[PROJECT]?)
+              callback? null
+              return
 
-          callback? tmp
+            tmp = []
+            for t in tickets[TICKET]
+              url = index[INDEX][t[TICKET_URL_INDEX]]
+              tmp.push {
+                id:      t[TICKET_ID]
+                subject: t[TICKET_SUBJECT]
+                url:     url
+                project:
+                  id:    t[TICKET_PRJ_ID]
+                  name:  projects[PROJECT][url][t[TICKET_PRJ_ID]]
+                show:    t[TICKET_SHOW]
+              }
+
+            callback? tmp
 
 
     ###
@@ -165,20 +180,25 @@ timeTracker.factory("$ticket", () ->
     ###
     sync: (callback) ->
 
+      urlIndex = []
+      projectObj = {}
+      for t in tickets
+        projectObj[t.url] = projectObj[t.url] or {}
+        projectObj[t.url][t.project.id] = t.project.name
+      for url, v of projectObj
+        urlIndex.push url
       ticketArray = []
       for t in tickets
-        ticketArray.push [t.id, t.subject, t.url, t.project.id, t.show]
+        for url, i in urlIndex when url is t.url then index = i
+        ticketArray.push [t.id, t.subject, index, t.project.id, t.show]
+
+      chrome.storage.sync.set PROJECT: projectObj
+      chrome.storage.sync.set INDEX: urlIndex
       chrome.storage.sync.set TICKET: ticketArray, () ->
         if chrome.runtime.lastError?
           callback? false
         else
           callback? true
-
-      projectObj = {}
-      for t in tickets
-        projectObj[t.url] = projectObj[t.url] or {}
-        projectObj[t.url][t.project.id] = t.project.name
-      chrome.storage.sync.set PROJECT: projectObj
 
   }
 )
