@@ -7,7 +7,7 @@ div#timer(ng-controller='TimerCtrl')
 
         // ticket
         select.form-control.input-sm(name='time_entry'
-          , ng-model="selectedTicket"
+          , ng-model="selectedTicket[0]"
           , ng-options="'#' + ticket.id + ' ' + ticket.subject group by ticket.project.name for ticket in tickets"
           , ng-hide="isTracking")
 

@@ -42,6 +42,16 @@ timeTracker.factory("$ticket", () ->
   selectableTickets = []
 
 
+  ###
+   ticket that user selected
+  ###
+  selectedTickets = []
+
+
+  ###
+   compare ticket.
+   true: same / false: defferent
+  ###
   equals = (x, y) ->
     return x.url is y.url and x.id is y.id
 
@@ -49,28 +59,53 @@ timeTracker.factory("$ticket", () ->
   return {
 
 
+    ###
+     get all tickets.
+    ###
     get: () ->
       return tickets
 
 
+    ###
+     get selectable tickets.
+    ###
     getSelectable: () ->
       return selectableTickets
 
 
+    ###
+     get selected tickets.
+    ###
+    getSelected: () ->
+      return selectedTickets
+
+
+    ###
+     add ticket.
+     if ticket can be shown, it's added to selectable.
+    ###
     add: (ticket) ->
       if not ticket? then return
       found = tickets.some (ele) -> equals ele, ticket
-      if not found then tickets.push ticket
-      if ticket.show is SHOW.NOT then return
-      found = selectableTickets.some (ele) -> equals ele, ticket
-      if not found then selectableTickets.push ticket
+      if not found
+        tickets.push ticket
+        if ticket.show is SHOW.NOT then return
+        selectableTickets.push ticket
+        if selectedTickets.length is 0
+          selectedTickets.push ticket
 
 
+    ###
+     add ticket array.
+    ###
     addArray: (arr) ->
       if not arr? then return
       for t in arr then @add t
 
 
+    ###
+     remove ticket when exists.
+    ###
     remove: (ticket) ->
       if not ticket? then return
       for t, i in tickets when equals(t, ticket)
@@ -78,9 +113,14 @@ timeTracker.factory("$ticket", () ->
         break
       for t, i in selectableTickets when equals(t, ticket)
         selectableTickets.splice(i, 1)
+        selectedTickets[0] = selectableTickets[0]
         break
 
 
+    ###
+     set any parameter to ticket.
+     if ticket cannot be shown, it's deleted from selectable.
+    ###
     setParam: (url, id, param) ->
       if not url? or not url? or not id? then return
       for t in tickets when equals(t, {url: url, id: id})
@@ -88,7 +128,9 @@ timeTracker.factory("$ticket", () ->
         break
       for t, i in selectableTickets when equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
-        if t.show is SHOW.NOT then selectableTickets.splice(i, 1)
+        if t.show is SHOW.NOT
+          selectableTickets.splice(i, 1)
+          selectedTickets[0] = selectableTickets[0]
         break
 
 

@@ -96,12 +96,14 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   $scope.onClickIssueRemove = (issue) ->
     issue.show = SHOW.NOT
     $ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
-    $scope.selectedTicket = $ticket.getSelectable()[0]
     $message.toast "#{issue.subject} removed"
 
 
   $scope.isAdded = (issue) ->
-    return issue.show isnt SHOW.NOT
+    selectable = $ticket.getSelectable()
+    found = selectable.some (ele) ->
+      return issue.id is ele.id and issue.url is ele.url
+    return found
 
 
   ###

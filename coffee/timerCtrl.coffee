@@ -34,7 +34,7 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
     if not data?.issues? then return
     $ticket.addArray data.issues
     $scope.tickets = $ticket.getSelectable()
-    $scope.selectedTicket = $scope.tickets[0]
+    $scope.selectedTicket = $ticket.getSelected()
     $ticket.sync()
 
 
@@ -49,7 +49,7 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
       if millisec > ONE_MINUTE
         hours = millisec / 1000 / 60 / 60
         $redmine(url, apiKey).issues.submitTime(userId, $scope.comment, hours, submitSuccess, submitError)
-        $message.toast "Submitting #{$scope.selectedTicket.subject}: #{hours} hr"
+        $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
       else
         $message.toast 'Too short time entry.'
     else
