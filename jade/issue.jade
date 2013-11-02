@@ -11,19 +11,19 @@ div#issue(ng-controller='IssueCtrl')
           , ng-options='project as project.name group by project.account.host for project in projects'
           , ng-change='onProjectChange()')
 
-      // number
-      div.form-group.issueNumber
-        label.sr-only(for='inputIssueNumber') Ticket Number
-        input#inputIssueNumber.form-control.input-sm(type='search', placeholder='search')
+      // search
+      div.form-group.search
+        label.sr-only(for='inputIssueNumber') Search
+        input#inputIssueNumber.form-control.input-sm(type='search', placeholder='search', ng-model='searchText')
 
     // issues
     div.issueList
       ul
-        li(ng-repeat='issue in issues')
+        li(ng-repeat='issue in issues | filter:issueFilter')
           span.id {{issue.id}}
           span.subject {{issue.subject}}
-          button.btn(type='button', ng-click='onClickIssueAdd(issue)', ng-hide='isAdded(issue)')
+          button.btn(type='button', ng-click='onClickIssueAdd(issue)', ng-hide='isContained(issue)')
             i.icon-plus-sign
-          button.btn(type='button', ng-click='onClickIssueRemove(issue)', ng-show='isAdded(issue)')
+          button.btn(type='button', ng-click='onClickIssueRemove(issue)', ng-show='isContained(issue)')
             i.icon-minus-sign
 

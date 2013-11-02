@@ -4,6 +4,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
 
   $scope.accounts = []
   $scope.projects = []
+  $scope.searchText = ''
 
   ###
    Initialize
@@ -104,6 +105,15 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
     found = selectable.some (ele) ->
       return issue.id is ele.id and issue.url is ele.url
     return found
+
+
+  ###
+   filter issues by searchText.
+  ###
+  $scope.issueFilter = (item) ->
+    if $scope.searchText.isBlank() then return true
+    return (item.id + "").contains $scope.searchText or
+           item.subject.contains $scope.searchText
 
 
   ###
