@@ -64,6 +64,14 @@ timeTracker.factory("$ticket", () ->
     return x.url is y.url and x.id is y.id
 
 
+  ###
+   sort ticket by id
+  ###
+  selectableTickets.sortById = () ->
+    this.sort (x, y) ->
+      return x.id - y.id
+
+
   return {
 
 
@@ -99,6 +107,7 @@ timeTracker.factory("$ticket", () ->
         tickets.push ticket
         if ticket.show is SHOW.NOT then return
         selectableTickets.push ticket
+        selectableTickets.sortById()
         if selectedTickets.length is 0
           selectedTickets.push ticket
 
@@ -136,6 +145,7 @@ timeTracker.factory("$ticket", () ->
         for k, v of param then t[k] = v
         if t.show isnt SHOW.NOT
           selectableTickets.push t
+          selectableTickets.sortById()
         break
       for t, i in selectableTickets when equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
