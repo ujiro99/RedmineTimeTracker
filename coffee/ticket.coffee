@@ -30,11 +30,11 @@ timeTracker.factory("$ticket", () ->
   #     ticket = [ id, subject, project_url_index, project_id, show ]
   #
   #     project = {
-  #       url:
-  #         id: name
+  #       value of url:
+  #         index: xxx
+  #         value of id: name
   #     }
   #
-  #     index = [ project_url ]
   #
 
 
@@ -184,26 +184,28 @@ timeTracker.factory("$ticket", () ->
         chrome.storage.sync.get PROJECT, (projects) ->
           if chrome.runtime.lastError? then callback? null; return
 
-          chrome.storage.sync.get INDEX, (index) ->
-            if chrome.runtime.lastError? then callback? null; return
-            if not (tickets[TICKET]? and index[INDEX]? and projects[PROJECT]?)
-              callback? null
-              return
+          if not (tickets[TICKET]? and projects[PROJECT]?)
+            callback? null
+            return
 
-            tmp = []
-            for t in tickets[TICKET] when t?
-              url = index[INDEX][t[TICKET_URL_INDEX]]
-              tmp.push {
-                id:      t[TICKET_ID]
-                subject: t[TICKET_SUBJECT]
-                url:     url
-                project:
-                  id:    t[TICKET_PRJ_ID]
-                  name:  projects[PROJECT][url][t[TICKET_PRJ_ID]]
-                show:    t[TICKET_SHOW]
-              }
+          # console.log tickets[TICKET]
+          # console.log projects[PROJECT]
 
-            callback? tmp
+          tmp = []
+          for t in tickets[TICKET]
+            for url, obj of projects[PROJECT] when obj.index is t[TICKET_URL_INDEX]
+              break
+            tmp.push {
+              id:      t[TICKET_ID]
+              subject: t[TICKET_SUBJECT]
+              url:     url
+              project:
+                id:    t[TICKET_PRJ_ID]
+                name:  projects[PROJECT][url][t[TICKET_PRJ_ID]]
+              show:    t[TICKET_SHOW]
+            }
+
+          callback? tmp
 
 
     ###
@@ -211,20 +213,16 @@ timeTracker.factory("$ticket", () ->
     ###
     sync: (callback) ->
 
-      urlIndex = []
+      ticketArray = []
       projectObj = {}
       for t in tickets
         projectObj[t.url] = projectObj[t.url] or {}
         projectObj[t.url][t.project.id] = t.project.name
-      for url, v of projectObj
-        urlIndex.push url
-      ticketArray = []
-      for t in tickets
-        for url, i in urlIndex when url is t.url then index = i
+        index = Object.keys(projectObj).length - 1
+        projectObj[t.url].index = index
         ticketArray.push [t.id, t.subject, index, t.project.id, t.show]
 
       chrome.storage.sync.set PROJECT: projectObj
-      chrome.storage.sync.set INDEX: urlIndex
       chrome.storage.sync.set TICKET: ticketArray, () ->
         if chrome.runtime.lastError?
           callback? false
