@@ -11,6 +11,7 @@ clearfix()
 html, body
   height: 100%
   font-weight: 200
+  color: #333
 
 select.input-sm,
 input.input-sm
@@ -122,8 +123,38 @@ p
     padding-right 5px
 
   .issueList
+    ul
+      margin-top: 10px
+      padding-left: 4px
+      font-size: 12px
+
     li
-      list-style-type none
+      list-style-type: none
+      height: 20px
+      overflow: hidden
+
+      span
+        vertical-align: middle
+        display: inline-block
+
+      span:nth-child(1)
+        width: 26px
+
+      span:nth-child(2)
+        margin-right: -40px
+        padding-right: 45px
+        white-space: nowrap
+        text-overflow: ellipsis
+        overflow: hidden
+        width: 100%
+
+      .btn
+        background-color: transparent
+        border: none
+        padding: 0
+        color: #aaa
+      .btn:hover
+        color: #555
 
 
 #options
