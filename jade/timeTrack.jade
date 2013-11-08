@@ -20,7 +20,7 @@ div#timer(ng-controller='TimerCtrl')
 
       // button
       button.btn.iconButton(type='button', ng-click='clickSubmitButton()')
-        i(ng-class="{'icon-play-sign': !isTracking, 'icon-stop': isTracking}")
+        i.fa(ng-class="{'fa-play': !isTracking, 'fa-stop': isTracking}")
 
     // comment
     div.comment

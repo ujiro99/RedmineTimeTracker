@@ -17,6 +17,14 @@ Height = 28
   width: 100%
   box-shadow: 0 0 0 1px rgba(0,0,0,.1)!important
   border-radius: .3125em!important
+  &:after
+    content: '\f0d7'
+    font-family: 'FontAwesome'
+    font-size: 1.5em
+    opacity: .4
+    position: absolute
+    top: 1px
+    right: 8px
 
 .dropdown-text,
 .dropdown-content a
@@ -90,10 +98,13 @@ Height = 28
 .dropdown-toggle:focus ~ .dropdown-text
   transition: box-shadow .2s ease-out;
   box-shadow: 0 0 0 1px rgba(0,0,0,.2)!important
+  &:after
+    opacity: .7
 
 .dropdown-content:hover,
 .dropdown-toggle:focus ~ .dropdown-content
   opacity: 1
   visibility: visible
-  top: 35px
+  top: 38px
+  z-index: 1
 
