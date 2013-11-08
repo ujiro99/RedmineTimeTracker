@@ -5,11 +5,14 @@ div#timer(ng-controller='TimerCtrl')
     div.select
       div.inputWidhButton
 
-        // ticket
-        select.form-control.input-sm(name='time_entry'
-          , ng-model="selectedTicket[0]"
-          , ng-options="'#' + ticket.id + ' ' + ticket.subject group by ticket.project.name for ticket in tickets"
-          , ng-hide="isTracking")
+        div.dropdown.form-controll
+          span.dropdown-toggle(tabindex="0")
+          div.dropdown-text #{{selectedTicket[0].id}} {{selectedTicket[0].subject}}
+          ul.dropdown-content
+            li(ng-repeat="ticket in tickets", ng-click="selectedTicket[0] = ticket")
+              a
+                span #{{ticket.id}}
+                span {{ticket.subject}}
 
         // progress
         div.progress.progress-striped.active(ng-show="isTracking")
