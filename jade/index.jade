@@ -5,7 +5,7 @@ html(ng-app='timeTracker', ng-csp="")
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     title Redmine Time Tracker
     link(rel='stylesheet', href='/css/bootstrap.css')
-    link(rel='stylesheet', href='/css/timer.css')
+    link(rel='stylesheet', href='/css/main.css')
     link(rel='stylesheet', href='/css/dropdown.css')
     link(rel='stylesheet', href='/css/font-awesome.min.css')
 
@@ -13,8 +13,7 @@ html(ng-app='timeTracker', ng-csp="")
   body(ng-controller='MainCtrl')
 
     .wrap
-
-      section(ng-include="'timeTrack.html'")
+      section(ng-include="'timer.html'")
       section(ng-include="'issue.html'")
       section(ng-include="'options.html'")
       section(ng-include="'about.html'")
