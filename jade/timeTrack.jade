@@ -31,4 +31,4 @@ div#timer(ng-controller='TimerCtrl')
         , placeholder='comments...'
         , ng-change='commentRemain = commentMaxLength - comment.length')
       div
-        span.label(ng-class="{'label-info': commentRemain >= 0, 'label-danger': commentRemain < 0}") {{commentRemain}}
+        span.label.label-danger(ng-show="commentRemain < 0") {{commentRemain}}
