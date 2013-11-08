@@ -2,9 +2,11 @@ div#timer(ng-controller='TimerCtrl')
 
   form(action='#', method='POST', name='time_entry')
 
+    // time track
     div.select
       div.inputWidhButton
 
+        // select ticket
         div.dropdown.form-controll(ng-hide="isTracking")
           span.dropdown-toggle(tabindex="0")
           div.dropdown-text {{selectedTicket[0].id}} {{selectedTicket[0].subject}}
