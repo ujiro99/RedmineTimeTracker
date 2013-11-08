@@ -7,11 +7,11 @@ div#timer(ng-controller='TimerCtrl')
 
         div.dropdown.form-controll
           span.dropdown-toggle(tabindex="0")
-          div.dropdown-text #{{selectedTicket[0].id}} {{selectedTicket[0].subject}}
+          div.dropdown-text {{selectedTicket[0].id}} {{selectedTicket[0].subject}}
           ul.dropdown-content
             li(ng-repeat="ticket in tickets", ng-click="selectedTicket[0] = ticket")
               a
-                span #{{ticket.id}}
+                span {{ticket.id}}
                 span {{ticket.subject}}
 
         // progress

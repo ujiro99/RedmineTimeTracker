@@ -1,8 +1,12 @@
+Height = 28
+
 .dropdown
   position: relative
   display: inline-block
   text-align: left
-  width: 300px
+  width: 100%
+  height: Height px
+  vertical-align: middle
 
 .dropdown-text::-moz-selection,
 .dropdown-toggle::-moz-selection
@@ -18,15 +22,15 @@
   cursor: pointer
   position: absolute
   text-indent: 10px
-  line-height: 38px
-  background-color: #4f4f4b
+  line-height: Height px
+  background-color: #fff
   width: 100%
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1)!important
+  border-radius: .3125em!important
 
 .dropdown-text,
 .dropdown-content a
-  color: #fff
-  text-transform: uppercase
-  letter-spacing: 1px
+  color: #333
 
 .dropdown-toggle
   font-size: 0
@@ -39,7 +43,7 @@
   margin: 0 0 0 1px
   background: transparent
   text-indent: -10px
-  height: 34px
+  height: Height px
   width: 100%
 
   &:focus
@@ -52,10 +56,6 @@
         border-color: transparent transparent #555 transparent
 
 .dropdown-content
-  -webkit-transition: .25s ease
-  -moz-transition: .25s ease
-  -ms-transition: .25s ease
-  -o-transition: .25s ease
   transition: .25s ease
   list-style-type: none
   position: absolute
@@ -65,11 +65,13 @@
   opacity: 0
   visibility: hidden
   text-indent: 10px
-  line-height: 38px
-  background-color: #df826b
-  width: 300px
-
+  line-height: Height - 4px
+  background-color: #fff
+  width: 100%
+  box-shadow: 0 0 0 1px rgba(0,0,0,.2)!important
+  border-radius: .3125em!important
   &:after
+    z-index: 4
     position: absolute
     right: 14px
     top: -9px
@@ -78,30 +80,30 @@
     height: 0px
     border-style: solid
     border-width: 0 8px 9px 8px
-    border-color: transparent transparent #df826b transparent
+    border-color: transparent transparent #bbb transparent
+
   li
-    border-bottom: 4px solid #4f4f4b
     overflow: hidden
-    &:last-child
-      border-bottom: none
   a
     display: block
-    -webkit-transition: .25s ease
-    -moz-transition: .25s ease
-    -ms-transition: .25s ease
-    -o-transition: .25s ease
     transition: .25s ease
     &:hover
-      background: #4f4f4b
+      background: #df826b
       padding-left: 5px
+      text-decoration: none
+      color: snow
+
+    &>span:nth-of-type(1)
+      margin-right: 4px
 
 .dropdown-toggle:hover ~ .dropdown-text,
 .dropdown-toggle:focus ~ .dropdown-text
-  background-color: #4f4f4b
+  transition: box-shadow .2s ease-out;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.2)!important
 
 .dropdown-content:hover,
 .dropdown-toggle:focus ~ .dropdown-content
   opacity: 1
   visibility: visible
-  top: 55px
+  top: 35px
 
