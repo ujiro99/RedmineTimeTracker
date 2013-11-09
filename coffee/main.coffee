@@ -1,6 +1,6 @@
 @timeTracker = angular.module('timeTracker', ['ngResource'])
 
-timeTracker.factory("$message", ['$rootScope', ($rootScope) ->
+timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
   MESSAGE_DURATION = 2000
 
@@ -12,10 +12,8 @@ timeTracker.factory("$message", ['$rootScope', ($rootScope) ->
     toast: (msg, duration) ->
       duration = duration or MESSAGE_DURATION
       $rootScope.message = msg
-      if not $rootScope.$$phase then $rootScope.$apply()
-      setTimeout ->
+      $timeout ->
         $rootScope.message = ""
-        if not $rootScope.$$phase then $rootScope.$apply()
       , duration
   }
 ])
