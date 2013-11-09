@@ -2,7 +2,7 @@
 
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
-  MESSAGE_DURATION = 2000
+  MESSAGE_DURATION = 1000
 
   return {
 
@@ -11,9 +11,9 @@ timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout
     ###
     toast: (msg, duration) ->
       duration = duration or MESSAGE_DURATION
-      $rootScope.message = msg
+      $rootScope.messages.push msg
       $timeout ->
-        $rootScope.message = ""
+        $rootScope.messages.shift()
       , duration
   }
 ])
@@ -23,7 +23,7 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootSco
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
 
-  $rootScope.message = ""
+  $rootScope.messages = []
 
   $ticket.load (tickets) ->
     $ticket.set tickets
