@@ -97,7 +97,12 @@ timeTracker.factory("$redmine", ['$http', ($http) ->
             "Content-Type": CONTENT_TYPE
           timeout: AJAX_TIME_OUT
         $http(config)
-          .success(success or NULLFUNC)
+          .success( (data, status, headers, config) ->
+            if data?.projects?
+              data.projects = for prj in data.projects
+                prj.text = prj.name
+                prj
+            success?(data, status, headers, config))
           .error(error or NULLFUNC)
 
 

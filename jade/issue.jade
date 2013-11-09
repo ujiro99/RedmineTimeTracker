@@ -7,14 +7,7 @@ div#issue(ng-controller='IssueCtrl')
 
       // project
       div.form-group.project
-        div.dropdown.form-controll
-          span.dropdown-toggle(tabindex="0")
-          div.dropdown-text {{selectedProject.name}}
-          ul.dropdown-content
-            li(ng-repeat='project in projects',
-               ng-click='onClickProject(project)')
-              a
-                span {{project.name}}
+        dropdown(items='projects', selected='selectedProject')
 
       // search
       div.form-group.search

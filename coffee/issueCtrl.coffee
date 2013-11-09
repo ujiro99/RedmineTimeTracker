@@ -4,6 +4,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
 
   $scope.accounts = []
   $scope.projects = []
+  $scope.selectedProject = []
   $scope.searchText = ''
 
   ###
@@ -34,7 +35,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
         prj.account = $scope.accounts[0]
         prj
       $scope.projects = msg.projects
-      $scope.selectedProject = msg.projects[0]
+      $scope.selectedProject[0] = msg.projects[0]
     else
       loadProjectError msg
 
@@ -50,10 +51,10 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
    load issues according selected project.
   ###
   loadIssues = ->
-    if not $scope.selectedProject? then return
-    url = $scope.selectedProject.account.url
-    apiKey = $scope.selectedProject.account.apiKey
-    projectId = $scope.selectedProject.id
+    if $scope.selectedProject.length is 0 then return
+    url = $scope.selectedProject[0].account.url
+    apiKey = $scope.selectedProject[0].account.apiKey
+    projectId = $scope.selectedProject[0].id
     $redmine(url, apiKey).issues.getOnProject(projectId, loadIssuesSuccess, loadIssuesError)
 
 
@@ -77,8 +78,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   ###
    on project selection change, load issue on the project.
   ###
-  $scope.onClickProject = (project) ->
-    $scope.selectedProject = project
+  $scope.$watch 'selectedProject[0]', ->
     loadIssues()
 
 
