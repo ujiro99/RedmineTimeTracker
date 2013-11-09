@@ -122,6 +122,7 @@ timeTracker.factory("$ticket", () ->
       if not ticket? then return
       found = tickets.some (ele) -> equals ele, ticket
       if not found
+        ticket.text = ticket.id + " " + ticket.subject
         tickets.push ticket
         if ticket.show is SHOW.NOT then return
         selectableTickets.push ticket
@@ -198,6 +199,7 @@ timeTracker.factory("$ticket", () ->
             tmp.push {
               id:      t[TICKET_ID]
               subject: t[TICKET_SUBJECT]
+              text: t[TICKET_ID] + " " + t[TICKET_SUBJECT]
               url:     url
               project:
                 id:    t[TICKET_PRJ_ID]
