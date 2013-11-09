@@ -1,2 +1,3 @@
-.message
-  span(ng-show='message.length > 0') {{message}}
+.message(ng-class='{ active: message.length > 0 }')
+  i.fa.fa-check(ng-show='message.length > 0')
+  span {{message}}

@@ -74,12 +74,26 @@ p
   bottom: 0
   left: 0
   right: 0
-  background-color: #333
-  opacity: 0.75
+  height: 0px
+  background-color: rgba(255, 255, 255, .8)
+  border-top: 1px solid rgba(255, 255, 255, .9)
+  box-shadow: 0 0 15px -4px rgba(0, 0, 0, .2)
   text-align: center
+  transition: .3s ease
+
+.message.active
+  height: 27px
+
+  i
+    color: #777
+    font-size: 12px
+    margin-right: 8px
+    vertical-align: middle
 
   span
-    color: #eee
+    color: #888
+    line-height: 24px
+
 
 #timer
 
