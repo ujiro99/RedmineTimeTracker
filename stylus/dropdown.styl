@@ -1,18 +1,19 @@
-Height = 28
+height = 28
+key_color = #df826b
 
 .dropdown
   position: relative
   display: inline-block
   text-align: left
   width: 100%
-  height: Height px
+  height: height px
   vertical-align: middle
 
 .dropdown-text
   cursor: pointer
   position: absolute
   text-indent: 10px
-  line-height: Height px
+  line-height: height px
   background-color: #fff
   width: 100%
   box-shadow: 0 0 0 1px rgba(0,0,0,.1)!important
@@ -20,7 +21,7 @@ Height = 28
   &:after
     content: '\f0d7'
     font-family: 'FontAwesome'
-    font-size: 1.5em
+    font-size: 1.3em
     opacity: .4
     position: absolute
     top: 1px
@@ -41,7 +42,7 @@ Height = 28
   margin: 0 0 0 1px
   background: transparent
   text-indent: -10px
-  height: Height px
+  height: height px
   width: 100%
 
   &:focus
@@ -63,9 +64,9 @@ Height = 28
   opacity: 0
   visibility: hidden
   text-indent: 10px
-  line-height: Height - 4px
-  background-color: #fff
+  line-height: height - 4px
   width: 100%
+  background-color: #fff
   box-shadow: 0 0 0 1px rgba(0,0,0,.2)!important
   border-radius: .3125em!important
   &:after
@@ -86,7 +87,7 @@ Height = 28
     display: block
     transition: .25s ease
     &:hover
-      background: #df826b
+      background: key_color
       padding-left: 5px
       text-decoration: none
       color: snow

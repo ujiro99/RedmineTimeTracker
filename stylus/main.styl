@@ -1,3 +1,4 @@
+key_color = #df826b
 
 clearfix()
   &:before,
@@ -34,6 +35,7 @@ p
 .wrap > section
   clearfix()
   padding: 20px 10px 20px 10px
+  background-color: #f6f6f6
 
 .wrap > section:nth-last-of-type(2)
   padding-bottom: 5px
@@ -41,33 +43,6 @@ p
 .wrap > section:nth-last-of-type(1)
   padding: 0
 
-.wrap > section:nth-child(odd)
-  background-color: #fcfcfc
-
-.wrap > section:nth-child(even)
-  background-color: #f0f0f0
-
-.inputWidhButton
-  display inline-block
-  padding-top 0
-  width 100%
-  vertical-align middle
-  margin-right -27px
-  padding-right 27px
-
-.iconButton
-  font-size 24px
-  padding 0px
-  margin-left: 4px
-  background-color transparent
-  border: none
-
-  &:active
-    -webkit-box-shadow 0px 0px
-    box-shadow 0px 0px
-
-  &:focus
-    outline: none
 
 .message
   position: fixed
@@ -101,19 +76,59 @@ p
 
 #timer
 
-  .fa-play
-    color #F56F6B
-    &:hover
-      color #d2322d
+  .inputWidhButton
+    display inline-block
+    padding-top 0
+    width 100%
+    vertical-align middle
+    margin-right -26px
+    padding-right 34px
+    background-color: key_color
+    border-radius: .3125em!important
 
-  .fa-stop
-    color #aaaaaa
-    font-size 25px
+    .dropdown-text
+      box-shadow: none!important
+      background-color: key_color
+      border-right: solid 1px #f0d0d0
+      border-radius: .3125em 0 0 .3125em !important
+      color: #fafafa
+      &:after
+        opacity: .8
+
+    .dropdown-toggle:hover ~ .dropdown-text,
+    .dropdown-toggle:focus ~ .dropdown-text
+      box-shadow: none!important
+      &:after
+        opacity: 1
+
+  .iconButton
+    padding: 0px
+    margin-left: 4px
+    background-color: transparent
+    border: none
+    color: #f0f0f0
+
+    img
+      width: 24px
+      height: 24px
+
     &:hover
-      color #c0c0c0
+      color: #ffffff
+
+    &:active
+      -webkit-box-shadow: 0px 0px
+      box-shadow: 0px 0px
+
+    &:focus
+      outline: none
 
   .progress
     margin-bottom 0px
+    height: 28px
+
+  .progress-bar
+    background-color: key_color
+    box-shadow: none!important
 
   .comment
     textarea
@@ -164,6 +179,7 @@ p
       list-style-type: none
       height: 20px
       overflow: hidden
+      transition: .25s ease
 
       span
         vertical-align: middle
@@ -173,7 +189,7 @@ p
         width: 26px
 
       span:nth-child(2)
-        margin-right: -40px
+        margin-right: -45px
         padding-right: 45px
         white-space: nowrap
         text-overflow: ellipsis
@@ -185,8 +201,13 @@ p
         border: none
         padding: 0
         color: #aaa
-      .btn:hover
-        color: #555
+
+    li:hover
+      text-indent: 3px
+
+      &,
+      .btn
+        color: #df826b
 
 
 #options

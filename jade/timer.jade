@@ -12,7 +12,7 @@ div#timer(ng-controller='TimerCtrl')
 
         // progress
         div.progress.progress-striped.active(ng-show="isTracking")
-          .progress-bar.progress-bar-info(style='width:100%')
+          div.progress-bar(style='width:100%')
 
       // button
       button.btn.iconButton(type='button', ng-click='clickSubmitButton()')

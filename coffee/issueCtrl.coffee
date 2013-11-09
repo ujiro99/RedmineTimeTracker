@@ -83,9 +83,19 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
 
 
   ###
+   on user selected issue.
+  ###
+  $scope.onClickIssue = (issue) ->
+    if $scope.isContained(issue)
+      removeIssue(issue)
+    else
+      addIssue(issue)
+
+
+  ###
    add selected issue.
   ###
-  $scope.onClickIssueAdd = (issue) ->
+  addIssue = (issue) ->
     issue.show = SHOW.SHOW
     $ticket.add issue
     $ticket.setParam issue.url, issue.id, {show: SHOW.SHOW}
@@ -95,7 +105,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   ###
    remove selected issue.
   ###
-  $scope.onClickIssueRemove = (issue) ->
+  removeIssue = (issue) ->
     issue.show = SHOW.NOT
     $ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
     $message.toast "#{issue.subject} removed"

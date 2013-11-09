@@ -21,15 +21,14 @@ div#issue(ng-controller='IssueCtrl')
     // issues
     div.issueList
       ul
-        li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"')
+        li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"',
+           ng-click="onClickIssue(issue)")
           span.id {{issue.id}}
           span.subject {{issue.subject}}
           button.btn(type='button',
-                     ng-click='onClickIssueAdd(issue)',
                      ng-hide='isContained(issue)')
             i.fa.fa-plus
           button.btn(type='button',
-                     ng-click='onClickIssueRemove(issue)',
                      ng-show='isContained(issue)')
             i.fa.fa-minus
 
