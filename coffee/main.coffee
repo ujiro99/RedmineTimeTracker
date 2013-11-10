@@ -1,4 +1,4 @@
-@timeTracker = angular.module('timeTracker', ['ngResource'])
+@timeTracker = angular.module('timeTracker', ['ngResource', 'timer'])
 
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
@@ -31,6 +31,7 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootSco
   alarmInfo =
     when: Date.now() + 1
     periodInMinutes: MINUTE_5
+
   chrome.alarms.create(TICKET_SYNC, alarmInfo)
   chrome.alarms.onAlarm.addListener (alarm) ->
     if alarm.name is TICKET_SYNC

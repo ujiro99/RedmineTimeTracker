@@ -1,4 +1,4 @@
-timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', ($scope, $account, $redmine, $ticket, $message) ->
+timeTracker.controller('TimerCtrl', ['$scope', 'timer', '$account', '$redmine', '$ticket', '$message', ($scope, timer, $account, $redmine, $ticket, $message) ->
 
   # ONE_MINUTE = 1000 * 60
   ONE_MINUTE = 1000 * 5 # for develop
@@ -44,17 +44,22 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
   onClickSubmit = (url, apiKey, userId) ->
     if $scope.isTracking
       $scope.isTracking = false
-      end = new Date()
-      millisec = end.getTime() - start.getTime()
-      if millisec > ONE_MINUTE
-        hours = millisec / 1000 / 60 / 60
-        $redmine(url, apiKey).issues.submitTime(userId, $scope.comment, hours, submitSuccess, submitError)
-        $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
-      else
-        $message.toast 'Too short time entry.'
+      timer.stop()
     else
       $scope.isTracking = true
-      start = new Date()
+      timer.start()
+
+
+  ###
+   on timer stopped, send time entry.
+  ###
+  $scope.$on 'timer-stopped', (e, millisec) ->
+    if millisec > ONE_MINUTE
+      hours = millisec / 1000 / 60 / 60
+      $redmine(url, apiKey).issues.submitTime(userId, $scope.comment, hours, submitSuccess, submitError)
+      $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
+    else
+      $message.toast 'Too short time entry.'
 
 
   ###
