@@ -11,8 +11,8 @@ div#timer(ng-controller='TimerCtrl')
           dropdown(items='tickets', selected='selectedTicket')
 
         // progress
-        div.progress.progress-striped.active(ng-show="isTracking")
-          div.progress-bar(style='width:100%')
+        div.progress(ng-show="isTracking")
+          span {{selectedTicket[0].text}}
 
       // button
       button.btn.iconButton(type='button', ng-click='clickSubmitButton()')

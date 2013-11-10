@@ -84,13 +84,15 @@ p
     margin-right -26px
     padding-right 34px
     background-color: key_color
-    border-radius: .3125em!important
+    border-radius: .3125em !important
+
+    & > div
+      border-right: solid 1px #f0d0d0
+      border-radius: .3125em 0 0 .3125em !important
 
     .dropdown-text
       box-shadow: none!important
       background-color: key_color
-      border-right: solid 1px #f0d0d0
-      border-radius: .3125em 0 0 .3125em !important
       color: #fafafa
       &:after
         opacity: .8
@@ -115,18 +117,12 @@ p
     &:hover
       color: #ffffff
 
-    &:active
-      -webkit-box-shadow: 0px 0px
-      box-shadow: 0px 0px
-
     &:focus
       outline: none
 
   .progress
     margin-bottom 0px
     height: 28px
-
-  .progress-bar
     background-color: key_color
     box-shadow: none!important
 
