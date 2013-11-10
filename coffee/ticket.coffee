@@ -106,7 +106,7 @@ timeTracker.factory("$ticket", () ->
 
       for t in ticketslist
         tickets.push t
-        if t.show is SHOW.NOT then return
+        if t.show is SHOW.NOT then continue
         selectableTickets.push t
 
       selectableTickets.sortById()
