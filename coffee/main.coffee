@@ -2,7 +2,7 @@
 
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
-  MESSAGE_DURATION = 1000
+  MESSAGE_DURATION = 1500
 
   return {
 
