@@ -1,18 +1,15 @@
-timeTracker.controller('TimerCtrl', ['$scope', 'timer', '$account', '$redmine', '$ticket', '$message', ($scope, timer, $account, $redmine, $ticket, $message) ->
+timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', ($scope, $account, $redmine, $ticket, $message) ->
 
-  # ONE_MINUTE = 1000 * 60
-  ONE_MINUTE = 1000 * 5 # for develop
+  # ONE_MINUTE = 1
+  ONE_MINUTE = 0 # for develop
   COMMENT_MAX = 255
-
-  hours = 0
-  start = null
 
   $scope.isTracking = false
   $scope.comment = ""
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
-  $scope.clickSubmitButton = ->
 
+  _redmine = null
 
   ###
    get data from sync Storage, then init.
@@ -23,8 +20,8 @@ timeTracker.controller('TimerCtrl', ['$scope', 'timer', '$account', '$redmine', 
       url    = accounts[0].url
       apiKey = accounts[0].apiKey
       userId = accounts[0].userId
-      $scope.clickSubmitButton = -> onClickSubmit(url, apiKey, userId)
-      $redmine(url, apiKey).issues.getOnUser(userId, successGetIssues)
+      _redmine = $redmine(url, apiKey, userId)
+      _redmine.issues.getOnUser(successGetIssues)
 
 
   ###
@@ -41,22 +38,22 @@ timeTracker.controller('TimerCtrl', ['$scope', 'timer', '$account', '$redmine', 
   ###
    Start or End Time tracking
   ###
-  onClickSubmit = (url, apiKey, userId) ->
+  $scope.clickSubmitButton = () ->
     if $scope.isTracking
       $scope.isTracking = false
-      timer.stop()
+      $scope.$broadcast 'timer-stop'
     else
       $scope.isTracking = true
-      timer.start()
+      $scope.$broadcast 'timer-start'
 
 
   ###
    on timer stopped, send time entry.
   ###
-  $scope.$on 'timer-stopped', (e, millisec) ->
-    if millisec > ONE_MINUTE
-      hours = millisec / 1000 / 60 / 60
-      $redmine(url, apiKey).issues.submitTime(userId, $scope.comment, hours, submitSuccess, submitError)
+  $scope.$on 'timer-stopped', (e, time) ->
+    if _redmine? and time.minutes >= ONE_MINUTE
+      hours = time.minutes / 60
+      _redmine.issues.submitTime($scope.comment, hours, submitSuccess, submitError)
       $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
       $message.toast 'Too short time entry.'
