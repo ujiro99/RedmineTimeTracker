@@ -18,7 +18,7 @@ timeTracker.factory("$redmine", ['$http', ($http) ->
   user = {}
 
 
-  return (url, apiKey) ->
+  return (url, apiKey, userId) ->
 
     issues:
 
@@ -48,7 +48,7 @@ timeTracker.factory("$redmine", ['$http', ($http) ->
       ###
        Load tickets associated to user ID.
       ###
-      getOnUser: (userId, success, error) ->
+      getOnUser: (success, error) ->
         params =
           assigned_to_id: userId
         @get(success, error, params)
@@ -66,7 +66,7 @@ timeTracker.factory("$redmine", ['$http', ($http) ->
       ###
        submit time entry to redmine server.
       ###
-      submitTime: (userId, comment, hours, success, error) ->
+      submitTime: (comment, hours, success, error) ->
         timeEntryData.time_entry.issue_id = userId
         timeEntryData.time_entry.hours = hours
         timeEntryData.time_entry.comments = comment
