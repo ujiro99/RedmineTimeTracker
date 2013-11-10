@@ -162,7 +162,8 @@ timeTracker.factory("$ticket", () ->
       if not url? or not url? or not id? then return
       for t in tickets when equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
-        if t.show isnt SHOW.NOT
+        found = selectableTickets.some (ele) -> equals t, ele
+        if t.show isnt SHOW.NOT and not found
           selectableTickets.push t
           selectableTickets.sortById()
         break
