@@ -1,4 +1,4 @@
-key_color = #df826b
+key_color = #f7505a
 
 clearfix()
   &:before,
@@ -28,17 +28,24 @@ p
   &:focus
     box-shadow: 0 0 0 1px rgba(0,0,0,.2)!important
 
+.line
+  width: 70%
+  height: 1px
+  margin: 10px auto
+  background-color: rgba(247,80,90, 0.4)
+
 .wrap
   height: 100%
   overflow-y: scroll
 
 .wrap > section
   clearfix()
-  padding: 20px 10px 20px 10px
-  background-color: #f6f6f6
+  padding: 25px 10px 25px 10px
 
 .wrap > section:nth-last-of-type(2)
-  padding-bottom: 5px
+  margin: 20px 0 0 0
+  background-color: rgba(247,80,90, 1)
+  padding-bottom: 0
 
 .wrap > section:nth-last-of-type(1)
   padding: 0
@@ -70,8 +77,8 @@ p
     vertical-align: middle
 
   span
-    color: #888
-    line-height: 24px
+    color: #555
+    line-height: 22px
 
 
 #timer
@@ -87,7 +94,7 @@ p
     border-radius: .3125em !important
 
     & > div
-      border-right: solid 1px #f0d0d0
+      border-right: solid 1px #eeeeee
       border-radius: .3125em 0 0 .3125em !important
 
     .dropdown-text
@@ -108,7 +115,7 @@ p
     margin-left: 4px
     background-color: transparent
     border: none
-    color: #f0f0f0
+    color: rgba(255,255,255,.9)
 
     img
       width: 24px
@@ -138,6 +145,8 @@ p
       vertical-align: middle
 
   .comment
+    margin-top: 15px
+
     textarea
       margin 6px 0 0 0px
 
@@ -220,4 +229,18 @@ p
 #options
   button
     margin-right 5px
+
+
+#about
+  margin: 0 10px 0 10px
+  color: #fff
+
+  p.privacy
+    margin-bottom: 25px
+
+  .hooter
+    border-top: solid 1px rgba(255,255,255,.2)
+    
+    p
+      margin: 3px 0 5px 0
 
