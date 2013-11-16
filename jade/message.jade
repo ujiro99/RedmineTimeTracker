@@ -1,5 +1,5 @@
-.message(ng-style='{ height: (messages.length * 24) }', ng-show='messages.length > 0')
+.message(ng-show='messages.length > 0')
   ul
-    li(ng-repeat="msg in messages")
+    li(ng-repeat="msg in messages", ng-style='msg.style')
       i.fa.fa-check
-      span {{msg}}
+      span {{msg.text}}

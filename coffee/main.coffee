@@ -1,20 +1,32 @@
-@timeTracker = angular.module('timeTracker', ['ngResource', 'timer'])
+@timeTracker = angular.module('timeTracker', ['ngResource', 'ui.bootstrap', 'timer'])
 
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
+  MESSAGE_HEIGHT = 24
   MESSAGE_DURATION = 1500
+  ANIMATION_DURATION = 50
 
   return {
 
     ###
      show message page bottom.
     ###
-    toast: (msg, duration) ->
+    toast: (text, duration) ->
       duration = duration or MESSAGE_DURATION
+      msg = {
+        text: text
+        style: 'height': 0
+      }
       $rootScope.messages.push msg
       $timeout ->
-        $rootScope.messages.shift()
+        msg.style.height = MESSAGE_HEIGHT
+      , 10
+      $timeout ->
+        msg.style.height = 0
       , duration
+      $timeout ->
+        $rootScope.messages.shift()
+      , duration + ANIMATION_DURATION
   }
 ])
 

@@ -1,4 +1,7 @@
-key_color = #f7505a
+color_key = #f7505a
+color_key_down = #e55050
+color_tooltip = #f6f6f6
+
 
 clearfix()
   &:before,
@@ -7,6 +10,12 @@ clearfix()
     display: table
   &:after
     clear: both
+
+
+text-ellipsis()
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
 
 
 html, body
@@ -56,50 +65,84 @@ p
   bottom: 0
   left: 0
   right: 0
-  height: 0
-  background-color: rgba(255, 255, 255, .8)
+  background-color: rgba(255, 255, 255, .925)
   border-top: 1px solid rgba(255, 255, 255, .9)
-  box-shadow: 0 0 15px -4px rgba(0, 0, 0, .2)
+  box-shadow: 0 0 5px rgba(0, 0, 0, .1)
   text-align: center
-  transition: .25s ease
 
   ul
     padding-left: 0
     margin-bottom: 0
 
   li
-    border-bottom: solid 1px #ddd
+    transition: .25s ease
+    height: 0
 
   i
-    color: #777
-    font-size: 12px
+    color: color_key_down
+    font-size: 10px
     margin-right: 8px
     vertical-align: middle
 
   span
     color: #555
-    line-height: 22px
+    line-height: 24px
+
+
+.tooltip
+
+  &.in
+    opacity: 1
+
+  &.top .tooltip-arrow
+    border-top-color:    color_tooltip
+
+  &.bottom .tooltip-arrow
+    border-bottom-color: color_tooltip
+
+  &.right .tooltip-arrow
+    border-right-color:  color_tooltip
+
+  &.left .tooltip-arrow
+    border-left-color:   color_tooltip
+
+  .tooltip-inner
+    color: #111
+    text-align: left
+    background-color: color_tooltip
+
+
+.btn-default:focus
+   background-color: transparent
+   outline: none
+
+.btn-default:hover
+   background-color: #ebebeb
 
 
 #timer
 
-  .inputWidhButton
-    display inline-block
-    padding-top 0
-    width 100%
-    vertical-align middle
-    margin-right -26px
-    padding-right 34px
-    background-color: key_color
+  width_button = 34
+  height_select = 28
+
+  .select
+    position: relative
+    height: height_select px
+    background-color: color_key
     border-radius: .3125em !important
 
+  .inputWidhButton
+    display inline-block
+    padding-right width_button px
+    width 100%
+
     & > div
-      border-right: solid 1px #eeeeee
+      border-right: solid 1px #f5f5f5
       border-radius: .3125em 0 0 .3125em !important
 
     .dropdown-text
       box-shadow: none!important
-      background-color: key_color
+      background-color: color_key
       color: #fafafa
       &:after
         opacity: .8
@@ -107,41 +150,50 @@ p
     .dropdown-toggle:hover ~ .dropdown-text,
     .dropdown-toggle:focus ~ .dropdown-text
       box-shadow: none!important
+      background-color: color_key_down
       &:after
         opacity: 1
 
-  .iconButton
+  .btn
     padding: 0px
     margin-left: 4px
     background-color: transparent
     border: none
-    color: rgba(255,255,255,.9)
+    outline: none
+    display: inline-block
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    width: width_button px
+    color: #f0f0f0
+    &:hover
+      background-color: color_key_down
+      color: #ffffff
 
     img
       width: 24px
       height: 24px
 
-    &:hover
-      color: #ffffff
-
-    &:focus
-      outline: none
-
   .progress
     margin-bottom 0px
-    height: 28px
+    height: height_select px
 
   .progress-bar
     width: 100%
-    background-color: key_color
+    background-color: color_key
     box-shadow: none!important
     color: #fafafa
 
     span
-      margin-right: 10px
+      margin-right: -65px
+      padding-right: 67px
+      width: 100%
+      display: inline-block
+      text-ellipsis()
 
     span, timer
-      line-height: 28px
+      line-height: height_select px
       vertical-align: middle
 
   .comment
@@ -195,35 +247,35 @@ p
       list-style-type: none
       height: 20px
       overflow: hidden
-      transition: .25s ease
-
-      span
-        vertical-align: middle
-        display: inline-block
-
-      span:nth-child(1)
-        width: 26px
-
-      span:nth-child(2)
-        margin-right: -45px
-        padding-right: 45px
-        white-space: nowrap
-        text-overflow: ellipsis
-        overflow: hidden
-        width: 100%
 
       .btn
         background-color: transparent
         border: none
         padding: 0
         color: #aaa
+        transition: .25s ease
+
+    li > span
+      vertical-align: middle
+      display: inline-block
+      transition: .25s ease
+
+    li > span:nth-child(1)
+      width: 26px
+
+    li > span:nth-child(2)
+      margin-right: -45px
+      padding-right: 45px
+      width: 100%
+      text-ellipsis()
 
     li:hover
-      text-indent: 3px
+      & > span
+        text-indent: 3px
 
       &,
       .btn
-        color: key_color
+        color: color_key
 
 
 #options
@@ -240,7 +292,7 @@ p
 
   .hooter
     border-top: solid 1px rgba(255,255,255,.2)
-    
+
     p
       margin: 3px 0 5px 0
 

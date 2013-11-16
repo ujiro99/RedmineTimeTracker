@@ -14,10 +14,10 @@ div#timer(ng-controller='TimerCtrl')
         div.progress.progress-striped.active(ng-show="isTracking")
           div.progress-bar(role="progressbar")
             span {{selectedTicket[0].text}}
-            timer(interval="1000") {{hours}}:{{minutes}}:{{seconds}}
+            timer(interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
       // button
-      button.btn.iconButton(type='button', ng-click='clickSubmitButton()')
+      button.btn(type='button', ng-click='clickSubmitButton()')
         i.fa(ng-class="{'fa-play': !isTracking, 'fa-stop': isTracking}")
 
     // comment

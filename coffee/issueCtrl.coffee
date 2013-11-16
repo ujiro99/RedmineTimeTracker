@@ -7,6 +7,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   $scope.selectedProject = []
   $scope.searchText = ''
 
+
   ###
    Initialize
   ###
