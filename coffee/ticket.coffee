@@ -60,7 +60,7 @@ timeTracker.factory("$ticket", () ->
    compare ticket.
    true: same / false: defferent
   ###
-  equals = (x, y) ->
+  _equals = (x, y) ->
     return x.url is y.url and x.id is y.id
 
 
@@ -72,8 +72,107 @@ timeTracker.factory("$ticket", () ->
       return x.id - y.id
 
 
-  return {
+  ###
+   get tickets from local storage.
+  ###
+  _getLocal = (callback) ->
+    _get(chrome.storage.local, callback)
 
+
+  ###
+   get tickets from sync storage.
+  ###
+  _getSync = (callback) ->
+    _get(chrome.storage.sync, callback)
+
+
+  ###
+   get tickets from any area.
+  ###
+  _get = (storage, callback) ->
+    if not storage? then callback? null; return
+
+    storage.get TICKET, (tickets) ->
+      if chrome.runtime.lastError? then callback? null; return
+
+      storage.get PROJECT, (projects) ->
+        if chrome.runtime.lastError? then callback? null; return
+
+        if not (tickets[TICKET]? and projects[PROJECT]?)
+          callback? null
+          return
+
+        tmp = []
+        for t in tickets[TICKET]
+          for url, obj of projects[PROJECT] when obj.index is t[TICKET_URL_INDEX]
+            break
+          tmp.push {
+            id:      t[TICKET_ID]
+            subject: t[TICKET_SUBJECT]
+            text: t[TICKET_ID] + " " + t[TICKET_SUBJECT]
+            url:     url
+            project:
+              id:    t[TICKET_PRJ_ID]
+              name:  projects[PROJECT][url][t[TICKET_PRJ_ID]]
+            show:    t[TICKET_SHOW]
+          }
+
+        callback? tmp
+
+
+  ###
+   save all tickets to local.
+  ###
+  _setLocal = (callback) ->
+    _set chrome.storage.local, callback
+
+
+  ###
+   save all tickets to chrome sync.
+  ###
+  _setSync = (callback) ->
+    _set chrome.storage.sync, callback
+
+
+  ###
+   save all tickets to any area.
+  ###
+  _set = (storage, callback) ->
+    if not storage? then callback? null; return
+    ticketArray = []
+    projectObj = {}
+    for t in tickets
+      projectObj[t.url] = projectObj[t.url] or {}
+      projectObj[t.url][t.project.id] = t.project.name
+      index = Object.keys(projectObj).length - 1
+      projectObj[t.url].index = index
+      ticketArray.push [t.id, t.subject, index, t.project.id, t.show]
+
+    storage.set PROJECT: projectObj
+    storage.set TICKET: ticketArray, () ->
+      if chrome.runtime.lastError?
+        callback? false
+      else
+        callback? true
+
+
+  ###
+   add ticket to all and selectable.
+  ###
+  _add = (ticket) ->
+    if not ticket? then return
+    found = tickets.some (ele) -> _equals ele, ticket
+    if not found
+      ticket.text = ticket.id + " " + ticket.subject
+      tickets.push ticket
+      if ticket.show is SHOW.NOT then return
+      selectableTickets.push ticket
+      selectableTickets.sortById()
+      if selectedTickets.length is 0
+        selectedTickets.push ticket
+
+
+  return {
 
     ###
      get all tickets.
@@ -100,6 +199,9 @@ timeTracker.factory("$ticket", () ->
      set tickets.
     ###
     set: (ticketslist) ->
+
+      console.log 'tikcet set'
+
       if not ticketslist? then return
 
       tickets.clear()
@@ -119,24 +221,20 @@ timeTracker.factory("$ticket", () ->
      if ticket can be shown, it's added to selectable.
     ###
     add: (ticket) ->
-      if not ticket? then return
-      found = tickets.some (ele) -> equals ele, ticket
-      if not found
-        ticket.text = ticket.id + " " + ticket.subject
-        tickets.push ticket
-        if ticket.show is SHOW.NOT then return
-        selectableTickets.push ticket
-        selectableTickets.sortById()
-        if selectedTickets.length is 0
-          selectedTickets.push ticket
+      _add(ticket)
+      _setLocal()
 
 
     ###
      add ticket array.
     ###
     addArray: (arr) ->
+
+      console.log 'tikcet addArray'
+
       if not arr? then return
-      for t in arr then @add t
+      for t in arr then _add t
+      _setLocal()
 
 
     ###
@@ -144,13 +242,14 @@ timeTracker.factory("$ticket", () ->
     ###
     remove: (ticket) ->
       if not ticket? then return
-      for t, i in tickets when equals(t, ticket)
+      for t, i in tickets when _equals(t, ticket)
         tickets.splice(i, 1)
         break
-      for t, i in selectableTickets when equals(t, ticket)
+      for t, i in selectableTickets when _equals(t, ticket)
         selectableTickets.splice(i, 1)
         selectedTickets[0] = selectableTickets[0]
         break
+      _setLocal()
 
 
     ###
@@ -160,77 +259,39 @@ timeTracker.factory("$ticket", () ->
     ###
     setParam: (url, id, param) ->
       if not url? or not url? or not id? then return
-      for t in tickets when equals(t, {url: url, id: id})
+      for t in tickets when _equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
-        found = selectableTickets.some (ele) -> equals t, ele
+        found = selectableTickets.some (ele) -> _equals t, ele
         if t.show isnt SHOW.NOT and not found
           selectableTickets.push t
           selectableTickets.sortById()
         break
-      for t, i in selectableTickets when equals(t, {url: url, id: id})
+      for t, i in selectableTickets when _equals(t, {url: url, id: id})
         for k, v of param then t[k] = v
         if t.show is SHOW.NOT
           selectableTickets.splice(i, 1)
           selectedTickets[0] = selectableTickets[0]
         break
+      _setLocal()
 
 
     ###
-     load all tickets from chrome sync
+     load all tickets from chrome sync.
     ###
     load: (callback) ->
-
-      chrome.storage.sync.get TICKET, (tickets) ->
-        if chrome.runtime.lastError? then callback? null; return
-
-        chrome.storage.sync.get PROJECT, (projects) ->
-          if chrome.runtime.lastError? then callback? null; return
-
-          if not (tickets[TICKET]? and projects[PROJECT]?)
-            callback? null
-            return
-
-          # console.log tickets[TICKET]
-          # console.log projects[PROJECT]
-
-          tmp = []
-          for t in tickets[TICKET]
-            for url, obj of projects[PROJECT] when obj.index is t[TICKET_URL_INDEX]
-              break
-            tmp.push {
-              id:      t[TICKET_ID]
-              subject: t[TICKET_SUBJECT]
-              text: t[TICKET_ID] + " " + t[TICKET_SUBJECT]
-              url:     url
-              project:
-                id:    t[TICKET_PRJ_ID]
-                name:  projects[PROJECT][url][t[TICKET_PRJ_ID]]
-              show:    t[TICKET_SHOW]
-            }
-
-          callback? tmp
+      _getLocal (localTickets) ->
+        if localTickets?.length > 0
+          callback localTickets
+        else
+          _getSync (syncTickets) ->
+            callback syncTickets
 
 
     ###
-     sync all tickets to chrome sync
+     sync all tickets to chrome sync.
     ###
     sync: (callback) ->
-
-      ticketArray = []
-      projectObj = {}
-      for t in tickets
-        projectObj[t.url] = projectObj[t.url] or {}
-        projectObj[t.url][t.project.id] = t.project.name
-        index = Object.keys(projectObj).length - 1
-        projectObj[t.url].index = index
-        ticketArray.push [t.id, t.subject, index, t.project.id, t.show]
-
-      chrome.storage.sync.set PROJECT: projectObj
-      chrome.storage.sync.set TICKET: ticketArray, () ->
-        if chrome.runtime.lastError?
-          callback? false
-        else
-          callback? true
+      _setSync callback
 
   }
 )

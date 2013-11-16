@@ -17,7 +17,9 @@ timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout
         text: text
         style: 'height': 0
       }
+
       $rootScope.messages.push msg
+
       $timeout ->
         msg.style.height = MESSAGE_HEIGHT
       , 10
@@ -39,6 +41,7 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootSco
 
   $ticket.load (tickets) ->
     $ticket.set tickets
+    $scope.$broadcast 'ticketLoaded'
 
   alarmInfo =
     when: Date.now() + 1

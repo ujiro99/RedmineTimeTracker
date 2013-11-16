@@ -77,8 +77,9 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
 
 
   ###
-   Initialize
+   on ticket loaded from crome, start initialize.
   ###
-  init()
+  $scope.$on 'ticketLoaded', () ->
+    init()
 
 ])
