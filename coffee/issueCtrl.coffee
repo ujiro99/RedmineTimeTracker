@@ -127,7 +127,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   $scope.issueFilter = (item) ->
     if $scope.searchText.isBlank() then return true
     return (item.id + "").contains($scope.searchText) or
-           item.subject.contains($scope.searchText)
+           item.subject.toLowerCase().contains($scope.searchText.toLowerCase())
 
 
   ###
