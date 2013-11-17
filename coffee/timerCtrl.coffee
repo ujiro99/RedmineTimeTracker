@@ -11,16 +11,17 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
 
   _redmine = null
 
+
   ###
-   get data from sync Storage, then init.
+   get issues from redmine server.
   ###
-  init = ->
+  getIssues = ->
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
       url    = accounts[0].url
       apiKey = accounts[0].apiKey
       userId = accounts[0].userId
-      _redmine = $redmine(url, apiKey, userId)
+      _redmine = $redmine(accounts[0])
       _redmine.issues.getOnUser(successGetIssues)
 
 
@@ -53,7 +54,7 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
   $scope.$on 'timer-stopped', (e, time) ->
     if _redmine? and time.minutes >= ONE_MINUTE
       hours = time.minutes / 60
-      _redmine.issues.submitTime($scope.comment, hours, submitSuccess, submitError)
+      _redmine.issues.submitTime($scope.selectedTicket[0].id, $scope.comment, hours, submitSuccess, submitError)
       $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
       $message.toast 'Too short time entry.'
@@ -77,9 +78,17 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
 
 
   ###
-   on ticket loaded from crome, start initialize.
+   on ticket loaded from crome storage, start getting issues.
   ###
   $scope.$on 'ticketLoaded', () ->
-    init()
+    getIssues()
 
+
+  ###
+   on account changed, start getting issues.
+  ###
+  $scope.$on 'accountChanged', () ->
+    getIssues()
+  
+  
 ])

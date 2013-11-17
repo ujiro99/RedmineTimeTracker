@@ -9,11 +9,11 @@ timeTracker.factory("$account", () ->
   return {
 
     ###
-     get all account data using chrome sync
+     get all account data using chrome local
     ###
     getAccounts: (callback) ->
       callback = callback or NULLFUNC
-      chrome.storage.sync.get ACCOUNTS, (item) ->
+      chrome.storage.local.get ACCOUNTS, (item) ->
         if chrome.runtime.lastError? or not item[ACCOUNTS]?
           callback null
         else
@@ -21,7 +21,7 @@ timeTracker.factory("$account", () ->
 
 
     ###
-     add a account data using chrome sync
+     add a account data using chrome local
     ###
     addAccount: (account, callback) ->
       if not account? then return
@@ -29,11 +29,12 @@ timeTracker.factory("$account", () ->
       @getAccounts (accounts) ->
         accounts = accounts or []
         newArry = []
+        # merge accounts.
         for a in accounts when a.host isnt account.host
           newArry.push a
         accounts = newArry
         accounts.push account
-        chrome.storage.sync.set ACCOUNTS: accounts, () ->
+        chrome.storage.local.set ACCOUNTS: accounts, () ->
           if chrome.runtime.lastError?
             callback false
           else
@@ -45,7 +46,7 @@ timeTracker.factory("$account", () ->
     ###
     clearAccount: (callback) ->
       callback = callback or NULLFUNC
-      chrome.storage.sync.clear () ->
+      chrome.storage.local.clear () ->
         if chrome.runtime.lastError?
           callback false
         else

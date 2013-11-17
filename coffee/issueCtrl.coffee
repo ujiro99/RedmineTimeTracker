@@ -22,9 +22,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
       $scope.accounts = accounts
-      url = accounts[0].url
-      apiKey = accounts[0].apiKey
-      $redmine(url, apiKey).projects.get(loadProjectSuccess, loadProjectError)
+      $redmine(accounts[0]).projects.get(loadProjectSuccess, loadProjectError)
 
 
   ###
@@ -53,10 +51,9 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   ###
   loadIssues = ->
     if $scope.selectedProject.length is 0 then return
-    url = $scope.selectedProject[0].account.url
-    apiKey = $scope.selectedProject[0].account.apiKey
+    account = $scope.selectedProject[0].account
     projectId = $scope.selectedProject[0].id
-    $redmine(url, apiKey).issues.getOnProject(projectId, loadIssuesSuccess, loadIssuesError)
+    $redmine(account).issues.getOnProject(projectId, loadIssuesSuccess, loadIssuesError)
 
 
   ###

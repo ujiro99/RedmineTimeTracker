@@ -1,29 +1,25 @@
 div#options(ng-controller='OptionCtrl')
 
-  // Host
-  .settings-section.form-group
-    .setting-labels
-      label.control-label
-        | URL
-      p
-        span.setting-description
-          | Host Address of the Redmine server which send the time entry.
-    .setting-options
-      input.form-control.input-sm(type='text', ng-model='option.url', placeholder='ex) http://www.redmine.org')
+  form(name='account')
 
-   // Api key
-  .settings-section.form-group
-    .setting-labels
-      label.control-label
-        | API key
-      p
-        span.setting-description
-          | Your API key to access the Redmine server.
-    .setting-options
-      input.form-control.input-sm(type='text', ng-model='option.apiKey', placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5')
+    // Host
+    div.url.settings-section.form-group
+      .setting-labels
+        label.control-label Server URL
+      .setting-options
+        input.form-control.input-sm(type='text', name='url', ng-model='option.url', ng-class='{invalid:!account.url.$valid}', placeholder='ex) http://www.redmine.org', required)
+        span.label.label-danger(ng-show='account.url.$error.required') required!
 
-   // Save Button
-  div.pull-right
-    button.btn.btn-default.btn-xs(ng-click='saveOptions()') Save
-    button.btn.btn-default.btn-xs(ng-click='clearOptions()') Clear
+    div.btn-group.selectAuth
+      button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
+      button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
+
+    div.auth
+      div(ng-show="authWay=='id_pass'", ng-include="'template/basic_auth.html'")
+      div(ng-show="authWay=='api_key'", ng-include="'template/api_key.html'")
+
+    // Save Button
+    div.pull-right.save
+      button.btn.btn-default.btn-sm(ng-click='saveOptions()') Save
+      button.btn.btn-default.btn-sm(ng-click='clearOptions()') Clear
 

@@ -1,6 +1,7 @@
 color_key = #f7505a
 color_key_down = #e55050
 color_tooltip = #f6f6f6
+height_input = 28
 
 
 clearfix()
@@ -24,28 +25,39 @@ html, body
   font-size: 12px
   color: #333
 
-input.input-sm
-  height 28px
-
-p
-  font-size: 0.9em
-
-.form-control
-  border: none
-  box-shadow: 0 0 0 1px rgba(0,0,0,.1)!important
-  &:hover,
-  &:focus
-    box-shadow: 0 0 0 1px rgba(0,0,0,.2)!important
-
-.line
-  width: 70%
-  height: 1px
-  margin: 10px auto
-  background-color: rgba(247,80,90, 0.4)
 
 .wrap
   height: 100%
   overflow-y: scroll
+
+  input.input-sm
+    height 28px
+
+  .form-control
+    border: none
+    box-shadow: 0 0 0 1px rgba(0,0,0,.1)
+    &:hover,
+    &:focus
+      box-shadow: 0 0 0 1px rgba(0,0,0,.2)
+
+  .line
+    width: 70%
+    height: 1px
+    margin: 10px auto
+    background-color: rgba(247,80,90, 0.4)
+
+  .btn
+    box-shadow: none
+    background-color: transparent
+    outline: none
+    .active
+      box-shadow: none
+
+  .invalid
+  .invalid:hover
+  .invalid:focus
+    border-color: #e9322d
+    box-shadow: 0 0 6px #f8b9b7
 
 .wrap > section
   clearfix()
@@ -58,7 +70,6 @@ p
 
 .wrap > section:nth-last-of-type(1)
   padding: 0
-
 
 .message
   position: fixed
@@ -123,11 +134,10 @@ p
 #timer
 
   width_button = 34
-  height_select = 28
 
   .select
     position: relative
-    height: height_select px
+    height: height_input px
     background-color: color_key
     border-radius: .3125em !important
 
@@ -141,15 +151,15 @@ p
       border-radius: .3125em 0 0 .3125em !important
 
     .dropdown-text
-      box-shadow: none!important
+      box-shadow: none
       background-color: color_key
-      color: #fafafa
+      color: #fff
       &:after
-        opacity: .8
+        opacity: .9
 
     .dropdown-toggle:hover ~ .dropdown-text,
     .dropdown-toggle:focus ~ .dropdown-text
-      box-shadow: none!important
+      box-shadow: none
       background-color: color_key_down
       &:after
         opacity: 1
@@ -157,16 +167,14 @@ p
   .btn
     padding: 0px
     margin-left: 4px
-    background-color: transparent
     border: none
-    outline: none
     display: inline-block
     position: absolute
     top: 0
     right: 0
     bottom: 0
     width: width_button px
-    color: #f0f0f0
+    color: #f5f5f5
     &:hover
       background-color: color_key_down
       color: #ffffff
@@ -177,12 +185,12 @@ p
 
   .progress
     margin-bottom 0px
-    height: height_select px
+    height: height_input px
 
   .progress-bar
     width: 100%
     background-color: color_key
-    box-shadow: none!important
+    box-shadow: none
     color: #fafafa
 
     span
@@ -193,7 +201,7 @@ p
       text-ellipsis()
 
     span, timer
-      line-height: height_select px
+      line-height: height_input px
       vertical-align: middle
 
   .comment
@@ -249,7 +257,6 @@ p
       overflow: hidden
 
       .btn
-        background-color: transparent
         border: none
         padding: 0
         color: #aaa
@@ -279,8 +286,43 @@ p
 
 
 #options
-  button
-    margin-right 5px
+
+  .setting-options
+    height: height_input px
+
+  .url
+    span
+      position: relative
+      left: 100%
+      top: -22px
+      margin-left: -62px
+
+  .selectAuth
+    margin: 20px auto 15px auto
+    height: height_input px
+    display: table
+
+    button
+      border-color: color_key
+      color: color_key
+      padding: 2px 15px
+      &:hover
+        border-color: color_key_down
+        color: color_key_down
+        background-color: #fff
+
+    .active
+      background-color: color_key
+      color: snow
+      &:hover
+        color: snow
+        background-color: color_key_down
+
+  .save
+    button
+      padding: 2px 15px
+      &:first-child
+        margin-right 5px
 
 
 #about
@@ -295,4 +337,5 @@ p
 
     p
       margin: 3px 0 5px 0
+
 
