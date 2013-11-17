@@ -1,7 +1,6 @@
 timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', ($scope, $account, $redmine, $ticket, $message) ->
 
-  # ONE_MINUTE = 1
-  ONE_MINUTE = 0 # for develop
+  ONE_MINUTE = 1
   COMMENT_MAX = 255
 
   $scope.isTracking = false
