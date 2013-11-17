@@ -41,7 +41,7 @@ timeTracker.controller('OptionCtrl', ['$scope', '$redmine', '$account', '$messag
       $account.addAccount account, (result) ->
         if result
           $message.toast "Succeed accessing to the server!"
-          $scope.$broadcast 'accountChanged'
+          $scope.$emit 'notifyAccountChanged'
         else
           saveFail null
     else

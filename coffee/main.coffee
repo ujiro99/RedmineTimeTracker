@@ -40,8 +40,15 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootSco
   $rootScope.messages = []
 
   $ticket.load (tickets) ->
+    if not tickets? or tickets.length is 0
+      return
     $ticket.set tickets
     $scope.$broadcast 'ticketLoaded'
+
+
+  $scope.$on 'notifyAccountChanged', () ->
+    $scope.$broadcast 'accountChanged'
+
 
   alarmInfo =
     when: Date.now() + 1

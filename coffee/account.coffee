@@ -24,7 +24,7 @@ timeTracker.factory("$account", () ->
      add a account data using chrome local
     ###
     addAccount: (account, callback) ->
-      if not account? then return
+      if not account? then callback false; return
       callback = callback or NULLFUNC
       @getAccounts (accounts) ->
         accounts = accounts or []

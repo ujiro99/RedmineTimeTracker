@@ -89,6 +89,6 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
   ###
   $scope.$on 'accountChanged', () ->
     getIssues()
-  
-  
+
+
 ])

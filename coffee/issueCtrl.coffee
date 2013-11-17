@@ -9,9 +9,16 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
 
 
   ###
-   Initialize
+   on ticket loaded, start getting project and issues.
   ###
-  init = () ->
+  $scope.$on 'ticketLoaded', () ->
+    loadProject()
+
+
+  ###
+   on account changed, start getting project and issues.
+  ###
+  $scope.$on 'accountChanged', () ->
     loadProject()
 
 
@@ -126,11 +133,5 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
     if $scope.searchText.isBlank() then return true
     return (item.id + "").contains($scope.searchText) or
            item.subject.toLowerCase().contains($scope.searchText.toLowerCase())
-
-
-  ###
-   execute initialize.
-  ###
-  init()
 
 ])
