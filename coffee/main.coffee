@@ -1,4 +1,4 @@
-@timeTracker = angular.module('timeTracker', ['ngResource', 'ui.bootstrap', 'timer'])
+@timeTracker = angular.module('timeTracker', ['ui.bootstrap', 'timer'])
 
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 

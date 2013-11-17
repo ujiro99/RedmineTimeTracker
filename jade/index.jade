@@ -14,20 +14,15 @@ html(ng-app='timeTracker', ng-csp="")
 
     .wrap
       section(ng-include="'timer.html'")
-      .line
       section(ng-include="'issue.html'")
-      .line
       section(ng-include="'options.html'")
-
       section(ng-include="'about.html'")
-
       section(ng-include="'message.html'")
 
     .src
       script(src='/scripts/jquery.js')
       script(src='/scripts/bootstrap.js')
       script(src='/scripts/angular.min.js')
-      script(src='/scripts/angular-resource.min.js')
       script(src='/scripts/angular-timer.min.js')
       script(src='/scripts/ui-bootstrap-0.6.0.min.js')
       script(src='/scripts/main.js')

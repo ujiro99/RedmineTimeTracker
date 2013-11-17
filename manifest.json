@@ -7,9 +7,8 @@
   "default_locale": "en",
 
   "icons": {
-    "128": "images/toolbar_icons/extension_icon_128.png",
-    "48": "images/toolbar_icons/extension_icon_48.png",
-    "16":"images/toolbar_icons/extension_icon_16.png"
+    "128": "images/icon_128.png",
+    "16":  "images/icon_16.png"
   },
 
   "app": {
@@ -20,7 +19,6 @@
 
   "permissions": [
     "http://*/*",
-    "https://www.google-analytics.com/",
     "storage",
     "alarms"
   ]
