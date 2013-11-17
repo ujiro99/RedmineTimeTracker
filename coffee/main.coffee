@@ -32,18 +32,33 @@ timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout
   }
 ])
 
-timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', ($rootScope, $scope, $ticket) ->
+timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', '$redmine', '$account',  ($rootScope, $scope, $ticket, $redmine, $account) ->
 
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
+  TICKET_CLOSED = 5
+
+  _redmine = {}
 
   $rootScope.messages = []
+
 
   $ticket.load (tickets) ->
     if not tickets? or tickets.length is 0
       return
     $ticket.set tickets
     $scope.$broadcast 'ticketLoaded'
+    _removeClosedIssues()
+
+
+  _removeClosedIssues = () ->
+    $account.getAccounts (accounts) ->
+      if not accounts? or not accounts?[0]? then return
+      _redmine = $redmine(accounts[0])
+      for t in $ticket.get()
+        _redmine.issues.getById t.id, (data, status, headers, config) ->
+          if data.issue?.status.id is TICKET_CLOSED
+            $ticket.remove {id: data.issue.id, url: data.issue.url}
 
 
   $scope.$on 'notifyAccountChanged', () ->

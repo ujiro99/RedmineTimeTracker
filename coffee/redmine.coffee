@@ -88,6 +88,23 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
           .error(error or NULLFUNC)
 
 
+      ###
+       get any ticket using id.
+      ###
+      getById: (issueId, success, error) ->
+        config =
+          method: "GET"
+          url: auth.url + "/issues/#{issueId}.json"
+        config = _setBasicConfig config, auth
+        $http(config)
+          .success( (data, status, headers, config) ->
+            if data?.issue?
+              data.issue.show = SHOW.DEFAULT
+              data.issue.url = auth.url
+            success?(data, status, headers, config))
+          .error(error or NULLFUNC)
+
+
     projects:
 
       ###
