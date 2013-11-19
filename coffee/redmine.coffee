@@ -37,6 +37,7 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
        load issues following selected project
       ###
       get: (success, error, params) ->
+        params.limit = 100
         config =
           method: "GET"
           url: auth.url + "/issues.json"
