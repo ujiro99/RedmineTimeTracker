@@ -18,10 +18,6 @@ module.exports = (grunt) ->
         options:
           livereload: true
 
-      coffee_with_test:
-        files: ["coffee/**/*.coffee", 'test/**/*_test.coffee'],
-        tasks: ["coffee:compile", 'simplemocha']
-
       stylus:
         files: "stylus/**/*.styl",
         tasks: ["stylus"]
@@ -60,23 +56,11 @@ module.exports = (grunt) ->
           ext: '.html'
         ]
 
-    simplemocha:
-      options:
-        globals: ['should']
-        timeout: 3000
-        ignoreLeaks: false
-        ui: 'bdd'
-        reporter: 'spec'
-        compilers: 'coffee:coffee-script'
-      all:
-        src: 'test/**/*.coffee'
-
   # plugins
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
-  grunt.loadNpmTasks 'grunt-simple-mocha'
 
   # tasks
   grunt.registerTask "run", ["connect", "watch:coffee"]
