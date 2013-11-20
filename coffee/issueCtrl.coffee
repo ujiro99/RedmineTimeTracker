@@ -68,7 +68,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   ###
   loadIssuesSuccess = (data) ->
     for issue in data.issues
-      for t in $ticket.get() when t.url is issue.url and t.id is issue.id
+      for t in $ticket.get() when issue.equals t
         issue.show = t.show
     $scope.issues = data.issues
 
@@ -121,8 +121,7 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
   ###
   $scope.isContained = (issue) ->
     selectable = $ticket.getSelectable()
-    found = selectable.some (ele) ->
-      return issue.id is ele.id and issue.url is ele.url
+    found = selectable.some (t) -> issue.equals t
     return found
 
 

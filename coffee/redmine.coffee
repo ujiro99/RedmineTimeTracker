@@ -29,6 +29,10 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
     return config
 
 
+  equals = (y) ->
+    return @url is y.url and @id is y.id
+
+
   return (auth) ->
 
     issues:
@@ -49,6 +53,7 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
               data.issues = for issue in data.issues
                 issue.show = SHOW.DEFAULT
                 issue.url = auth.url
+                issue.equals = equals
                 issue
             success?(data, status, headers, config))
           .error(error or NULLFUNC)
