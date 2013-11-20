@@ -3,9 +3,15 @@
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
   MESSAGE_DURATION = 1500
-  ANIMATION_DURATION = 50
+  ANIMATION_DURATION = 200
   STYLE_HIDDEN = 'height': 0
-  STYLE_VISIBLE = 'height': 30
+
+  _strScale = (str) ->
+    e = $("#ruler")
+    width = e.text(str).get(0).offsetWidth
+    height = e.text(str).get(0).offsetHeight
+    e.empty()
+    return w: width, h: height
 
   return {
 
@@ -21,8 +27,10 @@ timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout
 
       $rootScope.messages.push msg
 
+      scale = _strScale(text)
+      rows = Math.ceil(( scale.w + 40) / $(window).width())
       $timeout ->
-        msg.style = STYLE_VISIBLE
+        msg.style = 'height': 8 + rows * scale.h
       , 10
       $timeout ->
         msg.style = STYLE_HIDDEN

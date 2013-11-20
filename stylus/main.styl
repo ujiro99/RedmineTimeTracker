@@ -92,11 +92,22 @@ message_color = #555
     color: message_color
     transition: height .3s ease
     padding: 0px 10px
-    height: 0
+    position: relative
+
+  .list-item
+    display: table
+    width: 100%
+    position: absolute
+    top: 0
 
   i
     font-size: 10px
     margin-right: 8px
+
+  i,
+  span
+    display: table-cell
+    vertical-align: middle
 
 
 .tooltip
