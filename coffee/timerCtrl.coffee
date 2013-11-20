@@ -53,6 +53,7 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
   $scope.$on 'timer-stopped', (e, time) ->
     if _redmine? and time.minutes >= ONE_MINUTE
       hours = time.minutes / 60
+      hours = Math.floor(hours * 100) / 100
       _redmine.issues.submitTime($scope.selectedTicket[0].id, $scope.comment, hours, submitSuccess, submitError)
       $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
