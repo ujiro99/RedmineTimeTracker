@@ -1,9 +1,9 @@
-timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', ($scope, $account, $redmine, $ticket, $message) ->
+timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', 'state', ($scope, $account, $redmine, $ticket, $message, state) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
 
-  $scope.isTracking = false
+  $scope.state = state
   $scope.comment = ""
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
@@ -39,11 +39,11 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
-    if $scope.isTracking
-      $scope.isTracking = false
+    if state.isTracking
+      state.isTracking = false
       $scope.$broadcast 'timer-stop'
     else
-      $scope.isTracking = true
+      state.isTracking = true
       $scope.$broadcast 'timer-start'
 
 

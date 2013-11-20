@@ -1,4 +1,4 @@
-timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket', "$message", ($scope, $redmine, $account, $ticket, $message ) ->
+timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket', "$message", 'state', ($scope, $redmine, $account, $ticket, $message, state ) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
