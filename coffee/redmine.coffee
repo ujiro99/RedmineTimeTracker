@@ -29,6 +29,33 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
     return config
 
 
+  ###
+   convert json to xml.
+  ###
+  _JSONtoXML = (obj, depth) ->
+    result = ""
+    indent = ""
+    depth = depth || 0
+
+    i = depth
+    while --i > 0 then indent += "  "
+    for key, val of obj
+      name = key
+      if key.match(/^\d+$/) then name = "item"
+      if typeof(val) is "object"
+        result += indent + "<" + name + ">\n"
+        depth++
+        result += _JSONtoXML(val, depth)
+        depth--
+        result += indent + "</" + name + ">\n"
+      else
+        val = '' + val
+        val = val.replace(/&amp;/g, "&").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;")
+        result += indent + "<" + name + ">" + val + "</" + name + ">\n"
+
+    return result
+
+
   equals = (y) ->
     return @url is y.url and @id is y.id
 
@@ -87,8 +114,9 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
         config =
           method: "POST"
           url: auth.url + "/issues/#{timeEntryData.time_entry.issue_id}/time_entries.json"
-          data: JSON.stringify(timeEntryData)
+          data: _JSONtoXML timeEntryData
         config = _setBasicConfig config, auth
+        config.headers = "Content-Type": "application/xml"
         $http(config)
           .success(success or NULLFUNC)
           .error(error or NULLFUNC)
