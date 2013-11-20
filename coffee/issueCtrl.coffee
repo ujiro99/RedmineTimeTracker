@@ -89,9 +89,14 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
 
   ###
    on user selected issue.
+   if ticket is being tracked, it will not be removed.
   ###
   $scope.onClickIssue = (issue) ->
     if $scope.isContained(issue)
+      selected = $ticket.getSelected()[0]
+      if state.isTracking and issue.equals selected
+        $message.toast issue.subject + ' is being tracked now.'
+        return
       removeIssue(issue)
     else
       addIssue(issue)
