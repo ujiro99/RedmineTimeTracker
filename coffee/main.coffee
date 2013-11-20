@@ -2,9 +2,10 @@
 
 timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
 
-  MESSAGE_HEIGHT = 24
   MESSAGE_DURATION = 1500
   ANIMATION_DURATION = 50
+  STYLE_HIDDEN = 'height': 0
+  STYLE_VISIBLE = 'height': 30
 
   return {
 
@@ -15,20 +16,21 @@ timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout
       duration = duration or MESSAGE_DURATION
       msg = {
         text: text
-        style: 'height': 0
+        style: STYLE_HIDDEN
       }
 
       $rootScope.messages.push msg
 
       $timeout ->
-        msg.style.height = MESSAGE_HEIGHT
+        msg.style = STYLE_VISIBLE
       , 10
       $timeout ->
-        msg.style.height = 0
+        msg.style = STYLE_HIDDEN
       , duration
       $timeout ->
         $rootScope.messages.shift()
       , duration + ANIMATION_DURATION
+
   }
 ])
 
