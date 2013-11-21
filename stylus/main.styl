@@ -272,6 +272,22 @@ message_color = #555
         color: #aaa
         transition: .25s ease
 
+        span
+          display: inline-block
+          width: 1em
+          height: 1em
+          line-height: 1
+          position: relative
+          &.minus
+            border-radius: 50%
+            border: solid 1px
+            margin: -5px 0 0 0
+            vertical-align: middle
+            background-image: -webkit-gradient(linear,left center,right center,from(#aaa),to(#aaa));
+            background-size: 70% 1px;
+            background-repeat: no-repeat;
+            background-position: 45% 50%;
+
     li > span
       vertical-align: middle
       display: inline-block
@@ -279,6 +295,7 @@ message_color = #555
 
     li > span:nth-child(1)
       width: 26px
+      color #aaa
 
     li > span:nth-child(2)
       margin-right: -45px
@@ -293,12 +310,29 @@ message_color = #555
       &,
       .btn
         color: color_key
+        .minus
+          background-image: -webkit-gradient(linear, left center, right center, from(color_key), to(color_key));
 
 
 #options
 
+  .form-group
+    overflow: hidden
+
+  label-width = 70
+  
+  .setting-labels
+    width: label-width px
+    display: inline-block
+    label
+      font-weight: normal
+  
   .setting-options
-    height: height_input px
+    height: height_input + 2 px
+    width: 100%
+    padding: 1px label-width + 1px 0 0
+    margin-right: - label-width px
+    display: inline-block
 
   .url
     span
@@ -308,14 +342,14 @@ message_color = #555
       margin-left: -62px
 
   .selectAuth
-    margin: 30px auto 5px auto
-    height: height_input px
+    margin: 15px auto 15px auto
     display: table
 
     button
       border-color: color_key
       color: color_key
-      padding: 2px 15px
+      padding: 1px 15px
+      transition: background-color .2s ease
       &:hover
         border-color: color_key_down
         color: color_key_down

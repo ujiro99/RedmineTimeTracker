@@ -28,8 +28,8 @@ div#issue(ng-controller='IssueCtrl')
                        tooltip-popup-delay='500') {{issue.subject}}
           button.btn(type='button',
                      ng-hide='isContained(issue)')
-            i.fa.fa-plus
+            span(data-icon!='&#xe095;')
           button.btn(type='button',
                      ng-show='isContained(issue)')
-            i.fa.fa-minus
+            span.minus
 
