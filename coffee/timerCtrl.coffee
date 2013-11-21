@@ -17,9 +17,6 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
   getIssues = ->
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
-      url    = accounts[0].url
-      apiKey = accounts[0].apiKey
-      userId = accounts[0].userId
       _redmine = $redmine(accounts[0])
       _redmine.issues.getOnUser(successGetIssues)
 

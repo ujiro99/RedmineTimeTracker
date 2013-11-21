@@ -22,7 +22,6 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
   _setBasicConfig = (config, auth) ->
     config.headers = "Content-Type": CONTENT_TYPE
     config.timeout = AJAX_TIME_OUT
-    auth.decrypt?()
     if auth.apiKey? and auth.apiKey.length > 0
       config.headers["X-Redmine-API-Key"] = auth.apiKey
     else

@@ -5,16 +5,22 @@ timeTracker.factory("$account", () ->
   NULLFUNC = () ->
 
 
+  ###
+   decrypt the account data, only to sync on chrome.
+  ###
   _decrypt = () ->
-    @apiKey = CryptoJS.AES.decrypt(@apiKey, PHRASE)
-    @id     = CryptoJS.AES.decrypt(@id, PHRASE)
-    @pass   = CryptoJS.AES.decrypt(@pass, PHRASE)
+    @apiKey = CryptoJS.AES.decrypt(@apiKey, PHRASE).toString(CryptoJS.enc.Utf8)
+    @id     = CryptoJS.AES.decrypt(@id, PHRASE).toString(CryptoJS.enc.Utf8)
+    @pass   = CryptoJS.AES.decrypt(@pass, PHRASE).toString(CryptoJS.enc.Utf8)
 
 
+  ###
+   encrypt the account data, only to sync on chrome.
+  ###
   _encrypt = () ->
-    @apiKey = CryptoJS.AES.encrypt(@apiKey, PHRASE).ciphertext.words.join('')
-    @id     = CryptoJS.AES.encrypt(@id, PHRASE).ciphertext.words.join('')
-    @pass   = CryptoJS.AES.encrypt(@pass, PHRASE).ciphertext.words.join('')
+    @apiKey = CryptoJS.AES.encrypt(@apiKey, PHRASE)
+    @id     = CryptoJS.AES.encrypt(@id, PHRASE)
+    @pass   = CryptoJS.AES.encrypt(@pass, PHRASE)
 
 
   return {
@@ -24,12 +30,12 @@ timeTracker.factory("$account", () ->
     ###
     getAccounts: (callback) ->
       callback = callback or NULLFUNC
-      chrome.storage.local.get ACCOUNTS, (item) ->
+      chrome.storage.sync.get ACCOUNTS, (item) ->
         if chrome.runtime.lastError? or not item[ACCOUNTS]?
           callback null
         else
           for a in item[ACCOUNTS]
-            a.decrypt = _decrypt
+            _decrypt.apply(a)
           callback item[ACCOUNTS]
 
 
@@ -48,7 +54,7 @@ timeTracker.factory("$account", () ->
         accounts = newArry
         _encrypt.apply(account)
         accounts.push account
-        chrome.storage.local.set ACCOUNTS: accounts, () ->
+        chrome.storage.sync.set ACCOUNTS: accounts, () ->
           if chrome.runtime.lastError?
             callback false
           else
@@ -60,7 +66,7 @@ timeTracker.factory("$account", () ->
     ###
     clearAccount: (callback) ->
       callback = callback or NULLFUNC
-      chrome.storage.local.clear () ->
+      chrome.storage.sync.clear () ->
         if chrome.runtime.lastError?
           callback false
         else

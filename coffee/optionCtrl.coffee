@@ -11,11 +11,10 @@ timeTracker.controller('OptionCtrl', ['$scope', '$redmine', '$account', '$messag
     # restore accounts
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts[0]? then return
-      accounts[0].decrypt()
       $scope.option.url    = accounts[0].url
       $scope.option.apiKey = accounts[0].apiKey
       $scope.option.id     = accounts[0].id
-      $scope.option.pass   = ""
+      $scope.option.pass   = accounts[0].pass
 
 
   ###
