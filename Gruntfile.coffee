@@ -63,5 +63,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-stylus'
 
   # tasks
-  grunt.registerTask "run", ["connect", "watch:coffee"]
-  grunt.registerTask "run_with_test", ["coffee", "connect", "watch:coffee_with_test"]
+  grunt.registerTask "run", ["connect", "watch"]
+  grunt.registerTask "build", ["coffee", "jade", "stylus"]
+
