@@ -1,10 +1,21 @@
 timeTracker.factory("$account", () ->
 
   ACCOUNTS = "ACCOUNTS"
-  HOST     = "HOST"
-  API_KEY  = "API_KEY"
-  USER_ID  = "USER_ID"
+  PHRASE = "hello, redmine time traker."
   NULLFUNC = () ->
+
+
+  _decrypt = () ->
+    @apiKey = CryptoJS.AES.decrypt(@apiKey, PHRASE)
+    @id     = CryptoJS.AES.decrypt(@id, PHRASE)
+    @pass   = CryptoJS.AES.decrypt(@pass, PHRASE)
+
+
+  _encrypt = () ->
+    @apiKey = CryptoJS.AES.encrypt(@apiKey, PHRASE).ciphertext.words.join('')
+    @id     = CryptoJS.AES.encrypt(@id, PHRASE).ciphertext.words.join('')
+    @pass   = CryptoJS.AES.encrypt(@pass, PHRASE).ciphertext.words.join('')
+
 
   return {
 
@@ -17,6 +28,8 @@ timeTracker.factory("$account", () ->
         if chrome.runtime.lastError? or not item[ACCOUNTS]?
           callback null
         else
+          for a in item[ACCOUNTS]
+            a.decrypt = _decrypt
           callback item[ACCOUNTS]
 
 
@@ -33,6 +46,7 @@ timeTracker.factory("$account", () ->
         for a in accounts when a.host isnt account.host
           newArry.push a
         accounts = newArry
+        _encrypt.apply(account)
         accounts.push account
         chrome.storage.local.set ACCOUNTS: accounts, () ->
           if chrome.runtime.lastError?
