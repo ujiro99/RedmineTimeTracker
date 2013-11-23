@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $redmine, $account, $ticket, $message, state) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticket, $message, state) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
@@ -6,6 +6,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $redmine, $account, $ticket, $messa
   $scope.projects = []
   $scope.selectedProject = []
   $scope.searchText = ''
+  $scope.tooltipPlace = 'top'
 
 
   ###
@@ -138,3 +139,12 @@ timeTracker.controller 'IssueCtrl', ($scope, $redmine, $account, $ticket, $messa
     return (item.id + "").contains($scope.searchText) or
            item.subject.toLowerCase().contains($scope.searchText.toLowerCase())
 
+
+  ###
+   calculate tooltip position.
+  ###
+  $scope.onMouseMove = (e) ->
+    if e.clientY > $window.innerHeight / 2
+      $scope.tooltipPlace = 'top'
+    else
+      $scope.tooltipPlace = 'bottom'

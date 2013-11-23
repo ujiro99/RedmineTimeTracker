@@ -22,10 +22,12 @@ div#issue(ng-controller='IssueCtrl')
     div.issueList
       ul
         li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"',
-           ng-click="onClickIssue(issue)")
+           ng-click="onClickIssue(issue)",
+           ng-mousemove='onMouseMove($event)')
           span.id {{issue.id}}
           span.subject(tooltip-html-unsafe="<h6>{{issue.subject}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
-                       tooltip-popup-delay='500') {{issue.subject}}
+                       tooltip-popup-delay='500',
+                       tooltip-placement='{{tooltipPlace}}') {{issue.subject}}
           button.btn(type='button',
                      ng-hide='isContained(issue)')
             span(data-icon!='&#xe095;')
