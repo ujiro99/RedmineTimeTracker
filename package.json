@@ -4,6 +4,8 @@
   "description": "Time Tracking tool for Redmine on GoogleChrome",
   "main": "index.js",
   "devDependencies": {
+    "chai": "~1.8.1",
+    "mocha": "~1.14.0",
     "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-coffee": "~0.7.0",
@@ -15,8 +17,6 @@
     "grunt-contrib-htmlmin": "~0.1.3",
     "grunt-contrib-yuidoc": "~0.5.0",
     "grunt-simple-mocha": "~0.4.0",
-    "chai": "~1.8.1",
-    "mocha": "~1.14.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
