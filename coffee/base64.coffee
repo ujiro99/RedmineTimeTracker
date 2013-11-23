@@ -1,4 +1,4 @@
-timeTracker.factory("Base64", [ () ->
+timeTracker.factory "Base64", () ->
 
   keyStr = "ABCDEFGHIJKLMNOP" +
            "QRSTUVWXYZabcdef" +
@@ -66,5 +66,3 @@ timeTracker.factory("Base64", [ () ->
       enc1 = enc2 = enc3 = enc4 = ""
       break unless i < input.length
     output
-  ]
-)

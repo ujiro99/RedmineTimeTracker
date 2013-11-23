@@ -1,4 +1,4 @@
-timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
+timeTracker.factory "$redmine", ($http, Base64) ->
 
   CONTENT_TYPE = "application/json"
   AJAX_TIME_OUT = 30 * 1000
@@ -172,6 +172,4 @@ timeTracker.factory("$redmine", ['$http', 'Base64', ($http, Base64) ->
         $http(config)
           .success(success or NULLFUNC)
           .error(error or NULLFUNC)
-
-])
 

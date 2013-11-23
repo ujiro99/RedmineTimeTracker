@@ -1,4 +1,4 @@
-timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket', "$message", 'state', ($scope, $redmine, $account, $ticket, $message, state ) ->
+timeTracker.controller 'IssueCtrl', ($scope, $redmine, $account, $ticket, $message, state) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
@@ -138,4 +138,3 @@ timeTracker.controller('IssueCtrl', ['$scope', '$redmine', '$account', '$ticket'
     return (item.id + "").contains($scope.searchText) or
            item.subject.toLowerCase().contains($scope.searchText.toLowerCase())
 
-])

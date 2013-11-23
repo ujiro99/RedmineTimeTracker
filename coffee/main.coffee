@@ -1,6 +1,6 @@
-@timeTracker = angular.module('timeTracker', ['ui.bootstrap', 'timer'])
+timeTracker = angular.module('timeTracker', ['ui.bootstrap', 'timer'])
 
-timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout) ->
+timeTracker.factory "$message", ($rootScope, $timeout) ->
 
   MESSAGE_DURATION = 1500
   ANIMATION_DURATION = 1000
@@ -42,9 +42,8 @@ timeTracker.factory("$message", ['$rootScope', '$timeout', ($rootScope, $timeout
       , duration + ANIMATION_DURATION
 
   }
-])
 
-timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', '$redmine', '$account',  ($rootScope, $scope, $ticket, $redmine, $account) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $account) ->
 
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
@@ -86,4 +85,3 @@ timeTracker.controller('MainCtrl', ['$rootScope', '$scope', '$ticket', '$redmine
     if alarm.name is TICKET_SYNC
       $ticket.sync()
 
-])

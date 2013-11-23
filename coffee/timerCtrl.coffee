@@ -1,4 +1,4 @@
-timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket', '$message', 'state', ($scope, $account, $redmine, $ticket, $message, state) ->
+timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $message, state) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
@@ -87,5 +87,3 @@ timeTracker.controller('TimerCtrl', ['$scope', '$account', '$redmine', '$ticket'
   $scope.$on 'accountChanged', () ->
     getIssues()
 
-
-])

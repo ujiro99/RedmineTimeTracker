@@ -1,4 +1,4 @@
-timeTracker.controller('OptionCtrl', ['$scope', '$redmine', '$account', '$message', ($scope, $redmine, $account, $message) ->
+timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
 
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = 'id_pass'
@@ -71,4 +71,3 @@ timeTracker.controller('OptionCtrl', ['$scope', '$redmine', '$account', '$messag
   ###
   init()
 
-])

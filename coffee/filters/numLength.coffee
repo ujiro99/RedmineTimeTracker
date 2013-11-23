@@ -1,4 +1,4 @@
-timeTracker.filter('numLength', () ->
+timeTracker.filter 'numLength', () ->
 
   return (n, len) ->
     num = parseInt(n, 10)
@@ -8,4 +8,3 @@ timeTracker.filter('numLength', () ->
     num = '0' + num while num.length < len
     return num
 
-)

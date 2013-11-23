@@ -14,7 +14,7 @@ module.exports = (grunt) ->
     watch:
       coffee:
         files: "coffee/**/*.coffee",
-        tasks: ["coffee"]
+        tasks: ["coffee:develop"]
         options:
           livereload: true
 
@@ -24,10 +24,20 @@ module.exports = (grunt) ->
 
       jade:
         files: "jade/**/*.jade",
-        tasks: ["jade"]
+        tasks: ["jade:develop"]
 
     coffee:
-      compile:
+      production:
+        options:
+          bare: true
+          join: true
+        files: [
+          'scripts/script.js': ['coffee/main.coffee', 'coffee/**/*.coffee']
+        ]
+      develop:
+        options:
+          sourceMap: true
+          bare: true
         files: [
           expand: true
           cwd: 'coffee/'
@@ -47,7 +57,21 @@ module.exports = (grunt) ->
         ]
 
     jade:
-      compile:
+      production:
+        options:
+          data: (dest, src) ->
+            return { production: true }
+        files: [
+          expand: true
+          cwd: 'jade/'
+          src: ['**/*.jade']
+          dest: 'views/'
+          ext: '.html'
+        ]
+      develop:
+        options:
+          data: (dest, src) ->
+            return { production: false }
         files: [
           expand: true
           cwd: 'jade/'
@@ -56,13 +80,31 @@ module.exports = (grunt) ->
           ext: '.html'
         ]
 
+    ngmin:
+      production:
+        src: 'scripts/script.js'
+        dest: 'scripts/script.js'
+
+    uglify:
+      production:
+        options:
+          sourceMap: (fileName) ->
+            fileName.replace /\.js$/, '.js.map'
+        src: 'scripts/script.js'
+        dest: 'scripts/script.min.js'
+
+
   # plugins
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
+  grunt.loadNpmTasks 'grunt-contrib-uglify'
+  grunt.loadNpmTasks 'grunt-ngmin'
+
 
   # tasks
   grunt.registerTask "run", ["connect", "watch"]
-  grunt.registerTask "build", ["coffee", "jade", "stylus"]
+  grunt.registerTask "minify", ["ngmin", "uglify"]
+  grunt.registerTask "production", ["coffee:production", "jade:production", "stylus", "minify"]
 
