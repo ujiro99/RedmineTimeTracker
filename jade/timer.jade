@@ -8,7 +8,7 @@ div#timer(ng-controller='TimerCtrl')
 
         // select ticket
         div(ng-hide='state.isTracking')
-          dropdown(items='tickets', selected='selectedTicket')
+          uz-dropdown(items='tickets', selected='selectedTicket')
 
         // progress
         div.progress.progress-striped.active(ng-show="state.isTracking")

@@ -1,4 +1,4 @@
-timeTracker.directive 'dropdown', () ->
+timeTracker.directive 'uzDropdown', () ->
   return {
     restrict: 'E'
     template: "<div class='dropdown'>" +
