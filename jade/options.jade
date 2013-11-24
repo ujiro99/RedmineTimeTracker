@@ -20,6 +20,8 @@ div#options(ng-controller='OptionCtrl')
 
     // Save Button
     div.pull-right.save
-      button.btn.btn-default.btn-sm(ng-click='saveOptions()') Save
+      button.btn.btn-default.btn-sm(ng-click='saveOptions()',
+                                    btn-loading='isSaving',
+                                    data-loading-text='...') Save
       button.btn.btn-default.btn-sm(ng-click='clearOptions()') Clear
 

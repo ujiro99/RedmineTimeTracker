@@ -2,6 +2,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
 
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = 'id_pass'
+  $scope.isSaving = false
 
 
   ###
@@ -21,6 +22,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
    Load the user ID associated to Api Key.
   ###
   $scope.saveOptions = () ->
+    $scope.isSaving = true
     if not $scope.option.url? or $scope.option.url.length is 0
       $message.toast "Please input Redmine Server URL."
       return
@@ -31,6 +33,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
    sucess to save
   ###
   saveSucess = (msg) ->
+    $scope.isSaving = false
     if msg?.user?.id?
       account =
         url:    $scope.option.url
@@ -52,6 +55,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
    fail to save
   ###
   saveFail = (msg) ->
+    $scope.isSaving = false
     $message.toast "Save Failed. #{msg}"
 
 
