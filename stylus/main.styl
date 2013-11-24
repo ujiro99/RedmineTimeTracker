@@ -52,6 +52,9 @@ html, body
     outline: none
     .active
       box-shadow: none
+    &.loading
+      background-color: #ebebeb
+      border-color: #adadad
 
   .invalid
   .invalid:hover
@@ -320,13 +323,13 @@ message_color = #555
     overflow: hidden
 
   label-width = 70
-  
+
   .setting-labels
     width: label-width px
     display: inline-block
     label
       font-weight: normal
-  
+
   .setting-options
     height: height_input + 2 px
     width: 100%

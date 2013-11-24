@@ -9,7 +9,7 @@ html(ng-app='timeTracker', ng-csp="")
     link(rel='stylesheet', href='/css/dropdown.css')
     link(rel='stylesheet', href='/css/font-awesome.min.css')
     link(rel='stylesheet', href='/css/Simple-Line-Icons.css')
-
+    link(rel='stylesheet', href='/css/ladda-themeless.min.css')
 
   body(ng-controller='MainCtrl')
 
@@ -27,6 +27,9 @@ html(ng-app='timeTracker', ng-csp="")
       script(src='/scripts/angular-timer.min.js')
       script(src='/scripts/ui-bootstrap-0.6.0.min.js')
       script(src='/scripts/aes.js')
+      script(src='/scripts/spin.min.js')
+      script(src='/scripts/ladda.min.js')
+
       if production
         script(src='/scripts/script.min.js')
       else
@@ -43,6 +46,7 @@ html(ng-app='timeTracker', ng-csp="")
         script(src='/scripts/controllers/optionCtrl.js')
         script(src='/scripts/directives/uzDropdown.js')
         script(src='/scripts/directives/btnLoading.js')
+
       script(src='/scripts/google-analytics-bundle.js')
       script(src='/scripts/analytics.js')
 

@@ -20,8 +20,11 @@ div#options(ng-controller='OptionCtrl')
 
     // Save Button
     div.pull-right.save
-      button.btn.btn-default.btn-sm(ng-click='saveOptions()',
-                                    btn-loading='isSaving',
-                                    data-loading-text='...') Save
+      button.btn.btn-default.btn-sm.ladda-button(
+        ng-click='saveOptions()',
+        uz-loading='isSaving',
+        data-style='zoom-in',
+        data-size='xs',
+        data-spinner-color="#555") Save
       button.btn.btn-default.btn-sm(ng-click='clearOptions()') Clear
 
