@@ -19,10 +19,17 @@ text-ellipsis()
   overflow: hidden
 
 
+align-center()
+  display: -webkit-box
+  -webkit-box-orient: horizontal
+  -webkit-box-pack: center
+  -webkit-box-align: center
+
+
 html, body
   height: 100%
   font-weight: 400
-  font-size: 12px
+  font-size: 0.88em
   color: #333
   font-family: mplus-2c-regular
 
@@ -63,9 +70,32 @@ html, body
     border-color: #e9322d
     box-shadow: 0 0 6px #f8b9b7
 
+  header
+    height: 4em
+    .caption
+      align-center()
+      height 100%
+    .title
+      font-size: 1.05em
+      color: color_key
+    .icon
+      color: #fff
+      display: table
+      background-color: color_key
+      font-size: 1.3em
+      height: 1.4em
+      width: 1.4em
+      -webkit-transform: rotate(45deg)
+      span
+        display: table-cell
+        text-align: center
+        vertical-align: middle
+        -webkit-transform: rotate(-45deg)
+
+
 .wrap > section
   clearfix()
-  padding: 25px 10px 25px 10px
+  padding: 0px 10px 25px 10px
 
 .wrap > section:nth-last-of-type(2)
   margin: 20px 0 0 0
@@ -105,7 +135,7 @@ message_color = #555
     transition: height .3s ease, opacity .25s ease
 
   i
-    font-size: 10px
+    font-size: 0.9em
     padding-right: 8px
 
   i,
