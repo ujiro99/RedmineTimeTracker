@@ -30,8 +30,8 @@ div#issue(ng-controller='IssueCtrl')
                        tooltip-placement='{{tooltipPlace}}') {{issue.subject}}
           button.btn(type='button',
                      ng-hide='isContained(issue)')
-            span(data-icon!='&#xe095;')
+            span.icon-plus
           button.btn(type='button',
                      ng-show='isContained(issue)')
-            span.minus
+            span.icon-minus
 
