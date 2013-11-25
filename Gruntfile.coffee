@@ -99,9 +99,6 @@ module.exports = (grunt) ->
 
     uglify:
       production:
-        options:
-          sourceMap: (fileName) ->
-            fileName.replace /\.js$/, '.js.map'
         src: 'scripts/script.js'
         dest: 'scripts/script.min.js'
 
