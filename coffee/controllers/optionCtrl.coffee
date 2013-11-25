@@ -26,6 +26,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
     if not $scope.option.url? or $scope.option.url.length is 0
       $message.toast "Please input Redmine Server URL."
       return
+    $scope.option.url = util.getUrl $scope.option.url
     $redmine($scope.option).user.get(saveSucess, saveFail)
 
 
