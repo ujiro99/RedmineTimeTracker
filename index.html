@@ -1,42 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Redminetimetracker by ujiro99</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Redminetimetracker by ujiro99</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Redminetimetracker</h1>
-        <p>Chrome app for tracking work time.</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/ujiro99/RedmineTimeTracker">View the Project on GitHub <small>ujiro99/RedmineTimeTracker</small></a></p>
+        <header>
+          <h1>Redminetimetracker</h1>
+          <h2>Chrome app for tracking work time.</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/ujiro99/RedmineTimeTracker/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/ujiro99/RedmineTimeTracker/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/ujiro99/RedmineTimeTracker" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/ujiro99/RedmineTimeTracker/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/ujiro99/RedmineTimeTracker/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/ujiro99/RedmineTimeTracker">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a name="redminetimetracker" class="anchor" href="#redminetimetracker"><span class="octicon octicon-link"></span></a>RedmineTimeTracker</h3>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/ujiro99">ujiro99</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="time-tracking-tool-for-redmine" class="anchor" href="#time-tracking-tool-for-redmine"><span class="octicon octicon-link"></span></a>Time Tracking tool for Redmine.</h1>
+
+<p>Redmineの作業時間を記録するためのツールです.
+チケット毎の工数管理や生産性の把握に使用することができます.</p>
+
+<p><a href="https://chrome.google.com/webstore/detail/redmine-time-tracker/dmmneannhefdfnmkfheapickfaialefp">Chrome Web Store</a></p>
+
+<h2>
+<a name="%E4%BD%BF%E3%81%84%E6%96%B9" class="anchor" href="#%E4%BD%BF%E3%81%84%E6%96%B9"><span class="octicon octicon-link"></span></a>使い方</h2>
+
+<h3>
+<a name="0-redmine%E3%81%AErest-api%E3%81%AE%E6%9C%89%E5%8A%B9%E5%8C%96" class="anchor" href="#0-redmine%E3%81%AErest-api%E3%81%AE%E6%9C%89%E5%8A%B9%E5%8C%96"><span class="octicon octicon-link"></span></a>0. RedmineのREST APIの有効化</h3>
+
+<p>本ツールはRedmineのREST APIを使用します.
+REST APIが有効になっていない場合, 以下のページを参考にREST APIを有効にしてください.
+既に有効になっている場合, 本手順は不要です.</p>
+
+<pre><code>Redmine REST API
+http://www.r-labs.org/projects/r-labs/wiki/Redmine_REST_API#ユーザー認証
+</code></pre>
+
+<p>REST APIの有効化にはRedmineのシステム管理者権限が必要です.
+システム管理者権限をお持ちでない場合は, システム管理者にREST APIの有効化を依頼してください.</p>
+
+<h3>
+<a name="1-redmine%E3%81%AE%E7%99%BB%E9%8C%B2" class="anchor" href="#1-redmine%E3%81%AE%E7%99%BB%E9%8C%B2"><span class="octicon octicon-link"></span></a>1. Redmineの登録</h3>
+
+<p>RedmineのURLと認証情報を登録します.
+認証情報には (1)UserIDとパスワード, 又は (2) ApiKey が使用できます.
+使用する認証情報に従って(1)又は(2)のいづれかを行ってください.</p>
+
+<p>(1) UserIDとパスワード
+Redmineのログインに使用するUserIDとパスワードを登録します.
+画面をスクロールし, 'Settings' を表示します。
+URLとUserID, パスワードを入力してください.</p>
+
+<p>(2) ApiKey
+Redmineのログインに使用するApiKeyを登録します.
+画面をスクロールし, 'Settings' を表示します.
+URLとApiKeyを入力してください.
+なお、ApiKeyは'個人設定'ページの右側に表示されます.</p>
+
+<p>これらの認証情報は暗号化された上でGoogle Chrome上で同期されます.
+そのため, 一度登録するとログインしている全てのGoogle Chrome上で
+本ツールの情報が同期されます.</p>
+
+<h3>
+<a name="2-%E3%83%81%E3%82%B1%E3%83%83%E3%83%88%E3%81%AE%E9%81%B8%E6%8A%9E" class="anchor" href="#2-%E3%83%81%E3%82%B1%E3%83%83%E3%83%88%E3%81%AE%E9%81%B8%E6%8A%9E"><span class="octicon octicon-link"></span></a>2. チケットの選択</h3>
+
+<p>Redmineの認証に成功すると'Time Tracking'及び'Edit List'に
+チケットが表示される様になります.
+認証直後は'Time Tracking'には自分の担当チケットのみが表示されます.
+担当外のチケットを選択する場合は'Edit List'から選択してください.</p>
+
+<h3>
+<a name="3-%E4%BD%9C%E6%A5%AD%E6%99%82%E9%96%93%E3%81%AE%E8%A8%98%E9%8C%B2" class="anchor" href="#3-%E4%BD%9C%E6%A5%AD%E6%99%82%E9%96%93%E3%81%AE%E8%A8%98%E9%8C%B2"><span class="octicon octicon-link"></span></a>3. 作業時間の記録</h3>
+
+<p>'Time Tracking'でチケットを選択し, 開始/停止ボタンで
+作業時間の記録を開始します.
+もう一度ボタンを押すとRedmine上に作業時間が記録されます.</p>
+        </section>
+
+        <footer>
+          Redminetimetracker is maintained by <a href="https://github.com/ujiro99">ujiro99</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32234486-8");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
