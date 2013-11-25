@@ -18,6 +18,10 @@ module.exports = (grunt) ->
         options:
           livereload: true
 
+      test:
+        files: "test/**/*.coffee"
+        tasks: ["coffee:test"]
+
       stylus:
         files: "stylus/**/*.styl",
         tasks: ["stylus"]
@@ -43,6 +47,14 @@ module.exports = (grunt) ->
           cwd: 'coffee/'
           src: ['**/*.coffee']
           dest: 'scripts/'
+          ext: '.js'
+        ]
+      test:
+        files: [
+          expand: true
+          cwd: 'test/'
+          src: ['**/*.coffee']
+          dest: 'test/'
           ext: '.js'
         ]
 
