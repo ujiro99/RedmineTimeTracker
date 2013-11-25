@@ -106,5 +106,6 @@ module.exports = (grunt) ->
   # tasks
   grunt.registerTask "run", ["connect", "watch"]
   grunt.registerTask "minify", ["ngmin", "uglify"]
+  grunt.registerTask "dev", ["coffee:develop", "jade:develop", "stylus", "minify"]
   grunt.registerTask "production", ["coffee:production", "jade:production", "stylus", "minify"]
 
