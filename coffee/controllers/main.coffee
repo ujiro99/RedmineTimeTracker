@@ -69,7 +69,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
       for t in $ticket.get()
         _redmine.issues.getById t.id, (data, status, headers, config) ->
           if data.issue?.status.id is TICKET_CLOSED
-            $ticket.remove {id: data.issue.id, url: data.issue.url}
+            $ticket.remove {url: data.issue.url, id: data.issue.id }
 
 
   $scope.$on 'notifyAccountChanged', () ->
