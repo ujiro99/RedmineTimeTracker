@@ -29,7 +29,7 @@ html, body
   height: 100%
   font-weight: 400
   font-size: 0.88em
-  color: #333
+  color: #555
   font-family: mplus-2c-regular
 
 
@@ -38,7 +38,7 @@ html, body
   overflow-y: scroll
 
   input.input-sm
-    height 28px
+    height height_input px
 
   .form-control
     border: none
@@ -238,6 +238,19 @@ message_color = #555
     span, timer
       line-height: height_input px
       vertical-align: middle
+
+  .form-inline
+    display: flex
+    margin: 10px 0 0 0
+    .activity
+      flex: 3
+    .total
+      flex: 2
+      position: relative
+      left: 7px
+      color: #888
+      span
+        line-height: height_input px
 
   .comment
     margin-top: 13px

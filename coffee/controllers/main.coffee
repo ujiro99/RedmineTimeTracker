@@ -59,10 +59,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
       return
     $ticket.set tickets
     $scope.$broadcast 'ticketLoaded'
-    _removeClosedIssues()
+    _updateIssues()
 
 
-  _removeClosedIssues = () ->
+  _updateIssues = () ->
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
       _redmine = $redmine(accounts[0])
@@ -70,6 +70,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
         _redmine.issues.getById t.id, (data, status, headers, config) ->
           if data.issue?.status.id is TICKET_CLOSED
             $ticket.remove {url: data.issue.url, id: data.issue.id }
+            return
+          if data.issue.spent_hours?
+            total = Math.floor(data.issue.spent_hours * 100) / 100
+            $ticket.setParam  data.issue.url, data.issue.id, total: total
 
 
   $scope.$on 'notifyAccountChanged', () ->

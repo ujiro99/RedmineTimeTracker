@@ -124,10 +124,11 @@ timeTracker.factory "$redmine", ($http, Base64) ->
       ###
        submit time entry to redmine server.
       ###
-      submitTime: (issueId, comment, hours, success, error) ->
-        timeEntryData.time_entry.issue_id = issueId
-        timeEntryData.time_entry.hours = hours
-        timeEntryData.time_entry.comments = comment
+      submitTime: (config, success, error) ->
+        timeEntryData.time_entry.issue_id    = config.issueId
+        timeEntryData.time_entry.hours       = config.hours
+        timeEntryData.time_entry.comments    = config.comment
+        timeEntryData.time_entry.activity_id = config.activityId
         config =
           method: "POST"
           url: auth.url + "/issues/#{timeEntryData.time_entry.issue_id}/time_entries.json"
@@ -168,6 +169,21 @@ timeTracker.factory "$redmine", ($http, Base64) ->
         config =
           method: "GET"
           url: auth.url + "/users/current.json?include=memberships"
+        config = _setBasicConfig config, auth
+        $http(config)
+          .success(success or NULLFUNC)
+          .error(error or NULLFUNC)
+
+
+    enumerations:
+
+      ###
+       Load time entry activities.
+      ###
+      getActivities: (success, error) ->
+        config =
+          method: "GET"
+          url: auth.url + "/enumerations/time_entry_activities.json"
         config = _setBasicConfig config, auth
         $http(config)
           .success(success or NULLFUNC)

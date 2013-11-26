@@ -13,19 +13,27 @@ div#timer(ng-controller='TimerCtrl')
     div.select
       div.inputWidhButton
 
-        // select ticket
         div(ng-hide='state.isTracking')
           uz-dropdown(items='tickets', selected='selectedTicket')
 
-        // progress
         div.progress.progress-striped.active(ng-show="state.isTracking")
           div.progress-bar(role="progressbar")
             span {{selectedTicket[0].text}}
             timer(interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
-      // button
       button.btn(type='button', ng-click='clickSubmitButton()')
         i.fa(ng-class="{'fa-play': !state.isTracking, 'fa-stop': state.isTracking}")
+
+
+    // activity & total
+    div.form-inline
+
+      div.activity
+        uz-dropdown(items='activities', selected='selectedActivity')
+
+      div.total
+        span total {{selectedTicket[0].total}} hr
+
 
     // comment
     div.comment

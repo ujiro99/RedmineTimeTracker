@@ -4,6 +4,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   COMMENT_MAX = 255
 
   $scope.state = state
+  $scope.activities = []
+  $scope.selectedActivity = []
   $scope.comment = ""
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
@@ -19,6 +21,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
       if not accounts? or not accounts?[0]? then return
       _redmine = $redmine(accounts[0])
       _redmine.issues.getOnUser(successGetIssues)
+      _redmine.enumerations.getActivities(successGetActivities)
+
 
 
   ###
@@ -30,6 +34,16 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
     $scope.tickets = $ticket.getSelectable()
     $scope.selectedTicket = $ticket.getSelected()
     $ticket.sync()
+
+
+  ###
+   merge ticket on strage, and update view
+  ###
+  successGetActivities = (data, status, headers, config) ->
+    if not data?.time_entry_activities? then return
+    $scope.activities = for a in data.time_entry_activities
+      a.text = a.name; a
+    $scope.selectedActivity[0] = $scope.activities[0]
 
 
   ###
@@ -51,7 +65,13 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
     if _redmine? and time.minutes >= ONE_MINUTE
       hours = time.minutes / 60
       hours = Math.floor(hours * 100) / 100
-      _redmine.issues.submitTime($scope.selectedTicket[0].id, $scope.comment, hours, submitSuccess, submitError)
+      $scope.selectedTicket[0].total += hours
+      conf =
+        issueId:    $scope.selectedTicket[0].id
+        hours:      hours
+        comment:    $scope.comment
+        activityId: $scope.selectedActivity[0].id
+      _redmine.issues.submitTime(conf, submitSuccess, submitError)
       $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
       $message.toast 'Too short time entry.'
