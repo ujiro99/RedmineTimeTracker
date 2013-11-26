@@ -28,9 +28,6 @@ if not ('clear' in Array.prototype)
    get url
   ###
   getUrl: (url) ->
-    trimed = $.trim(url)
-    match = trimed.match(/(^https?:\/\/.+)\//i, "")
-    return match[1] if match
-    return trimed
+    return $.trim(url).replace(/\/$/, '')
 
 }

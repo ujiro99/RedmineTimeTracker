@@ -25,7 +25,7 @@ describe 'util.coffee', ->
 
 
     it "'http://redmine.com/redmine' should be 'http://redmine.com/redmine'", () ->
-      url = util.getUrl("http://redmine.com/redmine/")
+      url = util.getUrl("http://redmine.com/redmine")
       expect(url).to.equal("http://redmine.com/redmine")
 
 
@@ -33,7 +33,3 @@ describe 'util.coffee', ->
       url = util.getUrl("http://redmine.com/redmine/")
       expect(url).to.equal("http://redmine.com/redmine")
 
-
-    it "'http://redmine.com/redmine/1.json' should be 'http://redmine.com/redmine'", () ->
-      url = util.getUrl("http://redmine.com/redmine/1.json")
-      expect(url).to.equal("http://redmine.com/redmine")
