@@ -242,18 +242,28 @@ message_color = #555
   .form-inline
     display: flex
     margin: 10px 0 0 0
+    height: height_input px
     .activity
+      flex: 5
+    .separater
+      width: 5px
+    .time
       flex: 3
-    .total
-      flex: 2
-      position: relative
-      left: 7px
-      color: #888
+      input
+        margin 0 -20px 0 0
+        padding: 0 25px 0 10px
+        display: inline-block
+        position: relative
+        top: -1px
       span
         line-height: height_input px
+        display: inline-block
+        color: #888
+        position: relative
+        left: 2px
 
   .comment
-    margin-top: 13px
+    margin-top: 10px
 
     textarea
       margin 6px 0 0 0px

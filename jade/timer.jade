@@ -1,47 +1,16 @@
 div#timer(ng-controller='TimerCtrl')
 
   header
-    div.caption
-      div.icon
-        span.icon-clock
+    div.caption(ng-click="changeMode()")
+      div.icon(ng-switch on="mode")
+        span.icon-clock(ng-switch-when="auto")
+        span.icon-note(ng-switch-when="manual")
       div.title
         span Time Tracking
 
   form(action='#', method='POST', name='time_entry')
 
-    // time track
-    div.select
-      div.inputWidhButton
+    div(ng-switch on="mode")
+      section.animate-switch(ng-switch-when="auto", ng-include="'auto.html'")
+      section.animate-switch(ng-switch-when="manual", ng-include="'manual.html'")
 
-        div(ng-hide='state.isTracking')
-          uz-dropdown(items='tickets', selected='selectedTicket')
-
-        div.progress.progress-striped.active(ng-show="state.isTracking")
-          div.progress-bar(role="progressbar")
-            span {{selectedTicket[0].text}}
-            timer(interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
-
-      button.btn(type='button', ng-click='clickSubmitButton()')
-        i.fa(ng-class="{'fa-play': !state.isTracking, 'fa-stop': state.isTracking}")
-
-
-    // activity & total
-    div.form-inline
-
-      div.activity
-        uz-dropdown(items='activities', selected='selectedActivity')
-
-      div.total
-        span total {{selectedTicket[0].total}} hr
-
-
-    // comment
-    div.comment
-      textarea.form-control(name='comment'
-        , rows='2'
-        , ng-model='comment'
-        , ng-maxlength='commentMaxLength'
-        , placeholder='comments...'
-        , ng-change='commentRemain = commentMaxLength - comment.length')
-      div
-        span.label.label-danger(ng-show="commentRemain < 0") {{commentRemain}}

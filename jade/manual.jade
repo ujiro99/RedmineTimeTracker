@@ -1,0 +1,35 @@
+// time track
+div.select
+  div.inputWidhButton
+    div
+      uz-dropdown(items='tickets', selected='selectedTicket')
+
+  button.btn(type='button', ng-click='clickManual()')
+    i.fa.fa-check
+
+
+// activity & total
+div.form-inline
+
+  div.activity
+    uz-dropdown(items='activities', selected='selectedActivity')
+
+  div.separater
+
+  div.time
+    label.sr-only input time
+    input.form-control.input-sm(type='text',
+                                ng-model='time.hours')
+    span hr
+
+
+// comment
+div.comment
+  textarea.form-control(name='comment'
+    , rows='2'
+    , ng-model='comment'
+    , ng-maxlength='commentMaxLength'
+    , placeholder='comments...'
+    , ng-change='commentRemain = commentMaxLength - comment.length')
+  div
+    span.label.label-danger(ng-show="commentRemain < 0") {{commentRemain}}

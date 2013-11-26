@@ -9,6 +9,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   $scope.comment = ""
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
+  $scope.mode = "auto"
+  $scope.time = {}
 
   _redmine = null
 
@@ -46,6 +48,13 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
     $scope.selectedActivity[0] = $scope.activities[0]
 
 
+  $scope.changeMode = () ->
+    if $scope.mode is "auto"
+      $scope.mode = "manual"
+    else
+      $scope.mode = "auto"
+
+
   ###
    Start or End Time tracking
   ###
@@ -59,11 +68,25 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
 
 
   ###
+   on clicked manual post button, send time entry.
+  ###
+  $scope.clickManual = () ->
+    postEntry($scope.time.hours * 60)
+
+
+  ###
    on timer stopped, send time entry.
   ###
   $scope.$on 'timer-stopped', (e, time) ->
-    if _redmine? and time.minutes >= ONE_MINUTE
-      hours = time.minutes / 60
+    postEntry(time.minutes)
+
+
+  ###
+   send time entry.
+  ###
+  postEntry = (minutes) ->
+    if _redmine? and minutes >= ONE_MINUTE
+      hours = minutes / 60
       hours = Math.floor(hours * 100) / 100
       $scope.selectedTicket[0].total += hours
       conf =
