@@ -105,6 +105,23 @@ timeTracker.factory "$redmine", ($http, Base64) ->
 
 
       ###
+       get any ticket using id.
+      ###
+      getById: (issueId, success, error) ->
+        config =
+          method: "GET"
+          url: auth.url + "/issues/#{issueId}.json"
+        config = _setBasicConfig config, auth
+        $http(config)
+          .success( (data, status, headers, config) ->
+            if data?.issue?
+              data.issue.show = SHOW.DEFAULT
+              data.issue.url = auth.url
+            success?(data, status, headers, config))
+          .error(error or NULLFUNC)
+
+
+      ###
        submit time entry to redmine server.
       ###
       submitTime: (issueId, comment, hours, success, error) ->
@@ -119,23 +136,6 @@ timeTracker.factory "$redmine", ($http, Base64) ->
         config.headers = "Content-Type": "application/xml"
         $http(config)
           .success(success or NULLFUNC)
-          .error(error or NULLFUNC)
-
-
-      ###
-       get any ticket using id.
-      ###
-      getById: (issueId, success, error) ->
-        config =
-          method: "GET"
-          url: auth.url + "/issues/#{issueId}.json"
-        config = _setBasicConfig config, auth
-        $http(config)
-          .success( (data, status, headers, config) ->
-            if data?.issue?
-              data.issue.show = SHOW.DEFAULT
-              data.issue.url = auth.url
-            success?(data, status, headers, config))
           .error(error or NULLFUNC)
 
 
