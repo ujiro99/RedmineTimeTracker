@@ -11,9 +11,6 @@ timeTracker.factory "$redmine", ($http, Base64) ->
       "hours": 0
       "activity_id": 8
       "comments": ""
-  issues = {}
-  projects = {}
-  user = {}
 
 
   ###
@@ -61,6 +58,8 @@ timeTracker.factory "$redmine", ($http, Base64) ->
 
 
   return (auth) ->
+
+    _projects = []
 
     issues:
 
@@ -143,9 +142,16 @@ timeTracker.factory "$redmine", ($http, Base64) ->
     projects:
 
       ###
+       return chached projects.
+      ###
+      get: () ->
+        return _projects
+
+
+      ###
        Load projects on url
       ###
-      get: (success, error) ->
+      load: (success, error) ->
         config =
           method: "GET"
           url: auth.url + "/projects.json"
@@ -155,7 +161,9 @@ timeTracker.factory "$redmine", ($http, Base64) ->
             if data?.projects?
               data.projects = for prj in data.projects
                 prj.text = prj.name
+                prj.account = auth
                 prj
+              _projects = data.projects
             success?(data, status, headers, config))
           .error(error or NULLFUNC)
 

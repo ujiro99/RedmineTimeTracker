@@ -30,7 +30,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
       $scope.accounts = accounts
-      $redmine(accounts[0]).projects.get(loadProjectSuccess, loadProjectError)
+      $redmine(accounts[0]).projects.load(loadProjectSuccess, loadProjectError)
 
 
   ###
@@ -38,9 +38,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   loadProjectSuccess = (msg) ->
     if msg.projects?
-      msg.projects = for prj in msg.projects
-        prj.account = $scope.accounts[0]
-        prj
       $scope.projects = msg.projects
       $scope.selectedProject[0] = msg.projects[0]
     else
