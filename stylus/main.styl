@@ -19,10 +19,9 @@ text-ellipsis()
 
 
 align-center()
-  display: -webkit-box
-  -webkit-box-orient: horizontal
-  -webkit-box-pack: center
-  -webkit-box-align: center
+  display: flex
+  justify-content: center
+  align-items: center
 
 
 html, body
@@ -68,11 +67,12 @@ html, body
     .caption
       align-center()
       height 100%
+      color: color_key
     .title
+      align-center()
       font-size: 1.05em
-      color: color_key
+      flex: 1
     .icon
-      color: color_key
       display: table
       font-size: 1.3em
       margin: 0 8px 0 0
@@ -169,6 +169,15 @@ message_color = #555
 #timer
 
   width_button = 34
+
+  .caption
+    .fa
+      transition: 0.2s ease opacity
+      padding: 0 4px
+      font-size: 1.5em
+      opacity: 0
+    &:hover > .fa
+      opacity: 1
 
   .select
     position: relative
@@ -276,6 +285,26 @@ message_color = #555
       top: -15px
       opacity: 0.8
       float: right
+
+  .animate-switch-container
+    position: relative
+    height: 128px
+    overflow: hidden
+
+  .animate-switch
+    position: absolute
+    width: 100%
+    &.ng-enter
+    &.ng-leave
+      transition: 0.3s ease all
+    &.ng-enter
+      left: 100%
+      &.ng-enter-active
+        left: 0
+    &.ng-leave
+      left: 0
+      &.ng-leave-active
+        left: -100%
 
 
 #issue
@@ -426,10 +455,11 @@ message_color = #555
   font-family: mplus-2c-thin
 
   header
-    color: #fff
     font-size: 1.7em
     height: 3em
     margin: 15px 0 0 0
+    .caption
+      color: #fff
 
     .line
       width: 70%
