@@ -1,0 +1,5 @@
+.setting-labels
+  label.control-label Server URL
+.setting-options
+  input.form-control.input-sm(type='text', name='url', ng-model='option.url', ng-class='{invalid:!account.url.$valid}', placeholder='ex) http://www.redmine.org', required)
+  span.fa(ng-show='account.url.$error.required') &#xf06a;

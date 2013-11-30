@@ -2,38 +2,62 @@ div#options(ng-controller='OptionCtrl')
 
   header
     div.caption
-      div.icon
-        span.icon-settings
       div.title
-        span Settings
+        div.icon
+          span.icon-users
+        span Accounts
 
-  form(name='account')
+  // search
+  div.input-and-btn
+    div.form-group.search.input
+      label.sr-only Search
+      input.form-control.input-sm(type='search',
+                                  placeholder='search...',
+                                  ng-model='searchText')
+      i.fa.fa-search
+    button.btn(ng-click='toggleForm()')
+      span.icon-plus
 
-    // Auth way
-    div.btn-group.selectAuth
-      button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
-      button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
-    // Host
-    div.url.settings-section.form-group
-      .setting-labels
-        label.control-label Server URL
-      .setting-options
-        input.form-control.input-sm(type='text', name='url', ng-model='option.url', ng-class='{invalid:!account.url.$valid}', placeholder='ex) http://www.redmine.org', required)
-        span.label.label-danger(ng-show='account.url.$error.required') required!
+  // add
+  .animate-add-account(ng-show='isAdding')
+    form(name='account')
 
-    // Auth
-    div.auth
-      div(ng-show="authWay=='id_pass'", ng-include="'template/basic_auth.html'")
-      div(ng-show="authWay=='api_key'", ng-include="'template/api_key.html'")
+      // Auth way
+      div.btn-group.selectAuth
+        button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
+        button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
-    // Save Button
-    div.pull-right.save
-      button.btn.btn-default.btn-sm.ladda-button(
-        ng-click='saveOptions()',
-        uz-loading='isSaving',
-        data-style='zoom-in',
-        data-size='xs',
-        data-spinner-color="#555") Save
-      button.btn.btn-default.btn-sm(ng-click='clearOptions()') Clear
+      // Auth
+      div.auth(ng-switch on="authWay")
+        section.animate-switch(ng-switch-when="id_pass")
+          div(ng-include="'template/basic_auth.html'")
+        section.animate-switch(ng-switch-when="api_key")
+          div(ng-include="'template/api_key.html'")
+
+      // Add Button
+      div.save
+        button.btn.btn-default.btn-sm.ladda-button(
+          ng-click='addAccount()',
+          uz-loading='isSaving',
+          data-style='zoom-in',
+          data-size='xs',
+          data-spinner-color="#555") Add
+
+  // list
+  .account-list
+    ul
+      li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
+         ng-click='removeAccount(account.url)')
+        .number
+        .list-label
+          span {{account.url}}
+          ul
+            li.list-label(ng-repeat='prj in account.projects')
+              span {{prj.name}}
+        button.btn(type='button')
+          span.icon-minus
+
+  div
+    button.btn.btn-default.btn-sm(ng-click='clearOptions()') Clear
 
