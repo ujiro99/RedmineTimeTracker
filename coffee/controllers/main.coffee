@@ -49,13 +49,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
   MINUTE_5 = 5
   TICKET_CLOSED = 5
 
-  _redmine = {}
-
   $rootScope.messages = []
 
 
   $ticket.load (tickets) ->
-    if not tickets? or tickets.length is 0
+    if not tickets?
       return
     $ticket.set tickets
     $scope.$broadcast 'ticketLoaded'
@@ -65,19 +63,22 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
   _updateIssues = () ->
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
-      _redmine = $redmine(accounts[0])
       for t in $ticket.get()
-        _redmine.issues.getById t.id, (data, status, headers, config) ->
-          if data.issue?.status.id is TICKET_CLOSED
-            $ticket.remove {url: data.issue.url, id: data.issue.id }
-            return
-          if data.issue.spent_hours?
-            total = Math.floor(data.issue.spent_hours * 100) / 100
-            $ticket.setParam  data.issue.url, data.issue.id, total: total
+        for account in accounts when account.url is t.url
+          $redmine(account).getIssuesById t.id, (data, status, headers, config) ->
+            if data.issue?.status.id is TICKET_CLOSED
+              $ticket.remove {url: data.issue.url, id: data.issue.id }
+              return
+            if data.issue.spent_hours?
+              total = Math.floor(data.issue.spent_hours * 100) / 100
+              $ticket.setParam  data.issue.url, data.issue.id, total: total
 
 
   $scope.$on 'notifyAccountChanged', () ->
     $scope.$broadcast 'accountChanged'
+
+  $scope.$on 'notifyAccountRemoved', (e, url) ->
+    $scope.$broadcast 'accountRemoved', url
 
 
   alarmInfo =

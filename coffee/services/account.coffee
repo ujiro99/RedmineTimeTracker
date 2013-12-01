@@ -26,7 +26,7 @@ timeTracker.factory("$account", () ->
   return {
 
     ###
-     get all account data using chrome local
+     get all account data using chrome sync
     ###
     getAccounts: (callback) ->
       callback = callback or NULLFUNC
@@ -40,7 +40,7 @@ timeTracker.factory("$account", () ->
 
 
     ###
-     add a account data using chrome local
+     add a account data using chrome sync
     ###
     addAccount: (account, callback) ->
       if not account? then callback false; return
@@ -49,7 +49,7 @@ timeTracker.factory("$account", () ->
         accounts = accounts or []
         newArry = []
         # merge accounts.
-        for a in accounts when a.host isnt account.host
+        for a in accounts when a.url isnt account.url
           newArry.push a
         accounts = newArry
         _encrypt.apply(account)
@@ -62,10 +62,29 @@ timeTracker.factory("$account", () ->
 
 
     ###
+     remove by url.
+    ###
+    removeAccount: (url, callback) ->
+      if not url? then callback false; return
+      callback = callback or NULLFUNC
+      @getAccounts (accounts) ->
+        accounts = accounts or []
+        # select other url account
+        accounts = for a in accounts when a.url isnt url
+          _encrypt.apply(a); a
+        chrome.storage.sync.set ACCOUNTS: accounts, () ->
+          if chrome.runtime.lastError?
+            callback false
+          else
+            callback true
+
+
+    ###
       clear all account data
     ###
     clearAccount: (callback) ->
       callback = callback or NULLFUNC
+      chrome.storage.local.clear()
       chrome.storage.sync.clear () ->
         if chrome.runtime.lastError?
           callback false

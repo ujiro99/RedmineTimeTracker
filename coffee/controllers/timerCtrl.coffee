@@ -4,15 +4,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   COMMENT_MAX = 255
 
   $scope.state = state
-  $scope.activities = []
+  $scope.projects = {}
   $scope.selectedActivity = []
   $scope.comment = ""
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
   $scope.mode = "auto"
-  $scope.time = {}
-
-  _redmine = null
 
 
   ###
@@ -21,10 +18,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   getIssues = ->
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
-      _redmine = $redmine(accounts[0])
-      _redmine.issues.getOnUser(successGetIssues)
-      _redmine.enumerations.getActivities(successGetActivities)
-
+      for account in accounts
+        $scope.projects[account.url] = {}
+        $scope.projects[account.url].account = account
+        redmine = $redmine(account)
+        redmine.getIssuesOnUser(successGetIssues)
+        redmine.getActivities(getActivitiesSuccess)
 
 
   ###
@@ -39,13 +38,36 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
 
 
   ###
-   merge ticket on strage, and update view
+   on first, set selectedActivity.
   ###
-  successGetActivities = (data, status, headers, config) ->
+  _getActivitiesSuccessFirst = (data, status, headers, config) ->
+    _getActivitiesSuccess(data, status, headers, config)
+    getActivitiesSuccess = _getActivitiesSuccess
+    $scope.selectedActivity[0] = $scope.projects[data.url].activities[0]
+
+
+  ###
+   show loaded activities.
+  ###
+  _getActivitiesSuccess = (data, status, headers, config) ->
     if not data?.time_entry_activities? then return
-    $scope.activities = for a in data.time_entry_activities
+    $scope.projects[data.url].activities = for a in data.time_entry_activities
       a.text = a.name; a
-    $scope.selectedActivity[0] = $scope.activities[0]
+
+
+  ###
+   show loaded activities.
+  ###
+  getActivitiesSuccess = _getActivitiesSuccessFirst
+
+
+  ###
+   change activity according to selected ticket
+  ###
+  $scope.$watch 'selectedTicket[0].url', ->
+    if $scope.selectedTicket
+      url = $scope.selectedTicket[0].url
+      $scope.selectedActivity[0] = $scope.projects[url].activities?[0]
 
 
   $scope.changeMode = () ->
@@ -59,6 +81,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
+    if not $scope.selectedTicket[0] then return
     if state.isTracking
       state.isTracking = false
       $scope.$broadcast 'timer-stop'
@@ -85,7 +108,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
    send time entry.
   ###
   postEntry = (minutes) ->
-    if _redmine? and minutes >= ONE_MINUTE
+    if minutes >= ONE_MINUTE
       hours = minutes / 60
       hours = Math.floor(hours * 100) / 100
       $scope.selectedTicket[0].total += hours
@@ -94,7 +117,10 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
         hours:      hours
         comment:    $scope.comment
         activityId: $scope.selectedActivity[0].id
-      _redmine.issues.submitTime(conf, submitSuccess, submitError)
+      url = $scope.selectedTicket[0].url
+      account = $scope.projects[url].account
+      redmine = $redmine(account)
+      redmine.submitTime(conf, submitSuccess, submitError)
       $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
       $message.toast 'Too short time entry.'
@@ -127,6 +153,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   ###
    on account changed, start getting issues.
   ###
-  $scope.$on 'accountChanged', () ->
-    getIssues()
+  # $scope.$on 'accountChanged', () ->
+  #   getIssues()
 

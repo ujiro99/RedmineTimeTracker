@@ -34,6 +34,7 @@ html, body
 
 .wrap
   height: 100%
+  padding: 0px 10px
   overflow-y: scroll
 
   input.input-sm
@@ -41,10 +42,10 @@ html, body
 
   .form-control
     border: none
-    box-shadow: 0 0 0 1px rgba(0,0,0,.1)
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
     &:hover,
     &:focus
-      box-shadow: 0 0 0 1px rgba(0,0,0,.2)
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
 
   .btn
     box-shadow: none
@@ -55,12 +56,41 @@ html, body
     &.loading
       background-color: #ebebeb
       border-color: #adadad
+    span.icon-minus
+      display: inline-block
+      width: 100%
+      height: 1em
+      line-height: 1
+      position: relative
+      width: 1em
+      border-radius: 50%
+      border: solid 1px
+      margin: -5px 0 0 0
+      vertical-align: middle
+      background-image: -webkit-gradient(linear,left center,right center,from(#aaa),to(#aaa));
+      background-size: 70% 1px;
+      background-repeat: no-repeat;
+      background-position: 45% 50%;
 
   .invalid
   .invalid:hover
   .invalid:focus
     border-color: #e9322d
     box-shadow: 0 0 6px #f8b9b7
+
+  .search
+    margin-right -5px
+    padding-right 5px
+    position: relative
+    input
+      padding-right: 20px
+    i
+      opacity: .5
+      position: absolute
+      top: 8px
+      right: 12px
+    &:hover i
+      opacity: .7
 
   header
     height: 5em
@@ -82,23 +112,17 @@ html, body
         vertical-align: middle
 
 
-.wrap > section
-  clearfix()
-  padding: 0px 10px 25px 10px
+.frame
+  overflow: hidden
 
-.wrap > section:nth-last-of-type(2)
-  margin: 30px 0 0 0
-  background-color: rgba(247,80,90, 1)
-  padding-bottom: 0
-
-.wrap > section:nth-last-of-type(1)
-  padding: 0
-
+  & > section
+    padding: 0 0 25px 0
 
 message_color = #555
 
 .message
   position: fixed
+  padding: 0
   bottom: 0
   left: 0
   right: 0
@@ -172,7 +196,7 @@ message_color = #555
 
   .caption
     .fa
-      transition: 0.2s ease opacity
+      transition: opacity 0.2s ease
       padding: 0 4px
       font-size: 1.5em
       opacity: 0
@@ -236,13 +260,15 @@ message_color = #555
     background-color: color_key
     box-shadow: none
     color: #fafafa
+    display: flex
 
     span
-      margin-right: -65px
-      padding-right: 67px
-      width: 100%
       display: inline-block
       text-ellipsis()
+      &:nth-child(1)
+        flex: 1
+      &:nth-child(2)
+        flex-basis: 60px
 
     span, timer
       line-height: height_input px
@@ -264,15 +290,17 @@ message_color = #555
         display: inline-block
         position: relative
         top: -1px
+        &:hover+span
+          color: #888
       span
         line-height: height_input px
         display: inline-block
-        color: #888
+        color: #aaa
         position: relative
         left: 2px
 
   .comment
-    margin-top: 10px
+    margin: 10px 0 0 0
 
     textarea
       margin 6px 0 0 0px
@@ -289,7 +317,6 @@ message_color = #555
   .animate-switch-container
     position: relative
     height: 128px
-    overflow: hidden
 
   .animate-switch
     position: absolute
@@ -308,7 +335,6 @@ message_color = #555
 
 
 #issue
-
   .form-group
     display: inline-block
     margin-bottom: 0
@@ -320,18 +346,6 @@ message_color = #555
 
   .search
     width: 40%
-    margin-right -5px
-    padding-right 5px
-    position: relative
-
-    i
-      opacity: .5
-      position: absolute
-      top: 8px
-      right: 12px
-
-    &:hover i
-      opacity: .7
 
   .issueList
     ul
@@ -347,36 +361,20 @@ message_color = #555
         border: none
         padding: 0
         color: #aaa
-        transition: .25s ease
-
-        span
-          display: inline-block
-          width: 1em
-          height: 1em
-          line-height: 1
-          position: relative
-          &.icon-minus
-            border-radius: 50%
-            border: solid 1px
-            margin: -5px 0 0 0
-            vertical-align: middle
-            background-image: -webkit-gradient(linear,left center,right center,from(#aaa),to(#aaa));
-            background-size: 70% 1px;
-            background-repeat: no-repeat;
-            background-position: 45% 50%;
+        transition: .2s ease
 
     li > span
       vertical-align: middle
       display: inline-block
-      transition: .25s ease
+      transition: .2s ease
 
     li > span:nth-child(1)
       width: 26px
       color #aaa
 
     li > span:nth-child(2)
-      margin-right: -45px
-      padding-right: 45px
+      margin-right: -42px
+      padding-right: 50px
       width: 100%
       text-ellipsis()
 
@@ -393,11 +391,58 @@ message_color = #555
 
 #options
 
+  label-width = 70
+
   .form-group
     margin-bottom: 10px
-    overflow: hidden
 
-  label-width = 70
+  .input-and-btn
+    display: flex
+    .input
+      flex: 1
+    .btn
+      padding: 0 0 0 7px
+      height: height_input px
+      line-height: height_input px
+      font-size: 16px
+      color: #888
+      transition: color .25s ease
+      &:hover
+        color: color_key
+
+  .animate-add-account
+    margin: 10px 0
+    height: 197px
+    border-collapse: separate
+    border-spacing: 0px
+    transition: ease .3s
+    opacity: 1
+    -webkit-transform: scale3d(1,1,1)
+    &.ng-hide-add
+    &.ng-hide-remove
+      display: block!important
+    &.ng-hide
+      opacity: 0
+      height: 0
+      -webkit-transform: scale3d(1,0,1)
+
+  .auth
+    position: relative
+    height: 138px
+    .animate-switch
+      position: absolute
+      width: 100%
+      &.ng-enter
+      &.ng-leave
+        transition: 0.2s ease all
+      &.ng-enter
+        opacity: 0
+        &.ng-enter-active
+          opacity: 1
+      &.ng-leave
+        opacity: 1
+        &.ng-leave-active
+          opacity: 0
 
   .setting-labels
     width: label-width px
@@ -409,7 +454,7 @@ message_color = #555
   .setting-options
     height: height_input + 8 px
     width: 100%
-    padding: 4px label-width + 4px 0 0
+    padding: 4px label-width - 0px 0 0
     margin-right: - label-width px
     display: inline-block
 
@@ -419,7 +464,10 @@ message_color = #555
       position: relative
       left: 100%
       top: -22px
-      margin-left: - label-width px
+      margin-left: -18px
+      font-size: 1.2em
+      color: color_key
+      background-color: #fff
 
   .selectAuth
     margin: 0px auto 15px auto
@@ -443,21 +491,67 @@ message_color = #555
         background-color: color_key_down
 
   .save
+    position: relative
+    display: flex
+    justify-content: flex-end
     button
       padding: 2px 15px
-      &:first-child
-        margin-right 5px
+
+
+
+  .account-list
+    padding-left: 4px
+    .number
+      transition: ease .2s
+
+    & > li
+      counter-increment: account
+      margin-bottom: 1em
+      & > .number:before
+        content: counter(account)
+        padding-right: 10px
+        color: #aaa
+
+      &:hover
+        .number
+          padding-left: 5px
+        span
+        .btn
+          color: color_key
+        .icon-minus
+          background-image: -webkit-gradient(linear, left center, right center, from(color_key), to(color_key));
+        .number:before
+          color: color_key
+
+    li
+      list-style-type: none
+      display: flex
+      align-items: center
+
+      .btn
+        border: none
+        padding: 0 3px
+        color: #aaa
+
+      .list-label
+        width: 100%
+        text-ellipsis()
+
+  .project-list
+    padding-left: 6px
+    color: #aaa
 
 
 #about
-  margin: 0 10px 0 10px
   color: #fff
+  background-color: rgba(247,80,90, 1)
+  margin: 30px -10px 0 -10px
+  padding: 0 10px 5px 10px
   font-family: mplus-2c-thin
 
   header
     font-size: 1.7em
     height: 3em
-    margin: 15px 0 0 0
     .caption
       color: #fff
 
@@ -474,6 +568,6 @@ message_color = #555
   footer
     text-align: right
     p
-      margin: 0 -14px 4px 0
+      margin: 0
       font-size: 0.8em
 

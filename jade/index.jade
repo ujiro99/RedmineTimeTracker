@@ -17,9 +17,10 @@ html(ng-app='timeTracker', ng-csp="")
   body(ng-controller='MainCtrl')
 
     .wrap
-      section(ng-include="'timer.html'")
-      section(ng-include="'issue.html'")
-      section(ng-include="'options.html'")
+      .frame
+        section(ng-include="'timer.html'")
+        section(ng-include="'issue.html'")
+        section(ng-include="'options.html'")
       section(ng-include="'about.html'")
       section(ng-include="'message.html'")
 

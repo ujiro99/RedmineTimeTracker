@@ -8,7 +8,7 @@ div#options(ng-controller='OptionCtrl')
         span Accounts
 
   // search
-  div.input-and-btn
+  .input-and-btn
     div.form-group.search.input
       label.sr-only Search
       input.form-control.input-sm(type='search',
@@ -45,18 +45,17 @@ div#options(ng-controller='OptionCtrl')
           data-spinner-color="#555") Add
 
   // list
-  .account-list
-    ul
-      li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
-         ng-click='removeAccount(account.url)')
-        .number
-        .list-label
-          span {{account.url}}
-          ul
-            li.list-label(ng-repeat='prj in account.projects')
-              span {{prj.name}}
-        button.btn(type='button')
-          span.icon-minus
+  ul.account-list
+    li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
+       ng-click='removeAccount(account.url)')
+      .number
+      .list-label
+        span {{account.url}}
+        ul.project-list
+          li.list-label(ng-repeat='prj in account.projects')
+            span {{prj.name}}
+      button.btn(type='button')
+        span.icon-minus
 
   div
     button.btn.btn-default.btn-sm(ng-click='clearOptions()') Clear

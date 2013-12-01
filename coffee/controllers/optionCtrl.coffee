@@ -1,40 +1,73 @@
 timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
 
+  $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = 'id_pass'
+  $scope.searchText = ''
   $scope.isSaving = false
+  $scope.isAdding = false
 
 
   ###
    Initialize Option page.
   ###
   init = ->
-    # restore accounts
     $account.getAccounts (accounts) ->
       if not accounts? or not accounts[0]? then return
-      $scope.option.url    = accounts[0].url
-      $scope.option.apiKey = accounts[0].apiKey
-      $scope.option.id     = accounts[0].id
-      $scope.option.pass   = accounts[0].pass
+      for account in accounts
+        loadProject account
 
 
   ###
-   Load the user ID associated to Api Key.
+   load project.
   ###
-  $scope.saveOptions = () ->
+  loadProject = (account) ->
+    $redmine(account).loadProjects loadProjectSuccess, loadProjectError
+
+
+  ###
+   show loaded project.
+   if project is already loaded, overwrites by new project.
+  ###
+  loadProjectSuccess = (msg) ->
+    if msg.projects?
+      o =
+        url: msg.projects[0].account.url
+        projects: msg.projects
+      for a, i in $scope.accounts when a.url is o.url
+        $scope.accounts.splice i, 1
+      $scope.accounts.push o
+      $message.toast "Loaded : " + o.url
+      $scope.$emit 'notifyAccountChanged'
+    else
+      loadProjectError msg
+
+
+  ###
+   show fail message.
+  ###
+  loadProjectError = (msg) ->
+    $message.toast "Load Project Failed."
+
+
+  ###
+   Load the user ID associated to Authentication info.
+  ###
+  $scope.addAccount = () ->
     $scope.isSaving = true
     if not $scope.option.url? or $scope.option.url.length is 0
       $message.toast "Please input Redmine Server URL."
+      $scope.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
-    $redmine($scope.option).user.get(saveSucess, saveFail)
+    $redmine($scope.option).getUser(addAccount, failAuthentication)
 
 
   ###
-   sucess to save
+   add account.
   ###
-  saveSucess = (msg) ->
-    $scope.isSaving = false
+  addAccount = (msg) ->
+    $scope.isSaving = $scope.isAdding = false
     if msg?.user?.id?
       account =
         url:    $scope.option.url
@@ -44,20 +77,21 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
         userId: msg.user.id
       $account.addAccount account, (result) ->
         if result
-          $message.toast "Succeed accessing to the server!"
+          $message.toast "Succeed authentication!"
+          loadProject account
           $scope.$emit 'notifyAccountChanged'
         else
-          saveFail null
+          failAuthentication null
     else
-      saveFail msg
+      failAuthentication msg
 
 
   ###
    fail to save
   ###
-  saveFail = (msg) ->
+  failAuthentication = (msg) ->
     $scope.isSaving = false
-    $message.toast "Save Failed. #{msg}"
+    $message.toast "Failed authentication."
 
 
   ###
@@ -69,6 +103,33 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
         $message.toast "All data Cleared."
       else
         $message.toast "Clear Failed."
+
+
+  ###
+   filter account and projects.
+  ###
+  $scope.accountFilter = (account) ->
+    if $scope.searchText.isBlank() then return true
+    return (account.url + "").contains($scope.searchText) or
+           account.projects.some (prj) ->
+             prj.name.toLowerCase().contains($scope.searchText.toLowerCase())
+
+
+  $scope.toggleForm = () ->
+    $scope.isAdding = !$scope.isAdding
+
+
+  ###
+   remove account from chrome sync.
+  ###
+  $scope.removeAccount = (url) ->
+    $account.removeAccount url, () ->
+      $redmine({url: url}, true) # delete
+      for a, i in $scope.accounts when a.url is url
+        $scope.accounts.splice i, 1
+        break
+      $scope.$emit 'notifyAccountRemoved', url
+      $message.toast url + ' removed.'
 
 
   ###

@@ -18,7 +18,8 @@ div.select
 div.form-inline
 
   div.activity
-    uz-dropdown(items='activities', selected='selectedActivity')
+    uz-dropdown(items='projects[selectedTicket[0].url].activities',
+                selected='selectedActivity')
 
   div.separater
 
