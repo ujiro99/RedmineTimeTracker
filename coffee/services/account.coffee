@@ -4,23 +4,42 @@ timeTracker.factory("$account", () ->
   PHRASE = "hello, redmine time traker."
   NULLFUNC = () ->
 
+  ###
+   JSON formatter for cipherParams.
+  ###
+  _Json =
+    stringify: (cipherParams) ->
+      jsonObj = ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)
+      if cipherParams.iv then jsonObj.iv = cipherParams.iv.toString()
+      if cipherParams.salt then jsonObj.s = cipherParams.salt.toString()
+      return JSON.stringify(jsonObj)
+
+    parse: (jsonStr) ->
+      jsonObj = JSON.parse(jsonStr)
+      cipherParams = CryptoJS.lib.CipherParams.create {
+          ciphertext: CryptoJS.enc.Base64.parse(jsonObj.ct)
+      }
+      if jsonObj.iv then cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
+      if jsonObj.s then cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
+      return cipherParams
+
 
   ###
    decrypt the account data, only to sync on chrome.
   ###
   _decrypt = () ->
-    @apiKey = CryptoJS.AES.decrypt(@apiKey, PHRASE).toString(CryptoJS.enc.Utf8)
-    @id     = CryptoJS.AES.decrypt(@id, PHRASE).toString(CryptoJS.enc.Utf8)
-    @pass   = CryptoJS.AES.decrypt(@pass, PHRASE).toString(CryptoJS.enc.Utf8)
+    @apiKey = CryptoJS.AES.decrypt(_Json.parse(@apiKey), PHRASE).toString(CryptoJS.enc.Utf8)
+    @id     = CryptoJS.AES.decrypt(_Json.parse(@id), PHRASE).toString(CryptoJS.enc.Utf8)
+    @pass   = CryptoJS.AES.decrypt(_Json.parse(@pass), PHRASE).toString(CryptoJS.enc.Utf8)
 
 
   ###
    encrypt the account data, only to sync on chrome.
   ###
   _encrypt = () ->
-    @apiKey = CryptoJS.AES.encrypt(@apiKey, PHRASE)
-    @id     = CryptoJS.AES.encrypt(@id, PHRASE)
-    @pass   = CryptoJS.AES.encrypt(@pass, PHRASE)
+    @apiKey = _Json.stringify CryptoJS.AES.encrypt(@apiKey, PHRASE)
+    @id     = _Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
+    @pass   = _Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
 
 
   return {
@@ -50,6 +69,7 @@ timeTracker.factory("$account", () ->
         newArry = []
         # merge accounts.
         for a in accounts when a.url isnt account.url
+          _encrypt.apply(a)
           newArry.push a
         accounts = newArry
         _encrypt.apply(account)
