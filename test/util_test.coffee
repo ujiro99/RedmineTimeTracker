@@ -11,6 +11,7 @@ describe 'util.coffee', ->
       'http://redmine.com/'
       'http://redmine.com/redmine'
       'http://redmine.com/redmine/'
+      'http://redmine.com?param=anyparameter'
     ]
 
     expects = [
@@ -20,12 +21,13 @@ describe 'util.coffee', ->
       'http://redmine.com'
       'http://redmine.com/redmine'
       'http://redmine.com/redmine'
+      'http://redmine.com'
     ]
 
     for data, i in dataset
       e = expects[i]
 
-      it data + " should be" + e, () ->
+      it data + " should be " + e, () ->
         url = util.getUrl(data)
         expect(url).to.equal(e)
 

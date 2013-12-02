@@ -28,6 +28,6 @@ if not ('clear' in Array.prototype)
    get url
   ###
   getUrl: (url) ->
-    return $.trim(url).replace(/\/$/, '')
+    return $.trim(url).replace(/\?.*$/, '').replace(/\/$/, '')
 
 }
