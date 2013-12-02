@@ -60,7 +60,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
       $scope.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
-    $redmine($scope.option).getUser(addAccount, failAuthentication)
+    $redmine($scope.option).findUser(addAccount, failAuthentication)
 
 
   ###

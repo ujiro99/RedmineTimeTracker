@@ -178,9 +178,9 @@ class Redmine
 
 
   ###
-   Load user on url associated to apiKey
+   Load user on url associated to auth.
   ###
-  getUser: (success, error) ->
+  _getUser: (success, error) ->
     config =
       method: "GET"
       url: @auth.url + "/users/current.json?include=memberships"
@@ -188,6 +188,23 @@ class Redmine
     @$http(config)
       .success(success or @NULLFUNC)
       .error(error or @NULLFUNC)
+
+
+  ###
+   find user recursive.
+  ###
+  _findUser: (success, error) ->
+    @auth.url = @auth.url.substring(0, @auth.url.lastIndexOf('/'))
+    if not @auth.url.match(/^https?:\/\/.+/) then error(); return
+    @_getUser(success, () => @_findUser(success, error))
+
+
+  ###
+   find user from url.
+  ###
+  findUser: (success, error) ->
+    @auth.url = @auth.url + '/'
+    @_findUser(success, error)
 
 
   ###
