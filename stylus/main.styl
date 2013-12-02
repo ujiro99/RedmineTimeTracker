@@ -356,6 +356,7 @@ message_color = #555
       list-style-type: none
       height: 20px
       overflow: hidden
+      display: flex
 
       .btn
         border: none
@@ -369,18 +370,17 @@ message_color = #555
       transition: .2s ease
 
     li > span:nth-child(1)
-      width: 26px
+      padding-right: 5px
+      min-width: 15px
       color #aaa
 
     li > span:nth-child(2)
-      margin-right: -42px
-      padding-right: 50px
-      width: 100%
+      flex: 1
       text-ellipsis()
 
     li:hover
-      & > span
-        text-indent: 3px
+      & > span:nth-child(1)
+        text-indent: 5px
 
       & > span
       .btn
