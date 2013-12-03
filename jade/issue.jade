@@ -33,7 +33,8 @@ div#issue(ng-controller='IssueCtrl')
            ng-mousemove='onMouseMove($event)')
           span.id {{issue.id}}
           span.subject(tooltip-html-unsafe="<h6>{{issue.subject}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
-                       tooltip-popup-delay='500',
+                       tooltip-animation='flase',
+                       tooltip-popup-delay='700',
                        tooltip-placement='{{tooltipPlace}}') {{issue.subject}}
           button.btn(type='button',
                      ng-hide='isContained(issue)')
