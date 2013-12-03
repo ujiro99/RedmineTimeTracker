@@ -2,6 +2,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
+  $scope.issues = []
   $scope.projects = []
   $scope.selectedProject = []
   $scope.searchText = ''
@@ -54,19 +55,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
 
 
   ###
-   load issues according selected project.
-  ###
-  loadIssues = ->
-    if $scope.selectedProject.length is 0 then return
-    if not $scope.selectedProject[0]?
-      $scope.issues.clear()
-      return
-    account = $scope.selectedProject[0].account
-    projectId = $scope.selectedProject[0].id
-    $redmine(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
-
-
-  ###
    on loading success, update issue list
   ###
   loadIssuesSuccess = (data) ->
@@ -97,6 +85,19 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   $scope.$watch 'selectedProject[0]', ->
     loadIssues()
+
+
+  ###
+   load issues according selected project.
+  ###
+  loadIssues = ->
+    if $scope.selectedProject.length is 0 then return
+    if not $scope.selectedProject[0]?
+      $scope.issues.clear()
+      return
+    account = $scope.selectedProject[0].account
+    projectId = $scope.selectedProject[0].id
+    $redmine(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
 
 
   ###

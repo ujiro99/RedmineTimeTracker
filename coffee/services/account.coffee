@@ -41,7 +41,7 @@ timeTracker.factory("$account", ($rootScope) ->
     @id     = _Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
     @pass   = _Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
 
-  
+
   ###
    all account.
   ###

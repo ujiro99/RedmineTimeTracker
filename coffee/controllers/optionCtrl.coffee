@@ -100,6 +100,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
   $scope.clearOptions = () ->
     $account.clearAccount (result) ->
       if result
+        $scope.accounts.clear()
         $message.toast "All data Cleared."
       else
         $message.toast "Clear Failed."
