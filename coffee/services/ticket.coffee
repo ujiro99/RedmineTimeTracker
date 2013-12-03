@@ -170,8 +170,6 @@ timeTracker.factory("$ticket", () ->
       if ticket.show is SHOW.NOT then return
       selectableTickets.push ticket
       selectableTickets.sortById()
-      if selectedTickets.length is 0
-        selectedTickets.push ticket
 
 
   return {
@@ -222,6 +220,10 @@ timeTracker.factory("$ticket", () ->
     ###
     add: (ticket) ->
       _add(ticket)
+      if selectedTickets.length is 0
+        selectedTickets.push ticket
+      if not selectedTickets[0]?
+        selectedTickets[0] = ticket
       _setLocal()
 
 
@@ -232,6 +234,10 @@ timeTracker.factory("$ticket", () ->
       console.log 'tikcet addArray'
       if not arr? then return
       for t in arr then _add t
+      if selectedTickets.length is 0
+        selectedTickets.push selectableTickets[0]
+      if not selectedTickets[0]?
+        selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
