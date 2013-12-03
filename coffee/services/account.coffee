@@ -1,4 +1,4 @@
-timeTracker.factory("$account", () ->
+timeTracker.factory("$account", ($rootScope) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
@@ -41,20 +41,30 @@ timeTracker.factory("$account", () ->
     @id     = _Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
     @pass   = _Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
 
+  
+  ###
+   all account.
+  ###
+  _accounts = []
 
   return {
 
     ###
-     get all account data using chrome sync
+     get all account data.
+     if account was not loaded, load from chrome sync.
     ###
     getAccounts: (callback) ->
       callback = callback or NULLFUNC
+      if _accounts.length > 0
+        callback _accounts
+        return
       chrome.storage.sync.get ACCOUNTS, (item) ->
         if chrome.runtime.lastError? or not item[ACCOUNTS]?
           callback null
         else
           for a in item[ACCOUNTS]
             _decrypt.apply(a)
+          _accounts = item[ACCOUNTS]
           callback item[ACCOUNTS]
 
 
@@ -78,7 +88,13 @@ timeTracker.factory("$account", () ->
           if chrome.runtime.lastError?
             callback false
           else
+            _decrypt.apply(account)
+            for a, i in _accounts when a.url is account.url
+              _accounts.splice i, 1
+              break
+            _accounts.push account
             callback true
+            $rootScope.$broadcast 'accountAdded', account
 
 
     ###
@@ -96,7 +112,11 @@ timeTracker.factory("$account", () ->
           if chrome.runtime.lastError?
             callback false
           else
+            for a, i in _accounts when a.url is url
+              _accounts.splice i, 1
+              break
             callback true
+            $rootScope.$broadcast 'accountRemoved', url
 
 
     ###
@@ -109,6 +129,9 @@ timeTracker.factory("$account", () ->
         if chrome.runtime.lastError?
           callback false
         else
+          while _accounts.length > 0
+            a = _accounts.pop()
+            $rootScope.$broadcast 'accountRemoved', a.url
           callback true
   }
 )

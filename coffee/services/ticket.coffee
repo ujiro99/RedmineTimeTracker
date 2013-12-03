@@ -104,6 +104,7 @@ timeTracker.factory("$ticket", () ->
 
         tmp = []
         for t in tickets[TICKET]
+          # search url
           for url, obj of projects[PROJECT] when obj.index is t[TICKET_URL_INDEX]
             break
           tmp.push {
@@ -141,12 +142,13 @@ timeTracker.factory("$ticket", () ->
     if not storage? then callback? null; return
     ticketArray = []
     projectObj = {}
+    urlIndex = {}
     for t in tickets
+      urlIndex[t.url] = urlIndex[t.url] or Object.keys(urlIndex).length - 1
       projectObj[t.url] = projectObj[t.url] or {}
       projectObj[t.url][t.project.id] = t.project.name
-      index = Object.keys(projectObj).length - 1
-      projectObj[t.url].index = index
-      ticketArray.push [t.id, t.subject, index, t.project.id, t.show]
+      projectObj[t.url].index = urlIndex[t.url]
+      ticketArray.push [t.id, t.subject, urlIndex[t.url], t.project.id, t.show]
 
     storage.set PROJECT: projectObj
     storage.set TICKET: ticketArray, () ->
@@ -199,9 +201,7 @@ timeTracker.factory("$ticket", () ->
      set tickets.
     ###
     set: (ticketslist) ->
-
       console.log 'tikcet set'
-
       if not ticketslist? then return
 
       tickets.clear()
@@ -229,9 +229,7 @@ timeTracker.factory("$ticket", () ->
      add ticket array.
     ###
     addArray: (arr) ->
-
       console.log 'tikcet addArray'
-
       if not arr? then return
       for t in arr then _add t
       _setLocal()
@@ -247,8 +245,21 @@ timeTracker.factory("$ticket", () ->
         break
       for t, i in selectableTickets when _equals(t, ticket)
         selectableTickets.splice(i, 1)
-        selectedTickets[0] = selectableTickets[0]
         break
+      selectedTickets[0] = selectableTickets[0]
+      _setLocal()
+
+
+    ###
+     remove ticket associated to url.
+    ###
+    removeUrl: (url) ->
+      if not url? then return
+      newTickets = (t for t in tickets when t.url isnt url)
+      tickets.clear()
+      selectableTickets.clear()
+      @addArray newTickets
+      selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
@@ -281,9 +292,11 @@ timeTracker.factory("$ticket", () ->
     load: (callback) ->
       _getLocal (localTickets) ->
         if localTickets?.length > 0
+          console.log 'tikcet loaded from local'
           callback localTickets
         else
           _getSync (syncTickets) ->
+            console.log 'tikcet loaded from sync'
             callback syncTickets
 
 

@@ -10,31 +10,38 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
   $scope.mode = "auto"
+  $scope.tickets = []
+  $scope.selectedTicket = []
 
 
   ###
-   get issues from redmine server.
+   Initialize.
   ###
-  getIssues = ->
+  init = () ->
     $account.getAccounts (accounts) ->
-      if not accounts? or not accounts?[0]? then return
+      if not accounts then return
       for account in accounts
-        $scope.projects[account.url] = {}
-        $scope.projects[account.url].account = account
-        redmine = $redmine(account)
-        redmine.getIssuesOnUser(successGetIssues)
-        redmine.getActivities(getActivitiesSuccess)
+        loadActivities account
+      $scope.tickets = $ticket.getSelectable()
+      $scope.selectedTicket = $ticket.getSelected()
+
+  init()
 
 
   ###
-   merge ticket on strage, and update view
+   load activities for new account.
   ###
-  successGetIssues = (data, status, headers, config) ->
-    if not data?.issues? then return
-    $ticket.addArray data.issues
-    $scope.tickets = $ticket.getSelectable()
-    $scope.selectedTicket = $ticket.getSelected()
-    $ticket.sync()
+  $scope.$on 'accountAdded', (e, account) ->
+    loadActivities account
+
+
+  ###
+   load activities for account.
+  ###
+  loadActivities = (account) ->
+    $scope.projects[account.url] = $scope.projects[account.url] or {}
+    $scope.projects[account.url].account = account
+    $redmine(account).getActivities(getActivitiesSuccess)
 
 
   ###
@@ -65,11 +72,14 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
    change activity according to selected ticket
   ###
   $scope.$watch 'selectedTicket[0].url', ->
-    if $scope.selectedTicket
-      url = $scope.selectedTicket[0].url
-      $scope.selectedActivity[0] = $scope.projects[url].activities?[0]
+    if not $scope.selectedTicket[0]? then return
+    url = $scope.selectedTicket[0].url
+    $scope.selectedActivity[0] = $scope.projects[url].activities?[0]
 
 
+  ###
+   change post mode.
+  ###
   $scope.changeMode = () ->
     if $scope.mode is "auto"
       $scope.mode = "manual"
@@ -141,18 +151,4 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   ###
   submitError = (msg) ->
     $message.toast "Save Failed."
-
-
-  ###
-   on ticket loaded from crome storage, start getting issues.
-  ###
-  $scope.$on 'ticketLoaded', () ->
-    getIssues()
-
-
-  ###
-   on account changed, start getting issues.
-  ###
-  # $scope.$on 'accountChanged', () ->
-  #   getIssues()
 

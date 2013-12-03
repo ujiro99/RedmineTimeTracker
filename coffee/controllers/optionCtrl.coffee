@@ -17,6 +17,8 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
       for account in accounts
         loadProject account
 
+  init()
+
 
   ###
    load project.
@@ -38,7 +40,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
         $scope.accounts.splice i, 1
       $scope.accounts.push o
       $message.toast "Loaded : " + o.url
-      $scope.$emit 'notifyAccountChanged'
     else
       loadProjectError msg
 
@@ -79,7 +80,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
         if result
           $message.toast "Succeed authentication!"
           loadProject account
-          $scope.$emit 'notifyAccountChanged'
         else
           failAuthentication null
     else
@@ -115,6 +115,9 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
              prj.name.toLowerCase().contains($scope.searchText.toLowerCase())
 
 
+  ###
+   toggle account add form visible.
+  ###
   $scope.toggleForm = () ->
     $scope.isAdding = !$scope.isAdding
 
@@ -128,12 +131,5 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
       for a, i in $scope.accounts when a.url is url
         $scope.accounts.splice i, 1
         break
-      $scope.$emit 'notifyAccountRemoved', url
       $message.toast url + ' removed.'
-
-
-  ###
-   Initialize
-  ###
-  init()
 

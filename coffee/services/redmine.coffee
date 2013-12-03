@@ -1,4 +1,4 @@
-timeTracker.factory "$redmine", ($http, Base64) ->
+timeTracker.factory "$redmine", ($http, $rootScope, Base64) ->
 
   _redmines = {}
 
@@ -7,7 +7,7 @@ timeTracker.factory "$redmine", ($http, Base64) ->
       delete _redmines[auth.url]
       return
     if not _redmines[auth.url]
-      _redmines[auth.url] = new Redmine(auth, $http, Base64)
+      _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope)
     return _redmines[auth.url]
 
 
@@ -21,7 +21,7 @@ class Redmine
   _equals = (y) ->
     return @url is y.url and @id is y.id
 
-  constructor: (@auth, @$http, @Base64) ->
+  constructor: (@auth, @$http, @Base64, @observer) ->
     @url = auth.url
 
   _projects: []
@@ -173,6 +173,7 @@ class Redmine
             prj.account = @auth
             prj
           @_projects = data.projects
+          @observer.$broadcast 'projectsAdded', data.projects
         success?(data, status, headers, config))
       .error(error or @NULLFUNC)
 

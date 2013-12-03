@@ -9,30 +9,48 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
 
 
   ###
-   on account changed, start getting project and issues.
+   on project added, show project.
   ###
-  $scope.$on 'accountChanged', () ->
-    loadProject()
+  $scope.$on 'projectsAdded', (e, projects) ->
+    for prj in projects
+      addProject prj
 
 
+  ###
+   start getting issues.
+  ###
+  $scope.$on 'accountAdded', (e, account) ->
+    $redmine(account).getIssuesOnUser(getIssuesSuccess)
+
+
+  ###
+   remove project and issues.
+  ###
   $scope.$on 'accountRemoved', (e, url) ->
     removeProject url
 
 
   ###
-   load project.
+   add project.
+   if project already exists, it will be overwritten.
   ###
-  loadProject = () ->
-    $account.getAccounts (accounts) ->
-      if not accounts? or not accounts?[0]? then return
-      for account in accounts
-        for project in $redmine(account).getProjects() or []
-          found = $scope.projects.some (prj) ->
-            prj.account.url is account.url and prj.id is project.id
-          if not found
-            $scope.projects.push project
-      if not $scope.selectedProject[0]
-        $scope.selectedProject[0] = $scope.projects[0]
+  addProject = (project) ->
+    for prj, i in $scope.projects
+      if prj.account.url is project.account.url and prj.id is project.id
+        $scope.projects.splice i, 1
+        break
+    $scope.projects.push project
+    if not $scope.selectedProject[0]
+      $scope.selectedProject[0] = $scope.projects[0]
+
+
+  ###
+   add assigned issues.
+  ###
+  getIssuesSuccess = (data) ->
+    if not data? then return
+    $ticket.addArray data.issues
+    $ticket.sync()
 
 
   ###
@@ -40,6 +58,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   loadIssues = ->
     if $scope.selectedProject.length is 0 then return
+    if not $scope.selectedProject[0]?
+      $scope.issues.clear()
+      return
     account = $scope.selectedProject[0].account
     projectId = $scope.selectedProject[0].id
     $redmine(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
@@ -55,16 +76,20 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
     $scope.issues = data.issues
 
 
-  removeProject = (url) ->
-    $scope.projects = (prj for prj in $scope.projects when prj.account.url isnt url)
-    $scope.selectedProject[0] = $scope.projects[0]
-
-
   ###
    show fail message.
   ###
   loadIssuesError = () ->
     $message.toast 'Failed to load issues'
+
+
+  ###
+   remve project and tikcets.
+  ###
+  removeProject = (url) ->
+    $scope.projects = (prj for prj in $scope.projects when prj.account.url isnt url)
+    $scope.selectedProject[0] = $scope.projects[0]
+    $ticket.removeUrl url
 
 
   ###

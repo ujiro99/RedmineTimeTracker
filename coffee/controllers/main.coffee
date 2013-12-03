@@ -74,16 +74,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
               $ticket.setParam  data.issue.url, data.issue.id, total: total
 
 
-  $scope.$on 'notifyAccountChanged', () ->
-    $scope.$broadcast 'accountChanged'
-
-  $scope.$on 'notifyAccountRemoved', (e, url) ->
-    $scope.$broadcast 'accountRemoved', url
-
-
   alarmInfo =
     when: Date.now() + 1
     periodInMinutes: MINUTE_5
+
 
   chrome.alarms.create(TICKET_SYNC, alarmInfo)
   chrome.alarms.onAlarm.addListener (alarm) ->
