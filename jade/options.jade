@@ -57,7 +57,7 @@ div#options(ng-controller='OptionCtrl')
       button.btn(type='button')
         span.icon-minus
 
-  div.clear(ng-show="false")
+  div.clear(ng-show="state.debug")
     button.btn.btn-default.btn-sm(ng-click='clearOptions()')
       i.fa.fa-exclamation-triangle
       span Clear All

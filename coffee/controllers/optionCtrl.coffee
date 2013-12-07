@@ -1,4 +1,4 @@
-timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
+timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message, state) ->
 
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
@@ -6,6 +6,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message) ->
   $scope.searchText = ''
   $scope.isSaving = false
   $scope.isAdding = false
+  $scope.state = state
 
 
   ###
