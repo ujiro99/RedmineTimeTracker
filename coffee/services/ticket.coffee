@@ -144,7 +144,7 @@ timeTracker.factory("$ticket", () ->
     projectObj = {}
     urlIndex = {}
     for t in tickets
-      urlIndex[t.url] = urlIndex[t.url] or Object.keys(urlIndex).length - 1
+      urlIndex[t.url] = urlIndex[t.url] or Object.keys(urlIndex).length
       projectObj[t.url] = projectObj[t.url] or {}
       projectObj[t.url][t.project.id] = t.project.name
       projectObj[t.url].index = urlIndex[t.url]
@@ -297,7 +297,7 @@ timeTracker.factory("$ticket", () ->
     ###
     load: (callback) ->
       _getLocal (localTickets) ->
-        if localTickets?.length > 0
+        if localTickets?
           console.log 'tikcet loaded from local'
           callback localTickets
         else
