@@ -1,7 +1,7 @@
 timeTracker.factory("state", () ->
 
   return  {
-    debug: true
+    debug: false
     isTracking : false
   }
 
