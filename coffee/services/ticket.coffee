@@ -21,7 +21,7 @@ timeTracker.factory("$ticket", () ->
   #       subject: ,
   #       url: ,
   #       project: ,
-  #         id: ,
+  #         id: project_id
   #         name: ,
   #       show:
   #     }
@@ -32,8 +32,8 @@ timeTracker.factory("$ticket", () ->
   #
   #     project = {
   #       value of url:
-  #         index: xxx
-  #         value of id: name
+  #         index: project_url_index
+  #         value of project_id: name
   #     }
   #
   #
