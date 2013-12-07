@@ -187,7 +187,9 @@ class Redmine
       url: @auth.url + "/users/current.json?include=memberships"
     config = @setBasicConfig config, @auth
     @$http(config)
-      .success(success or @NULLFUNC)
+      .success( (data, status, headers, config) =>
+        @auth.userId = data.user.id
+        success(data, status, headers, config))
       .error(error or @NULLFUNC)
 
 
