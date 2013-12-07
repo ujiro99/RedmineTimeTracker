@@ -2,7 +2,8 @@ timeTracker.factory("$ticket", () ->
 
   TICKET = "TICKET"
   PROJECT = "PROJECT"
-  INDEX = "INDEX"
+
+  URL_INDEX_START = 1  # for avoid 0 == false
 
   TICKET_ID        = 0
   TICKET_SUBJECT   = 1
@@ -144,7 +145,7 @@ timeTracker.factory("$ticket", () ->
     projectObj = {}
     urlIndex = {}
     for t in tickets
-      urlIndex[t.url] = urlIndex[t.url] or Object.keys(urlIndex).length
+      urlIndex[t.url] = urlIndex[t.url] or Object.keys(urlIndex).length + URL_INDEX_START
       projectObj[t.url] = projectObj[t.url] or {}
       projectObj[t.url][t.project.id] = t.project.name
       projectObj[t.url].index = urlIndex[t.url]
