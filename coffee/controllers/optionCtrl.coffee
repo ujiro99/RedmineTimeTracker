@@ -39,6 +39,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message, stat
         projects: msg.projects
       for a, i in $scope.accounts when a.url is o.url
         $scope.accounts.splice i, 1
+        break
       $scope.accounts.push o
       $message.toast "Loaded : " + o.url
     else
@@ -62,6 +63,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message, stat
       $scope.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
+    $redmine({url: $scope.option.url}, true) # delete first
     $redmine($scope.option).findUser(addAccount, failAuthentication)
 
 
