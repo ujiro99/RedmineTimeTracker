@@ -3,8 +3,9 @@ timeTracker.factory "$redmine", ($http, $rootScope, Base64) ->
   _redmines = {}
 
   return (auth, remove) ->
-    if remove and _redmines[auth.url]?
-      delete _redmines[auth.url]
+    if remove
+      if _redmines[auth.url]?
+        delete _redmines[auth.url]
       return
     if not _redmines[auth.url]
       _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope)
