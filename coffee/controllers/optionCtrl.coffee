@@ -120,13 +120,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $redmine, $account, $message, stat
 
 
   ###
-   toggle account add form visible.
-  ###
-  $scope.toggleForm = () ->
-    $scope.isAdding = !$scope.isAdding
-
-
-  ###
    remove account from chrome sync.
   ###
   $scope.removeAccount = (url) ->

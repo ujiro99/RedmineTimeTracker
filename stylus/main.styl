@@ -34,7 +34,6 @@ html, body
 
 .wrap
   height: 100%
-  padding: 0px 10px
   overflow-y: scroll
 
   input.input-sm
@@ -113,6 +112,7 @@ html, body
 
 
 .frame
+  margin: 0 10px
   overflow: hidden
 
   & > section
@@ -410,21 +410,14 @@ message_color = #555
       &:hover
         color: color_key
 
-  .animate-add-account
-    margin: 10px 0
-    height: 197px
-    border-collapse: separate
-    border-spacing: 0px
-    transition: ease .3s
-    opacity: 1
-    -webkit-transform: scale3d(1,1,1)
-    &.ng-hide-add
-    &.ng-hide-remove
-      display: block!important
-    &.ng-hide
-      opacity: 0
-      height: 0
-      -webkit-transform: scale3d(1,0,1)
+  .add-account
+    margin: 0
+    .well
+      overflow: hidden
+      margin-bottom: 10px
+      padding: 16px 8px
+    .btn
+      background-color: #fff
 
   .auth
     position: relative
@@ -557,7 +550,6 @@ message_color = #555
 #about
   color: #fff
   background-color: rgba(247,80,90, 1)
-  margin: 30px -10px 0 -10px
   padding: 0 10px 5px 10px
   font-family: mplus-2c-thin
 

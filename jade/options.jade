@@ -15,13 +15,12 @@ div#options(ng-controller='OptionCtrl')
                                   placeholder='search...',
                                   ng-model='searchText')
       i.fa.fa-search
-    button.btn(ng-click='toggleForm()')
+    button.btn(ng-click='isAdding = !isAdding')
       span.icon-plus
 
-
   // add
-  .animate-add-account(ng-show='isAdding')
-    form(name='account')
+  div.add-account.collapse(uz-collapse='isAdding')
+    form.well(name='account')
 
       // Auth way
       div.btn-group.selectAuth
