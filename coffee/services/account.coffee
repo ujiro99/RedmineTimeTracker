@@ -25,12 +25,36 @@ timeTracker.factory("$account", ($rootScope) ->
 
 
   ###
+   decrypt object. this is used for compatibility.
+  ###
+  _decryptObject = (obj) ->
+    return CryptoJS.AES.decrypt(obj, PHRASE).toString(CryptoJS.enc.Utf8)
+
+
+  ###
+   decrypt string.
+  ###
+  _decryptString = (str) ->
+    return CryptoJS.AES.decrypt(_Json.parse(str), PHRASE).toString(CryptoJS.enc.Utf8)
+
+
+  ###
+   decrypt according it type.
+  ###
+  _decrypt = (any) ->
+    if typeof any is "string"
+      return _decryptString(any)
+    else
+      return _decryptObject(any)
+
+
+  ###
    decrypt the account data, only to sync on chrome.
   ###
-  _decrypt = () ->
-    @apiKey = CryptoJS.AES.decrypt(_Json.parse(@apiKey), PHRASE).toString(CryptoJS.enc.Utf8)
-    @id     = CryptoJS.AES.decrypt(_Json.parse(@id), PHRASE).toString(CryptoJS.enc.Utf8)
-    @pass   = CryptoJS.AES.decrypt(_Json.parse(@pass), PHRASE).toString(CryptoJS.enc.Utf8)
+  _decryptAuth = () ->
+    @apiKey = _decrypt @apiKey
+    @id     = _decrypt @id
+    @pass   = _decrypt @pass
 
 
   ###
@@ -63,7 +87,7 @@ timeTracker.factory("$account", ($rootScope) ->
           callback null
         else
           for a in item[ACCOUNTS]
-            _decrypt.apply(a)
+            _decryptAuth.apply(a)
           _accounts = item[ACCOUNTS]
           callback item[ACCOUNTS]
 
@@ -88,7 +112,7 @@ timeTracker.factory("$account", ($rootScope) ->
           if chrome.runtime.lastError?
             callback false
           else
-            _decrypt.apply(account)
+            _decryptAuth.apply(account)
             for a, i in _accounts when a.url is account.url
               _accounts.splice i, 1
               break
