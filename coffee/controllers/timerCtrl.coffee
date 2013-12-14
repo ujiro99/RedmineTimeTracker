@@ -10,6 +10,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
   $scope.mode = "auto"
+  $scope.time = { hours: 0 }
   $scope.tickets = []
   $scope.selectedTicket = []
 
