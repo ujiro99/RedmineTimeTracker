@@ -364,29 +364,49 @@ message_color = #555
         color: #aaa
         transition: .2s ease
 
-    li > span
-      vertical-align: middle
-      display: inline-block
+      .btn.external-link
+        font-size: 16px
+        display: flex
+        color: #ccc
+        &:hover
+          color: color_key
+
+
+    .issue
+      color #555
+      border: none
+      padding: 0 3px 0 0
+      background-color: transparent
+      outline: none
       transition: .2s ease
-
-    li > span:nth-child(1)
-      padding-right: 5px
-      min-width: 15px
-      color #aaa
-
-    li > span:nth-child(2)
+      display: flex
       flex: 1
-      text-ellipsis()
-
-    li:hover
-      & > span:nth-child(1)
-        text-indent: 5px
 
       & > span
+        vertical-align: middle
+        display: inline-block
+
+      & > span:nth-child(1)
+        padding-right: 5px
+        min-width: 15px
+        color #aaa
+
+      & > span:nth-child(2)
+        flex: 1
+        text-align: left
+        text-ellipsis()
+
+    .issue:hover
+      margin-left: 5px
+
+      span
       .btn
         color: color_key
         .icon-minus
           background-image: -webkit-gradient(linear, left center, right center, from(color_key), to(color_key));
+
+      .tooltip-inner span
+        color: #555
 
 
 #options

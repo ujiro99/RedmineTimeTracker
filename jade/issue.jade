@@ -29,17 +29,17 @@ div#issue(ng-controller='IssueCtrl')
     div.issueList
       ul
         li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"',
-           ng-click="onClickIssue(issue)",
            ng-mousemove='onMouseMove($event)')
-          span.id {{issue.id}}
-          span.subject(tooltip-html-unsafe="<h6>{{issue.subject}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
-                       tooltip-animation='flase',
-                       tooltip-popup-delay='700',
-                       tooltip-placement='{{tooltipPlace}}') {{issue.subject}}
-          button.btn(type='button',
-                     ng-hide='isContained(issue)')
-            span.icon-plus
-          button.btn(type='button',
-                     ng-show='isContained(issue)')
-            span.icon-minus
+          button.issue(type='button', ng-click="onClickIssue(issue)")
+            span.id {{issue.id}}
+            span.subject(tooltip-html-unsafe="<h6>{{issue.subject}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
+                         tooltip-animation="false",
+                         tooltip-popup-delay='700',
+                         tooltip-placement='{{tooltipPlace}}') {{issue.subject}}
+            div.btn(ng-hide='isContained(issue)')
+              span.icon-plus
+            div.btn(ng-show='isContained(issue)')
+              span.icon-minus
+            button.btn.external-link(type='button', ng-click="openIssue(issue)")
+              span.fa.fa-info-circle
 

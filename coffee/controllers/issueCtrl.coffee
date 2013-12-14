@@ -78,6 +78,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
     $scope.projects = (prj for prj in $scope.projects when prj.account.url isnt url)
     $scope.selectedProject[0] = $scope.projects[0]
     $ticket.removeUrl url
+    $message.toast(url + ' removed.')
 
 
   ###
@@ -113,6 +114,23 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
       removeIssue(issue)
     else
       addIssue(issue)
+
+
+  ###
+   open issue page on redmien.
+  ###
+  $scope.openIssue = (issue) ->
+    openLink issue.url + '/issues/' + issue.id
+
+
+  ###
+   open link on other window.
+  ###
+  openLink = (url) ->
+    a = document.createElement('a')
+    a.href = url
+    a.target='_blank'
+    a.click()
 
 
   ###
@@ -160,3 +178,5 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
       $scope.tooltipPlace = 'top'
     else
       $scope.tooltipPlace = 'bottom'
+
+
