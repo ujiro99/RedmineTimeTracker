@@ -36,7 +36,7 @@ module.exports = (grunt) ->
           bare: true
           join: true
         files: [
-          'scripts/script.js': ['coffee/controllers/main.coffee', 'coffee/**/*.coffee']
+          'scripts/script.js': ['coffee/app.coffee', 'coffee/**/*.coffee']
         ]
       develop:
         options:
