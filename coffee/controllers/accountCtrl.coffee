@@ -98,20 +98,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message, sta
 
 
   ###
-   clear all account data.
-  ###
-  $scope.clearOptions = () ->
-    $account.clearAccount (result) ->
-      if result
-        for a in $scope.accounts
-          $redmine(a, true) # delete
-        $scope.accounts.clear()
-        $message.toast "All data Cleared."
-      else
-        $message.toast "Clear Failed."
-
-
-  ###
    filter account and projects.
   ###
   $scope.accountFilter = (account) ->

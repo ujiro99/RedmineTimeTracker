@@ -566,6 +566,62 @@ message_color = #555
     padding-left: 6px
     color: #aaa
 
+#options
+
+  input[type=checkbox],
+  input[type=radio]
+    -webkit-appearance: none
+    box-shadow: inset 0px 0px 0px 1px #e6e6e6
+    border-radius: 15px
+    background-color: #fff
+    padding: 1px
+    display: inline-block
+    width: 52px
+    height: 31px
+    position: relative
+    cursor: pointer
+    transition: all .3s ease-out
+    margin: 0px
+    -webkit-transform: scale(.7) // Adjust size
+    outline: none
+    border: none
+
+  input[type=checkbox]:checked,
+  input[type=radio]:checked
+    box-shadow: inset 0px 0px 0px 20px color_key
+
+  input[type=checkbox]:after,
+  input[type=radio]:after
+    content: ''
+    position: absolute
+    width: 29px
+    height: 29px
+    border-radius: 15px
+    box-shadow: 0px 2px 2px 1px rgba(0,0,0,.2)
+    cursor: pointer
+    background-color: #fff
+    left: 1px
+    transition: ease-in .1s
+
+  input[type="checkbox"]:checked:after,
+  input[type="radio"]:checked:after
+    left: 22px
+
+  .settings-section
+    display: flex
+    align-items: center
+
+  .setting-labels
+    flex: 1
+    margin-bottom: 3px
+
+  .setting-description
+    margin-left: 5px
+    color: #999
+
+  .setting-options
+    margin-right: -6px
+
 
 #about
   color: #fff

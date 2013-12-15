@@ -4,62 +4,14 @@ div#options(ng-controller='OptionCtrl')
     div.caption
       div.title
         div.icon
-          span.icon-users
-        span Accounts
+          span.icon-settings
+        span Options
 
-  // search
-  .input-and-btn
-    div.form-group.search.input
-      label.sr-only Search
-      input.form-control.input-sm(type='search',
-                                  placeholder='search...',
-                                  ng-model='searchText')
-      i.fa.fa-search
-    button.btn(ng-click='isAdding = !isAdding', ga-click='toggleForm')
-      span.icon-plus
 
-  // add
-  div.add-account.collapse(uz-collapse='isAdding')
-    form.well(name='account')
-
-      // Auth way
-      div.btn-group.selectAuth
-        button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
-        button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
-
-      // Auth
-      div.auth(ng-switch on="authWay")
-        section.animate-switch(ng-switch-when="id_pass")
-          div(ng-include="'template/basic_auth.html'")
-        section.animate-switch(ng-switch-when="api_key")
-          div(ng-include="'template/api_key.html'")
-
-      // Add Button
-      div.save
-        button.btn.btn-default.btn-sm.ladda-button(
-          ng-click='addAccount()',
-          ga-click='addAccount',
-          uz-loading='isSaving',
-          data-style='zoom-in',
-          data-size='xs',
-          data-spinner-color="#555") Add
-
-  // list
-  ul.account-list
-    li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
-       ng-click='removeAccount(account.url)',
-       ga-click='removeAccount')
-      .number
-      .list-label
-        span {{account.url}}
-        ul.project-list
-          li.list-label(ng-repeat='prj in account.projects')
-            span {{prj.name}}
-      button.btn(type='button')
-        span.icon-minus
-
-  div.clear(ng-show="state.debug")
-    button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
-      i.fa.fa-exclamation-triangle
-      span Clear All
- 
+  div.settings-section.form-group
+    div.setting-labels
+      label.control-label Reports Usage
+      div.setting-description
+        span Automatically send usage statistics and crash reports.
+    div.setting-options
+      input.btn(type="checkbox", name="reportUsage", ng-model="options.reportUsage")

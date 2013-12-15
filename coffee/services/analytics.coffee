@@ -18,6 +18,7 @@ timeTracker.factory "analytics", () ->
     sendEvent: (category, action, label, value) ->
       tracker.sendEvent category, action, label, value
 
+
     ###*
      Track a view using the asynchronous tracking API.
      @method sendView
@@ -25,5 +26,15 @@ timeTracker.factory "analytics", () ->
     ###
     sendView: (viewName) ->
       tracker.sendAppView AppPrefix + viewName
+
+
+    ###*
+     Set Tracking is permitted.
+     @method setPermittion
+     @param {Boolean} permitted  Is enable tracking.
+    ###
+    setPermittion: (permitted) ->
+      service.getConfig().addCallback (config) ->
+        config.setTrackingPermitted(permitted)
 
   }
