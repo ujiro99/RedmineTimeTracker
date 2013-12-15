@@ -15,7 +15,7 @@ div#options(ng-controller='OptionCtrl')
                                   placeholder='search...',
                                   ng-model='searchText')
       i.fa.fa-search
-    button.btn(ng-click='isAdding = !isAdding')
+    button.btn(ng-click='isAdding = !isAdding', ga-click='toggleForm')
       span.icon-plus
 
   // add
@@ -38,6 +38,7 @@ div#options(ng-controller='OptionCtrl')
       div.save
         button.btn.btn-default.btn-sm.ladda-button(
           ng-click='addAccount()',
+          ga-click='addAccount',
           uz-loading='isSaving',
           data-style='zoom-in',
           data-size='xs',
@@ -46,7 +47,8 @@ div#options(ng-controller='OptionCtrl')
   // list
   ul.account-list
     li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
-       ng-click='removeAccount(account.url)')
+       ng-click='removeAccount(account.url)',
+       ga-click='removeAccount')
       .number
       .list-label
         span {{account.url}}
@@ -57,7 +59,7 @@ div#options(ng-controller='OptionCtrl')
         span.icon-minus
 
   div.clear(ng-show="state.debug")
-    button.btn.btn-default.btn-sm(ng-click='clearOptions()')
+    button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
       i.fa.fa-exclamation-triangle
       span Clear All
  

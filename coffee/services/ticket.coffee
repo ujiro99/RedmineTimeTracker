@@ -1,4 +1,4 @@
-timeTracker.factory("$ticket", () ->
+timeTracker.factory("$ticket", (analytics) ->
 
   TICKET = "TICKET"
   PROJECT = "PROJECT"
@@ -156,6 +156,7 @@ timeTracker.factory("$ticket", () ->
       if chrome.runtime.lastError?
         callback? false
       else
+        analytics.sendEvent 'internal', 'ticket', 'set', ticketArray.length
         callback? true
 
 

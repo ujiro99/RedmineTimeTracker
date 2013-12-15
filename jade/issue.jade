@@ -30,7 +30,7 @@ div#issue(ng-controller='IssueCtrl')
       ul
         li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"',
            ng-mousemove='onMouseMove($event)')
-          button.issue(type='button', ng-click="onClickIssue(issue)")
+          button.issue(type='button', ng-click="onClickIssue(issue)", ga-click='issueItem')
             span.id {{issue.id}}
             span.subject(tooltip-html-unsafe="<h6>{{issue.subject}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
                          tooltip-animation="false",
@@ -40,6 +40,6 @@ div#issue(ng-controller='IssueCtrl')
               span.icon-plus
             div.btn(ng-show='isContained(issue)')
               span.icon-minus
-            button.btn.external-link(type='button', ng-click="openIssue(issue)")
+            button.btn.external-link(type='button', ng-click="openIssue(issue)", ga-click='issueLink')
               span.fa.fa-info-circle
 
