@@ -7,7 +7,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, option, analyt
    restore option, and start watching options.
   ###
   option.getOptions (options) ->
-    $scope.options = options
+    $scope.options = options or {}
     analytics.setPermittion options.reportUsage
 
     # start watch changing.
