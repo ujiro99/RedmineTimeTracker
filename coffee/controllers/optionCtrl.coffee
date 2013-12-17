@@ -1,7 +1,8 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, option, analytics) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, $account, option, analytics, state) ->
 
   DEFAULT_OPTION = { reportUsage: true }
   $scope.options = {}
+  $scope.state = state
 
 
   ###
@@ -30,9 +31,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, option, analyt
   $scope.clearOptions = () ->
     $account.clearAccount (result) ->
       if result
-        for a in $scope.accounts
-          $redmine(a, true) # delete
-        $scope.accounts.clear()
         $message.toast "All data Cleared."
       else
         $message.toast "Clear Failed."

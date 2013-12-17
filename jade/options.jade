@@ -15,3 +15,9 @@ div#options(ng-controller='OptionCtrl')
         span Automatically send usage statistics and crash reports.
     div.setting-options
       input.btn(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
+
+  div.clear(ng-show='state.debug')
+    button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
+      i.fa.fa-exclamation-triangle
+      span Clear All
+ 
