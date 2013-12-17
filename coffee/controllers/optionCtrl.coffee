@@ -1,13 +1,14 @@
 timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, option, analytics) ->
 
-  $scope.options = { reportUsage: true }
+  DEFAULT_OPTION = { reportUsage: true }
+  $scope.options = {}
 
 
   ###
    restore option, and start watching options.
   ###
   option.getOptions (options) ->
-    $scope.options = options or {}
+    $scope.options = options or DEFAULT_OPTION
     analytics.setPermittion $scope.options.reportUsage
 
     # start watch changing.
