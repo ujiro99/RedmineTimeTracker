@@ -40,5 +40,5 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
       $ticket.sync()
 
 
-  analytics.sendView("/")
+  analytics.sendView("")
 

@@ -1,7 +1,7 @@
 timeTracker.factory "analytics", () ->
 
   AppPrefix = "/app/"
-  AnalyticsCode = "UA-32234486-8"
+  AnalyticsCode = "UA-32234486-7"
   service = analytics.getService("RedmineTimeTracker")
   tracker = service.getTracker(AnalyticsCode)
 
