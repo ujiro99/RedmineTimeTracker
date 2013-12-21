@@ -11,18 +11,23 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, $account, opti
   option.getOptions (options) ->
     $scope.options = options or DEFAULT_OPTION
     analytics.setPermittion $scope.options.reportUsage
-
     # start watch changing.
-    $scope.$watch 'options.reportUsage', (newVal, oldVal) ->
-      if newVal is oldVal then return
-      analytics.setPermittion newVal
-      $timeout ->
-        option.setOptions $scope.options, (result) ->
-          if result
-            $message.toast 'Option saved.'
-          else
-            $message.toast 'Failed to save.'
-      , 500
+    $scope.$watch 'options', watchOptions, true
+
+
+  ###
+   if option was changed, save it.
+  ###
+  watchOptions = (newVal, oldVal) ->
+    if util.equals(newVal, oldVal) then return
+    analytics.setPermittion newVal.reportUsage
+    $timeout ->
+      option.setOptions $scope.options, (result) ->
+        if result
+          $message.toast 'Option saved.'
+        else
+          $message.toast 'Failed to save.'
+    , 500
 
 
   ###
