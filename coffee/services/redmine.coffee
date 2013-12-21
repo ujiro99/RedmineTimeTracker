@@ -207,8 +207,11 @@ class Redmine
    find user from url.
   ###
   findUser: (success, error) ->
+    orgUrl = @auth.url
     @auth.url = @auth.url + '/'
-    @_findUser(success, error)
+    @_findUser(success, (param...) =>
+      @auth.url = orgUrl
+      error(param...))
 
 
   ###
