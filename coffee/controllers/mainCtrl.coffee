@@ -21,6 +21,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
       for t in $ticket.get()
         for account in accounts when account.url is t.url
           $redmine(account).getIssuesById t.id, (data, status, headers, config) ->
+            newParam =
+              subject: data.issue.subject
+              text: data.issue.id + ' ' + data.issue.subject
+            $ticket.setParam  data.issue.url, data.issue.id, newParam
             if data.issue?.status.id is TICKET_CLOSED
               $ticket.remove {url: data.issue.url, id: data.issue.id }
               return

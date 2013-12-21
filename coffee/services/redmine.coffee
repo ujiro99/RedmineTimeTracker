@@ -92,6 +92,7 @@ class Redmine
             issue.show = @SHOW.DEFAULT
             issue.url = @auth.url
             issue.equals = _equals
+            issue.total = issue.spent_hours or 0
             issue
         success?(data, status, headers, config))
       .error(error or @NULLFUNC)
