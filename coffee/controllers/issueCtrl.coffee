@@ -21,7 +21,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    start getting issues.
   ###
   $scope.$on 'accountAdded', (e, account) ->
-    Redmine(account).getIssuesOnUser(getIssuesSuccess)
+    Redmine.get(account).getIssuesOnUser(getIssuesSuccess)
 
 
   ###
@@ -98,7 +98,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
       return
     account = $scope.selectedProject[0].account
     projectId = $scope.selectedProject[0].id
-    Redmine(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
+    Redmine.get(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
 
 
   ###

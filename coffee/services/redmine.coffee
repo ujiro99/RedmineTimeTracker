@@ -2,15 +2,25 @@ timeTracker.factory "Redmine", ($http, $rootScope, Base64) ->
 
   _redmines = {}
 
-  return (auth, remove) ->
-    if remove
+  return {
+
+    ###
+     get redmine instance.
+    ###
+    get: (auth) ->
+      if not _redmines[auth.url]
+        _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope)
+      return _redmines[auth.url]
+
+
+    ###
+     remove redmine instance.
+    ###
+    remove: (auth) ->
       if _redmines[auth.url]?
         delete _redmines[auth.url]
-      return
-    if not _redmines[auth.url]
-      _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope)
-    return _redmines[auth.url]
 
+  }
 
 class Redmine
 
@@ -33,6 +43,7 @@ class Redmine
       "hours": 0
       "activity_id": 8
       "comments": ""
+
 
   ###
    convert json to xml.
@@ -59,7 +70,6 @@ class Redmine
         result += indent + "<" + name + ">" + val + "</" + name + ">\n"
 
     return result
-
 
 
   ###

@@ -20,7 +20,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, Ticket, Redmine, Account
       if not accounts? or not accounts?[0]? then return
       for t in Ticket.get()
         for account in accounts when account.url is t.url
-          Redmine(account).getIssuesById t.id, (data, status, headers, config) ->
+          Redmine.get(account).getIssuesById t.id, (data, status, headers, config) ->
             newParam =
               subject: data.issue.subject
               text: data.issue.id + ' ' + data.issue.subject

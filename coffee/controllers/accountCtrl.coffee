@@ -24,7 +24,7 @@ timeTracker.controller 'AccountCtrl', ($scope, Redmine, Account, Message) ->
    load project.
   ###
   loadProject = (account) ->
-    Redmine(account).loadProjects loadProjectSuccess, loadProjectError
+    Redmine.get(account).loadProjects loadProjectSuccess, loadProjectError
 
 
   ###
@@ -62,8 +62,8 @@ timeTracker.controller 'AccountCtrl', ($scope, Redmine, Account, Message) ->
       $scope.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
-    Redmine({url: $scope.option.url}, true) # delete first
-    Redmine($scope.option).findUser(addAccount, failAuthentication)
+    Redmine.remove({url: $scope.option.url})
+    Redmine.get($scope.option).findUser(addAccount, failAuthentication)
 
 
   ###
@@ -111,7 +111,7 @@ timeTracker.controller 'AccountCtrl', ($scope, Redmine, Account, Message) ->
   ###
   $scope.removeAccount = (url) ->
     Account.removeAccount url, () ->
-      Redmine({url: url}, true) # delete
+      Redmine.get({url: url}, true) # delete
       for a, i in $scope.accounts when a.url is url
         $scope.accounts.splice i, 1
         break

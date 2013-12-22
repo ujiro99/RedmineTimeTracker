@@ -44,7 +44,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   loadActivities = (account) ->
     $scope.projects[account.url] = $scope.projects[account.url] or {}
     $scope.projects[account.url].account = account
-    Redmine(account).getActivities(getActivitiesSuccess)
+    Redmine.get(account).getActivities(getActivitiesSuccess)
 
 
   ###
@@ -143,7 +143,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
         activityId: $scope.selectedActivity[0].id
       url = $scope.selectedTicket[0].url
       account = $scope.projects[url].account
-      redmine = Redmine(account)
+      redmine = Redmine.get(account)
       redmine.submitTime(conf, submitSuccess, submitError)
       Message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
