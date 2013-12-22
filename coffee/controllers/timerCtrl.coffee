@@ -1,7 +1,8 @@
-timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $message, state) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $ticket, $message, state) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
+  SWITCHING_TIME = 300
 
   $scope.state = state
   $scope.projects = {}
@@ -14,6 +15,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
   $scope.tickets = []
   $scope.selectedTicket = []
 
+  trackedTime = {}
 
   ###
    Initialize.
@@ -80,12 +82,20 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
 
   ###
    change post mode.
+   if tracking, restore tracked time.
   ###
   $scope.changeMode = () ->
     if $scope.mode is "auto"
+      if state.isTracking
+        $scope.$broadcast 'timer-stop'
       $scope.mode = "manual"
     else
       $scope.mode = "auto"
+      if state.isTracking
+        # wait for complete switching
+        $timeout () ->
+          $scope.$broadcast 'timer-start', new Date() - trackedTime.millis
+        , SWITCHING_TIME
 
 
   ###
@@ -112,7 +122,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $account, $redmine, $ticket, $messa
    on timer stopped, send time entry.
   ###
   $scope.$on 'timer-stopped', (e, time) ->
-    postEntry(time.minutes)
+    trackedTime = time
+    if not state.isTracking
+      postEntry(time.minutes)
 
 
   ###
