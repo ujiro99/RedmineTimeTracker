@@ -1,4 +1,4 @@
-timeTracker.factory "$message", ($rootScope, $timeout) ->
+timeTracker.factory "Message", ($rootScope, $timeout) ->
 
   MESSAGE_DURATION = 1500
   ANIMATION_DURATION = 1000

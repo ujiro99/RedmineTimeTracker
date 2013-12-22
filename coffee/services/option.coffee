@@ -1,4 +1,4 @@
-timeTracker.factory("option", () ->
+timeTracker.factory("Option", () ->
 
   OPTIONS = "OPTIONS"
   NULLFUNC = () ->

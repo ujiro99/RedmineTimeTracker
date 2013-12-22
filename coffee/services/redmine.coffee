@@ -1,4 +1,4 @@
-timeTracker.factory "$redmine", ($http, $rootScope, Base64) ->
+timeTracker.factory "Redmine", ($http, $rootScope, Base64) ->
 
   _redmines = {}
 

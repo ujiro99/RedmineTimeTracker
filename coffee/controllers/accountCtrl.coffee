@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
+timeTracker.controller 'AccountCtrl', ($scope, Redmine, Account, Message) ->
 
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
@@ -12,7 +12,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
    Initialize Option page.
   ###
   init = ->
-    $account.getAccounts (accounts) ->
+    Account.getAccounts (accounts) ->
       if not accounts? or not accounts[0]? then return
       for account in accounts
         loadProject account
@@ -24,7 +24,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
    load project.
   ###
   loadProject = (account) ->
-    $redmine(account).loadProjects loadProjectSuccess, loadProjectError
+    Redmine(account).loadProjects loadProjectSuccess, loadProjectError
 
 
   ###
@@ -40,7 +40,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
         $scope.accounts.splice i, 1
         break
       $scope.accounts.push o
-      $message.toast "Loaded : " + o.url
+      Message.toast "Loaded : " + o.url
     else
       loadProjectError msg
 
@@ -49,7 +49,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
    show fail message.
   ###
   loadProjectError = (msg) ->
-    $message.toast "Load Project Failed."
+    Message.toast "Load Project Failed."
 
 
   ###
@@ -58,12 +58,12 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
   $scope.addAccount = () ->
     $scope.isSaving = true
     if not $scope.option.url? or $scope.option.url.length is 0
-      $message.toast "Please input Redmine Server URL."
+      Message.toast "Please input Redmine Server URL."
       $scope.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
-    $redmine({url: $scope.option.url}, true) # delete first
-    $redmine($scope.option).findUser(addAccount, failAuthentication)
+    Redmine({url: $scope.option.url}, true) # delete first
+    Redmine($scope.option).findUser(addAccount, failAuthentication)
 
 
   ###
@@ -78,9 +78,9 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
         id:     $scope.option.id
         pass:   $scope.option.pass
         userId: msg.user.id
-      $account.addAccount account, (result) ->
+      Account.addAccount account, (result) ->
         if result
-          $message.toast "Succeed authentication!"
+          Message.toast "Succeed authentication!"
           loadProject account
         else
           failAuthentication null
@@ -93,7 +93,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
   ###
   failAuthentication = (msg) ->
     $scope.isSaving = false
-    $message.toast "Failed authentication."
+    Message.toast "Failed authentication."
 
 
   ###
@@ -110,10 +110,10 @@ timeTracker.controller 'AccountCtrl', ($scope, $redmine, $account, $message) ->
    remove account from chrome sync.
   ###
   $scope.removeAccount = (url) ->
-    $account.removeAccount url, () ->
-      $redmine({url: url}, true) # delete
+    Account.removeAccount url, () ->
+      Redmine({url: url}, true) # delete
       for a, i in $scope.accounts when a.url is url
         $scope.accounts.splice i, 1
         break
-      $message.toast url + ' removed.'
+      Message.toast url + ' removed.'
 

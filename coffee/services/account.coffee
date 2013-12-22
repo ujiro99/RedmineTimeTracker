@@ -1,4 +1,4 @@
-timeTracker.factory("$account", ($rootScope, analytics) ->
+timeTracker.factory("Account", ($rootScope, Analytics) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
@@ -119,7 +119,7 @@ timeTracker.factory("$account", ($rootScope, analytics) ->
             _accounts.push account
             callback true
             $rootScope.$broadcast 'accountAdded', account
-            analytics.sendEvent 'internal', 'account', 'add', _accounts.length
+            Analytics.sendEvent 'internal', 'account', 'add', _accounts.length
 
 
     ###
@@ -142,7 +142,7 @@ timeTracker.factory("$account", ($rootScope, analytics) ->
               break
             callback true
             $rootScope.$broadcast 'accountRemoved', url
-            analytics.sendEvent 'internal', 'account', 'remove', _accounts.length
+            Analytics.sendEvent 'internal', 'account', 'remove', _accounts.length
 
 
     ###

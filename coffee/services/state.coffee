@@ -1,4 +1,4 @@
-timeTracker.factory("state", () ->
+timeTracker.factory("State", () ->
 
   return  {
     debug: false

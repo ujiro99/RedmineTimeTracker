@@ -1,16 +1,16 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, $account, option, analytics, state) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option, Analytics, State) ->
 
   DEFAULT_OPTION = { reportUsage: true }
   $scope.options = {}
-  $scope.state = state
+  $scope.state = State
 
 
   ###
    restore option, and start watching options.
   ###
-  option.getOptions (options) ->
+  Option.getOptions (options) ->
     $scope.options = options or DEFAULT_OPTION
-    analytics.setPermittion $scope.options.reportUsage
+    Analytics.setPermittion $scope.options.reportUsage
     # start watch changing.
     $scope.$watch 'options', watchOptions, true
 
@@ -20,13 +20,13 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, $account, opti
   ###
   watchOptions = (newVal, oldVal) ->
     if util.equals(newVal, oldVal) then return
-    analytics.setPermittion newVal.reportUsage
+    Analytics.setPermittion newVal.reportUsage
     $timeout ->
-      option.setOptions $scope.options, (result) ->
+      Option.setOptions $scope.options, (result) ->
         if result
-          $message.toast 'Option saved.'
+          Message.toast 'Option saved.'
         else
-          $message.toast 'Failed to save.'
+          Message.toast 'Failed to save.'
     , 500
 
 
@@ -34,10 +34,10 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, $message, $account, opti
    clear all account data.
   ###
   $scope.clearOptions = () ->
-    $account.clearAccount (result) ->
+    Account.clearAccount (result) ->
       if result
-        $message.toast "All data Cleared."
+        Message.toast "All data Cleared."
       else
-        $message.toast "Clear Failed."
+        Message.toast "Clear Failed."
 
 

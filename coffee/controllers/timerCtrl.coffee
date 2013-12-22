@@ -1,10 +1,10 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $ticket, $message, state) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, Message, State) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
   SWITCHING_TIME = 300
 
-  $scope.state = state
+  $scope.state = State
   $scope.projects = {}
   $scope.selectedActivity = []
   $scope.comment = ""
@@ -21,12 +21,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
    Initialize.
   ###
   init = () ->
-    $account.getAccounts (accounts) ->
+    Account.getAccounts (accounts) ->
       if not accounts then return
       for account in accounts
         loadActivities account
-      $scope.tickets = $ticket.getSelectable()
-      $scope.selectedTicket = $ticket.getSelected()
+      $scope.tickets = Ticket.getSelectable()
+      $scope.selectedTicket = Ticket.getSelected()
 
   init()
 
@@ -44,7 +44,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
   loadActivities = (account) ->
     $scope.projects[account.url] = $scope.projects[account.url] or {}
     $scope.projects[account.url].account = account
-    $redmine(account).getActivities(getActivitiesSuccess)
+    Redmine(account).getActivities(getActivitiesSuccess)
 
 
   ###
@@ -86,12 +86,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
   ###
   $scope.changeMode = () ->
     if $scope.mode is "auto"
-      if state.isTracking
+      if State.isTracking
         $scope.$broadcast 'timer-stop'
       $scope.mode = "manual"
     else
       $scope.mode = "auto"
-      if state.isTracking
+      if State.isTracking
         # wait for complete switching
         $timeout () ->
           $scope.$broadcast 'timer-start', new Date() - trackedTime.millis
@@ -103,11 +103,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
   ###
   $scope.clickSubmitButton = () ->
     if not $scope.selectedTicket[0] then return
-    if state.isTracking
-      state.isTracking = false
+    if State.isTracking
+      State.isTracking = false
       $scope.$broadcast 'timer-stop'
     else
-      state.isTracking = true
+      State.isTracking = true
       $scope.$broadcast 'timer-start'
 
 
@@ -123,7 +123,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
   ###
   $scope.$on 'timer-stopped', (e, time) ->
     trackedTime = time
-    if not state.isTracking
+    if not State.isTracking
       postEntry(time.minutes)
 
 
@@ -143,11 +143,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
         activityId: $scope.selectedActivity[0].id
       url = $scope.selectedTicket[0].url
       account = $scope.projects[url].account
-      redmine = $redmine(account)
+      redmine = Redmine(account)
       redmine.submitTime(conf, submitSuccess, submitError)
-      $message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
+      Message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
     else
-      $message.toast 'Too short time entry.'
+      Message.toast 'Too short time entry.'
 
 
   ###
@@ -155,7 +155,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
   ###
   submitSuccess = (msg) ->
     if msg?.time_entry?.id?
-      $message.toast "Time Entry Saved."
+      Message.toast "Time Entry Saved."
     else
       submitError msg
 
@@ -164,5 +164,5 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
    show failed message.
   ###
   submitError = (msg) ->
-    $message.toast "Save Failed."
+    Message.toast "Save Failed."
 

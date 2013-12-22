@@ -1,4 +1,4 @@
-timeTracker.factory "analytics", () ->
+timeTracker.factory "Analytics", () ->
 
   AppPrefix = "/app/"
   AnalyticsCode = "UA-32234486-7"

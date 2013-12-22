@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticket, $message, state) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, State) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
@@ -21,7 +21,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
    start getting issues.
   ###
   $scope.$on 'accountAdded', (e, account) ->
-    $redmine(account).getIssuesOnUser(getIssuesSuccess)
+    Redmine(account).getIssuesOnUser(getIssuesSuccess)
 
 
   ###
@@ -50,8 +50,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   getIssuesSuccess = (data) ->
     if not data? then return
-    $ticket.addArray data.issues
-    $ticket.sync()
+    Ticket.addArray data.issues
+    Ticket.sync()
 
 
   ###
@@ -59,7 +59,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   loadIssuesSuccess = (data) ->
     for issue in data.issues
-      for t in $ticket.get() when issue.equals t
+      for t in Ticket.get() when issue.equals t
         issue.show = t.show
     $scope.issues = data.issues
 
@@ -68,7 +68,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
    show fail message.
   ###
   loadIssuesError = () ->
-    $message.toast 'Failed to load issues'
+    Message.toast 'Failed to load issues'
 
 
   ###
@@ -77,8 +77,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   removeProject = (url) ->
     $scope.projects = (prj for prj in $scope.projects when prj.account.url isnt url)
     $scope.selectedProject[0] = $scope.projects[0]
-    $ticket.removeUrl url
-    $message.toast(url + ' removed.')
+    Ticket.removeUrl url
+    Message.toast(url + ' removed.')
 
 
   ###
@@ -98,7 +98,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
       return
     account = $scope.selectedProject[0].account
     projectId = $scope.selectedProject[0].id
-    $redmine(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
+    Redmine(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
 
 
   ###
@@ -107,9 +107,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   $scope.onClickIssue = (issue) ->
     if $scope.isContained(issue)
-      selected = $ticket.getSelected()[0]
-      if state.isTracking and issue.equals selected
-        $message.toast issue.subject + ' is being tracked now.'
+      selected = Ticket.getSelected()[0]
+      if State.isTracking and issue.equals selected
+        Message.toast issue.subject + ' is being tracked now.'
         return
       removeIssue(issue)
     else
@@ -138,9 +138,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   addIssue = (issue) ->
     issue.show = SHOW.SHOW
-    $ticket.add issue
-    $ticket.setParam issue.url, issue.id, {show: SHOW.SHOW}
-    $message.toast "#{issue.subject} added"
+    Ticket.add issue
+    Ticket.setParam issue.url, issue.id, {show: SHOW.SHOW}
+    Message.toast "#{issue.subject} added"
 
 
   ###
@@ -148,15 +148,15 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, $redmine, $account, $ticke
   ###
   removeIssue = (issue) ->
     issue.show = SHOW.NOT
-    $ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
-    $message.toast "#{issue.subject} removed"
+    Ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
+    Message.toast "#{issue.subject} removed"
 
 
   ###
    check issue was contained in selectableTickets.
   ###
   $scope.isContained = (issue) ->
-    selectable = $ticket.getSelectable()
+    selectable = Ticket.getSelectable()
     found = selectable.some (t) -> issue.equals t
     return found
 

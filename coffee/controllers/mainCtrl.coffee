@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $account, analytics) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, Ticket, Redmine, Account, Analytics) ->
 
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
@@ -7,30 +7,30 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
   $rootScope.messages = []
 
 
-  $ticket.load (tickets) ->
+  Ticket.load (tickets) ->
     if not tickets?
       return
-    $ticket.set tickets
+    Ticket.set tickets
     $scope.$broadcast 'ticketLoaded'
     _updateIssues()
 
 
   _updateIssues = () ->
-    $account.getAccounts (accounts) ->
+    Account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]? then return
-      for t in $ticket.get()
+      for t in Ticket.get()
         for account in accounts when account.url is t.url
-          $redmine(account).getIssuesById t.id, (data, status, headers, config) ->
+          Redmine(account).getIssuesById t.id, (data, status, headers, config) ->
             newParam =
               subject: data.issue.subject
               text: data.issue.id + ' ' + data.issue.subject
-            $ticket.setParam  data.issue.url, data.issue.id, newParam
+            Ticket.setParam  data.issue.url, data.issue.id, newParam
             if data.issue?.status.id is TICKET_CLOSED
-              $ticket.remove {url: data.issue.url, id: data.issue.id }
+              Ticket.remove {url: data.issue.url, id: data.issue.id }
               return
             if data.issue.spent_hours?
               total = Math.floor(data.issue.spent_hours * 100) / 100
-              $ticket.setParam  data.issue.url, data.issue.id, total: total
+              Ticket.setParam  data.issue.url, data.issue.id, total: total
 
 
   alarmInfo =
@@ -41,8 +41,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $ticket, $redmine, $acco
   chrome.alarms.create(TICKET_SYNC, alarmInfo)
   chrome.alarms.onAlarm.addListener (alarm) ->
     if alarm.name is TICKET_SYNC
-      $ticket.sync()
+      Ticket.sync()
 
 
-  analytics.sendView("")
+  Analytics.sendView("")
 
