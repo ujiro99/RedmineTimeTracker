@@ -11,7 +11,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
   $scope.mode = "auto"
-  $scope.time = { hours: 0 }
+  $scope.time = { min: 0 }
   $scope.tickets = []
   $scope.selectedTicket = []
 
@@ -115,7 +115,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
    on clicked manual post button, send time entry.
   ###
   $scope.clickManual = () ->
-    postEntry($scope.time.hours * 60)
+    postEntry($scope.time.min)
 
 
   ###
@@ -134,7 +134,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, $account, $redmine, $tick
     if minutes >= ONE_MINUTE
       hours = minutes / 60
       hours = Math.floor(hours * 100) / 100
-      $scope.selectedTicket[0].total += hours
+      total = $scope.selectedTicket[0].total + hours
+      $scope.selectedTicket[0].total = Math.floor(total * 100) / 100
       conf =
         issueId:    $scope.selectedTicket[0].id
         hours:      hours
