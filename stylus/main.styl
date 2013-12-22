@@ -118,8 +118,6 @@ html, body
   & > section
     padding: 0 0 25px 0
 
-message_color = #555
-
 .message
   position: fixed
   padding: 0
@@ -136,26 +134,21 @@ message_color = #555
     margin-bottom: 0
 
   li
-    color: message_color
     padding: 0px 10px
+    height: 0
+    overflow: hidden
+    transition: height .2s ease
+    display: flex
+    justify-content: center
+    align-items: center
 
-  .list-item
-    display: inline-table
-    width: 100%
-
-  li
-  .list-item
-    transition: height .3s ease, opacity .25s ease
+  span
+    color: #555
 
   i
+    color: #aaa
     font-size: 0.9em
     padding-right: 8px
-
-  i,
-  span
-    display: table-cell
-    vertical-align: middle
-
 
 .tooltip
 

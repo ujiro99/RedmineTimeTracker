@@ -4,7 +4,7 @@ timeTracker.factory "Message", ($rootScope, $timeout) ->
   ANIMATION_DURATION = 1000
   W_PADDING = 40
   H_PADDING = 8
-  STYLE_HIDDEN = 'height': 0, opacity: 0
+  STYLE_HIDDEN = 'height': 0
 
   _strScale = (str) ->
     e = $("#ruler")
@@ -24,14 +24,13 @@ timeTracker.factory "Message", ($rootScope, $timeout) ->
         text: text
         style: STYLE_HIDDEN
       }
+      scale = _strScale(text)
+      rows = Math.ceil(scale.w / ($(window).width() - W_PADDING))
 
       $rootScope.messages.push msg
-
-      scale = _strScale(text)
-      rows = Math.ceil(( scale.w + W_PADDING ) / $(window).width())
       $timeout ->
-        msg.style = 'height': H_PADDING + rows * scale.h, opacity: 1
-      , 10
+        msg.style = 'height': H_PADDING + rows * scale.h
+      , 50
       $timeout ->
         msg.style = STYLE_HIDDEN
       , duration
