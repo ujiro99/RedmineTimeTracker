@@ -263,16 +263,15 @@ message_color = #555
     display: flex
 
     span
-      display: inline-block
-      text-ellipsis()
-      &:nth-child(1)
-        flex: 1
-      &:nth-child(2)
-        flex-basis: 60px
-
-    span, timer
       line-height: height_input px
-      vertical-align: middle
+
+    & > span
+      text-ellipsis()
+      padding: 0 2px
+      flex: 1
+
+    timer span
+      padding-right: 4px
 
   .form-inline
     display: flex
@@ -285,8 +284,8 @@ message_color = #555
     .time
       flex: 3
       input
-        margin 0 -20px 0 0
-        padding: 0 30px 0 10px
+        margin 0 -27px 0 0
+        padding: 0 28px 0 10px
         display: inline-block
         position: relative
         top: -1px
@@ -297,7 +296,7 @@ message_color = #555
         display: inline-block
         color: #aaa
         position: relative
-        left: -5px
+        left: 2px
 
   .comment
     margin: 10px 0 0 0
