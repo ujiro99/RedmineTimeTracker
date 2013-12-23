@@ -9,5 +9,5 @@ div.modal-body
     li {{R.string("dialogRemoveAccountConfirmRedmine")}}
 
 div.modal-footer
-  button.btn.btn-default.btn-sm(ng-click="ok()") OK
-  button.btn.btn-default.btn-sm(ng-click="cancel()") Cancel
+  button.btn.btn-default.btn-sm(ng-click="ok()", ga-click="removeAccountOk") OK
+  button.btn.btn-default.btn-sm(ng-click="cancel()", ga-click="removeAccountCancel") Cancel
