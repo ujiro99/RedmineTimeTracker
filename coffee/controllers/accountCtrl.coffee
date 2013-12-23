@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message, Resource) ->
 
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
@@ -6,6 +6,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
   $scope.searchText = ''
   $scope.isSaving = false
   $scope.isAdding = false
+  $scope.R = Resource
 
 
   ###
@@ -121,7 +122,8 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
   ###
    controller for remove account dialog.
   ###
-  removeAccountCtrl = ($scope, $modalInstance) ->
+  removeAccountCtrl = ($scope, $modalInstance, Resource) ->
+    $scope.R = Resource
     $scope.ok = () ->
       $modalInstance.close true
     $scope.cancel = () ->

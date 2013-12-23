@@ -2,10 +2,19 @@
   "extName":  {
       "message": "Redmine Time Tracker",
       "description": "Chrome extension name."
-    },
-    "extDescription": {
-      "message": "Track your work time, and posts to Redmine server.",
-      "description": "Chrome extension description."
-    }
+  },
+  "extDescription": {
+    "message": "Track your work time, and posts to Redmine server.",
+    "description": "Chrome extension description."
+  },
+  "dialogRemoveAccountConfirm": {
+    "message": "Are you sure you want to remove the account?"
+  },
+  "dialogRemoveAccountConfirmTicket": {
+    "message": "Tickets in projects will also be removed from select list."
+  },
+  "dialogRemoveAccountConfirmRedmine": {
+    "message": "Data on the redmine server does not change."
+  }
 }
 

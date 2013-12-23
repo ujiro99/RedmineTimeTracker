@@ -3,10 +3,10 @@ div.modal-header
 
 div.modal-body
   p
-    span Are you sure you want to remove the account?
+    span {{R.string("dialogRemoveAccountConfirm")}}
   ul
-    li Tickets in projects will also be removed from select list.
-    li Data on the redmine server does not change.
+    li {{R.string("dialogRemoveAccountConfirmTicket")}}
+    li {{R.string("dialogRemoveAccountConfirmRedmine")}}
 
 div.modal-footer
   button.btn.btn-default.btn-sm(ng-click="ok()") OK
