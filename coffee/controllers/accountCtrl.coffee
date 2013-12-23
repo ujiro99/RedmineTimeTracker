@@ -128,6 +128,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
       $modalInstance.close true
     $scope.cancel = () ->
       $modalInstance.dismiss 'canceled.'
+  removeAccountCtrl.$inject = ['$scope', '$modalInstance', 'Resource']
 
 
   ###
@@ -140,5 +141,3 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
         $scope.accounts.splice i, 1
         break
       Message.toast url + ' removed.'
-
-
