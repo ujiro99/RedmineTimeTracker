@@ -78,7 +78,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
     $scope.projects = (prj for prj in $scope.projects when prj.account.url isnt url)
     $scope.selectedProject[0] = $scope.projects[0]
     Ticket.removeUrl url
-    Message.toast(url + ' removed.')
 
 
   ###

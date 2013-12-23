@@ -44,11 +44,12 @@ div#accounts(ng-controller='AccountCtrl')
           data-size='xs',
           data-spinner-color="#555") Add
 
+
   // list
   ul.account-list
     li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
-       ng-click='removeAccount(account.url)',
-       ga-click='removeAccount')
+       ng-click='openRemoveAccount(account.url)',
+       ga-click='openRemoveAccount')
       .number
       .list-label
         span {{account.url}}

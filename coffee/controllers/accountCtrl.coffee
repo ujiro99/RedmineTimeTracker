@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, Redmine, Account, Message) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message) ->
 
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
@@ -107,13 +107,36 @@ timeTracker.controller 'AccountCtrl', ($scope, Redmine, Account, Message) ->
 
 
   ###
+   open dialog for remove account.
+  ###
+  $scope.openRemoveAccount = (url) ->
+    modal = $modal.open
+      templateUrl: '/views/removeAccount.html'
+      controller: removeAccountCtrl
+    modal.result.then () ->
+      removeAccount(url)
+    , () -> # canceled
+
+
+  ###
+   controller for remove account dialog.
+  ###
+  removeAccountCtrl = ($scope, $modalInstance) ->
+    $scope.ok = () ->
+      $modalInstance.close true
+    $scope.cancel = () ->
+      $modalInstance.dismiss 'canceled.'
+
+
+  ###
    remove account from chrome sync.
   ###
-  $scope.removeAccount = (url) ->
+  removeAccount = (url) ->
     Account.removeAccount url, () ->
-      Redmine.get({url: url}, true) # delete
+      Redmine.remove({url: url})
       for a, i in $scope.accounts when a.url is url
         $scope.accounts.splice i, 1
         break
       Message.toast url + ' removed.'
+
 

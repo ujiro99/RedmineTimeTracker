@@ -1,0 +1,13 @@
+div.modal-header
+  h4 Remove Account
+
+div.modal-body
+  p
+    span Are you sure you want to remove the account?
+  ul
+    li Tickets in projects will also be removed from select list.
+    li Data on the redmine server does not change.
+
+div.modal-footer
+  button.btn.btn-default.btn-sm(ng-click="ok()") OK
+  button.btn.btn-default.btn-sm(ng-click="cancel()") Cancel
