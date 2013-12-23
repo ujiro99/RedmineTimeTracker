@@ -15,6 +15,9 @@
   },
   "dialogRemoveAccountConfirmRedmine": {
     "message": "Data on the redmine server does not change."
+  },
+  "requestAddAccount": {
+    "message": "First, please set your Redmine account."
   }
 }
 

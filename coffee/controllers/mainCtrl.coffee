@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, Ticket, Redmine, Account, Analytics) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, Ticket, Redmine, Account, State, Message, Analytics, Resource) ->
 
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
@@ -17,7 +17,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, Ticket, Redmine, Account
 
   _updateIssues = () ->
     Account.getAccounts (accounts) ->
-      if not accounts? or not accounts?[0]? then return
+      if not accounts? or not accounts?[0]?
+        requestAddAccount()
+        return
       for t in Ticket.get()
         for account in accounts when account.url is t.url
           Redmine.get(account).getIssuesById t.id, (data, status, headers, config) ->
@@ -31,6 +33,18 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, Ticket, Redmine, Account
             if data.issue.spent_hours?
               total = Math.floor(data.issue.spent_hours * 100) / 100
               Ticket.setParam  data.issue.url, data.issue.id, total: total
+
+
+  ###
+   request a setup of redmine account to user.
+  ###
+  requestAddAccount = () ->
+    State.isAdding = true
+    $location.hash('accounts')
+    $anchorScroll()
+    $timeout () ->
+      Message.toast(Resource.string("requestAddAccount"), 5000)
+    , 1000
 
 
   alarmInfo =

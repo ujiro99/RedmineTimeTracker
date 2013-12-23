@@ -15,6 +15,9 @@
   },
   "dialogRemoveAccountConfirmRedmine": {
     "message": "この操作は、Redmineサーバ上のデータには影響しません。"
+  },
+  "requestAddAccount": {
+    "message": "初めに、Redmineのアカウントを設定してください。"
   }
 }
 

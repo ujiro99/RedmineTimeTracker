@@ -1,11 +1,11 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message, Resource) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message, State, Resource) ->
 
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = 'id_pass'
   $scope.searchText = ''
+  $scope.state = State
   $scope.isSaving = false
-  $scope.isAdding = false
   $scope.R = Resource
 
 

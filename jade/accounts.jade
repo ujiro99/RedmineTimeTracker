@@ -15,11 +15,11 @@ div#accounts(ng-controller='AccountCtrl')
                                   placeholder='search...',
                                   ng-model='searchText')
       i.fa.fa-search
-    button.btn(ng-click='isAdding = !isAdding', ga-click='toggleForm')
+    button.btn(ng-click='state.isAdding = !state.isAdding', ga-click='toggleForm')
       span.icon-plus
 
   // add
-  div.add-account.collapse(uz-collapse='isAdding')
+  div.add-account.collapse(uz-collapse='state.isAdding')
     form.well(name='account')
 
       // Auth way
