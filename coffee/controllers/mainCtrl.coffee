@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, Ticket, Redmine, Account, State, Message, Analytics, Resource) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Redmine, Account, State, Message, Analytics, Resource) ->
 
   TICKET_SYNC = "TICKET_SYNC"
   MINUTE_5 = 5
@@ -40,11 +40,16 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   requestAddAccount = () ->
     State.isAdding = true
-    $location.hash('accounts')
-    $anchorScroll()
     $timeout () ->
-      Message.toast(Resource.string("requestAddAccount"), 5000)
+      $location.hash('accounts')
+      $anchorScroll()
     , 1000
+    $timeout () ->
+      Message.toast(Resource.string("msgRequestAddAccount_0"), 5000)
+    , 1500
+    $timeout () ->
+      Message.toast(Resource.string("msgRequestAddAccount_1"), 5000)
+    , 2500
 
 
   alarmInfo =

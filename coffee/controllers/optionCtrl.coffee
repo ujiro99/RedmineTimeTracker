@@ -1,4 +1,4 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option, Analytics, State) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option, Analytics, State, Resource) ->
 
   DEFAULT_OPTION = { reportUsage: true }
   $scope.options = {}
@@ -24,9 +24,9 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option
     $timeout ->
       Option.setOptions $scope.options, (result) ->
         if result
-          Message.toast 'Option saved.'
+          Message.toast Resource.string("msgOptionSaved")
         else
-          Message.toast 'Failed to save.'
+          Message.toast Resource.string("msgOptionSaveFailed")
     , 500
 
 
@@ -36,8 +36,8 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option
   $scope.clearOptions = () ->
     Account.clearAccount (result) ->
       if result
-        Message.toast "All data Cleared."
+        Message.toast Resource.string("msgClearDataSucess")
       else
-        Message.toast "Clear Failed."
+        Message.toast Resource.string("msgClearDataFail")
 
 

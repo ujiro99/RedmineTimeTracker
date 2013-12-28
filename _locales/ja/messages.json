@@ -16,8 +16,65 @@
   "dialogRemoveAccountConfirmRedmine": {
     "message": "この操作は、Redmineサーバ上のデータには影響しません。"
   },
-  "requestAddAccount": {
+  "msgRequestAddAccount_0": {
     "message": "初めに、Redmineのアカウントを設定してください。"
+  },
+  "msgRequestAddAccount_1": {
+    "message": "認証に成功すると、チケットが表示されるようになります。"
+  },
+  "msgRequestInputURL": {
+    "message": "サーバのURLを入力してください。"
+  },
+  "msgAuthSuccess": {
+    "message": "認証に成功しました!"
+  },
+  "msgAuthFail": {
+    "message": "認証に失敗しました。。。"
+  },
+  "msgAccountRemoved": {
+    "message": "{0} は削除しました."
+  },
+  "msgLoadIssueFail": {
+    "message": "チケットの読み込みに失敗しました。"
+  },
+  "msgIssueTracking": {
+    "message": "{0} は現在トラッキング中です。"
+  },
+  "msgIssueAdded": {
+    "message": "{0} を追加"
+  },
+  "msgIssueRemoved": {
+    "message": "{0} を削除"
+  },
+  "msgOptionSaved": {
+    "message": "オプションを保存しました."
+  },
+  "msgOptionSaveFailed": {
+    "message": "保存に失敗しました。"
+  },
+  "msgClearDataSucess": {
+    "message": "全データを消去しました。"
+  },
+  "msgClearDataFail": {
+    "message": "消去に失敗しました。"
+  },
+  "msgSubmitTimeEntry": {
+    "message": "保存中 {0}: {1} hr"
+  },
+  "msgShortTime": {
+    "message": "1分以上の計測が必要です。"
+  },
+  "msgSubmitTimeSuccess": {
+    "message": "作業時間を保存しました。"
+  },
+  "msgSubmitTimeFail": {
+    "message": "保存に失敗しました。"
+  },
+  "msgLoadProjectSuccess": {
+    "message": "{0} を読み込みました。"
+  },
+  "msgLoadProjectFail": {
+    "message": "読み込みに失敗しました。"
   }
 }
 

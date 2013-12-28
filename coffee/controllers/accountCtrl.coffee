@@ -41,7 +41,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
         $scope.accounts.splice i, 1
         break
       $scope.accounts.push o
-      Message.toast "Loaded : " + o.url
+      Message.toast Resource.string("msgLoadProjectSuccess").format(o.url)
     else
       loadProjectError msg
 
@@ -50,7 +50,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
    show fail message.
   ###
   loadProjectError = (msg) ->
-    Message.toast "Load Project Failed."
+    Message.toast Resource.string("msgLoadProjectFail")
 
 
   ###
@@ -59,7 +59,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
   $scope.addAccount = () ->
     $scope.isSaving = true
     if not $scope.option.url? or $scope.option.url.length is 0
-      Message.toast "Please input Redmine Server URL."
+      Message.toast Resource.string("msgRequestInputURL")
       $scope.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
@@ -81,7 +81,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
         userId: msg.user.id
       Account.addAccount account, (result) ->
         if result
-          Message.toast "Succeed authentication!"
+          Message.toast Resource.string("msgAuthSuccess"), 3000
           loadProject account
         else
           failAuthentication null
@@ -94,7 +94,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
   ###
   failAuthentication = (msg) ->
     $scope.isSaving = false
-    Message.toast "Failed authentication."
+    Message.toast Resource.string("msgAuthFail")
 
 
   ###
@@ -140,4 +140,4 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
       for a, i in $scope.accounts when a.url is url
         $scope.accounts.splice i, 1
         break
-      Message.toast url + ' removed.'
+      Message.toast Resource.string("msgAccountRemoved").format(url)

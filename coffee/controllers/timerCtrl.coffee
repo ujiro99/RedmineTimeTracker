@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, Message, State) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, Message, State, Resource) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
@@ -145,9 +145,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
       account = $scope.projects[url].account
       redmine = Redmine.get(account)
       redmine.submitTime(conf, submitSuccess, submitError)
-      Message.toast "Submitting #{$scope.selectedTicket[0].subject}: #{hours} hr"
+      Message.toast Resource.string("msgSubmitTimeEntry").format($scope.selectedTicket[0].subject, hours)
     else
-      Message.toast 'Too short time entry.'
+      Message.toast Resource.string("msgShortTime")
 
 
   ###
@@ -155,7 +155,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   ###
   submitSuccess = (msg) ->
     if msg?.time_entry?.id?
-      Message.toast "Time Entry Saved."
+      Message.toast Resource.string("msgSubmitTimeSuccess")
     else
       submitError msg
 
@@ -164,5 +164,5 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    show failed message.
   ###
   submitError = (msg) ->
-    Message.toast "Save Failed."
+    Message.toast Resource.string("msgSubmitTimeFail")
 

@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, State) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, State, Resource) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
@@ -68,7 +68,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    show fail message.
   ###
   loadIssuesError = () ->
-    Message.toast 'Failed to load issues'
+    Message.toast Resource.string("msgLoadIssueFail")
 
 
   ###
@@ -108,7 +108,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
     if $scope.isContained(issue)
       selected = Ticket.getSelected()[0]
       if State.isTracking and issue.equals selected
-        Message.toast issue.subject + ' is being tracked now.'
+        Message.toast  Resource.string("msgIssueTracking").format(issue.subject)
         return
       removeIssue(issue)
     else
@@ -139,7 +139,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
     issue.show = SHOW.SHOW
     Ticket.add issue
     Ticket.setParam issue.url, issue.id, {show: SHOW.SHOW}
-    Message.toast "#{issue.subject} added"
+    Message.toast  Resource.string("msgIssueAdded").format(issue.subject)
 
 
   ###
@@ -148,7 +148,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
   removeIssue = (issue) ->
     issue.show = SHOW.NOT
     Ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
-    Message.toast "#{issue.subject} removed"
+    Message.toast Resource.string("msgIssueRemoved").format(issue.subject)
 
 
   ###

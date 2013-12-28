@@ -16,8 +16,65 @@
   "dialogRemoveAccountConfirmRedmine": {
     "message": "Data on the redmine server does not change."
   },
-  "requestAddAccount": {
+  "msgRequestAddAccount_0": {
     "message": "First, please set your Redmine account."
+  },
+  "msgRequestAddAccount_1": {
+    "message": "If authentication succeeds, tickets will be displayed."
+  },
+  "msgRequestInputURL": {
+    "message": "Please input the Redmine Server URL."
+  },
+  "msgAuthSuccess": {
+    "message": "Succeed authentication!"
+  },
+  "msgAuthFail": {
+    "message": "Failed authentication."
+  },
+  "msgAccountRemoved": {
+    "message": "{0} removed."
+  },
+  "msgLoadIssueFail": {
+    "message": "Failed to load issues."
+  },
+  "msgIssueTracking": {
+    "message": "{0} is being tracked now."
+  },
+  "msgIssueAdded": {
+    "message": "{0} aded."
+  },
+  "msgIssueRemoved": {
+    "message": "{0} removed."
+  },
+  "msgOptionSaved": {
+    "message": "Option saved."
+  },
+  "msgOptionSaveFailed": {
+    "message": "Failed to save."
+  },
+  "msgClearDataSucess": {
+    "message": "All data cleared."
+  },
+  "msgClearDataFail": {
+    "message": "Clear failed."
+  },
+  "msgSubmitTimeEntry": {
+    "message": "Submitting {0}: {1} hr"
+  },
+  "msgShortTime": {
+    "message": "More than one minute is required"
+  },
+  "msgSubmitTimeSuccess": {
+    "message": "Time Entry saved."
+  },
+  "msgSubmitTimeFail": {
+    "message": "Save failed."
+  },
+  "msgLoadProjectSuccess": {
+    "message": "{0} loaded."
+  },
+  "msgLoadProjectFail": {
+    "message": "Load failed."
   }
 }
 
