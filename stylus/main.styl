@@ -421,6 +421,26 @@ body.modal-open
         color: #555
 
 
+  uz-pagination
+    display: flex
+    justify-content: center
+  .pagination
+    margin: 10px 0
+    &>li>a
+      border: none
+      border-radius: 12px
+      padding: 3px 8px
+      margin: 0 3px
+      color: #888
+      cursor: pointer
+    &>.active>a
+      background-color: color_key
+      color: #fff
+    &>.disabled>a
+      color: #ccc
+      cursor: not-allowed
+
+
 #accounts
 
   label-width = 70

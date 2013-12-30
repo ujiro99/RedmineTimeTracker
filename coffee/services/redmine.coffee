@@ -120,9 +120,10 @@ class Redmine
   ###
    Load tickets on project.
   ###
-  getIssuesOnProject: (projectId, success, error) ->
+  getIssuesOnProject: (projectId, page, success, error) ->
     params =
       project_id: projectId
+      page: page
     @getIssues(success, error, params)
 
 

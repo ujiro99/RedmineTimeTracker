@@ -7,7 +7,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
   $scope.selectedProject = []
   $scope.searchText = ''
   $scope.tooltipPlace = 'top'
-
+  $scope.currentPage = 0
+  $scope.totalItems = 0
+  $scope.itemsPerPage = 100
 
   ###
    on project added, show project.
@@ -58,6 +60,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    on loading success, update issue list
   ###
   loadIssuesSuccess = (data) ->
+    $scope.totalItems = data.total_count
     for issue in data.issues
       for t in Ticket.get() when issue.equals t
         issue.show = t.show
@@ -84,20 +87,27 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    on project selection change, load issue on the project.
   ###
   $scope.$watch 'selectedProject[0]', ->
-    loadIssues()
+    loadIssues($scope.currentPage)
+
+
+  ###
+   on currentPage change, load issue on the project.
+  ###
+  $scope.$watch 'currentPage', ->
+    loadIssues($scope.currentPage)
 
 
   ###
    load issues according selected project.
   ###
-  loadIssues = ->
+  loadIssues = (page) ->
     if $scope.selectedProject.length is 0 then return
     if not $scope.selectedProject[0]?
       $scope.issues.clear()
       return
     account = $scope.selectedProject[0].account
     projectId = $scope.selectedProject[0].id
-    Redmine.get(account).getIssuesOnProject(projectId, loadIssuesSuccess, loadIssuesError)
+    Redmine.get(account).getIssuesOnProject(projectId, page, loadIssuesSuccess, loadIssuesError)
 
 
   ###
@@ -177,5 +187,4 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
       $scope.tooltipPlace = 'top'
     else
       $scope.tooltipPlace = 'bottom'
-
 

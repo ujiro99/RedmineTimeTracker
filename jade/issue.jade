@@ -43,3 +43,9 @@ div#issue(ng-controller='IssueCtrl')
             button.btn.external-link(type='button', ng-click="openIssue(issue)", ga-click='issueLink')
               span.icon-question
 
+    // page
+    div.page
+      uz-pagination.pagination-small(total-items='totalItems',
+                                     current-page='currentPage',
+                                     items-per-page='itemsPerPage')
+
