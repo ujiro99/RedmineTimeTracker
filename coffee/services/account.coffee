@@ -52,18 +52,24 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
    decrypt the account data, only to sync on chrome.
   ###
   _decryptAuth = () ->
-    @apiKey = _decrypt @apiKey
-    @id     = _decrypt @id
-    @pass   = _decrypt @pass
+    return {
+      url:    @url
+      apiKey: _decrypt @apiKey
+      id:     _decrypt @id
+      pass:   _decrypt @pass
+    }
 
 
   ###
    encrypt the account data, only to sync on chrome.
   ###
   _encrypt = () ->
-    @apiKey = _Json.stringify CryptoJS.AES.encrypt(@apiKey, PHRASE)
-    @id     = _Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
-    @pass   = _Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
+    return {
+      url:    @url
+      apiKey: _Json.stringify CryptoJS.AES.encrypt(@apiKey, PHRASE)
+      id:     _Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
+      pass:   _Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
+    }
 
 
   ###
@@ -86,10 +92,9 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
         if chrome.runtime.lastError? or not item[ACCOUNTS]?
           callback null
         else
-          for a in item[ACCOUNTS]
+          _accounts = for a in item[ACCOUNTS]
             _decryptAuth.apply(a)
-          _accounts = item[ACCOUNTS]
-          callback item[ACCOUNTS]
+          callback _accounts
 
 
     ###
@@ -100,19 +105,16 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
       callback = callback or NULLFUNC
       @getAccounts (accounts) ->
         accounts = accounts or []
-        newArry = []
         # merge accounts.
-        for a in accounts when a.url isnt account.url
+        newArry = []
+        newArry = for a in accounts when a.url isnt account.url
           _encrypt.apply(a)
-          newArry.push a
         accounts = newArry
-        _encrypt.apply(account)
-        accounts.push account
+        accounts.push _encrypt.apply(account)
         chrome.storage.sync.set ACCOUNTS: accounts, () ->
           if chrome.runtime.lastError?
             callback false
           else
-            _decryptAuth.apply(account)
             for a, i in _accounts when a.url is account.url
               _accounts.splice i, 1
               break
@@ -132,7 +134,7 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
         accounts = accounts or []
         # select other url account
         accounts = for a in accounts when a.url isnt url
-          _encrypt.apply(a); a
+          _encrypt.apply(a)
         chrome.storage.sync.set ACCOUNTS: accounts, () ->
           if chrome.runtime.lastError?
             callback false
