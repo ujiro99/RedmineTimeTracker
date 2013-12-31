@@ -1,8 +1,10 @@
 timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message, State, Resource) ->
 
+  ID_PASS = 'id_pass'
+
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
-  $scope.authWay = 'id_pass'
+  $scope.authWay = ID_PASS
   $scope.searchText = ''
   $scope.state = State
   $scope.isSaving = false
@@ -64,7 +66,16 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
       return
     $scope.option.url = util.getUrl $scope.option.url
     Redmine.remove({url: $scope.option.url})
-    Redmine.get($scope.option).findUser(addAccount, failAuthentication)
+    if $scope.authWay is ID_PASS
+      option =
+        url:    $scope.option.url
+        id:     $scope.option.id
+        pass:   $scope.option.pass
+    else
+      option =
+        url:    $scope.option.url
+        apiKey: $scope.option.apiKey
+    Redmine.get(option).findUser(addAccount, failAuthentication)
 
 
   ###
@@ -72,17 +83,12 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
   ###
   addAccount = (msg) ->
     if msg?.user?.id?
-      account =
-        url:    $scope.option.url
-        apiKey: $scope.option.apiKey
-        id:     $scope.option.id
-        pass:   $scope.option.pass
-        userId: msg.user.id
-      Account.addAccount account, (result) ->
+      $scope.option.url = msg.account.url
+      Account.addAccount msg.account, (result) ->
         if result
           $scope.isSaving = $scope.state.isAdding = false
           Message.toast Resource.string("msgAuthSuccess"), 3000
-          loadProject account
+          loadProject msg.account
         else
           failAuthentication null
     else
