@@ -25,8 +25,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
       if not accounts then return
       for account in accounts
         loadActivities account
-      $scope.tickets = Ticket.getSelectable()
-      $scope.selectedTicket = Ticket.getSelected()
+    $scope.tickets = Ticket.getSelectable()
+    $scope.selectedTicket = Ticket.getSelected()
 
   init()
 

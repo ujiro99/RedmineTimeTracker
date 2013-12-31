@@ -89,17 +89,15 @@ class Redmine
   ###
   getIssues: (success, error, params) ->
     params.limit = params.limit or 100
-    @getIssuesCanceler.resolve() if @getIssuesCanceler
-    @getIssuesCanceler = @$q.defer()
+    cancelDefer = @$q.defer()
     config =
       method: "GET"
       url: @auth.url + "/issues.json"
       params: params
-      timeout: @getIssuesCanceler.promise
+      timeout: cancelDefer.promise
     config = @setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
-        @getIssuesCanceler = null
         if data?.issues?
           data.issues = for issue in data.issues
             issue.show  = Redmine.SHOW.DEFAULT
@@ -107,9 +105,8 @@ class Redmine
             issue.total = issue.spent_hours or 0
             new @Ticket.new(issue)
         success?(data, status, headers, config))
-      .error((data, status, headers, config) =>
-        @getIssuesCanceler = null
-        error?(data, status, headers, config))
+      .error(error or Redmine.NULLFUNC)
+    return cancelDefer
 
 
   ###
@@ -126,7 +123,8 @@ class Redmine
   ###
   getIssuesOnProject: (projectId, params, success, error) ->
     params.project_id = projectId
-    @getIssues(success, error, params)
+    @getIssuesCanceler.resolve() if @getIssuesCanceler
+    @getIssuesCanceler = @getIssues(success, error, params)
 
 
   ###
