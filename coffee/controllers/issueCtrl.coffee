@@ -1,6 +1,7 @@
 timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, State, Resource) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
+  STATUS_CANCEL = 0
 
   $scope.issues = []
   $scope.projects = []
@@ -72,7 +73,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
   ###
    show fail message.
   ###
-  loadIssuesError = () ->
+  loadIssuesError = (data, status) ->
+    if status is STATUS_CANCEL then return
     Message.toast Resource.string("msgLoadIssueFail")
 
 
@@ -89,6 +91,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    on project selection change, load issue on the project.
   ###
   $scope.$watch 'selectedProject[0]', ->
+    $scope.currentPage = 1
     loadIssues($scope.currentPage)
 
 

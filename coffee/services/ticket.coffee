@@ -108,16 +108,15 @@ timeTracker.factory("Ticket", (Analytics) ->
           # search url
           for url, obj of projects[PROJECT] when obj.index is t[TICKET_URL_INDEX]
             break
-          tmp.push {
-            id:      t[TICKET_ID]
-            subject: t[TICKET_SUBJECT]
-            text: t[TICKET_ID] + " " + t[TICKET_SUBJECT]
-            url:     url
-            project:
-              id:    t[TICKET_PRJ_ID]
-              name:  projects[PROJECT][url][t[TICKET_PRJ_ID]]
-            show:    t[TICKET_SHOW]
-          }
+          tmp.push new TicketModel(
+            t[TICKET_ID],
+            t[TICKET_SUBJECT],
+            url,
+            {
+              id: t[TICKET_PRJ_ID],
+              name: projects[PROJECT][url][t[TICKET_PRJ_ID]]
+            },
+            t[TICKET_SHOW])
 
         callback? tmp
 
@@ -167,11 +166,36 @@ timeTracker.factory("Ticket", (Analytics) ->
     if not ticket? then return
     found = tickets.some (ele) -> _equals ele, ticket
     if not found
-      ticket.text = ticket.id + " " + ticket.subject
       tickets.push ticket
       if ticket.show is SHOW.NOT then return
       selectableTickets.push ticket
       selectableTickets.sortById()
+
+
+  ###
+   Ticket data model.
+  ###
+  class TicketModel
+
+    ###
+     constructor.
+    ###
+    constructor: (@id,
+                  @subject,
+                  @url,
+                  @project,
+                  @show,
+                  @priority,
+                  @assigned_to,
+                  @total) ->
+      @text = @id + ' ' + @subject
+
+    ###
+     compare ticket.
+     true: same / false: defferent
+    ###
+    equals: (y) ->
+      return @url is y.url and @id is y.id
 
 
   return {
@@ -314,5 +338,18 @@ timeTracker.factory("Ticket", (Analytics) ->
     sync: (callback) ->
       _setSync callback
 
+
+    ###
+     create new TicketModel instance.
+    ###
+    new: (params) ->
+      return new TicketModel(params.id,
+                             params.subject,
+                             params.url,
+                             params.project,
+                             params.show,
+                             params.priority,
+                             params.assigned_to
+                             params.total)
   }
 )

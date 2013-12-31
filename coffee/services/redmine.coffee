@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64) ->
+timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket) ->
 
   _redmines = {}
 
@@ -9,7 +9,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64) ->
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope, $q)
+        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Base64)
       return _redmines[auth.url]
 
 
@@ -24,15 +24,12 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64) ->
 
 class Redmine
 
-  CONTENT_TYPE: "application/json"
-  AJAX_TIME_OUT: 30 * 1000
-  SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
-  NULLFUNC: () ->
+  @CONTENT_TYPE: "application/json"
+  @AJAX_TIME_OUT: 30 * 1000
+  @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
+  @NULLFUNC: () ->
 
-  _equals = (y) ->
-    return @url is y.url and @id is y.id
-
-  constructor: (@auth, @$http, @Base64, @observer, @$q) ->
+  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Base64) ->
     @url = auth.url
 
   _projects: []
@@ -78,8 +75,8 @@ class Redmine
    set basic configs for $http.
   ###
   setBasicConfig: (config, auth) ->
-    config.headers = "Content-Type": @CONTENT_TYPE
-    config.timeout = @AJAX_TIME_OUT
+    config.headers = "Content-Type": Redmine.CONTENT_TYPE
+    config.timeout = config.timeout or Redmine.AJAX_TIME_OUT
     if auth.apiKey? and auth.apiKey.length > 0
       config.headers["X-Redmine-API-Key"] = auth.apiKey
     else
@@ -105,11 +102,10 @@ class Redmine
         @getIssuesCanceler = null
         if data?.issues?
           data.issues = for issue in data.issues
-            issue.show = @SHOW.DEFAULT
-            issue.url = @auth.url
-            issue.equals = _equals
+            issue.show  = Redmine.SHOW.DEFAULT
+            issue.url   = @auth.url
             issue.total = issue.spent_hours or 0
-            issue
+            new @Ticket.new(issue)
         success?(data, status, headers, config))
       .error((data, status, headers, config) =>
         @getIssuesCanceler = null
@@ -144,10 +140,10 @@ class Redmine
     @$http(config)
       .success( (data, status, headers, config) =>
         if data?.issue?
-          data.issue.show = @SHOW.DEFAULT
+          data.issue.show = Redmine.SHOW.DEFAULT
           data.issue.url = @auth.url
         success?(data, status, headers, config))
-      .error(error or @NULLFUNC)
+      .error(error or Redmine.NULLFUNC)
 
 
   ###
@@ -165,8 +161,8 @@ class Redmine
     config = @setBasicConfig config, @auth
     config.headers = "Content-Type": "application/xml"
     @$http(config)
-      .success(success or @NULLFUNC)
-      .error(error or @NULLFUNC)
+      .success(success or Redmine.NULLFUNC)
+      .error(error or Redmine.NULLFUNC)
 
 
   ###
@@ -194,7 +190,7 @@ class Redmine
           @_projects = data.projects
           @observer.$broadcast 'projectsAdded', data.projects
         success?(data, status, headers, config))
-      .error(error or @NULLFUNC)
+      .error(error or Redmine.NULLFUNC)
 
 
   ###
@@ -209,7 +205,7 @@ class Redmine
       .success( (data, status, headers, config) =>
         @auth.userId = data.user.id
         success(data, status, headers, config))
-      .error(error or @NULLFUNC)
+      .error(error or Redmine.NULLFUNC)
 
 
   ###
@@ -244,5 +240,5 @@ class Redmine
       .success( (data, status, headers, config) =>
         data.url = @auth.url
         success?(data, status, headers, config))
-      .error(error or @NULLFUNC)
+      .error(error or Redmine.NULLFUNC)
 
