@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, Base64) ->
+timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64) ->
 
   _redmines = {}
 
@@ -9,7 +9,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, Base64) ->
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope)
+        _redmines[auth.url] = new Redmine(auth, $http, Base64, $rootScope, $q)
       return _redmines[auth.url]
 
 
@@ -32,7 +32,7 @@ class Redmine
   _equals = (y) ->
     return @url is y.url and @id is y.id
 
-  constructor: (@auth, @$http, @Base64, @observer) ->
+  constructor: (@auth, @$http, @Base64, @observer, @$q) ->
     @url = auth.url
 
   _projects: []
@@ -43,6 +43,8 @@ class Redmine
       "hours": 0
       "activity_id": 8
       "comments": ""
+
+  getIssuesCanceler: null
 
 
   ###
@@ -89,14 +91,18 @@ class Redmine
    load issues following selected project
   ###
   getIssues: (success, error, params) ->
-    params.limit = 100
+    params.limit = params.limit or 100
+    @getIssuesCanceler.resolve() if @getIssuesCanceler
+    @getIssuesCanceler = @$q.defer()
     config =
       method: "GET"
       url: @auth.url + "/issues.json"
       params: params
+      timeout: @getIssuesCanceler.promise
     config = @setBasicConfig config, @auth
     @$http(config)
-      .success( (data, status, headers, config) =>
+      .success((data, status, headers, config) =>
+        @getIssuesCanceler = null
         if data?.issues?
           data.issues = for issue in data.issues
             issue.show = @SHOW.DEFAULT
@@ -105,7 +111,9 @@ class Redmine
             issue.total = issue.spent_hours or 0
             issue
         success?(data, status, headers, config))
-      .error(error or @NULLFUNC)
+      .error((data, status, headers, config) =>
+        @getIssuesCanceler = null
+        error?(data, status, headers, config))
 
 
   ###
@@ -120,10 +128,8 @@ class Redmine
   ###
    Load tickets on project.
   ###
-  getIssuesOnProject: (projectId, page, success, error) ->
-    params =
-      project_id: projectId
-      page: page
+  getIssuesOnProject: (projectId, params, success, error) ->
+    params.project_id = projectId
     @getIssues(success, error, params)
 
 
