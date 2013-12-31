@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, State, Resource) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, State, Resource, Analytics) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
   STATUS_CANCEL = 0
@@ -99,6 +99,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    on currentPage change, load issue on the project.
   ###
   $scope.$watch 'currentPage', ->
+    Analytics.sendEvent 'user', 'clicked', 'pagination'
     loadIssues($scope.currentPage)
 
 
