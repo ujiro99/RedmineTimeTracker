@@ -71,7 +71,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
    add account.
   ###
   addAccount = (msg) ->
-    $scope.isSaving = $scope.isAdding = false
     if msg?.user?.id?
       account =
         url:    $scope.option.url
@@ -81,6 +80,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
         userId: msg.user.id
       Account.addAccount account, (result) ->
         if result
+          $scope.isSaving = $scope.state.isAdding = false
           Message.toast Resource.string("msgAuthSuccess"), 3000
           loadProject account
         else
@@ -94,7 +94,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
   ###
   failAuthentication = (msg) ->
     $scope.isSaving = false
-    Message.toast Resource.string("msgAuthFail")
+    Message.toast Resource.string("msgAuthFail"), 3000
 
 
   ###
