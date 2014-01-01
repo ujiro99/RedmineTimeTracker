@@ -10,7 +10,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option
   ###
   Option.getOptions (options) ->
     $scope.options = options or DEFAULT_OPTION
-    Analytics.setPermittion $scope.options.reportUsage
+    Analytics.setPermission $scope.options.reportUsage
     # start watch changing.
     $scope.$watch 'options', watchOptions, true
 
@@ -20,7 +20,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option
   ###
   watchOptions = (newVal, oldVal) ->
     if util.equals(newVal, oldVal) then return
-    Analytics.setPermittion newVal.reportUsage
+    Analytics.setPermission newVal.reportUsage
     $timeout ->
       Option.setOptions $scope.options, (result) ->
         if result

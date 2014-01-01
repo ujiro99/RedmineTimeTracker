@@ -30,10 +30,10 @@ timeTracker.factory "Analytics", () ->
 
     ###*
      Set Tracking is permitted.
-     @method setPermittion
+     @method setPermission
      @param {Boolean} permitted  Is enable tracking.
     ###
-    setPermittion: (permitted) ->
+    setPermission: (permitted) ->
       service.getConfig().addCallback (config) ->
         config.setTrackingPermitted(permitted)
 
