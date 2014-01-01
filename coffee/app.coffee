@@ -1,1 +1,1 @@
-timeTracker = angular.module('timeTracker', ['ui.bootstrap', 'ngAnimate', 'timer'])
+timeTracker = angular.module('timeTracker', ['ui.bootstrap', 'ngAnimate', 'timer', 'analytics'])

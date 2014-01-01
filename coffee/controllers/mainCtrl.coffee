@@ -55,13 +55,15 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   alarmInfo =
     when: Date.now() + 1
     periodInMinutes: MINUTE_5
-
-
   chrome.alarms.create(TICKET_SYNC, alarmInfo)
   chrome.alarms.onAlarm.addListener (alarm) ->
     if alarm.name is TICKET_SYNC
       Ticket.sync()
 
 
-  Analytics.sendView("")
+  Analytics.init {
+    serviceName:   "RedmineTimeTracker"
+    analyticsCode: "UA-32234486-7"
+  }
+  Analytics.sendView("/app/")
 
