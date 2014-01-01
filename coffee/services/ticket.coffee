@@ -133,6 +133,7 @@ timeTracker.factory("Ticket", (Analytics) ->
   ###
   _setSync = (callback) ->
     _set chrome.storage.sync, callback
+    Analytics.sendEvent 'internal', 'ticket', 'set', tickets.length
 
 
   ###
@@ -155,7 +156,6 @@ timeTracker.factory("Ticket", (Analytics) ->
       if chrome.runtime.lastError?
         callback? false
       else
-        Analytics.sendEvent 'internal', 'ticket', 'set', ticketArray.length
         callback? true
 
 
