@@ -7,45 +7,40 @@ div#issue(ng-controller='IssueCtrl')
           span.icon-list
         span Edit list
 
-  form.form-inline(action='#', role='form')
+  // select
+  div.form-group.project
+    uz-dropdown(items='projects', selected='selectedProject')
 
-    // select
-    div
-
-      // project
-      div.form-group.project
-        uz-dropdown(items='projects', selected='selectedProject')
-
-      // search
-      div.form-group.search
-        label.sr-only Search
-        input.form-control.input-sm(type='search',
-                                    placeholder='search...',
-                                    ng-model='searchText')
-        i.fa.fa-search
+  // search
+  div.form-group.search
+    label.sr-only Search
+    input.form-control.input-sm(type='search',
+                                placeholder='search...',
+                                ng-model='searchText')
+    i.fa.fa-search
 
 
-    // issues
-    div.issueList
-      ul
-        li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"',
-           ng-mousemove='onMouseMove($event)')
-          button.issue(type='button', ng-click="onClickIssue(issue)", ga-click='issueItem')
-            span.id {{issue.id}}
-            span.subject(tooltip-html-unsafe="<h6>{{issue.text}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
-                         tooltip-animation="",
-                         tooltip-popup-delay='700',
-                         tooltip-placement='{{tooltipPlace}}') {{issue.text}}
-            div.btn(ng-hide='isContained(issue)')
-              span.icon-plus
-            div.btn(ng-show='isContained(issue)')
-              span.icon-minus
-            button.btn.external-link(type='button', ng-click="openIssue(issue)", ga-click='issueLink')
-              span.icon-question
+  // issues
+  div.issueList
+    ul
+      li(ng-repeat='issue in issues | filter:issueFilter | orderBy:"id"',
+         ng-mousemove='onMouseMove($event)')
+        button.issue(type='button', ng-click="onClickIssue(issue)", ga-click='issueItem')
+          span.id {{issue.id}}
+          span.subject(tooltip-html-unsafe="<h6>{{issue.text}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
+                       tooltip-animation="",
+                       tooltip-popup-delay='700',
+                       tooltip-placement='{{tooltipPlace}}') {{issue.text}}
+          div.btn(ng-hide='isContained(issue)')
+            span.icon-plus
+          div.btn(ng-show='isContained(issue)')
+            span.icon-minus
+          button.btn.external-link(type='button', ng-click="openIssue(issue)", ga-click='issueLink')
+            span.icon-question
 
-    // page
-    div.page
-      uz-pagination.pagination-small(total-items='totalItems',
-                                     current-page='currentPage',
-                                     items-per-page='itemsPerPage')
+  // page
+  div.page
+    uz-pagination.pagination-small(total-items='totalItems',
+                                   current-page='currentPage',
+                                   items-per-page='itemsPerPage')
 
