@@ -30,7 +30,7 @@ timeTracker.directive 'uzPagination', ($window) ->
         a = element.find('a')
         if a.length <= MIN_SIZE then return
         minWidth = ($(a[0]).outerWidth(true) + $(a[1]).outerWidth(true)) * 2
-        buttonWidth = angular.element(a[a.length - 3]).outerWidth(true)
+        buttonWidth = $(a[a.length - 3]).outerWidth(true)
         scope.maxSize = Math.floor((element.outerWidth() - minWidth) / buttonWidth)
         scope.maxSize = 1 if scope.maxSize < 1
 
