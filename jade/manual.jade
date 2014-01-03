@@ -1,8 +1,10 @@
 // time track
 div.select
   div.inputWidhButton
-    div
-      uz-dropdown(items='tickets', selected='selectedTicket')
+    uz-dropdown(items='tickets',
+                selected='selectedTicket',
+                format="item.id + ' ' + item.text",
+                selected-format="selected[0].id + ' ' + selected[0].text")
 
   button.btn(type='button', ng-click='clickManual()', ga-click='postManual')
     i.fa.fa-check
@@ -25,11 +27,11 @@ div.form-inline
 
 // comment
 div.comment
-  textarea.form-control(name='comment'
-    , rows='2'
-    , ng-model='comment'
-    , ng-maxlength='commentMaxLength'
-    , placeholder='comments...'
-    , ng-change='commentRemain = commentMaxLength - comment.length')
+  textarea.form-control(name='comment',
+                        rows='2',
+                        ng-model='comment',
+                        ng-maxlength='commentMaxLength',
+                        placeholder='comments...',
+                        ng-change='commentRemain = commentMaxLength - comment.length')
   div
     span.label.label-danger(ng-show="commentRemain < 0") {{commentRemain}}
