@@ -173,10 +173,13 @@ class Redmine
   ###
    Load projects on url
   ###
-  loadProjects: (success, error) ->
+  loadProjects: (success, error, params) ->
+    params = params or {}
+    params.limit = params.limit or 100
     config =
       method: "GET"
       url: @auth.url + "/projects.json"
+      params: params
     config = @setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
