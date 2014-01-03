@@ -127,7 +127,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
     if $scope.isContained(issue)
       selected = Ticket.getSelected()[0]
       if State.isTracking and issue.equals selected
-        Message.toast  Resource.string("msgIssueTracking").format(issue.subject)
+        Message.toast  Resource.string("msgIssueTracking").format(issue.text)
         return
       removeIssue(issue)
     else
@@ -158,7 +158,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
     issue.show = SHOW.SHOW
     Ticket.add issue
     Ticket.setParam issue.url, issue.id, {show: SHOW.SHOW}
-    Message.toast  Resource.string("msgIssueAdded").format(issue.subject)
+    Message.toast  Resource.string("msgIssueAdded").format(issue.text)
 
 
   ###
@@ -167,7 +167,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
   removeIssue = (issue) ->
     issue.show = SHOW.NOT
     Ticket.setParam issue.url, issue.id, {show: SHOW.NOT}
-    Message.toast Resource.string("msgIssueRemoved").format(issue.subject)
+    Message.toast Resource.string("msgIssueRemoved").format(issue.text)
 
 
   ###
@@ -185,7 +185,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
   $scope.issueFilter = (item) ->
     if $scope.searchText.isBlank() then return true
     return (item.id + "").contains($scope.searchText) or
-           item.subject.toLowerCase().contains($scope.searchText.toLowerCase())
+           item.text.toLowerCase().contains($scope.searchText.toLowerCase())
 
 
   ###

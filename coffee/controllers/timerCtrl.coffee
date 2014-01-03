@@ -145,7 +145,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
       account = $scope.projects[url].account
       redmine = Redmine.get(account)
       redmine.submitTime(conf, submitSuccess, submitError)
-      Message.toast Resource.string("msgSubmitTimeEntry").format($scope.selectedTicket[0].subject, hours)
+      Message.toast Resource.string("msgSubmitTimeEntry").format($scope.selectedTicket[0].text, hours)
     else
       Message.toast Resource.string("msgShortTime")
 

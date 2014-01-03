@@ -6,7 +6,7 @@ timeTracker.factory("Ticket", (Analytics) ->
   URL_INDEX_START = 1  # for avoid 0 == false
 
   TICKET_ID        = 0
-  TICKET_SUBJECT   = 1
+  TICKET_TEXT      = 1
   TICKET_URL_INDEX = 2
   TICKET_PRJ_ID    = 3
   TICKET_SHOW      = 4
@@ -18,7 +18,7 @@ timeTracker.factory("Ticket", (Analytics) ->
   #
   #     ticket = {
   #       id: ,
-  #       subject: ,
+  #       text: ,
   #       url: ,
   #       project: ,
   #         id: project_id
@@ -28,7 +28,7 @@ timeTracker.factory("Ticket", (Analytics) ->
   #
   # - in chrome sync,
   #
-  #     ticket = [ id, subject, project_url_index, project_id, show ]
+  #     ticket = [ id, text, project_url_index, project_id, show ]
   #
   #     project = {
   #       value of url:
@@ -110,7 +110,7 @@ timeTracker.factory("Ticket", (Analytics) ->
             break
           tmp.push new TicketModel(
             t[TICKET_ID],
-            t[TICKET_SUBJECT],
+            t[TICKET_TEXT],
             url,
             {
               id: t[TICKET_PRJ_ID],
@@ -149,7 +149,7 @@ timeTracker.factory("Ticket", (Analytics) ->
       projectObj[t.url] = projectObj[t.url] or {}
       projectObj[t.url][t.project.id] = t.project.name
       projectObj[t.url].index = urlIndex[t.url]
-      ticketArray.push [t.id, t.subject, urlIndex[t.url], t.project.id, t.show]
+      ticketArray.push [t.id, t.text, urlIndex[t.url], t.project.id, t.show]
 
     storage.set PROJECT: projectObj
     storage.set TICKET: ticketArray, () ->
@@ -181,14 +181,13 @@ timeTracker.factory("Ticket", (Analytics) ->
      constructor.
     ###
     constructor: (@id,
-                  @subject,
+                  @text,
                   @url,
                   @project,
                   @show,
                   @priority,
                   @assigned_to,
                   @total) ->
-      @text = @id + ' ' + @subject
 
     ###
      compare ticket.
@@ -344,7 +343,7 @@ timeTracker.factory("Ticket", (Analytics) ->
     ###
     new: (params) ->
       return new TicketModel(params.id,
-                             params.subject,
+                             params.text,
                              params.url,
                              params.project,
                              params.show,

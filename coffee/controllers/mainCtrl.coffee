@@ -24,8 +24,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         for account in accounts when account.url is t.url
           Redmine.get(account).getIssuesById t.id, (data) ->
             newParam =
-              subject: data.issue.subject
-              text: data.issue.id + ' ' + data.issue.subject
+              text: data.issue.subject
             Ticket.setParam  data.issue.url, data.issue.id, newParam
             if data.issue?.status.id is TICKET_CLOSED
               Ticket.remove {url: data.issue.url, id: data.issue.id }

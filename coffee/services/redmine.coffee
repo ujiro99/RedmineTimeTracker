@@ -101,6 +101,7 @@ class Redmine
         data.url = @auth.url
         if data?.issues?
           data.issues = for issue in data.issues
+            issue.text  = issue.subject
             issue.show  = Redmine.SHOW.DEFAULT
             issue.url   = @auth.url
             issue.total = issue.spent_hours or 0

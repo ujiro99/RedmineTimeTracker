@@ -32,10 +32,10 @@ div#issue(ng-controller='IssueCtrl')
            ng-mousemove='onMouseMove($event)')
           button.issue(type='button', ng-click="onClickIssue(issue)", ga-click='issueItem')
             span.id {{issue.id}}
-            span.subject(tooltip-html-unsafe="<h6>{{issue.subject}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
+            span.subject(tooltip-html-unsafe="<h6>{{issue.text}}</h6><p><span>priority: {{issue.priority.name}}</span><br><span>assigned: {{issue.assigned_to.name}}</span></p>",
                          tooltip-animation="",
                          tooltip-popup-delay='700',
-                         tooltip-placement='{{tooltipPlace}}') {{issue.subject}}
+                         tooltip-placement='{{tooltipPlace}}') {{issue.text}}
             div.btn(ng-hide='isContained(issue)')
               span.icon-plus
             div.btn(ng-show='isContained(issue)')
