@@ -98,13 +98,14 @@ class Redmine
     config = @setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
+        data.url = @auth.url
         if data?.issues?
           data.issues = for issue in data.issues
             issue.show  = Redmine.SHOW.DEFAULT
             issue.url   = @auth.url
             issue.total = issue.spent_hours or 0
             new @Ticket.new(issue)
-        success?(data, status, headers, config))
+        success?(data))
       .error(error or Redmine.NULLFUNC)
     return cancelDefer
 

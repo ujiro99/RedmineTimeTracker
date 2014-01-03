@@ -61,7 +61,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Redmine, Ticket, Message, 
    on loading success, update issue list
   ###
   loadIssuesSuccess = (data) ->
-    return if $scope.selectedProject[0].account.url isnt data.issues[0].url
+    return if $scope.selectedProject[0].account.url isnt data.url
     return if $scope.currentPage - 1 isnt data.offset / data.limit
     $scope.totalItems = data.total_count
     for issue in data.issues
