@@ -12,14 +12,13 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
 
 
   ###
-   Initialize Option page.
+   Initialize.
   ###
   init = ->
     Account.getAccounts (accounts) ->
       if not accounts? or not accounts[0]? then return
       for account in accounts
         loadProject account
-
   init()
 
 
@@ -38,7 +37,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
     if msg.projects?
       o =
         url: msg.projects[0].account.url
-        projects: msg.projects
       for a, i in $scope.accounts when a.url is o.url
         $scope.accounts.splice i, 1
         break
@@ -104,13 +102,11 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
 
 
   ###
-   filter account and projects.
+   filter account.
   ###
   $scope.accountFilter = (account) ->
     if $scope.searchText.isBlank() then return true
-    return (account.url + "").contains($scope.searchText) or
-           account.projects.some (prj) ->
-             prj.name.toLowerCase().contains($scope.searchText.toLowerCase())
+    return (account.url + "").contains($scope.searchText)
 
 
   ###

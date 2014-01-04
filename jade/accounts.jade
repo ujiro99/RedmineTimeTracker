@@ -53,9 +53,6 @@ div#accounts(ng-controller='AccountCtrl')
       .number
       .list-label
         span {{account.url}}
-        ul.project-list
-          li.list-label(ng-repeat='prj in account.projects')
-            span {{prj.name}}
       button.btn(type='button')
         span.icon-minus
 
