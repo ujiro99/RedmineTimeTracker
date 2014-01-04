@@ -1,7 +1,6 @@
-timeTracker.factory("Ticket", (Analytics) ->
+timeTracker.factory("Ticket", (Project, Analytics) ->
 
   TICKET = "TICKET"
-  PROJECT = "PROJECT"
 
   URL_INDEX_START = 1  # for avoid 0 == false
 
@@ -29,13 +28,6 @@ timeTracker.factory("Ticket", (Analytics) ->
   # - in chrome sync,
   #
   #     ticket = [ id, text, project_url_index, project_id, show ]
-  #
-  #     project = {
-  #       value of url:
-  #         index: project_url_index
-  #         value of project_id: name
-  #     }
-  #
   #
 
 
@@ -96,25 +88,25 @@ timeTracker.factory("Ticket", (Analytics) ->
     storage.get TICKET, (tickets) ->
       if chrome.runtime.lastError? then callback? null; return
 
-      storage.get PROJECT, (projects) ->
+      Project.load (projects) ->
         if chrome.runtime.lastError? then callback? null; return
 
-        if not (tickets[TICKET]? and projects[PROJECT]?)
+        if not (tickets[TICKET]? and projects?)
           callback? null
           return
 
         tmp = []
         for t in tickets[TICKET]
           # search url
-          for url, obj of projects[PROJECT] when obj.index is t[TICKET_URL_INDEX]
+          for url, obj of projects when obj.index is t[TICKET_URL_INDEX]
             break
           tmp.push new TicketModel(
             t[TICKET_ID],
             t[TICKET_TEXT],
             url,
             {
-              id: t[TICKET_PRJ_ID],
-              name: projects[PROJECT][url][t[TICKET_PRJ_ID]]
+              id: t[TICKET_PRJ_ID]
+              name: projects[url][t[TICKET_PRJ_ID]]
             },
             t[TICKET_SHOW])
 
@@ -151,7 +143,7 @@ timeTracker.factory("Ticket", (Analytics) ->
       projectObj[t.url].index = urlIndex[t.url]
       ticketArray.push [t.id, t.text, urlIndex[t.url], t.project.id, t.show]
 
-    storage.set PROJECT: projectObj
+    Project.set projectObj
     storage.set TICKET: ticketArray, () ->
       if chrome.runtime.lastError?
         callback? false

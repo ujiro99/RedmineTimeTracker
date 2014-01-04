@@ -1,6 +1,6 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Redmine, Account, State, Message, Analytics, Resource) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, Message, Analytics, Resource) ->
 
-  TICKET_SYNC = "TICKET_SYNC"
+  DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
   TICKET_CLOSED = 5
 
@@ -54,10 +54,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   alarmInfo =
     when: Date.now() + 1
     periodInMinutes: MINUTE_5
-  chrome.alarms.create(TICKET_SYNC, alarmInfo)
+  chrome.alarms.create(DATA_SYNC, alarmInfo)
   chrome.alarms.onAlarm.addListener (alarm) ->
-    if alarm.name is TICKET_SYNC
+    if alarm.name is DATA_SYNC
       Ticket.sync()
+      Project.sync()
 
 
   Analytics.init {
