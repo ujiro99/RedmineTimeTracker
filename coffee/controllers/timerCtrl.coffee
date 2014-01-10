@@ -28,8 +28,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     $scope.tickets = Ticket.getSelectable()
     $scope.selectedTicket = Ticket.getSelected()
 
-  init()
-
 
   ###
    load activities for new account.
@@ -166,3 +164,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   submitError = (msg) ->
     Message.toast Resource.string("msgSubmitTimeFail")
 
+
+  ###
+   exec initialize.
+  ###
+  init()

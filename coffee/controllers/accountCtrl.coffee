@@ -19,7 +19,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
       if not accounts? or not accounts[0]? then return
       for account in accounts
         loadProject account
-  init()
 
 
   ###
@@ -143,3 +142,9 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
         $scope.accounts.splice i, 1
         break
       Message.toast Resource.string("msgAccountRemoved").format(url)
+
+
+  ###
+   exec Initialize.
+  ###
+  init()
