@@ -15,10 +15,12 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     _updateIssues()
 
 
+  ###
+   update issues status.
+  ###
   _updateIssues = () ->
     Account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]?
-        requestAddAccount()
         return
       for t in Ticket.get()
         for account in accounts when account.url is t.url
@@ -32,13 +34,25 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
             if data.issue.spent_hours?
               total = Math.floor(data.issue.spent_hours * 100) / 100
               Ticket.setParam  data.issue.url, data.issue.id, total: total
+        break
+
+
+  ###
+   check account exist.
+  ###
+  Account.getAccounts (accounts) ->
+    if not accounts? or not accounts?[0]?
+      requestAddAccount()
+      return
 
 
   ###
    request a setup of redmine account to user.
   ###
   requestAddAccount = () ->
-    State.isAdding = true
+    $timeout () ->
+      State.isAdding = true
+    , 500
     $timeout () ->
       $location.hash('accounts')
       $anchorScroll()
