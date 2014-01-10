@@ -1,7 +1,7 @@
 div#timer(ng-controller='TimerCtrl')
 
   header
-    div.caption(ng-click="changeMode()", ga-click='changeMode')
+    div.caption.hover-action(ng-click="changeMode()", ga-click='changeMode')
       i.fa.fa-angle-left
       div.title
         div.icon(ng-switch on="mode")

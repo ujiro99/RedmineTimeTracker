@@ -97,6 +97,15 @@ html, body
       align-center()
       height 100%
       color: color_key
+      &.hover-action
+        cursor: pointer
+        .fa
+          transition: opacity 0.2s ease
+          padding: 0 4px
+          font-size: 1.4em
+          opacity: 0
+        &:hover > .fa
+          opacity: 1
     .title
       align-center()
       font-size: 1.05em
@@ -206,19 +215,28 @@ body.modal-open
    background-color: #ebebeb
 
 
+.animate-switch-container
+  position: relative
+
+.animate-switch
+  position: absolute
+  width: 100%
+  &.ng-enter
+  &.ng-leave
+    transition: 0.32s ease
+  &.ng-enter
+    left: 100%
+    &.ng-enter-active
+      left: 0
+  &.ng-leave
+    left: 0
+    &.ng-leave-active
+      left: -100%
+
+
 #timer
 
   width_button = 34
-
-  .caption
-    cursor: pointer
-    .fa
-      transition: opacity 0.2s ease
-      padding: 0 4px
-      font-size: 1.5em
-      opacity: 0
-    &:hover > .fa
-      opacity: 1
 
   .select
     position: relative
@@ -328,23 +346,7 @@ body.modal-open
       float: right
 
   .animate-switch-container
-    position: relative
     height: 128px
-
-  .animate-switch
-    position: absolute
-    width: 100%
-    &.ng-enter
-    &.ng-leave
-      transition: 0.3s ease all
-    &.ng-enter
-      left: 100%
-      &.ng-enter-active
-        left: 0
-    &.ng-leave
-      left: 0
-      &.ng-leave-active
-        left: -100%
 
 
 #issue
@@ -417,6 +419,8 @@ body.modal-open
       .tooltip-inner span
         color: #555
 
+  .animate-switch-container
+    transition: height .32s ease
 
   uz-pagination
     display: flex

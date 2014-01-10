@@ -1,0 +1,36 @@
+// select
+div.form-group.project
+  uz-dropdown(items='accounts',
+              selected='selectedAccount',
+              format='item.url',
+              selected-format='selected[0].url')
+
+// search
+div.form-group.search
+  label.sr-only Search
+  input.form-control.input-sm(type='search',
+                              placeholder='search...',
+                              ng-model='searchText')
+  i.fa.fa-search
+
+
+// issues
+div.issueList
+  ul
+    li(ng-repeat='item in projectsInList | filter:editState.listFilter | orderBy:"id"')
+      button.issue(type='button', ng-click="editState.onClickItem(item)", ga-click='projectItem')
+        span.id {{item.id}}
+        span.subject {{item.text}}
+        div.btn(ng-hide='editState.isContained(item)')
+          span.icon-plus
+        div.btn(ng-show='editState.isContained(item)')
+          span.icon-minus
+        button.btn.external-link(type='button', ng-click="editState.openLink(item.url)", ga-click='projectLink')
+          span.icon-question
+
+// page
+div.page
+  uz-pagination.pagination-small(total-items='totalItems',
+                                 current-page='currentPage',
+                                 items-per-page='itemsPerPage')
+
