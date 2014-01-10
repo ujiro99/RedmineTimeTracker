@@ -40,10 +40,10 @@
   "msgIssueTracking": {
     "message": "{0} は現在トラッキング中です。"
   },
-  "msgIssueAdded": {
+  "msgAdded": {
     "message": "{0} を追加"
   },
-  "msgIssueRemoved": {
+  "msgRemoved": {
     "message": "{0} を削除"
   },
   "msgOptionSaved": {

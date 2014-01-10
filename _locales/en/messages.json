@@ -40,10 +40,10 @@
   "msgIssueTracking": {
     "message": "{0} is being tracked now."
   },
-  "msgIssueAdded": {
-    "message": "{0} aded."
+  "msgAdded": {
+    "message": "{0} added."
   },
-  "msgIssueRemoved": {
+  "msgRemoved": {
     "message": "{0} removed."
   },
   "msgOptionSaved": {
