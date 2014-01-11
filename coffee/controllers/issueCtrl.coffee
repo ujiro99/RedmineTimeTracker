@@ -35,7 +35,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    start getting issues.
   ###
   $scope.$on 'accountAdded', (e, account) ->
-    # Redmine.get(account).loadProjects @loadSuccess, @loadError, params
     Redmine.get(account).getIssuesOnUser(getIssuesSuccess)
     $scope.accounts.push account
     if not $scope.selectedAccount[0]
