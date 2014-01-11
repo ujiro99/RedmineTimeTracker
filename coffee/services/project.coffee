@@ -187,6 +187,7 @@ timeTracker.factory("Project", (Analytics) ->
       for p, i in _selectableProjects when p.equals {url: url, id: id}
         _selectableProjects.splice i, 1
         break
+      _setLocal()
 
 
     ###
