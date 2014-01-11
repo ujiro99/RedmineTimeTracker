@@ -220,9 +220,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       Message.toast Resource.string("msgRemoved").format(item.text)
 
 
-    ###
-     load issues according selected project.
-    ###
     load: (page) ->
       if not $scope.selectedProject[0]?
         $scope.issues.clear()
@@ -235,10 +232,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       Redmine.get(account).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
 
 
-    ###
-     on loading success, update issue list
-    ###
     loadSuccess: (data) ->
+      return if not $scope.selectedProject[0]
       return if $scope.selectedProject[0].url isnt data.url
       return if State.currentPage - 1 isnt data.offset / data.limit
       $scope.totalItems = data.total_count
@@ -248,9 +243,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       $scope.issues = data.issues
 
 
-    ###
-     show fail message.
-    ###
     loadError: (data, status) ->
       if status is STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
@@ -288,6 +280,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
 
     loadSuccess: (data) ->
+      return if not $scope.selectedAccount[0]
       return if $scope.selectedAccount[0].url isnt data.url
       return if State.currentPage - 1 isnt data.offset / data.limit
       $scope.totalItems = data.total_count
