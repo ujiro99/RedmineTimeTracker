@@ -6,13 +6,13 @@ div#issue(ng-controller='IssueCtrl')
       div.title
         div.icon
           span.icon-list
-        span Edit {{mode}} list
+        span {{mode}}
       i.fa.fa-angle-right
 
   // edit list
   div.animate-switch-container(ng-switch on='mode', uz-auto-height='section')
-    section.animate-switch(ng-switch-when="Issue")
+    section.animate-switch(ng-switch-when="Issues")
       div(ng-include="'editIssueList.html'")
-    section.animate-switch(ng-switch-when="Project")
+    section.animate-switch(ng-switch-when="Projects")
       div(ng-include="'editProjectList.html'")
 

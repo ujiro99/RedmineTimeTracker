@@ -1,7 +1,7 @@
 timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics) ->
 
   STATUS_CANCEL = 0
-  MODE = {ISSUE: "Issue", PROJECT: "Project"}
+  MODE = {ISSUE: "Issues", PROJECT: "Projects"}
 
   $scope.accounts = []
   $scope.currentPage = 1
