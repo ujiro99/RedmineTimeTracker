@@ -122,7 +122,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.$on 'timer-stopped', (e, time) ->
     trackedTime = time
     if not State.isTracking
-      postEntry(time.minutes)
+      postEntry(time.days * 60 * 24 + time.hours * 60 + time.minutes)
 
 
   ###
