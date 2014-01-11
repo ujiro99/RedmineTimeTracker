@@ -11,6 +11,19 @@ clearfix()
   &:after
     clear: both
 
+slideIn()
+  &.ng-enter
+  &.ng-leave
+    transition: 0.32s ease
+  &.ng-enter
+    left: 100%
+    &.ng-enter-active
+      left: 0
+  &.ng-leave
+    left: 0
+    &.ng-leave-active
+      left: -100%
+
 
 text-ellipsis()
   white-space: nowrap
@@ -221,17 +234,6 @@ body.modal-open
 .animate-switch
   position: absolute
   width: 100%
-  &.ng-enter
-  &.ng-leave
-    transition: 0.32s ease
-  &.ng-enter
-    left: 100%
-    &.ng-enter-active
-      left: 0
-  &.ng-leave
-    left: 0
-    &.ng-leave-active
-      left: -100%
 
 
 #timer
@@ -348,6 +350,9 @@ body.modal-open
   .animate-switch-container
     height: 128px
 
+  .animate-switch
+    slideIn()
+
 
 #issue
   .form-group
@@ -422,6 +427,9 @@ body.modal-open
   .animate-switch-container
     transition: height .32s ease
 
+  .animate-switch
+    slideIn()
+
   uz-pagination
     display: flex
     justify-content: center
@@ -454,6 +462,8 @@ body.modal-open
 
   .form-group
     margin-bottom: 10px
+    display: flex
+    align-items: center
 
   .input-and-btn
     display: flex
@@ -482,8 +492,6 @@ body.modal-open
     position: relative
     height: 138px
     .animate-switch
-      position: absolute
-      width: 100%
       &.ng-enter
       &.ng-leave
         transition: 0.2s ease all
@@ -498,17 +506,13 @@ body.modal-open
 
   .setting-labels
     width: label-width px
-    display: inline-block
     color: #888
     label
       font-weight: normal
 
   .setting-options
     height: height_input + 8 px
-    width: 100%
-    padding: 4px label-width - 0px 0 0
-    margin-right: - label-width px
-    display: inline-block
+    flex: 1
 
   .url
     span
