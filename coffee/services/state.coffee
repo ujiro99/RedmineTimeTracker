@@ -4,6 +4,7 @@ timeTracker.factory("State", () ->
     debug: false
     isTracking: false
     isAdding: false
+    currentPage: 1
   }
 
 )

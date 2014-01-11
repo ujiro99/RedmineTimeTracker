@@ -7,7 +7,7 @@ timeTracker.directive 'uzPagination', ($window) ->
     template: "<pagination class='pagination-small'" +
                           "boundary-links='true'" +
                           "total-items='totalItems'" +
-                          "page='currentPage'" +
+                          "page='page'" +
                           "items-per-page='itemsPerPage'" +
                           "max-size='maxSize'" +
                           "previous-text='&lsaquo;'" +
@@ -16,7 +16,7 @@ timeTracker.directive 'uzPagination', ($window) ->
                           "last-text='&raquo;'></pagination>"
 
     scope:
-      currentPage:  '='
+      page:         '='
       totalItems:   '='
       itemsPerPage: '='
 
@@ -35,7 +35,7 @@ timeTracker.directive 'uzPagination', ($window) ->
         scope.maxSize = 1 if scope.maxSize < 1
 
       # resize pagination bar
-      scope.$watch 'currentPage', calculateSize
+      scope.$watch 'page', calculateSize
       scope.$watch 'totalItems', calculateSize
       angular.element($window).on 'resize', () ->
         scope.$apply calculateSize

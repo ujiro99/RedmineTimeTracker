@@ -4,9 +4,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   MODE = {ISSUE: "Issues", PROJECT: "Projects"}
 
   $scope.accounts = []
-  $scope.currentPage = 1
   $scope.issues = []
-  $scope.itemsPerPage = 50
+  $scope.itemsPerPage = 25
   $scope.listData = {}
   $scope.mode = MODE.ISSUE
   $scope.projects = []
@@ -17,6 +16,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.selectedProject = []
   $scope.tooltipPlace = 'top'
   $scope.totalItems = 0
+  $scope.state = State
 
 
   ###
@@ -58,16 +58,16 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    on change selected, start loading.
   ###
   $scope.$watch 'selected[0]', () ->
-    $scope.currentPage = 1
-    $scope.editState.load($scope.currentPage)
+    State.currentPage = 1
+    $scope.editState.load(State.currentPage)
 
 
   ###
-   on change currentPage, start loading.
+   on change state.currentPage, start loading.
   ###
-  $scope.$watch 'currentPage', ->
+  $scope.$watch 'state.currentPage', ->
     Analytics.sendEvent 'user', 'clicked', 'pagination'
-    $scope.editState.load($scope.currentPage)
+    $scope.editState.load(State.currentPage)
 
 
   ###
@@ -232,7 +232,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     ###
     loadSuccess: (data) ->
       return if $scope.selectedProject[0].url isnt data.url
-      return if $scope.currentPage - 1 isnt data.offset / data.limit
+      return if State.currentPage - 1 isnt data.offset / data.limit
       $scope.totalItems = data.total_count
       for issue in data.issues
         for t in Ticket.get() when issue.equals t
@@ -281,7 +281,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
     loadSuccess: (data) ->
       return if $scope.selectedAccount[0].url isnt data.url
-      return if $scope.currentPage - 1 isnt data.offset / data.limit
+      return if State.currentPage - 1 isnt data.offset / data.limit
       $scope.totalItems = data.total_count
       if data.projects?
         $scope.projectsInList = data.projects
