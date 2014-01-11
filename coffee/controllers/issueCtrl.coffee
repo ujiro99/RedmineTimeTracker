@@ -73,10 +73,18 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   ###
    on change projects, update selected.
   ###
-  $scope.$watch 'projects', (b, a) ->
+  $scope.$watch 'projects', () ->
     if $scope.projects.length is 0
       $scope.selectedProject.clear()
-    if not $scope.selectedProject[0]?
+      return
+
+    selected = $scope.selectedProject[0]
+    if not selected?
+      $scope.selectedProject[0] = $scope.projects[0]
+      return
+
+    found = $scope.projects.some (ele) -> ele.equals(selected)
+    if not found
       $scope.selectedProject[0] = $scope.projects[0]
   , true
 
