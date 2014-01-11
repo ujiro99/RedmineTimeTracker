@@ -185,10 +185,10 @@ class Redmine
     config = @setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
+        data.url = @auth.url
         if data?.projects?
           data.projects = for prj in data.projects
             prj.text = prj.name
-            prj.account = @auth
             prj
           @_projects = data.projects
           @observer.$broadcast 'projectsAdded', data.projects

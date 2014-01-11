@@ -25,22 +25,20 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
    load project.
   ###
   loadProject = (account) ->
-    Redmine.get(account).loadProjects loadProjectSuccess, loadProjectError
+    Redmine.get(account).loadProjects loadProjectSuccess(account), loadProjectError
 
 
   ###
    show loaded project.
    if project is already loaded, overwrites by new project.
   ###
-  loadProjectSuccess = (msg) ->
+  loadProjectSuccess = (account) -> (msg) ->
     if msg.projects?
-      o =
-        url: msg.projects[0].account.url
-      for a, i in $scope.accounts when a.url is o.url
+      for a, i in $scope.accounts when a.url is msg.url
         $scope.accounts.splice i, 1
         break
-      $scope.accounts.push o
-      Message.toast Resource.string("msgLoadProjectSuccess").format(o.url)
+      $scope.accounts.push account
+      Message.toast Resource.string("msgLoadProjectSuccess").format(account.url)
     else
       loadProjectError msg
 
@@ -145,6 +143,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
 
 
   ###
-   exec Initialize.
+   Start Initialize.
   ###
   init()

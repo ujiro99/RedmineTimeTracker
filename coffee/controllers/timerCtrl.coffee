@@ -164,8 +164,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   submitError = (msg) ->
     Message.toast Resource.string("msgSubmitTimeFail")
 
-
   ###
-   exec initialize.
+   Start Initialize.
   ###
   init()
