@@ -1,4 +1,4 @@
-timeTracker.factory("Account", ($rootScope, Project, Analytics) ->
+timeTracker.factory("Account", ($rootScope, Analytics) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
@@ -90,10 +90,11 @@ timeTracker.factory("Account", ($rootScope, Project, Analytics) ->
         return
       chrome.storage.sync.get ACCOUNTS, (item) ->
         if chrome.runtime.lastError? or not item[ACCOUNTS]?
-          callback null
+          callback _accounts
         else
-          _accounts = for a in item[ACCOUNTS]
-            _decryptAuth.apply(a)
+          _accounts.clear()
+          for a in item[ACCOUNTS]
+            _accounts.push _decryptAuth.apply(a)
           callback _accounts
 
 

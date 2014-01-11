@@ -174,6 +174,31 @@ timeTracker.factory("Project", (Analytics) ->
 
 
     ###
+     remove a project.
+    ###
+    remove: (url, id) ->
+      delete _projects[url][id]
+      if Object.keys(_projects[url]).length is 1
+        delete _projects[url]
+        # update urlIndex
+        i = 0
+        for remainedUrl, params of _projects
+          _projects[remainedUrl].index = i++
+      for p, i in _selectableProjects when p.equals {url: url, id: id}
+        _selectableProjects.splice i, 1
+        break
+
+
+    ###
+     remove a project.
+    ###
+    removeUrl: (url) ->
+      for k, v of _projects[url]
+        continue if k is 'index'
+        @remove url, k
+
+
+    ###
      load all projects from chrome sync.
     ###
     load: (callback) ->

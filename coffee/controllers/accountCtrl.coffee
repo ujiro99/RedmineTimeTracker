@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message, State, Resource) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, Message, State, Resource) ->
 
   ID_PASS = 'id_pass'
 
@@ -139,6 +139,8 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Message
       for a, i in $scope.accounts when a.url is url
         $scope.accounts.splice i, 1
         break
+      Project.removeUrl url
+      Ticket.removeUrl url
       Message.toast Resource.string("msgAccountRemoved").format(url)
 
 

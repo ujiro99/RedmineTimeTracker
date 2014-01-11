@@ -24,7 +24,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   ###
   init = () ->
     Account.getAccounts (accounts) ->
-      if not accounts then return
       $scope.accounts = accounts
       $scope.selectedAccount[0] = $scope.accounts[0]
     $scope.projects = Project.getSelectable()
@@ -36,7 +35,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   ###
   $scope.$on 'accountAdded', (e, account) ->
     Redmine.get(account).getIssuesOnUser(getIssuesSuccess)
-    $scope.accounts.push account
     if not $scope.selectedAccount[0]
       $scope.selectedAccount[0] = $scope.accounts[0]
 
@@ -45,17 +43,21 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    remove project and issues.
   ###
   $scope.$on 'accountRemoved', (e, url) ->
-    removeProject url
-    for a, i in $scope.accounts when a.url is url
-      $scope.accounts.splice i, 1
+    # remove a account
     if $scope.selectedAccount[0]?.url is url
       $scope.selectedAccount[0] = $scope.accounts[0]
+    # remove projects
+    newPrjs = (p for p, i in $scope.projects when p.url isnt url)
+    $scope.projects.clear()
+    for p in newPrjs then $scope.projects.push p
+    if $scope.selectedProject[0]?.url is url
+      $scope.selectedProject[0] = $scope.projects[0]
 
 
   ###
    on change selected, start loading.
   ###
-  $scope.$watch 'selected[0]', ->
+  $scope.$watch 'selected[0]', () ->
     $scope.currentPage = 1
     $scope.editState.load($scope.currentPage)
 
@@ -86,13 +88,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     if not data? then return
     Ticket.addArray data.issues
     Ticket.sync()
-
-
-  ###
-   remve project and tikcets.
-  ###
-  removeProject = (url) ->
-    Ticket.removeUrl url
 
 
   ###
@@ -212,7 +207,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
      load issues according selected project.
     ###
     load: (page) ->
-      if $scope.selectedProject.length is 0 then return
       if not $scope.selectedProject[0]?
         $scope.issues.clear()
         return
@@ -266,7 +260,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
 
     load: (page) ->
-      if $scope.selectedAccount.length is 0 then return
       if not $scope.selectedAccount[0]?
         $scope.projectsInList.clear()
         return
