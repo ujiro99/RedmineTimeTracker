@@ -570,8 +570,12 @@ body.modal-open
 
     & > li
       counter-increment: account
-      margin-bottom: 1em
+      margin-bottom: 0.5em
       cursor: pointer
+      list-style-type: none
+      display: flex
+      align-items: center
+
       & > .number:before
         content: counter(account)
         padding-right: 10px
@@ -588,19 +592,24 @@ body.modal-open
         .number:before
           color: color_key
 
-    li
-      list-style-type: none
-      display: flex
-      align-items: center
-
       .btn
         border: none
         padding: 0 3px
         color: #aaa
 
-      .list-label
+      .list-item
         width: 100%
+
+      .list-label
         text-ellipsis()
+
+      .list-description
+        color: #aaa
+        padding-left: 10px
+
+        span
+          margin-right: 10px
+
 
 #options
 

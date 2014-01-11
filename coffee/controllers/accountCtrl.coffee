@@ -37,6 +37,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
       for a, i in $scope.accounts when a.url is msg.url
         $scope.accounts.splice i, 1
         break
+      account.projectCount = msg.projects.length
       $scope.accounts.push account
       Message.toast Resource.string("msgLoadProjectSuccess").format(account.url)
     else
