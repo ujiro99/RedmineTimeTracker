@@ -182,8 +182,8 @@ timeTracker.factory("Project", (Analytics) ->
         delete _projects[url]
         # update urlIndex
         i = 0
-        for remainedUrl, params of _projects
-          _projects[remainedUrl].index = i++
+        for redmineUrl, params of _projects
+          _projects[redmineUrl].index = i++
       for p, i in _selectableProjects when p.equals {url: url, id: id}
         _selectableProjects.splice i, 1
         break
