@@ -25,13 +25,17 @@ timeTracker.directive 'uzPagination', ($window) ->
       # Limit number for pagination size.
       scope.maxSize = 1
 
+      arrowWidth = null
+
       # calculate pagination bar's size.
       calculateSize = () ->
-        a = element.find('a')
-        if a.length <= MIN_SIZE then return
-        minWidth = ($(a[0]).outerWidth(true) + $(a[1]).outerWidth(true)) * 2
-        buttonWidth = $(a[a.length - 3]).outerWidth(true)
-        scope.maxSize = Math.floor((element.outerWidth() - minWidth) / buttonWidth)
+        alist = element.find('a')
+        if alist.length <= MIN_SIZE then return
+        arrowWidth = arrowWidth or ($(alist[0]).outerWidth(true) + $(alist[1]).outerWidth(true)) * 2
+        buttonWidth = 0
+        wlist = for a in alist then $(a).outerWidth(true)
+        buttonWidth = Math.max.apply({}, wlist)
+        scope.maxSize = Math.floor((element.outerWidth() - arrowWidth) / buttonWidth)
         scope.maxSize = 1 if scope.maxSize < 1
 
       # resize pagination bar
