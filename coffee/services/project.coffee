@@ -168,7 +168,7 @@ timeTracker.factory("Project", (Analytics) ->
       for p, i in _selectableProjects when p.equals prj
         _selectableProjects.splice i, 1
         break
-      if prj.show isnt SHOW.NOT
+      if _projects[prj.url][prj.id].show isnt SHOW.NOT
         _selectableProjects.push prj
       _setLocal()
 

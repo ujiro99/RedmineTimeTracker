@@ -99,10 +99,11 @@ class Redmine
         data.url = @auth.url
         if data?.issues?
           data.issues = for issue in data.issues
-            issue.text  = issue.subject
-            issue.show  = Redmine.SHOW.DEFAULT
-            issue.url   = @auth.url
-            issue.total = issue.spent_hours or 0
+            issue.text    = issue.subject
+            issue.show    = Redmine.SHOW.DEFAULT
+            issue.url     = @auth.url
+            issue.total   = issue.spent_hours or 0
+            issue.project = issue.project
             new @Ticket.new(issue)
         success?(data))
       .error(error or Redmine.NULLFUNC)
@@ -184,10 +185,9 @@ class Redmine
               urlIndex: prj.urlIndex,  # undefined
               id: prj.id,
               text: prj.name,
-              show: Redmine.SHOW.DEFAULT
+              show: Redmine.SHOW.NOT
             @Project.add(newPrj)
             @Project.new(newPrj)
-          @observer.$broadcast 'projectsLoaded', data.projects
         success?(data, status, headers, config))
       .error(error or Redmine.NULLFUNC)
 
