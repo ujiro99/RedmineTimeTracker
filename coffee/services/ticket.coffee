@@ -21,7 +21,7 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
   #       url: ,
   #       project: ,
   #         id: project_id
-  #         name: ,
+  #         text: ,
   #       show:
   #     }
   #
@@ -86,12 +86,17 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
     if not storage? then callback? null; return
 
     storage.get TICKET, (tickets) ->
-      if chrome.runtime.lastError? then callback? null; return
+      if chrome.runtime.lastError?
+        console.debug 'runtime error'
+        callback? null; return
 
       Project.load (projects) ->
-        if chrome.runtime.lastError? then callback? null; return
+        if chrome.runtime.lastError?
+          console.debug 'runtime error'
+          callback? null; return
 
-        if not (tickets[TICKET]? and projects?)
+        if not (tickets[TICKET]?)
+          console.debug 'project or ticket does not exists'
           callback? null
           return
 
@@ -106,7 +111,6 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
             url,
             {
               id: t[TICKET_PRJ_ID]
-              name: projects[url][t[TICKET_PRJ_ID]]
             },
             t[TICKET_SHOW])
 
@@ -134,16 +138,10 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
   _set = (storage, callback) ->
     if not storage? then callback? null; return
     ticketArray = []
-    projectObj = {}
-    urlIndex = {}
+    projects = Project.get()
     for t in tickets
-      urlIndex[t.url] = urlIndex[t.url] or Object.keys(urlIndex).length + URL_INDEX_START
-      projectObj[t.url] = projectObj[t.url] or {}
-      projectObj[t.url][t.project.id] = t.project.name
-      projectObj[t.url].index = urlIndex[t.url]
-      ticketArray.push [t.id, t.text, urlIndex[t.url], t.project.id, t.show]
-
-    Project.set projectObj
+      urlIndex = projects[t.url].index
+      ticketArray.push [t.id, t.text, urlIndex, t.project.id, t.show]
     storage.set TICKET: ticketArray, () ->
       if chrome.runtime.lastError?
         callback? false

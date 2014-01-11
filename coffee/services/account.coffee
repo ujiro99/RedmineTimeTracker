@@ -1,4 +1,4 @@
-timeTracker.factory("Account", ($rootScope, Analytics) ->
+timeTracker.factory("Account", ($rootScope, Project, Analytics) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."

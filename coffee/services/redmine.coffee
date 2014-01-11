@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket) ->
+timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project) ->
 
   _redmines = {}
 
@@ -9,7 +9,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket) ->
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Base64)
+        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64)
       return _redmines[auth.url]
 
 
@@ -29,10 +29,8 @@ class Redmine
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
   @NULLFUNC: () ->
 
-  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Base64) ->
+  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64) ->
     @url = auth.url
-
-  _projects: []
 
   _timeEntryData:
     "time_entry":
@@ -166,18 +164,11 @@ class Redmine
 
 
   ###
-   return chached projects.
-  ###
-  getProjects: () ->
-    return @_projects
-
-
-  ###
    Load projects on url
   ###
   loadProjects: (success, error, params) ->
     params = params or {}
-    params.limit = params.limit or 100
+    params.limit = params.limit or 50
     config =
       method: "GET"
       url: @auth.url + "/projects.json"
@@ -188,10 +179,15 @@ class Redmine
         data.url = @auth.url
         if data?.projects?
           data.projects = for prj in data.projects
-            prj.text = prj.name
-            prj
-          @_projects = data.projects
-          @observer.$broadcast 'projectsAdded', data.projects
+            newPrj =
+              url: @auth.url,
+              urlIndex: prj.urlIndex,
+              id: prj.id,
+              text: prj.name,
+              show: Redmine.SHOW.DEFAULT
+            @Project.add newPrj
+            @Project.new(newPrj)
+          @observer.$broadcast 'projectsLoaded', data.projects
         success?(data, status, headers, config))
       .error(error or Redmine.NULLFUNC)
 

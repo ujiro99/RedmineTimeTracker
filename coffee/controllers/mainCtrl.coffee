@@ -11,7 +11,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     if not tickets?
       return
     Ticket.set tickets
-    $scope.$broadcast 'ticketLoaded'
     _updateIssues()
 
 
