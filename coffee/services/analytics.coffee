@@ -4,6 +4,17 @@ angular.module('analytics', [])
     _service = null
     _tracker = null
 
+
+    ###
+     check was Analytics initialized.
+    ###
+    _initialized = () ->
+      if not _tracker
+        $log.error "please init analytics."
+        return false
+      return true
+
+
     return {
 
       ###*
@@ -27,9 +38,7 @@ angular.module('analytics', [])
        @param value {Integer} An integer that you can use to provide numerical data about the user event (optional).
       ###
       sendEvent: (category, action, label, value) ->
-        if not _tracker
-          $log.error "please init analytics."
-          return
+        return if not _initialized()
         _tracker.sendEvent category, action, label, value
 
 
@@ -39,10 +48,19 @@ angular.module('analytics', [])
        @param viewName {String} view's name which will be tracked.
       ###
       sendView: (viewName) ->
-        if not _tracker
-          $log.error "please init analytics."
-          return
+        return if not _initialized()
         _tracker.sendAppView viewName
+
+
+      ###*
+       Track a exception.
+       @method sendException
+       @param description {String} Specifies the description of an exception.
+       @param isFatal {Boolean} Was the exception fatal.
+      ###
+      sendException: (description, isFatal) ->
+        return if not _initialized()
+        _tracker.sendException description, isFatal
 
 
       ###*
@@ -51,9 +69,7 @@ angular.module('analytics', [])
        @param permitted {Boolean} Is enable tracking.
       ###
       setPermission: (permitted) ->
-        if not _service
-          $log.error "please init analytics."
-          return
+        return if not _initialized()
         _service.getConfig().addCallback (config) ->
           config.setTrackingPermitted(permitted)
 

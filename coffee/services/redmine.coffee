@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project) ->
+timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics) ->
 
   _redmines = {}
 
@@ -137,12 +137,15 @@ class Redmine
       url: @auth.url + "/issues/#{issueId}.json"
     config = @setBasicConfig config, @auth
     @$http(config)
-      .success( (data, status, headers, config) =>
+      .success((data, status, headers, config) =>
         if data?.issue?
           data.issue.show = Redmine.SHOW.DEFAULT
           data.issue.url = @auth.url
         success?(data, status, headers, config))
-      .error(error or Redmine.NULLFUNC)
+      .error((data, status, headers, config) ->
+        console.debug data
+        Analytics.sendException("Error: getIssuesById")
+        error(data, status))
 
 
   ###
@@ -161,7 +164,10 @@ class Redmine
     config.headers = "Content-Type": "application/xml"
     @$http(config)
       .success(success or Redmine.NULLFUNC)
-      .error(error or Redmine.NULLFUNC)
+      .error((data, status, headers, config) ->
+        console.debug data
+        Analytics.sendException("Error: submitTime")
+        error(data, status))
 
 
   ###
