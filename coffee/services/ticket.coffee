@@ -95,10 +95,9 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
           console.debug 'runtime error'
           callback? null; return
 
-        if not (tickets[TICKET]?)
+        if not tickets[TICKET]?
           console.debug 'project or ticket does not exists'
-          callback? null
-          return
+          callback? null; return
 
         tmp = []
         for t in tickets[TICKET]
