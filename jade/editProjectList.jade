@@ -25,7 +25,7 @@ div.issueList
           span.icon-plus
         div.btn(ng-show='editState.isContained(item)')
           span.icon-minus
-        button.btn.external-link(type='button', ng-click="editState.openLink(item.url)", ga-click='projectLink')
+        button.btn.external-link(type='button', ng-click="editState.openLink(item.url + '/projects/' + item.id)", ga-click='projectLink')
           span.icon-question
 
 // page
