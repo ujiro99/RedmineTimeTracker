@@ -27,6 +27,30 @@ key_color = #f7505a
     top: 1px
     right: 8px
 
+.dropdown-box
+  transition: opacity,top .25s ease
+  position: absolute
+  width: 100%
+  top: 32px
+  opacity: 0
+  visibility: hidden
+  background-color: #fff
+  border: solid 1px #eee
+  box-shadow: 2px 2px 4px rgba(0,0,0,.15)
+  border-radius: .3125em!important
+  z-index: 4
+  &:after
+    z-index: 4
+    position: absolute
+    right: 14px
+    top: -9px
+    content: ''
+    width: 0px
+    height: 0px
+    border-style: solid
+    border-width: 0 8px 9px 8px
+    border-color: transparent transparent #bbb transparent
+
 .dropdown-text,
 .dropdown-content a
   color: #333
@@ -59,33 +83,13 @@ key_color = #f7505a
         border-color: transparent transparent #555 transparent
 
 .dropdown-content
-  transition: opacity,top .25s ease
   list-style-type: none
-  position: absolute
-  top: 32px
   padding: 0
   margin: 0
-  opacity: 0
-  visibility: hidden
   text-indent: 10px
   line-height: height - 4px
-  width: 100%
-  background-color: #fff
-  border: solid 1px #eee
-  box-shadow: 2px 2px 4px rgba(0,0,0,.15)
-  border-radius: .3125em!important
-  z-index: 4
-  &:after
-    z-index: 4
-    position: absolute
-    right: 14px
-    top: -9px
-    content: ''
-    width: 0px
-    height: 0px
-    border-style: solid
-    border-width: 0 8px 9px 8px
-    border-color: transparent transparent #bbb transparent
+  overflow-y: scroll
+  max-height: 250px
 
   li
     overflow: hidden
@@ -119,7 +123,7 @@ key_color = #f7505a
   &:after
     opacity: .7
 
-.dropdown-toggle:focus ~ .dropdown-content
+.dropdown-toggle:focus ~ .dropdown-box
   opacity: 1
   visibility: visible
   top: 38px
