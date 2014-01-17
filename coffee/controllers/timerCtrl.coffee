@@ -7,7 +7,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.state = State
   $scope.projects = {}
   $scope.selectedActivity = []
-  $scope.comment = ""
+  $scope.comment = { text: "" }
   $scope.commentMaxLength = COMMENT_MAX
   $scope.commentRemain = COMMENT_MAX
   $scope.mode = "auto"
@@ -137,7 +137,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
       conf =
         issueId:    $scope.selectedTicket[0].id
         hours:      hours
-        comment:    $scope.comment
+        comment:    $scope.comment.text
         activityId: $scope.selectedActivity[0].id
       url = $scope.selectedTicket[0].url
       account = $scope.projects[url].account

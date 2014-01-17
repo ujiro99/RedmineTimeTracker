@@ -29,7 +29,7 @@ div.form-inline
 div.comment
   textarea.form-control(name='comment',
                         rows='2',
-                        ng-model='comment',
+                        ng-model='comment.text',
                         ng-maxlength='commentMaxLength',
                         placeholder='comments...',
                         ng-change='commentRemain = commentMaxLength - comment.length')
