@@ -33,7 +33,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
             if data.issue.spent_hours?
               total = Math.floor(data.issue.spent_hours * 100) / 100
               Ticket.setParam  data.issue.url, data.issue.id, total: total
-        break
+          break
 
 
   ###
