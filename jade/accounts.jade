@@ -13,7 +13,7 @@ div#accounts(ng-controller='AccountCtrl')
       label.sr-only Search
       input.form-control.input-sm(type='search',
                                   placeholder='search...',
-                                  ng-model='searchText')
+                                  ng-model='searchField.text')
       i.fa.fa-search
     button.btn(ng-click='state.isAdding = !state.isAdding', ga-click='toggleForm')
       span.icon-plus

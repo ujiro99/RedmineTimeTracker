@@ -5,7 +5,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   $scope.accounts = []
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = ID_PASS
-  $scope.searchText = ''
+  $scope.searchField = text: ''
   $scope.state = State
   $scope.isSaving = false
   $scope.R = Resource
@@ -103,8 +103,8 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
    filter account.
   ###
   $scope.accountFilter = (account) ->
-    if $scope.searchText.isBlank() then return true
-    return (account.url + "").contains($scope.searchText)
+    if $scope.searchField.text.isBlank() then return true
+    return (account.url + "").contains($scope.searchField.text)
 
 
   ###

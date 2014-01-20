@@ -10,7 +10,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.mode = MODE.ISSUE
   $scope.projects = []
   $scope.projectsInList = []
-  $scope.searchText = ''
+  $scope.searchField = text: ''
   $scope.selected = []
   $scope.selectedAccount = []
   $scope.selectedProject = []
@@ -166,12 +166,12 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
 
     ###
-     filter issues by searchText.
+     filter issues by searchField.text.
     ###
     listFilter: (item) ->
-      if $scope.searchText.isBlank() then return true
-      return (item.id + "").contains($scope.searchText) or
-             item.text.toLowerCase().contains($scope.searchText.toLowerCase())
+      if $scope.searchField.text.isBlank() then return true
+      return (item.id + "").contains($scope.searchField.text) or
+             item.text.toLowerCase().contains($scope.searchField.text.toLowerCase())
 
 
     ###
