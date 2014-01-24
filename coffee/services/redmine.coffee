@@ -1,5 +1,6 @@
 timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics) ->
 
+
   _redmines = {}
 
   return {
@@ -24,6 +25,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
 
 class Redmine
 
+  @NOT_FOUND = 404
   @CONTENT_TYPE: "application/json"
   @AJAX_TIME_OUT: 30 * 1000
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
@@ -142,9 +144,14 @@ class Redmine
           data.issue.show = Redmine.SHOW.DEFAULT
           data.issue.url = @auth.url
         success?(data, status, headers, config))
-      .error((data, status, headers, config) ->
-        console.debug data
-        Analytics.sendException("Error: getIssuesById")
+      .error((data, status, headers, config) =>
+        if status is Redmine.NOT_FOUND
+          data = issue:
+            url: @auth.url
+            id:  issueId
+        else
+          console.debug data
+          Analytics.sendException("Error: getIssuesById")
         error(data, status))
 
 

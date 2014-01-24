@@ -3,6 +3,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
   TICKET_CLOSED = 5
+  NOT_FOUND = 404
 
   $rootScope.messages = []
 
@@ -11,29 +12,44 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     if not tickets?
       return
     Ticket.set tickets
-    _updateIssues()
+    updateIssues()
 
 
   ###
    update issues status.
   ###
-  _updateIssues = () ->
+  updateIssues = () ->
     Account.getAccounts (accounts) ->
       if not accounts? or not accounts?[0]?
         return
       for t in Ticket.get()
         for account in accounts when account.url is t.url
-          Redmine.get(account).getIssuesById t.id, (data) ->
-            newParam =
-              text: data.issue.subject
-            Ticket.setParam  data.issue.url, data.issue.id, newParam
-            if data.issue?.status.id is TICKET_CLOSED
-              Ticket.remove {url: data.issue.url, id: data.issue.id }
-              return
-            if data.issue.spent_hours?
-              total = Math.floor(data.issue.spent_hours * 100) / 100
-              Ticket.setParam  data.issue.url, data.issue.id, total: total
+          Redmine.get(account).getIssuesById t.id, issueFound, issueNotFound
           break
+
+
+  ###
+   when issue found, update according to status.
+  ###
+  issueFound = (data) ->
+    newParam =
+      text: data.issue.subject
+    Ticket.setParam  data.issue.url, data.issue.id, newParam
+    if data.issue?.status.id is TICKET_CLOSED
+      Ticket.remove {url: data.issue.url, id: data.issue.id }
+      return
+    if data.issue.spent_hours?
+      total = Math.floor(data.issue.spent_hours * 100) / 100
+      Ticket.setParam  data.issue.url, data.issue.id, total: total
+
+
+  ###
+   when issue not found, remove issue.
+  ###
+  issueNotFound = (data, status) ->
+    if status is NOT_FOUND
+      Ticket.remove {url: data.issue.url, id: data.issue.id }
+      return
 
 
   ###
