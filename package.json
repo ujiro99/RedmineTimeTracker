@@ -1,6 +1,6 @@
 {
   "name": "RedmineTimeTracking",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Time Tracking tool for Redmine on GoogleChrome",
   "main": "index.js",
   "devDependencies": {
