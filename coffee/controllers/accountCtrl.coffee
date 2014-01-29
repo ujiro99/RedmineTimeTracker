@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, Message, State, Resource) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, Message, State, Resource, Analytics) ->
 
   ID_PASS = 'id_pass'
 
@@ -84,6 +84,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
         if result
           $scope.isSaving = $scope.state.isAdding = false
           Message.toast Resource.string("msgAuthSuccess"), 3000
+          Analytics.sendEvent 'internal', 'auth', 'success'
           loadProject msg.account
         else
           failAuthentication null
@@ -97,6 +98,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   failAuthentication = (msg) ->
     $scope.isSaving = false
     Message.toast Resource.string("msgAuthFail"), 3000
+    Analytics.sendEvent 'internal', 'auth', 'fail'
 
 
   ###
