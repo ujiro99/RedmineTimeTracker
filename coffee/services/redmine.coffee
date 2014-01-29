@@ -209,15 +209,19 @@ class Redmine
    Load user on url associated to auth.
   ###
   _getUser: (success, error) ->
+    error = error or Redmine.NULLFUNC
     config =
       method: "GET"
       url: @auth.url + "/users/current.json?include=memberships"
     config = @setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
+        if not data.user or not data.user.id
+          error(data, status, headers, config)
+          return
         @auth.userId = data.user.id
         success(data, status, headers, config))
-      .error(error or Redmine.NULLFUNC)
+      .error(error)
 
 
   ###
