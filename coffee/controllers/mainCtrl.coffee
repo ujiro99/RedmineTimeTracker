@@ -4,6 +4,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   MINUTE_5 = 5
   TICKET_CLOSED = 5
   NOT_FOUND = 404
+  UNAUTHORIZED = 401
 
   $rootScope.messages = []
 
@@ -47,7 +48,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    when issue not found, remove issue.
   ###
   issueNotFound = (data, status) ->
-    if status is NOT_FOUND
+    if status is NOT_FOUND or status is UNAUTHORIZED
       Ticket.remove {url: data.issue.url, id: data.issue.id }
       return
 

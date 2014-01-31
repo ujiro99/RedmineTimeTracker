@@ -26,6 +26,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
 class Redmine
 
   @NOT_FOUND = 404
+  @UNAUTHORIZED = 401
   @CONTENT_TYPE: "application/json"
   @AJAX_TIME_OUT: 30 * 1000
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
@@ -145,7 +146,7 @@ class Redmine
           data.issue.url = @auth.url
         success?(data, status, headers, config))
       .error((data, status, headers, config) =>
-        if status is Redmine.NOT_FOUND
+        if status is Redmine.NOT_FOUND or status is Redmine.UNAUTHORIZED
           data = issue:
             url: @auth.url
             id:  issueId
