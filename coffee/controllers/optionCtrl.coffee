@@ -1,8 +1,9 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option, Analytics, State, Resource) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project, Account, Option, Analytics, State, Resource) ->
 
   DEFAULT_OPTION = { reportUsage: true }
   $scope.options = {}
   $scope.state = State
+  $scope.isSetting = false
 
 
   ###
@@ -36,8 +37,30 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Account, Option
   $scope.clearOptions = () ->
     Account.clearAccount (result) ->
       if result
-        Message.toast Resource.string("msgClearDataSucess")
+        Message.toast Resource.string("msgClearDataSucess").format('all data')
       else
         Message.toast Resource.string("msgClearDataFail")
+
+
+  ###
+   clear ticket data.
+  ###
+  $scope.clearTickets = () ->
+    $scope.isSetting = true
+    Ticket.clear (result) ->
+      $timeout ->
+        if result
+          Message.toast Resource.string("msgClearDataSucess").format('ticket')
+        else
+          Message.toast Resource.string("msgClearDataFail")
+      , 1000
+    Project.clear (result) ->
+      $timeout ->
+        $scope.isSetting = false
+        if result
+          Message.toast Resource.string("msgClearDataSucess").format('project')
+        else
+          Message.toast Resource.string("msgClearDataFail")
+      , 2000
 
 

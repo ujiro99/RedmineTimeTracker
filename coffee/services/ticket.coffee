@@ -339,5 +339,20 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
                              params.priority,
                              params.assigned_to
                              params.total)
+
+
+    ###
+     clear ticket data on storage and local.
+    ###
+    clear: (callback) ->
+      tickets.clear()
+      selectableTickets.clear()
+      selectedTickets.clear()
+      chrome.storage.local.set TICKET: []
+      chrome.storage.sync.set TICKET: [], () ->
+      if chrome.runtime.lastError?
+        callback? false
+      else
+        callback? true
   }
 )

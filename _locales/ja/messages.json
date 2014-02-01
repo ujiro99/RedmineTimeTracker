@@ -53,7 +53,7 @@
     "message": "保存に失敗しました。"
   },
   "msgClearDataSucess": {
-    "message": "全データを消去しました。"
+    "message": "{0}を消去しました。"
   },
   "msgClearDataFail": {
     "message": "消去に失敗しました。"

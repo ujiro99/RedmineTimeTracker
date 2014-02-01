@@ -16,6 +16,22 @@ div#options(ng-controller='OptionCtrl')
     div.setting-options
       input.btn(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
 
+
+  div.settings-section.form-group
+    div.setting-labels
+      label.control-label Clear Ticket & Project
+      div.setting-description
+        span Remove all tickets and project from list.
+    div.setting-options
+      button.btn.btn-default.btn-sm.ladda-button(ng-click='clearTickets()',
+                                                 uz-loading='isSetting',
+                                                 data-style='zoom-in',
+                                                 data-size='xs',
+                                                 data-spinner-color="#555"
+                                                 ga-click='clearTickets')
+        span Clear
+
+
   div.clear(ng-show='state.debug')
     button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
       i.fa.fa-exclamation-triangle

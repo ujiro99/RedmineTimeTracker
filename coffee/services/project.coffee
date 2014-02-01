@@ -236,5 +236,19 @@ timeTracker.factory("Project", (Analytics) ->
                        params.text,
                        params.show)
 
+
+    ###
+     clear project data on storage and local.
+    ###
+    clear: (callback) ->
+      for url, params of _projects then delete _projects[url]
+      _selectableProjects.clear()
+      chrome.storage.local.set PROJECT: []
+      chrome.storage.sync.set PROJECT: [], () ->
+      if chrome.runtime.lastError?
+        callback? false
+      else
+        callback? true
+
   }
 )

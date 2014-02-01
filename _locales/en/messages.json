@@ -53,7 +53,7 @@
     "message": "Failed to save."
   },
   "msgClearDataSucess": {
-    "message": "All data cleared."
+    "message": "{0} cleared."
   },
   "msgClearDataFail": {
     "message": "Clear failed."
