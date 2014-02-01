@@ -160,6 +160,8 @@ class Redmine
    submit time entry to redmine server.
   ###
   submitTime: (config, success, error) ->
+    success = success or Redmine.NULLFUNC
+    error = error or Redmine.NULLFUNC
     @_timeEntryData.time_entry.issue_id    = config.issueId
     @_timeEntryData.time_entry.hours       = config.hours
     @_timeEntryData.time_entry.comments    = config.comment
@@ -171,11 +173,13 @@ class Redmine
     config = @setBasicConfig config, @auth
     config.headers = "Content-Type": "application/xml"
     @$http(config)
-      .success(success or Redmine.NULLFUNC)
-      .error((data, status, headers, config) ->
+      .success((params...) ->
+        Analytics.sendEvent 'internal', 'submitTime', 'success', config.hours
+        success(params))
+      .error((params...) ->
         console.debug data
         Analytics.sendException("Error: submitTime")
-        error(data, status))
+        error(params))
 
 
   ###
