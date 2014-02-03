@@ -10,7 +10,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64)
+        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64, Analytics)
       return _redmines[auth.url]
 
 
@@ -32,7 +32,7 @@ class Redmine
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
   @NULLFUNC: () ->
 
-  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64) ->
+  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64, @Analytics) ->
     @url = auth.url
 
   _timeEntryData:
@@ -152,7 +152,7 @@ class Redmine
             id:  issueId
         else
           console.debug data
-          Analytics.sendException("Error: getIssuesById")
+          @Analytics.sendException("Error: getIssuesById")
         error(data, status))
 
 
@@ -173,13 +173,13 @@ class Redmine
     config = @setBasicConfig config, @auth
     config.headers = "Content-Type": "application/xml"
     @$http(config)
-      .success((params...) ->
-        Analytics.sendEvent 'internal', 'submitTime', 'success', config.hours
-        success(params))
-      .error((params...) ->
+      .success((data) =>
+        @Analytics.sendEvent 'internal', 'submitTime', 'success', config.hours
+        success(data))
+      .error((data) =>
         console.debug data
-        Analytics.sendException("Error: submitTime")
-        error(params))
+        @Analytics.sendException("Error: submitTime")
+        error(data))
 
 
   ###
