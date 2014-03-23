@@ -1,0 +1,80 @@
+{
+  "extName":  {
+      "message": "Redmine Time Tracker",
+      "description": "Nazwa rozszerzenia google chrome."
+  },
+  "extDescription": {
+    "message": "Zarządza czasem w zadaniach i synchronizuje je z serwerem.",
+    "description": "Chrome extension description."
+  },
+  "dialogRemoveAccountConfirm": {
+    "message": "Czy jesteś pewien że chcesz usunąć konto?"
+  },
+  "dialogRemoveAccountConfirmTicket": {
+    "message": "Zadania w projektach zostaną również usunięte z listy wyboru."
+  },
+  "dialogRemoveAccountConfirmRedmine": {
+    "message": "Dane na serwerze nie ulegną zmianie."
+  },
+  "msgRequestAddAccount_0": {
+    "message": "Najpierw ustaw swoje konto."
+  },
+  "msgRequestAddAccount_1": {
+    "message": "Jeśli autoryzacja się powiedzie zadania zostaną wyświetlone"
+  },
+  "msgRequestInputURL": {
+    "message": "Proszę wpisać adres serwera Redmine."
+  },
+  "msgAuthSuccess": {
+    "message": "Autoryzacja przebiegła pomyślnie!"
+  },
+  "msgAuthFail": {
+    "message": "Autoryzacja nie powiodła się."
+  },
+  "msgAccountRemoved": {
+    "message": "{0} Dodano."
+  },
+  "msgLoadIssueFail": {
+    "message": "Nie udało się załadować issues."
+  },
+  "msgIssueTracking": {
+    "message": "{0} jest teraz śledzony."
+  },
+  "msgAdded": {
+    "message": "{0} dodano."
+  },
+  "msgRemoved": {
+    "message": "{0} usunięto."
+  },
+  "msgOptionSaved": {
+    "message": "Ustawienie zapisane."
+  },
+  "msgOptionSaveFailed": {
+    "message": "Nie można zapisać."
+  },
+  "msgClearDataSucess": {
+    "message": "{0} wyczyszczono."
+  },
+  "msgClearDataFail": {
+    "message": "Czyszczenie nie powiodło się."
+  },
+  "msgSubmitTimeEntry": {
+    "message": "Zgłoszono {0}: {1} h"
+  },
+  "msgShortTime": {
+    "message": "Wymagana jest więcej niż jedna minuta"
+  },
+  "msgSubmitTimeSuccess": {
+    "message": "Time Entry saved."
+  },
+  "msgSubmitTimeFail": {
+    "message": "Zapis się nie powiódł."
+  },
+  "msgLoadProjectSuccess": {
+    "message": "{0} załadowanych."
+  },
+  "msgLoadProjectFail": {
+    "message": "Ładowanie nie powiodło się."
+  }
+}
+
