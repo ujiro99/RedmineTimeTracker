@@ -6,7 +6,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.accounts = []
   $scope.issues = []
   $scope.itemsPerPage = 25
-  $scope.listData = {}
   $scope.mode = MODE.ISSUE
   $scope.projects = []
   $scope.projectsInList = []
@@ -27,7 +26,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       $scope.accounts = accounts
       $scope.selectedAccount[0] = $scope.accounts[0]
     $scope.projects = Project.getSelectable()
-    $scope.editState = new IssueEditState($scope, Ticket, State, Message, Resource)
+    $scope.editState = new IssueEditState()
 
 
   ###
@@ -113,10 +112,10 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.changeMode = () ->
     if $scope.mode is MODE.ISSUE
       $scope.mode = MODE.PROJECT
-      $scope.editState = new ProjectEditState($scope, Project, State, Message, Resource)
+      $scope.editState = new ProjectEditState()
     else
       $scope.mode = MODE.ISSUE
-      $scope.editState = new IssueEditState($scope, Ticket, State, Message, Resource)
+      $scope.editState = new IssueEditState()
 
 
   ###
@@ -132,7 +131,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
      check item was contained in selectableTickets.
     ###
     isContained: (item) ->
-      selectable = $scope.listData.getSelectable()
+      selectable = @listData.getSelectable()
       found = selectable.some (e) -> item.equals e
       return found
 
@@ -152,8 +151,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     ###
     addItem: (item) ->
       item.show = BaseEditState.SHOW.SHOW
-      $scope.listData.add item
-      $scope.listData.setParam item.url, item.id, {show: BaseEditState.SHOW.SHOW}
+      @listData.add item
+      @listData.setParam item.url, item.id, {show: BaseEditState.SHOW.SHOW}
       Message.toast Resource.string("msgAdded").format(item.text)
 
 
@@ -162,7 +161,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     ###
     removeItem: (item) ->
       item.show = BaseEditState.SHOW.NOT
-      $scope.listData.setParam item.url, item.id, {show: BaseEditState.SHOW.NOT}
+      @listData.setParam item.url, item.id, {show: BaseEditState.SHOW.NOT}
 
 
     ###
@@ -207,13 +206,13 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
     @inject: ['$scope', 'Ticket', 'State', 'Message', 'Resource']
 
-    constructor: (@$scope, @listData, @State, @Message, @Resource) ->
-      @$scope.listData = listData
-      @$scope.selected = @$scope.selectedProject
+    constructor: () ->
+      @listData = Ticket
+      $scope.selected = $scope.selectedProject
 
 
     removeItem: (item) ->
-      selected = $scope.listData.getSelected()[0]
+      selected = @listData.getSelected()[0]
       if State.isTracking and item.equals selected
         return
       super(item)
@@ -255,9 +254,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
     @inject: ['$scope', 'Project', 'State', 'Message', 'Resource']
 
-    constructor: (@$scope, @listData, @State, @Message, @Resource) ->
-      @$scope.listData = listData
-      @$scope.selected = @$scope.selectedAccount
+    constructor: () ->
+      @listData = Project
+      $scope.selected = $scope.selectedAccount
 
 
     removeItem: (item) ->
