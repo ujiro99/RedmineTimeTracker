@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, BaseEditState, IssueEditState, ProjectEditState) ->
 
   STATUS_CANCEL = 0
   MODE = {ISSUE: "Issues", PROJECT: "Projects"}
@@ -26,7 +26,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       $scope.accounts = accounts
       $scope.selectedAccount[0] = $scope.accounts[0]
     $scope.projects = Project.getSelectable()
-    $scope.editState = new IssueEditState()
+    $scope.editState = new IssueEditState($scope)
 
 
   ###
@@ -112,186 +112,10 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.changeMode = () ->
     if $scope.mode is MODE.ISSUE
       $scope.mode = MODE.PROJECT
-      $scope.editState = new ProjectEditState()
+      $scope.editState = new ProjectEditState($scope)
     else
       $scope.mode = MODE.ISSUE
-      $scope.editState = new IssueEditState()
-
-
-  ###
-   base state.
-  ###
-  class BaseEditState
-
-    @inject: []
-    @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
-
-
-    ###
-     check item was contained in selectableTickets.
-    ###
-    isContained: (item) ->
-      selectable = @listData.getSelectable()
-      found = selectable.some (e) -> item.equals e
-      return found
-
-
-    ###
-     on user selected item.
-    ###
-    onClickItem: (item) ->
-      if @isContained(item)
-        @removeItem(item)
-      else
-        @addItem(item)
-
-
-    ###
-     add selected item.
-    ###
-    addItem: (item) ->
-      item.show = BaseEditState.SHOW.SHOW
-      @listData.add item
-      @listData.setParam item.url, item.id, {show: BaseEditState.SHOW.SHOW}
-      Message.toast Resource.string("msgAdded").format(item.text)
-
-
-    ###
-     remove selected item.
-    ###
-    removeItem: (item) ->
-      item.show = BaseEditState.SHOW.NOT
-      @listData.setParam item.url, item.id, {show: BaseEditState.SHOW.NOT}
-
-
-    ###
-     filter issues by searchField.text.
-    ###
-    listFilter: (item) ->
-      if $scope.searchField.text.isBlank() then return true
-      return (item.id + "").contains($scope.searchField.text) or
-             item.text.toLowerCase().contains($scope.searchField.text.toLowerCase())
-
-
-    ###
-     load data.
-    ###
-    load: (page) ->
-
-
-    ###
-     open link on other window.
-    ###
-    openLink: (url) ->
-      a = document.createElement('a')
-      a.href = url
-      a.target='_blank'
-      a.click()
-
-
-    ###
-     calculate tooltip position.
-    ###
-    onMouseMove: (e) ->
-      if e.clientY > $window.innerHeight / 2
-        $scope.tooltipPlace = 'top'
-      else
-        $scope.tooltipPlace = 'bottom'
-
-
-  ###
-   controller for issue edit mode.
-  ###
-  class IssueEditState extends BaseEditState
-
-    @inject: ['$scope', 'Ticket', 'State', 'Message', 'Resource']
-
-    constructor: () ->
-      @listData = Ticket
-      $scope.selected = $scope.selectedProject
-
-
-    removeItem: (item) ->
-      selected = @listData.getSelected()[0]
-      if State.isTracking and item.equals selected
-        return
-      super(item)
-      Message.toast Resource.string("msgRemoved").format(item.text)
-
-
-    load: (page) ->
-      if not $scope.selectedProject[0]?
-        $scope.issues.clear()
-        return
-      account = (a for a in $scope.accounts when $scope.selectedProject[0].url is a.url)[0]
-      projectId = $scope.selectedProject[0].id
-      params =
-        page: page
-        limit: $scope.itemsPerPage
-      Redmine.get(account).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
-
-
-    loadSuccess: (data) ->
-      return if not $scope.selectedProject[0]
-      return if $scope.selectedProject[0].url isnt data.url
-      return if State.currentPage - 1 isnt data.offset / data.limit
-      $scope.totalItems = data.total_count
-      for issue in data.issues
-        for t in Ticket.get() when issue.equals t
-          issue.show = t.show
-      $scope.issues = data.issues
-
-
-    loadError: (data, status) ->
-      if status is STATUS_CANCEL then return
-      Message.toast Resource.string("msgLoadIssueFail")
-
-
-  ###
-   controller for project edit mode.
-  ###
-  class ProjectEditState extends BaseEditState
-
-    @inject: ['$scope', 'Project', 'State', 'Message', 'Resource']
-
-    constructor: () ->
-      @listData = Project
-      $scope.selected = $scope.selectedAccount
-
-
-    removeItem: (item) ->
-      selected = Ticket.getSelected()[0]
-      if State.isTracking and item.url is selected.url
-        return
-      super(item)
-      Message.toast Resource.string("msgRemoved").format(item.text)
-
-
-    load: (page) ->
-      if not $scope.selectedAccount[0]?
-        $scope.projectsInList.clear()
-        return
-      account = $scope.selectedAccount[0]
-      params =
-        page: page
-        limit: $scope.itemsPerPage
-      Redmine.get(account).loadProjects @loadSuccess, @loadError, params
-
-
-    loadSuccess: (data) ->
-      return if not $scope.selectedAccount[0]
-      return if $scope.selectedAccount[0].url isnt data.url
-      return if State.currentPage - 1 isnt data.offset / data.limit
-      $scope.totalItems = data.total_count
-      if data.projects?
-        $scope.projectsInList = data.projects
-      else
-        @loadError data
-
-
-    loadError: (data, status) ->
-      if status is STATUS_CANCEL then return
-      Message.toast Resource.string("msgLoadFail")
+      $scope.editState = new IssueEditState($scope)
 
 
   ###
