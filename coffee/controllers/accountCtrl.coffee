@@ -7,7 +7,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   $scope.authWay = ID_PASS
   $scope.searchField = text: ''
   $scope.state = State
-  $scope.isSaving = false
   $scope.R = Resource
 
 
@@ -55,10 +54,10 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
    Load the user ID associated to Authentication info.
   ###
   $scope.addAccount = () ->
-    $scope.isSaving = true
+    State.isSaving = true
     if not $scope.option.url? or $scope.option.url.length is 0
       Message.toast Resource.string("msgRequestInputURL")
-      $scope.isSaving = false
+      State.isSaving = false
       return
     $scope.option.url = util.getUrl $scope.option.url
     Redmine.remove({url: $scope.option.url})
@@ -82,7 +81,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
       $scope.option.url = msg.account.url
       Account.addAccount msg.account, (result) ->
         if result
-          $scope.isSaving = $scope.state.isAdding = false
+          State.isSaving = State.isAdding = false
           Message.toast Resource.string("msgAuthSuccess"), 3000
           Analytics.sendEvent 'internal', 'auth', 'success'
           loadProject msg.account
@@ -96,7 +95,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
    fail to save
   ###
   failAuthentication = (msg) ->
-    $scope.isSaving = false
+    State.isSaving = false
     Message.toast Resource.string("msgAuthFail"), 3000
     Analytics.sendEvent 'internal', 'auth', 'fail'
 

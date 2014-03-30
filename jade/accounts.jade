@@ -39,7 +39,7 @@ div#accounts(ng-controller='AccountCtrl')
         button.btn.btn-default.btn-sm.ladda-button(
           ng-click='addAccount()',
           ga-click='addAccount',
-          uz-loading='isSaving',
+          uz-loading='state.isSaving',
           data-style='zoom-in',
           data-size='xs',
           data-spinner-color="#555") Add
