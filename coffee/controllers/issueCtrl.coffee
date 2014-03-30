@@ -33,7 +33,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    start getting issues.
   ###
   $scope.$on 'accountAdded', (e, account) ->
-    Redmine.get(account).getIssuesOnUser(getIssuesSuccess)
     if not $scope.selectedAccount[0]
       $scope.selectedAccount[0] = $scope.accounts[0]
 
@@ -86,24 +85,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     if not found
       $scope.selectedProject[0] = $scope.projects[0]
   , true
-
-
-  ###
-   add assigned issues and projects.
-  ###
-  getIssuesSuccess = (data) ->
-    if not data? then return
-    # show assigned project.
-    activeProject = {}
-    for i in data.issues
-      activeProject[i.url] = activeProject[i.url] or {}
-      activeProject[i.url][i.project.id] = true
-    for url, ids of activeProject
-      for id in Object.keys(ids)
-        Project.setParam url, id - 0, {show: BaseEditState.SHOW.SHOW}
-    # show assigned ticket.
-    Ticket.addArray data.issues
-    Ticket.sync()
 
 
   ###

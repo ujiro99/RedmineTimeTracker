@@ -82,6 +82,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
       Account.addAccount msg.account, (result) ->
         if result
           State.isSaving = State.isAdding = false
+          Redmine.get(msg.account).getIssuesOnUser(getIssuesSuccess)
           Message.toast Resource.string("msgAuthSuccess"), 3000
           Analytics.sendEvent 'internal', 'auth', 'success'
           loadProject msg.account
@@ -89,6 +90,24 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
           failAuthentication null
     else
       failAuthentication msg
+
+
+  ###
+   add assigned issues and projects.
+  ###
+  getIssuesSuccess = (data) ->
+    if not data? then return
+    # show assigned project.
+    activeProject = {}
+    for i in data.issues
+      activeProject[i.url] = activeProject[i.url] or {}
+      activeProject[i.url][i.project.id] = true
+    for url, ids of activeProject
+      for id in Object.keys(ids)
+        Project.setParam url, id - 0, {show: Project.SHOW.SHOW}
+    # show assigned ticket.
+    Ticket.addArray data.issues
+    Ticket.sync()
 
 
   ###
