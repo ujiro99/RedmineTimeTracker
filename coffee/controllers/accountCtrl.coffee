@@ -53,7 +53,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   ###
    Load the user ID associated to Authentication info.
   ###
-  $scope.addAccount = () ->
+  $scope.findAccount = () ->
     State.isSaving = true
     if not $scope.option.url? or $scope.option.url.length is 0
       Message.toast Resource.string("msgRequestInputURL")
