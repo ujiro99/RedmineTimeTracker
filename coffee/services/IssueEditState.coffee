@@ -20,6 +20,7 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
 
 
     load: (page) ->
+      page = @currentPage if not page?
       if not @$scope.selectedProject[0]?
         @$scope.issues.clear()
         return
@@ -34,7 +35,7 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
     loadSuccess: (data) =>
       return if not @$scope.selectedProject[0]
       return if @$scope.selectedProject[0].url isnt data.url
-      return if State.currentPage - 1 isnt data.offset / data.limit
+      return if @currentPage - 1 isnt data.offset / data.limit
       @$scope.totalItems = data.total_count
       for issue in data.issues
         for t in Ticket.get() when issue.equals t

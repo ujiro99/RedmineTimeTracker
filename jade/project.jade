@@ -1,0 +1,11 @@
+div#project(ng-controller='ProjectCtrl')
+
+  header
+    div.caption
+      div.title
+        div.icon
+          span.icon-list
+        span Project
+
+  // edit list
+  div(ng-include="'editProjectList.html'", uz-auto-height='section')

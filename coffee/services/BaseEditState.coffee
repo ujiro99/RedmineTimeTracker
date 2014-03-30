@@ -7,6 +7,7 @@ timeTracker.factory "BaseEditState", ($window, Message, Resource) ->
 
     @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
+    currentPage: 1
 
     ###
      check item was contained in selectableTickets.

@@ -57,16 +57,16 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    on change selected, start loading.
   ###
   $scope.$watch 'selected[0]', () ->
-    State.currentPage = 1
-    $scope.editState.load(State.currentPage)
+    $scope.editState.currentPage = 1
+    $scope.editState.load()
 
 
   ###
    on change state.currentPage, start loading.
   ###
-  $scope.$watch 'state.currentPage', ->
+  $scope.$watch 'editState.currentPage', ->
     Analytics.sendEvent 'user', 'clicked', 'pagination'
-    $scope.editState.load(State.currentPage)
+    $scope.editState.load()
 
 
   ###

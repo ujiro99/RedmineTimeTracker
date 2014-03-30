@@ -20,6 +20,7 @@ timeTracker.factory "ProjectEditState", (Project, Ticket, Redmine, State, Messag
 
 
     load: (page) ->
+      page = @currentPage if not page?
       if not @$scope.selectedAccount[0]?
         @$scope.projectsInList.clear()
         return
@@ -33,7 +34,7 @@ timeTracker.factory "ProjectEditState", (Project, Ticket, Redmine, State, Messag
     loadSuccess: (data) =>
       return if not @$scope.selectedAccount[0]
       return if @$scope.selectedAccount[0].url isnt data.url
-      return if State.currentPage - 1 isnt data.offset / data.limit
+      return if @currentPage - 1 isnt data.offset / data.limit
       @$scope.totalItems = data.total_count
       if data.projects?
         @$scope.projectsInList = data.projects
