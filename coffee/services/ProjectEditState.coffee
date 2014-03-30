@@ -42,8 +42,8 @@ timeTracker.factory "ProjectEditState", (Project, Ticket, Redmine, State, Messag
         @loadError data
 
 
-    loadError: (data, status) ->
-      if status is STATUS_CANCEL then return
+    loadError: (data, status) =>
+      if status is BaseEditState.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadFail")
 
 

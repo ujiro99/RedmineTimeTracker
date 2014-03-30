@@ -43,8 +43,8 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
       @$scope.issues = data.issues
 
 
-    loadError: (data, status) ->
-      if status is STATUS_CANCEL then return
+    loadError: (data, status) =>
+      if status is BaseEditState.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
 
 
