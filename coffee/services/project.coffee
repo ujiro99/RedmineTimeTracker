@@ -85,6 +85,7 @@ timeTracker.factory("Project", (Analytics) ->
 
   return {
 
+    SHOW: SHOW
 
     ###
      get projects project.
