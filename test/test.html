@@ -5,14 +5,25 @@
   <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
 </head>
 <body>
+
   <div id="mocha"></div>
+
   <script src="../scripts/jquery.js"></script>
+
   <script src="../node_modules/mocha/mocha.js"></script>
   <script src="../node_modules/chai/chai.js"></script>
   <script>mocha.setup('bdd')</script>
 
+  <script src="../scripts/angular.min.js"></script>
+  <script src="http://code.angularjs.org/1.2.3/angular-mocks.js"></script>
+
+  <script src="app.js"></script>
   <script src="../scripts/util.js"></script>
+  <script src="../scripts/services/analytics.js"></script>
+  <script src="../scripts/services/project.js"></script>
+
   <script src="util_test.js"></script>
+  <script src="project_test.js"></script>
 
   <script>
     mocha.checkLeaks();
