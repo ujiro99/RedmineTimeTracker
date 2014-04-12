@@ -11,7 +11,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
   #         index: project_url_index
   #         value of project_id:
   #           text: project_name
-  #           show: true/false
+  #           show: DEFAULT: 0, NOT: 1, SHOW: 2
   #     }
   #
 
