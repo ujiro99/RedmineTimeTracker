@@ -20,6 +20,18 @@ describe 'project.coffee', ->
 
 
   ###
+    set: (newProjects) ->
+    setParam: (url, id, params) ->
+    remove: (url, id) ->
+    removeUrl: (url) ->
+    load: (callback) ->
+    sync: (callback) ->
+    new: (params) ->
+    clear: (callback) ->
+  ###
+
+
+  ###
    test for get()
   ###
   describe 'get()', ->
@@ -28,6 +40,50 @@ describe 'project.coffee', ->
       projects = Project.get()
       expect(projects).to.be.empty
 
+  ###
+   test for getSelectable()
+  ###
+  describe 'getSelectable()', ->
+
+    it 'be empty', () ->
+      projects = Project.getSelectable()
+      expect(projects).to.be.empty
+
+    it 'SHOW.NOT expect to be empty', () ->
+      prj =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 0
+        text: ""
+        show: SHOW.NOT
+      Project.add(prj)
+
+      projects = Project.getSelectable()
+      expect(projects).to.be.empty
+
+    it 'SHOW.DEFAULT expect to not be empty', () ->
+      prj =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 0
+        text: ""
+        show: SHOW.DEFAULT
+      Project.add(prj)
+
+      projects = Project.getSelectable()
+      expect(projects).to.not.be.empty
+
+    it 'SHOW.SHOW expect to not be empty', () ->
+      prj =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 0
+        text: ""
+        show: SHOW.SHOW
+      Project.add(prj)
+
+      projects = Project.getSelectable()
+      expect(projects).to.not.be.empty
 
   ###
    test for add()
