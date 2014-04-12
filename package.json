@@ -6,6 +6,7 @@
   "devDependencies": {
     "chai": "~1.8.1",
     "mocha": "~1.14.0",
+    "sinon": "~1.9.1",
     "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-coffee": "~0.7.0",
