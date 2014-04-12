@@ -49,6 +49,8 @@ module.exports = (grunt) ->
           ext: '.js'
         ]
       test:
+        options:
+          bare: true
         files: [
           expand: true
           cwd: 'test/'
