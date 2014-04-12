@@ -1,4 +1,4 @@
-timeTracker.factory("Ticket", (Project, Analytics) ->
+timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
 
   TICKET = "TICKET"
 
@@ -69,14 +69,14 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
    get tickets from local storage.
   ###
   _getLocal = (callback) ->
-    _get(chrome.storage.local, callback)
+    _get(Chrome.storage.local, callback)
 
 
   ###
    get tickets from sync storage.
   ###
   _getSync = (callback) ->
-    _get(chrome.storage.sync, callback)
+    _get(Chrome.storage.sync, callback)
 
 
   ###
@@ -86,12 +86,12 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
     if not storage? then callback? null; return
 
     storage.get TICKET, (tickets) ->
-      if chrome.runtime.lastError?
+      if Chrome.runtime.lastError?
         console.debug 'runtime error'
         callback? null; return
 
       Project.load (projects) ->
-        if chrome.runtime.lastError?
+        if Chrome.runtime.lastError?
           console.debug 'runtime error'
           callback? null; return
 
@@ -120,14 +120,14 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
    save all tickets to local.
   ###
   _setLocal = (callback) ->
-    _set chrome.storage.local, callback
+    _set Chrome.storage.local, callback
 
 
   ###
    save all tickets to chrome sync.
   ###
   _setSync = (callback) ->
-    _set chrome.storage.sync, callback
+    _set Chrome.storage.sync, callback
     Analytics.sendEvent 'internal', 'ticket', 'set', tickets.length
 
 
@@ -142,7 +142,7 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
       urlIndex = projects[t.url].index
       ticketArray.push [t.id, t.text, urlIndex, t.project.id, t.show]
     storage.set TICKET: ticketArray, () ->
-      if chrome.runtime.lastError?
+      if Chrome.runtime.lastError?
         callback? false
       else
         callback? true
@@ -348,9 +348,9 @@ timeTracker.factory("Ticket", (Project, Analytics) ->
       tickets.clear()
       selectableTickets.clear()
       selectedTickets.clear()
-      chrome.storage.local.set TICKET: []
-      chrome.storage.sync.set TICKET: [], () ->
-      if chrome.runtime.lastError?
+      Chrome.storage.local.set TICKET: []
+      Chrome.storage.sync.set TICKET: [], () ->
+      if Chrome.runtime.lastError?
         callback? false
       else
         callback? true

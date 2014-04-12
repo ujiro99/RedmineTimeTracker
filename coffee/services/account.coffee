@@ -1,4 +1,4 @@
-timeTracker.factory("Account", ($rootScope, Analytics) ->
+timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
@@ -88,8 +88,8 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
       if _accounts.length > 0
         callback _accounts
         return
-      chrome.storage.sync.get ACCOUNTS, (item) ->
-        if chrome.runtime.lastError? or not item[ACCOUNTS]?
+      Chrome.storage.sync.get ACCOUNTS, (item) ->
+        if Chrome.runtime.lastError? or not item[ACCOUNTS]?
           callback _accounts
         else
           _accounts.clear()
@@ -112,8 +112,8 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
           _encrypt.apply(a)
         accounts = newArry
         accounts.push _encrypt.apply(account)
-        chrome.storage.sync.set ACCOUNTS: accounts, () ->
-          if chrome.runtime.lastError?
+        Chrome.storage.sync.set ACCOUNTS: accounts, () ->
+          if Chrome.runtime.lastError?
             callback false
           else
             for a, i in _accounts when a.url is account.url
@@ -136,8 +136,8 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
         # select other url account
         accounts = for a in accounts when a.url isnt url
           _encrypt.apply(a)
-        chrome.storage.sync.set ACCOUNTS: accounts, () ->
-          if chrome.runtime.lastError?
+        Chrome.storage.sync.set ACCOUNTS: accounts, () ->
+          if Chrome.runtime.lastError?
             callback false
           else
             for a, i in _accounts when a.url is url
@@ -153,9 +153,9 @@ timeTracker.factory("Account", ($rootScope, Analytics) ->
     ###
     clearAccount: (callback) ->
       callback = callback or NULLFUNC
-      chrome.storage.local.clear()
-      chrome.storage.sync.clear () ->
-        if chrome.runtime.lastError?
+      Chrome.storage.local.clear()
+      Chrome.storage.sync.clear () ->
+        if Chrome.runtime.lastError?
           callback false
         else
           while _accounts.length > 0

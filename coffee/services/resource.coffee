@@ -1,8 +1,8 @@
-timeTracker.factory "Resource", () ->
+timeTracker.factory "Resource", (Chrome) ->
 
   return {
 
     string: (key) ->
-      return chrome.i18n.getMessage key
+      return Chrome.i18n.getMessage key
 
   }

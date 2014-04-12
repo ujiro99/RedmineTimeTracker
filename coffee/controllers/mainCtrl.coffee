@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, Message, Analytics, Resource) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, Message, Analytics, Chrome, Resource) ->
 
   DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
@@ -84,8 +84,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   alarmInfo =
     when: Date.now() + 1
     periodInMinutes: MINUTE_5
-  chrome.alarms.create(DATA_SYNC, alarmInfo)
-  chrome.alarms.onAlarm.addListener (alarm) ->
+  Chrome.alarms.create(DATA_SYNC, alarmInfo)
+  Chrome.alarms.onAlarm.addListener (alarm) ->
     if alarm.name is DATA_SYNC
       Ticket.sync()
       Project.sync()

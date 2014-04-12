@@ -1,4 +1,4 @@
-timeTracker.factory("Project", (Analytics) ->
+timeTracker.factory("Project", (Analytics, Chrome) ->
 
   PROJECT = "PROJECT"
   URL_INDEX_START = 1  # for avoid 0 == false
@@ -41,7 +41,7 @@ timeTracker.factory("Project", (Analytics) ->
   _get = (storage, callback) ->
     if not storage? then callback? null; return
     storage.get PROJECT, (projects) ->
-      if chrome.runtime.lastError? then callback? null; return
+      if Chrome.runtime.lastError? then callback? null; return
       if not projects[PROJECT]? then callback? null; return
       if Object.keys(projects[PROJECT]).length is 0 then callback? null; return
       callback? projects[PROJECT]
@@ -52,7 +52,7 @@ timeTracker.factory("Project", (Analytics) ->
   ###
   _set = (projects, storage, callback) ->
     storage.set PROJECT: projects, () ->
-      if chrome.runtime.lastError?
+      if Chrome.runtime.lastError?
         callback? false
       else
         callback? true
@@ -62,7 +62,7 @@ timeTracker.factory("Project", (Analytics) ->
    save all project to local.
   ###
   _setLocal = (callback) ->
-    _set _projects, chrome.storage.local, callback
+    _set _projects, Chrome.storage.local, callback
 
 
   ###
@@ -204,13 +204,13 @@ timeTracker.factory("Project", (Analytics) ->
      load all projects from chrome sync.
     ###
     load: (callback) ->
-      _get chrome.storage.local, (local) =>
+      _get Chrome.storage.local, (local) =>
         if local?
           console.log 'project loaded from local'
           @set local
           callback local
         else
-          _get chrome.storage.sync, (sync) =>
+          _get Chrome.storage.sync, (sync) =>
             console.log 'project loaded from sync'
             @set sync
             callback sync
@@ -220,7 +220,7 @@ timeTracker.factory("Project", (Analytics) ->
      sync all projects to chrome sync.
     ###
     sync: (callback) ->
-      _set _projects, chrome.storage.sync, callback
+      _set _projects, Chrome.storage.sync, callback
       count = 0
       for k, v of _projects
         count += Object.keys(v).length - 1
@@ -244,9 +244,9 @@ timeTracker.factory("Project", (Analytics) ->
     clear: (callback) ->
       for url, params of _projects then delete _projects[url]
       _selectableProjects.clear()
-      chrome.storage.local.set PROJECT: []
-      chrome.storage.sync.set PROJECT: [], () ->
-      if chrome.runtime.lastError?
+      Chrome.storage.local.set PROJECT: []
+      Chrome.storage.sync.set PROJECT: [], () ->
+      if Chrome.runtime.lastError?
         callback? false
       else
         callback? true
