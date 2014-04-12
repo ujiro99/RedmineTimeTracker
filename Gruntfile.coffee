@@ -40,7 +40,6 @@ module.exports = (grunt) ->
         ]
       develop:
         options:
-          sourceMap: true
           bare: true
         files: [
           expand: true
