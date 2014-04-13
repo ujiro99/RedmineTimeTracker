@@ -314,3 +314,107 @@ describe 'project.coffee', ->
       expect(added[prj3.url][prj3.id].text).to.be.equal(prj3.text)
       expect(added[prj3.url][prj3.id].show).to.be.equal(prj3.show)
 
+
+  ###
+   test for remove()
+  ###
+  describe 'remove()', ->
+
+    it 'should be empty, when remove 1 project from 1 project', () ->
+      expect(Project.get()).to.be.empty
+
+      # create test data
+      prj1 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 0
+        text: "first"
+        show: SHOW.DEFAULT
+
+      # execute
+      Project.add(prj1)
+      Project.remove(prj1.url, prj1.id)
+
+      # assert
+      added = Project.get()
+      expect(added).to.be.empty
+
+
+    it 'should leaves 2 projects, when remove 1 project from same url 3 projects', () ->
+      expect(Project.get()).to.be.empty
+
+      # create test data
+      prj1 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 0
+        text: "first"
+        show: SHOW.DEFAULT
+      prj2 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 1
+        text: "second"
+        show: SHOW.DEFAULT
+      prj3 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 2
+        text: "third"
+        show: SHOW.DEFAULT
+
+      # execute
+      Project.add(prj1)
+      Project.add(prj2)  # be removed
+      Project.add(prj3)
+      Project.remove(prj2.url, prj2.id)
+
+      # assert
+      added = Project.get()
+      expect(added[prj1.url].index).to.be.equal(prj1.urlIndex)
+      expect(added[prj1.url][prj1.id].text).to.be.equal(prj1.text)
+      expect(added[prj1.url][prj1.id].show).to.be.equal(prj1.show)
+      expect(added[prj2.url][prj2.id]).to.be.empty  # removed
+      expect(added[prj3.url].index).to.be.equal(prj3.urlIndex)
+      expect(added[prj3.url][prj3.id].text).to.be.equal(prj3.text)
+      expect(added[prj3.url][prj3.id].show).to.be.equal(prj3.show)
+
+
+    it 'should leaves 2 projects, when remove 1 project from different url 3 projects', () ->
+      expect(Project.get()).to.be.empty
+
+      # create test data
+      prj1 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker"
+        urlIndex: 2
+        id: 0
+        text: "first"
+        show: SHOW.DEFAULT
+      prj2 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker1"
+        urlIndex: 3
+        id: 0
+        text: "second"
+        show: SHOW.DEFAULT
+      prj3 =
+        url: "https://github.com/ujiro99/RedmineTimeTracker2"
+        urlIndex: 3
+        id: 0
+        text: "third"
+        show: SHOW.DEFAULT
+
+      # execute
+      Project.add(prj1)
+      Project.add(prj2)  # be removed
+      Project.add(prj3)
+      Project.remove(prj2.url, prj2.id)
+
+      # assert
+      added = Project.get()
+      expect(added[prj1.url].index).to.be.equal(prj1.urlIndex)
+      expect(added[prj1.url][prj1.id].text).to.be.equal(prj1.text)
+      expect(added[prj1.url][prj1.id].show).to.be.equal(prj1.show)
+      expect(added[prj2.url]).to.be.empty  # removed
+      expect(added[prj3.url].index).to.be.equal(prj3.urlIndex - 1) # update index
+      expect(added[prj3.url][prj3.id].text).to.be.equal(prj3.text)
+      expect(added[prj3.url][prj3.id].show).to.be.equal(prj3.show)
