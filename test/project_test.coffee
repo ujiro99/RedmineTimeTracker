@@ -85,18 +85,6 @@ describe 'project.coffee', ->
 
 
   ###
-    set: (newProjects) ->
-    setParam: (url, id, params) ->
-    remove: (url, id) ->
-    removeUrl: (url) ->
-    load: (callback) ->
-    sync: (callback) ->
-    new: (params) ->
-    clear: (callback) ->
-  ###
-
-
-  ###
    test for get()
   ###
   describe 'get()', ->
@@ -104,6 +92,7 @@ describe 'project.coffee', ->
     it 'be empty', () ->
       projects = Project.get()
       expect(projects).to.be.empty
+
 
   ###
    test for getSelectable()
@@ -149,6 +138,134 @@ describe 'project.coffee', ->
 
       projects = Project.getSelectable()
       expect(projects).to.not.be.empty
+
+
+  ###
+   test for set(newProjects)
+  ###
+  describe 'set(newProjects)', ->
+
+    it 'set 1 project to empty project', () ->
+      expect(Project.get()).to.be.empty
+      prj =
+        "http://redmine.com" :
+          index: 2
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+      Project.set(prj)
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+
+    it 'set 1 project to not empty project', () ->
+      prePrj =
+        "http://redmine.com/projects" :
+          index: 2
+          0:
+            text: "prj1_1"
+            show: SHOW.NOT
+      Project.set(prePrj)
+      expect(Project.get()).to.not.be.empty
+      prj =
+        "http://redmine.com" :
+          index: 2
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+      Project.set(prj)
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+
+    it 'set 2 different server\'s project', () ->
+      expect(Project.get()).to.be.empty
+      prj =
+        "http://redmine.com" :
+          index: 2
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com2" :
+          index: 3
+          0:
+            text: "prj2_0"
+            show: SHOW.DEFAULT
+      Project.set(prj)
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+      expect(added[prj2[0].url].index).to.be.equal(prj2[0].urlIndex)
+      expect(added[prj2[0].url][prj2[0].id].text).to.be.equal(prj2[0].text)
+      expect(added[prj2[0].url][prj2[0].id].show).to.be.equal(prj2[0].show)
+
+    it 'set 2 different server\'s project', () ->
+      expect(Project.get()).to.be.empty
+      prj =
+        "http://redmine.com" :
+          index: 2
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com2" :
+          index: 3
+          0:
+            text: "prj2_0"
+            show: SHOW.DEFAULT
+          1:
+            text: "prj2_1"
+            show: SHOW.DEFAULT
+      Project.set(prj)
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+      expect(added[prj2[0].url].index).to.be.equal(prj2[0].urlIndex)
+      expect(added[prj2[0].url][prj2[0].id].text).to.be.equal(prj2[0].text)
+      expect(added[prj2[0].url][prj2[0].id].show).to.be.equal(prj2[0].show)
+      expect(added[prj2[1].url].index).to.be.equal(prj2[1].urlIndex)
+      expect(added[prj2[1].url][prj2[1].id].text).to.be.equal(prj2[1].text)
+      expect(added[prj2[1].url][prj2[1].id].show).to.be.equal(prj2[1].show)
+
+    it 'set 3 different server\'s project', () ->
+      expect(Project.get()).to.be.empty
+      prj =
+        "http://redmine.com" :
+          index: 2
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com3" :
+          index: 4
+          0:
+            text: "prj3_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com2" :
+          index: 3
+          0:
+            text: "prj2_0"
+            show: SHOW.DEFAULT
+      Project.set(prj)
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+      expect(added[prj2[0].url].index).to.be.equal(prj2[0].urlIndex)
+      expect(added[prj2[0].url][prj2[0].id].text).to.be.equal(prj2[0].text)
+      expect(added[prj2[0].url][prj2[0].id].show).to.be.equal(prj2[0].show)
+      expect(added[prj3[0].url].index).to.be.equal(prj3[0].urlIndex)
+      expect(added[prj3[0].url][prj3[0].id].text).to.be.equal(prj3[0].text)
+      expect(added[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
+
+  ###
+   test for setParam(url, id, params)
+  ###
+  describe 'setParam(url, id, params)', ->
+
+
 
   ###
    test for add()
