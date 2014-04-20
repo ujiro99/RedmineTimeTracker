@@ -2,8 +2,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
 
   TICKET = "TICKET"
 
-  URL_INDEX_START = 1  # for avoid 0 == false
-
   TICKET_ID        = 0
   TICKET_TEXT      = 1
   TICKET_URL_INDEX = 2
