@@ -1,7 +1,6 @@
 timeTracker.factory("Project", (Analytics, Chrome) ->
 
   PROJECT = "PROJECT"
-  URL_INDEX_START = 1  # for avoid 0 == false
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   # - in chrome sync,
@@ -159,7 +158,10 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
       # initialize if not exists
       _projects[prj.url] = _projects[prj.url] or {}
       _projects[prj.url][prj.id] = _projects[prj.url][prj.id] or {}
-      prj.urlIndex = _projects[prj.url].index or Object.keys(_projects).length + URL_INDEX_START
+      if _projects[prj.url].index >= 0
+        prj.urlIndex = _projects[prj.url].index
+      else
+        prj.urlIndex = Object.keys(_projects).length - 1
       _projects[prj.url]['index'] = prj.urlIndex
       _projects[prj.url][prj.id] =
         text: prj.text

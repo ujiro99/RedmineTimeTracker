@@ -10,19 +10,19 @@ describe 'project.coffee', ->
   prj1 = [
     {
       url: "http://redmine.com"
-      urlIndex: 2
+      urlIndex: 0
       id: 0
       text: "prj1_0"
       show: SHOW.DEFAULT
     }, {
       url: "http://redmine.com"
-      urlIndex: 2
+      urlIndex: 0
       id: 1
       text: "prj1_1"
       show: SHOW.DEFAULT
     }, {
       url: "http://redmine.com"
-      urlIndex: 2
+      urlIndex: 0
       id: 2
       text: "prj1_2"
       show: SHOW.DEFAULT
@@ -32,19 +32,19 @@ describe 'project.coffee', ->
   prj2 = [
     {
       url: "http://redmine.com2"
-      urlIndex: 3
+      urlIndex: 1
       id: 0
       text: "prj2_0"
       show: SHOW.DEFAULT
     }, {
       url: "http://redmine.com2"
-      urlIndex: 3
+      urlIndex: 1
       id: 1
       text: "prj2_1"
       show: SHOW.DEFAULT
     }, {
       url: "http://redmine.com2"
-      urlIndex: 3
+      urlIndex: 1
       id: 2
       text: "prj2_2"
       show: SHOW.DEFAULT
@@ -54,24 +54,26 @@ describe 'project.coffee', ->
   prj3 = [
     {
       url: "http://redmine.com3"
-      urlIndex: 4
+      urlIndex: 2
       id: 0
       text: "prj3_0"
       show: SHOW.DEFAULT
     }, {
       url: "http://redmine.com3"
-      urlIndex: 4
+      urlIndex: 2
       id: 1
       text: "prj3_1"
       show: SHOW.DEFAULT
     }, {
       url: "http://redmine.com3"
-      urlIndex: 4
+      urlIndex: 2
       id: 2
       text: "prj3_2"
       show: SHOW.DEFAULT
     }
   ]
+
+
 
   beforeEach () ->
     angular.mock.module('timeTracker')
@@ -106,7 +108,7 @@ describe 'project.coffee', ->
     it 'SHOW.NOT expect to be empty', () ->
       prj =
         url: "https://github.com/ujiro99/RedmineTimeTracker"
-        urlIndex: 2
+        urlIndex: 0
         id: 0
         text: ""
         show: SHOW.NOT
@@ -118,7 +120,7 @@ describe 'project.coffee', ->
     it 'SHOW.DEFAULT expect to not be empty', () ->
       prj =
         url: "https://github.com/ujiro99/RedmineTimeTracker"
-        urlIndex: 2
+        urlIndex: 0
         id: 0
         text: ""
         show: SHOW.DEFAULT
@@ -130,7 +132,7 @@ describe 'project.coffee', ->
     it 'SHOW.SHOW expect to not be empty', () ->
       prj =
         url: "https://github.com/ujiro99/RedmineTimeTracker"
-        urlIndex: 2
+        urlIndex: 0
         id: 0
         text: ""
         show: SHOW.SHOW
@@ -149,7 +151,7 @@ describe 'project.coffee', ->
       expect(Project.get()).to.be.empty
       prj =
         "http://redmine.com" :
-          index: 2
+          index: 0
           0:
             text: "prj1_0"
             show: SHOW.DEFAULT
@@ -170,7 +172,7 @@ describe 'project.coffee', ->
       expect(Project.get()).to.not.be.empty
       prj =
         "http://redmine.com" :
-          index: 2
+          index: 0
           0:
             text: "prj1_0"
             show: SHOW.DEFAULT
@@ -184,12 +186,12 @@ describe 'project.coffee', ->
       expect(Project.get()).to.be.empty
       prj =
         "http://redmine.com" :
-          index: 2
+          index: 0
           0:
             text: "prj1_0"
             show: SHOW.DEFAULT
         "http://redmine.com2" :
-          index: 3
+          index: 1
           0:
             text: "prj2_0"
             show: SHOW.DEFAULT
@@ -206,12 +208,12 @@ describe 'project.coffee', ->
       expect(Project.get()).to.be.empty
       prj =
         "http://redmine.com" :
-          index: 2
+          index: 0
           0:
             text: "prj1_0"
             show: SHOW.DEFAULT
         "http://redmine.com2" :
-          index: 3
+          index: 1
           0:
             text: "prj2_0"
             show: SHOW.DEFAULT
@@ -234,17 +236,17 @@ describe 'project.coffee', ->
       expect(Project.get()).to.be.empty
       prj =
         "http://redmine.com" :
-          index: 2
+          index: 0
           0:
             text: "prj1_0"
             show: SHOW.DEFAULT
         "http://redmine.com3" :
-          index: 4
+          index: 2
           0:
             text: "prj3_0"
             show: SHOW.DEFAULT
         "http://redmine.com2" :
-          index: 3
+          index: 1
           0:
             text: "prj2_0"
             show: SHOW.DEFAULT
@@ -286,7 +288,7 @@ describe 'project.coffee', ->
       # create test data
       updated =
         url: "http://redmine.com"
-        urlIndex: 2   # same url and urlIndex
+        urlIndex: 0   # same url and urlIndex
         id: 0         # same id
         text: "prj_updated"
         show: SHOW.SHOW
