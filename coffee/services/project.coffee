@@ -102,18 +102,22 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
     ###
     set: (newProjects) ->
       if not newProjects? then return
-      tmp = {}
+
+      # clear old data
       _selectableProjects.clear()
-      for url, params of newProjects then tmp[url] = params
       for url, params of _projects then delete _projects[url]
-      for url, params of tmp
+
+      # set new project
+      for url, params of newProjects
         _projects[url] = params
         urlIndex = params.index
         for k, v of params
           if k isnt 'index'
             id = k - 0
-            show = v.show or SHOW.DEFAULT
-            prj = new ProjectModel(url, urlIndex, id, text, show)
+            _projects[url][id] = {}
+            _projects[url][id].text = v.text
+            _projects[url][id].show = v.show
+            prj = new ProjectModel(url, urlIndex, id, v.text, v.show)
             if prj.show isnt SHOW.NOT
               _selectableProjects.push prj
       _setLocal()
