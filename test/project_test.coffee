@@ -262,6 +262,7 @@ describe 'project.coffee', ->
       expect(added[prj3[0].url][prj3[0].id].text).to.be.equal(prj3[0].text)
       expect(added[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
 
+
   ###
    test for setParam(url, id, params)
   ###
@@ -406,7 +407,7 @@ describe 'project.coffee', ->
 
     it 'should be empty, when remove 1 project from 1 project', () ->
       expect(Project.get()).to.be.empty
-      
+
       # execute
       Project.add(prj1[0])
       Project.remove(prj1[0].url, prj1[0].id)
@@ -454,3 +455,87 @@ describe 'project.coffee', ->
       expect(added[prj3[0].url].index).to.be.equal(prj3[0].urlIndex - 1) # update index
       expect(added[prj3[0].url][prj3[0].id].text).to.be.equal(prj3[0].text)
       expect(added[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
+
+
+  ###
+   test for load(callback)
+  ###
+  describe 'load(callback)', ->
+
+    it 'load data.', () ->
+      expect(Project.get()).to.be.empty
+
+      # put test data.
+      prj =
+        "http://redmine.com" :
+          index: 0
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com2" :
+          index: 0
+          0:
+            text: "prj2_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com3" :
+          index: 0
+          0:
+            text: "prj3_0"
+            show: SHOW.DEFAULT
+      sinon.stub(Chrome.storage.local, 'get', (arg1, callback) ->
+        callback PROJECT: prj
+        return true
+      )
+
+      Project.load () ->
+        loaded = Project.get()
+        expect(loaded[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+        expect(loaded[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+        expect(loaded[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+        expect(loaded[prj2[0].url].index).to.be.equal(prj2[0].urlIndex)
+        expect(loaded[prj2[0].url][prj2[0].id].text).to.be.equal(prj2[0].text)
+        expect(loaded[prj2[0].url][prj2[0].id].show).to.be.equal(prj2[0].show)
+        expect(loaded[prj3[0].url].index).to.be.equal(prj3[0].urlIndex)
+        expect(loaded[prj3[0].url][prj3[0].id].text).to.be.equal(prj3[0].text)
+        expect(loaded[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
+
+
+    it 'compatibility: index start changed.', () ->
+      expect(Project.get()).to.be.empty
+
+      # put test data.
+      # this data is old format.
+      prj =
+        "http://redmine.com" :
+          index: 2
+          0:
+            text: "prj1_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com2" :
+          index: 3
+          0:
+            text: "prj2_0"
+            show: SHOW.DEFAULT
+        "http://redmine.com3" :
+          index: 4
+          0:
+            text: "prj3_0"
+            show: SHOW.DEFAULT
+      sinon.stub(Chrome.storage.local, 'get', (arg1, callback) ->
+        callback PROJECT: prj
+        return true
+      )
+
+      Project.load () ->
+        loaded = Project.get()
+        expect(loaded[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+        expect(loaded[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+        expect(loaded[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+        expect(loaded[prj2[0].url].index).to.be.equal(prj2[0].urlIndex)
+        expect(loaded[prj2[0].url][prj2[0].id].text).to.be.equal(prj2[0].text)
+        expect(loaded[prj2[0].url][prj2[0].id].show).to.be.equal(prj2[0].show)
+        expect(loaded[prj3[0].url].index).to.be.equal(prj3[0].urlIndex)
+        expect(loaded[prj3[0].url][prj3[0].id].text).to.be.equal(prj3[0].text)
+        expect(loaded[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
+
+

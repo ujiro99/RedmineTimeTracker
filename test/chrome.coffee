@@ -7,4 +7,6 @@ angular.module('chrome', []).factory 'Chrome', () ->
       sync:
         get: () -> return true
         set: () -> return true
+    runtime:
+      lastError: null
   }
