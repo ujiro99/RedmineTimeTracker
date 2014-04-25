@@ -458,6 +458,45 @@ describe 'project.coffee', ->
 
 
   ###
+   test for removeUrl(url)
+  ###
+  describe 'removeUrl(url)', ->
+
+    it 'should be empty, when remove 1 project from 3 same url projects.', () ->
+      expect(Project.get()).to.be.empty
+
+      # execute
+      Project.add(prj1[0])
+      Project.add(prj1[1])
+      Project.add(prj1[2])
+      Project.removeUrl(prj1[0].url)
+
+      # assert
+      added = Project.get()
+      expect(added).to.be.empty
+
+
+    it 'should leaves 2 project, when remove 1 url from 3 different url projects.', () ->
+      expect(Project.get()).to.be.empty
+
+      # execute
+      Project.add(prj1[0])
+      Project.add(prj2[0])  # be removed
+      Project.add(prj3[0])
+      Project.removeUrl(prj2[0].url)
+
+      # assert
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
+      expect(added[prj2[0].url]).to.be.empty  # removed
+      expect(added[prj3[0].url].index).to.be.equal(prj3[0].urlIndex-1) # updated
+      expect(added[prj3[0].url][prj3[0].id].text).to.be.equal(prj3[0].text)
+      expect(added[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
+
+
+  ###
    test for load(callback)
   ###
   describe 'load(callback)', ->
