@@ -188,7 +188,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
 
     ###
-     remove a project.
+     remove a project, and update urlIndex.
     ###
     remove: (url, id) ->
       delete _projects[url][id]
@@ -205,7 +205,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
 
     ###
-     remove a project.
+     remove projects on url, and update urlIndex.
     ###
     removeUrl: (url) ->
       for k, v of _projects[url]
