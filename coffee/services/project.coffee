@@ -112,11 +112,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
         for k, v of params
           if k isnt 'index'
             id = k - 0
-            text = v.text or v              # for compatibility
             show = v.show or SHOW.DEFAULT
-            _projects[url][id] = {}         # for compatibility
-            _projects[url][id].text = text  # for compatibility
-            _projects[url][id].show = show  # for compatibility
             prj = new ProjectModel(url, urlIndex, id, text, show)
             if prj.show isnt SHOW.NOT
               _selectableProjects.push prj
