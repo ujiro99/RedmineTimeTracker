@@ -36,7 +36,7 @@ module.exports = (grunt) ->
           bare: true
           join: true
         files: [
-          'scripts/script.js': ['coffee/app.coffee', 'coffee/**/*.coffee']
+          'dist/scripts/script.js': ['coffee/app.coffee', 'coffee/**/*.coffee']
         ]
       develop:
         options:
@@ -45,7 +45,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'coffee/'
           src: ['**/*.coffee']
-          dest: 'scripts/'
+          dest: 'dist/scripts/'
           ext: '.js'
         ]
       test:
@@ -65,7 +65,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'stylus/'
           src: ['**/*.styl']
-          dest: 'css/'
+          dest: 'dist/css/'
           ext: '.css'
         ]
 
@@ -78,7 +78,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'jade/'
           src: ['**/*.jade']
-          dest: 'views/'
+          dest: 'dist/views/'
           ext: '.html'
         ]
       develop:
@@ -89,7 +89,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'jade/'
           src: ['**/*.jade']
-          dest: 'views/'
+          dest: 'dist/views/'
           ext: '.html'
         ]
 
@@ -99,9 +99,9 @@ module.exports = (grunt) ->
           targetDir: './'
           layout: (type, component) ->
             if type is 'css'
-              return 'css/lib'
+              return 'dist/css/lib'
             else
-              return 'scripts/lib'
+              return 'dist/scripts/lib'
           install: true
           verbose: true
           cleanTargetDir: false
@@ -109,13 +109,13 @@ module.exports = (grunt) ->
 
     ngmin:
       production:
-        src: 'scripts/script.js'
-        dest: 'scripts/script.js'
+        src: 'dist/scripts/script.js'
+        dest: 'dist/scripts/script.js'
 
     uglify:
       production:
-        src: 'scripts/script.js'
-        dest: 'scripts/script.min.js'
+        src: 'dist/scripts/script.js'
+        dest: 'dist/scripts/script.min.js'
 
 
   # plugins
