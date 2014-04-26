@@ -229,13 +229,15 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
     ###
      add ticket.
      if ticket can be shown, it's added to selectable.
+     if ticket can be shown and there is no selected ticket, it be selected.
     ###
     add: (ticket) ->
       _add(ticket)
-      if selectedTickets.length is 0
-        selectedTickets.push ticket
-      if not selectedTickets[0]?
-        selectedTickets[0] = ticket
+      if ticket.show isnt SHOW.NOT
+        if selectedTickets.length is 0
+          selectedTickets.push ticket
+        if not selectedTickets[0]?
+          selectedTickets[0] = ticket
       _setLocal()
 
 

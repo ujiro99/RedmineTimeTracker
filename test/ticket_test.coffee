@@ -53,3 +53,24 @@ describe 'ticket.coffee', ->
       selectable = Ticket.getSelectable()
       expect(selectable).to.have.length(2)
 
+
+  describe 'getSelected()', ->
+
+    it 'be empty', () ->
+      ticket = Ticket.getSelected()
+      expect(ticket).to.be.empty
+
+    it 'be empty, when added SHOW.NOT', () ->
+      ticket = Ticket.getSelected()
+      Project.set TestData.prjObj
+      Ticket.add(
+        id: 0
+        text: "ticket0"
+        url: "http://redmine.com"
+        project:
+          id: 0
+          text: "prj1_0"
+        show: SHOW.NOT
+      )
+      expect(ticket[0]).to.be.empty
+
