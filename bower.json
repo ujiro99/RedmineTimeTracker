@@ -1,0 +1,49 @@
+{
+  "name": "RedmineTimeTracker.git",
+  "version": "0.5.7",
+  "homepage": "https://github.com/ujiro99/RedmineTimeTracker",
+  "author": "Yujiro Takeda",
+  "description": "Time Tracking tool for Redmine on GoogleChrome",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "spin.js",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "sugar": "~1.4.1",
+    "jquery": "~2.1.0",
+    "angular": "~1.2.16",
+    "angular-animate": "~1.2.16",
+    "bootstrap": "~3.1.1",
+    "ladda": "~0.9.3"
+  },
+  "exportsOverride": {
+    "jquery": {
+      "js": "**/jquery.min.js"
+    },
+    "angular": {
+      "js": "**/angular.min.js",
+      "css": "**/angular-csp.css"
+    },
+    "angular-animate": {
+      "js": "**/angular-animate.min.js"
+    },
+    "bootstrap": {
+      "js": "**/bootstrap.min.js",
+      "css": "**/bootstrap.min.css"
+    },
+    "ladda": {
+      "js": ["**/ladda.min.js", "**/spin.min.js" ],
+      "css": "**/ladda-themeless.min.css"
+    },
+    "spin.js": {
+      "js": "spin.min.js"
+    }
+  }
+}
