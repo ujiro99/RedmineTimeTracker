@@ -74,3 +74,50 @@ describe 'ticket.coffee', ->
       )
       expect(ticket[0]).to.be.empty
 
+    it 'should select first ticket', () ->
+      expect(Ticket.get()).to.be.empty
+      Ticket.set(ticketList)
+      selected = Ticket.getSelected()
+      expect(selected[0].id).to.equal(0)
+
+    it 'should not change selected ticket', () ->
+      expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
+      Ticket.set(ticketList)
+      Ticket.add(
+        id: 3
+        text: "ticket3"
+        url: "http://redmine.com"
+        project:
+          id: 0
+          text: "prj1_0"
+        show: SHOW.SHOW
+      )
+      selected = Ticket.getSelected()
+      expect(selected[0].id).to.equal(0)
+
+
+  describe 'setParam(url, id, param)', ->
+
+    it 'SHOW.NOT to SHOW.SHOW', () ->
+      Project.set(TestData.prjObj)
+      Ticket.add(
+        id: 0
+        text: "ticket0"
+        url: "http://redmine.com"
+        project:
+          id: 0
+          text: "prj1_0"
+        show: SHOW.NOT
+      )
+      ticket = Ticket.getSelected()
+      expect(ticket).to.be.empty
+      Ticket.setParam(
+        "http://redmine.com",
+        0,
+        show: SHOW.SHOW
+      )
+      ticket = Ticket.getSelected()
+      expect(ticket[0].id).to.equal(0)
+
+

@@ -289,20 +289,27 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
      if ticket cannot be shown, it be deleted from selectable.
     ###
     setParam: (url, id, param) ->
-      if not url? or not url? or not id? then return
-      for t in tickets when _equals(t, {url: url, id: id})
-        for k, v of param then t[k] = v
-        found = selectableTickets.some (ele) -> _equals t, ele
-        if t.show isnt SHOW.NOT and not found
-          selectableTickets.push t
-          selectableTickets.sortById()
-        break
-      for t, i in selectableTickets when _equals(t, {url: url, id: id})
-        for k, v of param then t[k] = v
-        if t.show is SHOW.NOT
+      if not url? or not id? or not param? then return
+      # update parameter
+      target = tickets.find (t) -> _equals(t, {url: url, id: id})
+      for k, v of param then target[k] = v
+      if target.show is SHOW.NOT
+        # delete from selectable
+        for t, i in selectableTickets when _equals(t, {url: url, id: id})
           selectableTickets.splice(i, 1)
+          break
+        isSelected = selectedTickets.some (ele) -> _equals target, ele
+        if isSelected
           selectedTickets[0] = selectableTickets[0]
-        break
+      else
+        # add selectable
+        found = selectableTickets.some (ele) -> _equals target, ele
+        if not found
+          selectableTickets.push target
+          selectableTickets.sortById()
+        # show in selection
+        if selectedTickets.isEmpty()
+          selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
