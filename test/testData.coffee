@@ -67,4 +67,47 @@ timeTracker.value "TestData", ()->
         show: SHOW.DEFAULT
       }
     ]
+    prjObj:
+      "http://redmine.com" :
+        index: 0
+        0:
+          text: "prj1_0"
+          show: SHOW.DEFAULT
+      "http://redmine.com3" :
+        index: 2
+        0:
+          text: "prj3_0"
+          show: SHOW.DEFAULT
+      "http://redmine.com2" :
+        index: 1
+        0:
+          text: "prj2_0"
+          show: SHOW.DEFAULT
+    ticketList: [
+      {
+        id: 0,
+        text: "ticket0",
+        url: "http://redmine.com",
+        project:
+          id: 0
+          text: "prj1_0",
+        show: SHOW.DEFAULT
+      }, {
+        id: 1,
+        text: "ticket1",
+        url: "http://redmine.com",
+        project:
+          id: 0
+          text: "prj1_0",
+        show: SHOW.NOT
+      }, {
+        id: 2,
+        text: "ticket2",
+        url: "http://redmine.com",
+        project:
+          id: 0
+          text: "prj1_0",
+        show: SHOW.SHOW
+      }
+    ]
   }
