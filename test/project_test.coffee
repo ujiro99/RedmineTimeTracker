@@ -7,79 +7,20 @@ describe 'project.coffee', ->
   Project = null
   Chrome = null
 
-  prj1 = [
-    {
-      url: "http://redmine.com"
-      urlIndex: 0
-      id: 0
-      text: "prj1_0"
-      show: SHOW.DEFAULT
-    }, {
-      url: "http://redmine.com"
-      urlIndex: 0
-      id: 1
-      text: "prj1_1"
-      show: SHOW.DEFAULT
-    }, {
-      url: "http://redmine.com"
-      urlIndex: 0
-      id: 2
-      text: "prj1_2"
-      show: SHOW.DEFAULT
-    }
-  ]
-
-  prj2 = [
-    {
-      url: "http://redmine.com2"
-      urlIndex: 1
-      id: 0
-      text: "prj2_0"
-      show: SHOW.DEFAULT
-    }, {
-      url: "http://redmine.com2"
-      urlIndex: 1
-      id: 1
-      text: "prj2_1"
-      show: SHOW.DEFAULT
-    }, {
-      url: "http://redmine.com2"
-      urlIndex: 1
-      id: 2
-      text: "prj2_2"
-      show: SHOW.DEFAULT
-    }
-  ]
-
-  prj3 = [
-    {
-      url: "http://redmine.com3"
-      urlIndex: 2
-      id: 0
-      text: "prj3_0"
-      show: SHOW.DEFAULT
-    }, {
-      url: "http://redmine.com3"
-      urlIndex: 2
-      id: 1
-      text: "prj3_1"
-      show: SHOW.DEFAULT
-    }, {
-      url: "http://redmine.com3"
-      urlIndex: 2
-      id: 2
-      text: "prj3_2"
-      show: SHOW.DEFAULT
-    }
-  ]
-
+  prj1 = null
+  prj2 = null
+  prj3 = null
 
 
   beforeEach () ->
     angular.mock.module('timeTracker')
-    inject (_Project_, _Chrome_) ->
+    inject (_Project_, _Chrome_, _TestData_) ->
       Project = _Project_   # underscores are a trick for resolving references.
       Chrome = _Chrome_
+      TestData = _TestData_()
+      prj1 = TestData.prj1
+      prj2 = TestData.prj2
+      prj3 = TestData.prj3
 
 
   it 'shoud have working Project service', () ->
