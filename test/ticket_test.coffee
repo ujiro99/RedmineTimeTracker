@@ -122,6 +122,76 @@ describe 'ticket.coffee', ->
       expect(tickets[0].url).to.equal("http://redmine.com")
       expect(tickets[1].url).to.equal("http://redmine.com2")
       expect(tickets[2].url).to.equal("http://redmine.com3")
+
+    it 'error: 1 project not found.', () ->
+      expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
+      tickets = [
+        {
+          id: 0,
+          text: "ticket0",
+          url: "http://redmine.com",
+          project:
+            id: 0
+            text: "prj1_0",
+          show: SHOW.DEFAULT
+        }, {
+          id: 0,
+          text: "ticket1",
+          url: "http://redmine.com4",
+          project:
+            id: 0
+            text: "prj1_0",
+          show: SHOW.NOT
+        }
+      ]
+      Ticket.set(tickets, (res, msg) ->
+        tickets = Ticket.get()
+        expect(tickets[0].url).to.equal("http://redmine.com")
+        expect(tickets[1].url).to.not.equal("http://redmine.com4")
+        expect(res).to.be.false
+        expect(msg.message).to.not.be.empty
+        expect(msg.param).to.have.length(1)
+      )
+
+    it 'error: 2 project not found.', () ->
+      expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
+      tickets = [
+        {
+          id: 0,
+          text: "ticket0",
+          url: "http://redmine.com",
+          project:
+            id: 0
+            text: "prj1_0",
+          show: SHOW.DEFAULT
+        }, {
+          id: 0,
+          text: "ticket1",
+          url: "http://redmine.com4",
+          project:
+            id: 0
+            text: "prj1_0",
+          show: SHOW.NOT
+        }, {
+          id: 2,
+          text: "ticket1",
+          url: "http://redmine.com5",
+          project:
+            id: 0
+            text: "prj1_0",
+          show: SHOW.NOT
+        }
+      ]
+      Ticket.set(tickets, (res, msg) ->
+        tickets = Ticket.get()
+        expect(tickets[0].url).to.equal("http://redmine.com")
+        expect(tickets[1].url).to.not.equal("http://redmine.com4")
+        expect(res).to.be.false
+        expect(msg.message).to.not.be.empty
+        expect(msg.param).to.have.length(2)
+      )
   describe 'setParam(url, id, param)', ->
 
     it 'SHOW.SHOW to SHOW.NOT', () ->

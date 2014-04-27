@@ -12,7 +12,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   Ticket.load (tickets) ->
     if not tickets?
       return
-    Ticket.set tickets
     updateIssues()
 
 

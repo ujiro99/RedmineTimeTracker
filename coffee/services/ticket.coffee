@@ -8,6 +8,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
   TICKET_PRJ_ID    = 3
   TICKET_SHOW      = 4
 
+  PROJECT_NOT_FOUND = -1
+
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   #
@@ -135,13 +137,27 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
   _set = (storage, callback) ->
     if not storage? then callback? null; return
     ticketArray = []
+    errorTickets = []
+    # assign project data
     projects = Project.get()
     for t in tickets
-      urlIndex = projects[t.url].index
-      ticketArray.push [t.id, t.text, urlIndex, t.project.id, t.show]
+      project = projects[t.url]
+      if project?
+        urlIndex = projects[t.url].index
+        ticketArray.push [t.id, t.text, urlIndex, t.project.id, t.show]
+      else
+        ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
+        errorTickets.push id: t.id, url: t.url
+    # save to strage
     storage.set TICKET: ticketArray, () ->
       if Chrome.runtime.lastError?
-        callback? false
+        callback? false, {message: "Chrome.runtime error."}
+      else if not errorTickets.isEmpty()
+        callback? false, {
+          message: "Project not found."
+          param: errorTickets
+        }
+        Analytics.sendException("Error: Project not found on ticket._set().")
       else
         callback? true
 
@@ -210,7 +226,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
     ###
      set tickets.
     ###
-    set: (ticketslist) ->
+    set: (ticketslist, callback) ->
       console.log 'tikcet set'
       if not ticketslist? then return
 
@@ -319,14 +335,16 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
      load all tickets from chrome sync.
     ###
     load: (callback) ->
-      _getLocal (localTickets) ->
+      _getLocal (localTickets) =>
         if localTickets?
           console.log 'tikcet loaded from local'
-          callback localTickets
+          @set localTickets, (res, msg) ->
+            callback localTickets, msg
         else
-          _getSync (syncTickets) ->
+          _getSync (syncTickets) =>
             console.log 'tikcet loaded from sync'
-            callback syncTickets
+            @set syncTickets, (res, msg) ->
+              callback syncTickets, msg
 
 
     ###
