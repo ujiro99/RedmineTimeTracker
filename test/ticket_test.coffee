@@ -237,3 +237,63 @@ describe 'ticket.coffee', ->
       expect(ticket[0].id).to.equal(0)
 
 
+  describe 'load(callback)', ->
+
+    _setupChrome = () ->
+      sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
+        callback true
+      sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
+        if arg1 is "PROJECT"
+          callback PROJECT: TestData.prjObj
+          return true
+        else
+          callback TICKET: TestData.ticketOnChrome
+          return true
+
+    it 'callback called by chrome.', () ->
+      expect(Ticket.get()).to.be.empty
+      # put test data.
+      _setupChrome()
+      # exec
+      callback = sinon.spy()
+      Ticket.load callback
+      expect(callback.called).is.true
+
+    it 'load data.', () ->
+      expect(Ticket.get()).to.be.empty
+      # put test data.
+      _setupChrome()
+      # exec
+      callback = sinon.spy (loaded, msg) ->
+        expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
+        expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
+        expect(loaded[2].id).to.equal(TestData.ticketList2[1].id)
+        expect(loaded[2].url).to.equal(TestData.ticketList2[1].url)
+        expect(loaded[1].id).to.equal(TestData.ticketList2[2].id)
+        expect(loaded[1].url).to.equal(TestData.ticketList2[2].url)
+        expect(msg).to.be.empty
+      Ticket.load callback
+      expect(callback.called).is.true
+
+    it 'error: project not found.', () ->
+      expect(Ticket.get()).to.be.empty
+      # put test data.
+      sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
+        callback true
+      sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
+        if arg1 is "PROJECT"
+          callback PROJECT: TestData.prjObj
+          return true
+        else
+          callback TICKET: TestData.ticketOnChrome.union [[ 0, "ticket4", 3, 0, SHOW.SHOW]]
+          return true
+      # exec
+      callback = sinon.spy (loaded, msg) ->
+        expect(loaded[0].id).to.equal(TestData.ticketList[0].id)
+        expect(loaded[0].url).to.equal(TestData.ticketList[0].url)
+        expect(loaded[2].id).to.equal(TestData.ticketList2[1].id)
+        expect(loaded[2].url).to.equal(TestData.ticketList2[1].url)
+        expect(msg.missing[0]).to.equal(3)
+        console.log msg
+      Ticket.load callback
+      expect(callback.called).is.true

@@ -100,20 +100,24 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
           callback? null; return
 
         tmp = []
+        missing = []
         for t in tickets[TICKET]
           # search url
-          for url, obj of projects when obj.index is t[TICKET_URL_INDEX]
+          url = PROJECT_NOT_FOUND
+          for key, obj of projects when obj.index is t[TICKET_URL_INDEX]
+            url = key
             break
+          # url not found ...
+          if url is PROJECT_NOT_FOUND
+            missing.push t[TICKET_URL_INDEX]
           tmp.push new TicketModel(
             t[TICKET_ID],
             t[TICKET_TEXT],
             url,
-            {
-              id: t[TICKET_PRJ_ID]
-            },
+            { id: t[TICKET_PRJ_ID] },
             t[TICKET_SHOW])
 
-        callback? tmp
+        callback? tmp, missing
 
 
   ###
@@ -335,15 +339,21 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
      load all tickets from chrome sync.
     ###
     load: (callback) ->
-      _getLocal (localTickets) =>
+      _getLocal (localTickets, missingUrlIndex) =>
         if localTickets?
           console.log 'tikcet loaded from local'
           @set localTickets, (res, msg) ->
+            if not missingUrlIndex.isEmpty()
+              msg = msg or {}
+              msg = Object.merge(msg, {missing: missingUrlIndex})
             callback localTickets, msg
         else
-          _getSync (syncTickets) =>
+          _getSync (syncTickets, missingUrlIndex) =>
             console.log 'tikcet loaded from sync'
             @set syncTickets, (res, msg) ->
+              if not missingUrlIndex.isEmpty()
+                msg = msg or {}
+                msg = Object.merge(msg, {missing: missingUrlIndex})
               callback syncTickets, msg
 
 

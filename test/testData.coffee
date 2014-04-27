@@ -137,4 +137,10 @@ timeTracker.value "TestData", ()->
         show: SHOW.SHOW
       }
     ]
+    ticketOnChrome: [
+      # id | text      | url_index | prj_id |    show
+      [ 0,  "ticket0",      0,         0,     SHOW.DEFAULT ],
+      [ 0,  "ticket2",      1,         0,     SHOW.NOT     ],
+      [ 0,  "ticket3",      2,         0,     SHOW.SHOW    ]
+    ]
   }
