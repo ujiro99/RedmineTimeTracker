@@ -9,8 +9,6 @@ describe 'ticket.coffee', ->
   Chrome = null
   TestData = null
 
-  ticketList = null
-
   beforeEach () ->
     angular.mock.module('timeTracker')
     # initialize object
@@ -19,7 +17,6 @@ describe 'ticket.coffee', ->
       Project = _Project_
       Chrome = _Chrome_
       TestData = _TestData_()
-      ticketList = TestData.ticketList
 
 
   it 'shoud have working Ticket service', () ->
@@ -37,7 +34,7 @@ describe 'ticket.coffee', ->
 
     it 'should have 1 ticket', () ->
       expect(Ticket.get()).to.be.empty
-      Ticket.set(ticketList)
+      Ticket.set(TestData.ticketList)
       expect(Ticket.get()).to.not.be.empty
 
 
@@ -49,7 +46,7 @@ describe 'ticket.coffee', ->
 
     it 'should have 1 ticket', () ->
       expect(Ticket.get()).to.be.empty
-      Ticket.set(ticketList)
+      Ticket.set(TestData.ticketList)
       selectable = Ticket.getSelectable()
       expect(selectable).to.have.length(2)
 
@@ -76,14 +73,14 @@ describe 'ticket.coffee', ->
 
     it 'should select first ticket', () ->
       expect(Ticket.get()).to.be.empty
-      Ticket.set(ticketList)
+      Ticket.set(TestData.ticketList)
       selected = Ticket.getSelected()
       expect(selected[0].id).to.equal(0)
 
     it 'should not change selected ticket', () ->
       expect(Ticket.get()).to.be.empty
       Project.set(TestData.prjObj)
-      Ticket.set(ticketList)
+      Ticket.set(TestData.ticketList)
       Ticket.add(
         id: 3
         text: "ticket3"
