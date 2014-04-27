@@ -225,6 +225,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
       if selectableTickets.length isnt 0
         selectedTickets[0] = selectableTickets[0]
 
+      _setLocal(callback)
+
 
     ###
      add ticket.

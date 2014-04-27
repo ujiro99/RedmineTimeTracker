@@ -34,6 +34,7 @@ describe 'ticket.coffee', ->
 
     it 'should have 1 ticket', () ->
       expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
       Ticket.set(TestData.ticketList)
       expect(Ticket.get()).to.not.be.empty
 
@@ -46,6 +47,7 @@ describe 'ticket.coffee', ->
 
     it 'should have 1 ticket', () ->
       expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
       Ticket.set(TestData.ticketList)
       selectable = Ticket.getSelectable()
       expect(selectable).to.have.length(2)
@@ -73,6 +75,7 @@ describe 'ticket.coffee', ->
 
     it 'should select first ticket', () ->
       expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
       Ticket.set(TestData.ticketList)
       selected = Ticket.getSelected()
       expect(selected[0].id).to.equal(0)
