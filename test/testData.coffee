@@ -83,6 +83,22 @@ timeTracker.value "TestData", ()->
         0:
           text: "prj2_0"
           show: SHOW.DEFAULT
+    prjOldFormat:
+      "http://redmine.com" :
+        index: 2
+        0:
+          text: "prj1_0"
+          show: SHOW.DEFAULT
+      "http://redmine.com2" :
+        index: 3
+        0:
+          text: "prj2_0"
+          show: SHOW.DEFAULT
+      "http://redmine.com3" :
+        index: 4
+        0:
+          text: "prj3_0"
+          show: SHOW.DEFAULT
     ticketList: [
       {
         id: 0,

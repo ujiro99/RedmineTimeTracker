@@ -6,6 +6,7 @@ describe 'project.coffee', ->
 
   Project = null
   Chrome = null
+  TestData = null
 
   prj1 = null
   prj2 = null
@@ -480,27 +481,12 @@ describe 'project.coffee', ->
         expect(loaded[prj3[0].url][prj3[0].id].show).to.be.equal(prj3[0].show)
 
 
-    it 'compatibility: index start changed.', () ->
+    it 'compatibility (version <= 0.5.7): index start changed.', () ->
       expect(Project.get()).to.be.empty
 
       # put test data.
       # this data is old format (version <= 0.5.7).
-      prj =
-        "http://redmine.com" :
-          index: 2
-          0:
-            text: "prj1_0"
-            show: SHOW.DEFAULT
-        "http://redmine.com2" :
-          index: 3
-          0:
-            text: "prj2_0"
-            show: SHOW.DEFAULT
-        "http://redmine.com3" :
-          index: 4
-          0:
-            text: "prj3_0"
-            show: SHOW.DEFAULT
+      prj = TestData.prjOldFormat
       sinon.stub(Chrome.storage.local, 'get', (arg1, callback) ->
         callback PROJECT: prj
         return true
