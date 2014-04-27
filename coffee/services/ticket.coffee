@@ -27,7 +27,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
   #
   # - in chrome sync,
   #
-  #     ticket = { id, text, project_url_index, project_id, show }
+  #     ticket = [ id, text, project_url_index, project_id, show ]
   #
 
 

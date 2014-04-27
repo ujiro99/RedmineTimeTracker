@@ -484,7 +484,7 @@ describe 'project.coffee', ->
       expect(Project.get()).to.be.empty
 
       # put test data.
-      # this data is old format.
+      # this data is old format (version <= 0.5.7).
       prj =
         "http://redmine.com" :
           index: 2
