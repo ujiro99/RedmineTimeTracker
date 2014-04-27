@@ -97,7 +97,53 @@ describe 'ticket.coffee', ->
       expect(selected[0].id).to.equal(0)
 
 
+  describe 'set(ticketList)', ->
+
+    it '1 project, 3 ticket.', () ->
+      expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
+      Ticket.set(TestData.ticketList)
+      tickets = Ticket.get()
+      expect(tickets[0].id).to.equal(0) # SHOW.DEFAULT
+      expect(tickets[1].id).to.equal(1) # SHOW.NOT
+      expect(tickets[2].id).to.equal(2) # SHOW.SHOW
+      selectable = Ticket.getSelectable()
+      expect(selectable[0].id).to.equal(0)
+      expect(selectable[1].id).to.equal(2)
+      selected = Ticket.getSelected()
+      expect(selected[0].id).to.equal(0)
+
+    it 'clear old list.', () ->
+      expect(Ticket.get()).to.be.empty
+      Project.set(TestData.prjObj)
+      Ticket.set(TestData.ticketList)
+      Ticket.set(TestData.ticketList2)
+      tickets = Ticket.get()
+      expect(tickets[0].url).to.equal("http://redmine.com")
+      expect(tickets[1].url).to.equal("http://redmine.com2")
+      expect(tickets[2].url).to.equal("http://redmine.com3")
   describe 'setParam(url, id, param)', ->
+
+    it 'SHOW.SHOW to SHOW.NOT', () ->
+      Project.set(TestData.prjObj)
+      Ticket.add(
+        id: 0
+        text: "ticket0"
+        url: "http://redmine.com"
+        project:
+          id: 0
+          text: "prj1_0"
+        show: SHOW.SHOW
+      )
+      ticket = Ticket.getSelected()
+      expect(ticket[0].id).to.equal(0)
+      Ticket.setParam(
+        "http://redmine.com",
+        0,
+        show: SHOW.NOT
+      )
+      ticket = Ticket.getSelected()
+      expect(ticket[0]).to.be.empty
 
     it 'SHOW.NOT to SHOW.SHOW', () ->
       Project.set(TestData.prjObj)

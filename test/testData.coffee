@@ -110,4 +110,31 @@ timeTracker.value "TestData", ()->
         show: SHOW.SHOW
       }
     ]
+    ticketList2: [
+      {
+        id: 0,
+        text: "ticket0",
+        url: "http://redmine.com",
+        project:
+          id: 0
+          text: "prj1_0",
+        show: SHOW.DEFAULT
+      }, {
+        id: 0,
+        text: "ticket2",
+        url: "http://redmine.com2",
+        project:
+          id: 0
+          text: "prj2_0",
+        show: SHOW.NOT
+      }, {
+        id: 0,
+        text: "ticket3",
+        url: "http://redmine.com3",
+        project:
+          id: 0
+          text: "prj3_0",
+        show: SHOW.SHOW
+      }
+    ]
   }
