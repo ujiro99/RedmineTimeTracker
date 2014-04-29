@@ -11,27 +11,26 @@ module.exports = (grunt) ->
 
     config: config
 
-    connect:
+    esteWatch:
       options:
-        livereload: 35729,
-        hostname: 'localhost',
-        base: '<%= config.app %>'
-
-    watch:
-      options:
-        livereload: true
-      coffee:
-        files: "coffee/**/*.coffee",
-        tasks: ["coffee:develop"]
-      test:
-        files: "test/**/*.coffee"
-        tasks: ["coffee:test"]
-      stylus:
-        files: "stylus/**/*.styl",
-        tasks: ["stylus:develop"]
-      jade:
-        files: "jade/**/*.jade",
-        tasks: ["jade:develop"]
+        dirs: [
+            'coffee/**/',
+            'stylus/**/',
+            'jade/**/',
+            'test/**/'
+          ]
+        livereload:
+          enabled: true
+          port: 35729
+          extensions: ['coffee', 'stylus', 'jade']
+      # extession settings
+      coffee: (path) ->
+        if path.match(/test/)
+          return 'coffee:test'
+        else
+          return 'coffee:develop'
+      stylus: (path) -> 'stylus:develop'
+      jade: (path) -> 'jade:develop'
 
     coffee:
       production:
@@ -154,8 +153,7 @@ module.exports = (grunt) ->
 
 
   # plugins
-  grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.loadNpmTasks 'grunt-contrib-connect'
+  grunt.loadNpmTasks 'grunt-este-watch'
   grunt.loadNpmTasks 'grunt-chrome-manifest'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jade'
@@ -166,7 +164,6 @@ module.exports = (grunt) ->
 
 
   # tasks
-  grunt.registerTask "run", ["connect", "watch"]
   grunt.registerTask "minify", ["ngmin", "uglify"]
 
   grunt.registerTask "dev", [
