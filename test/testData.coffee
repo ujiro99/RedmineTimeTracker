@@ -86,6 +86,7 @@ timeTracker.value "TestData", ()->
         0:
           text: "prj2_0"
           show: SHOW.DEFAULT
+
     prjOldFormat:                                     # version <= 0.5.7
       "http://redmine.com" :
         index: 2
