@@ -7,6 +7,47 @@ div#issue(ng-controller='IssueCtrl')
           span.icon-list
         span Issues
 
-  // edit list
-  div.animate-switch-container(uz-auto-height='section')
-    div(ng-include="'editIssueList.html'")
+
+  // edit area will change height
+  div.animate-height(uz-auto-height='section')
+
+    section
+
+      // edit list
+      div.form-group.project
+        uz-dropdown(items='projects',
+                    selected='selectedProject',
+                    format='item.text',
+                    selected-format='selected[0].text')
+
+      // search
+      div.form-group.search
+        label.sr-only Search
+        input.form-control.input-sm(type='search',
+                                    placeholder='search...',
+                                    ng-model='searchField.text')
+        i.fa.fa-search
+
+      // issues
+      div.issueList
+        ul
+          li(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',
+             ng-mousemove='editState.onMouseMove($event)')
+            button.issue(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
+              span.id {{item.id}}
+              span.subject(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",
+                           tooltip-animation="",
+                           tooltip-popup-delay='700',
+                           tooltip-placement='{{tooltipPlace}}') {{item.text}}
+              div.btn(ng-hide='editState.isContained(item)')
+                span.icon-plus
+              div.btn(ng-show='editState.isContained(item)')
+                span.icon-minus
+              button.btn.external-link(type='button', ng-click="editState.openLink(item.url + '/issues/' + item.id)", ga-click='issueLink')
+                span.icon-question
+
+      // page
+      div.page
+        uz-pagination.pagination-small(total-items='totalItems',
+                                       page='editState.currentPage',
+                                       items-per-page='itemsPerPage')
