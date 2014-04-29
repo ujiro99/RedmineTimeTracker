@@ -1,13 +1,11 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, BaseEditState, IssueEditState) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, IssueEditState) ->
 
   $scope.accounts = []
   $scope.issues = []
   $scope.itemsPerPage = 25
   $scope.projects = []
-  $scope.projectsInList = []
   $scope.searchField = text: ''
   $scope.selected = []
-  $scope.selectedAccount = []
   $scope.selectedProject = []
   $scope.tooltipPlace = 'top'
   $scope.totalItems = 0
@@ -20,26 +18,14 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   init = () ->
     Account.getAccounts (accounts) ->
       $scope.accounts = accounts
-      $scope.selectedAccount[0] = $scope.accounts[0]
     $scope.projects = Project.getSelectable()
     $scope.editState = new IssueEditState($scope)
-
-
-  ###
-   start getting issues.
-  ###
-  $scope.$on 'accountAdded', (e, account) ->
-    if not $scope.selectedAccount[0]
-      $scope.selectedAccount[0] = $scope.accounts[0]
 
 
   ###
    remove project and issues.
   ###
   $scope.$on 'accountRemoved', (e, url) ->
-    # remove a account
-    if $scope.selectedAccount[0]?.url is url
-      $scope.selectedAccount[0] = $scope.accounts[0]
     # remove projects
     newPrjs = (p for p, i in $scope.projects when p.url isnt url)
     $scope.projects.clear()

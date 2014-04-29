@@ -1,4 +1,4 @@
-timeTracker.controller 'ProjectCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, Resource, Analytics, BaseEditState, IssueEditState, ProjectEditState) ->
+timeTracker.controller 'ProjectCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, Resource, Analytics, ProjectEditState) ->
 
   $scope.accounts = []
   $scope.projects = []
