@@ -125,11 +125,23 @@ module.exports = (grunt) ->
       production:
         src: 'dist/scripts/script.js'
         dest: 'dist/scripts/script.min.js'
+    chromeManifest:
+      dist:
+        options:
+          buildnumber: true
+          background:
+            target: 'scripts/eventPage.js'
+            exclude: [
+              'scripts/chromereload.js'
+            ]
+        src: '<%= config.app %>'
+        dest: '<%= config.dist %>'
 
 
   # plugins
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-connect'
+  grunt.loadNpmTasks 'grunt-chrome-manifest'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
@@ -142,5 +154,11 @@ module.exports = (grunt) ->
   grunt.registerTask "run", ["connect", "watch"]
   grunt.registerTask "minify", ["ngmin", "uglify"]
   grunt.registerTask "dev", ["bower:install", "coffee:develop", "jade:develop", "stylus"]
-  grunt.registerTask "production", ["bower:install", "coffee:production", "jade:production", "stylus", "minify"]
+  grunt.registerTask "production", [
+    "bower:install",
+    "chromeManifest:dist",
+    "coffee:production",
+    "jade:production",
+    "stylus:production",
+    "minify"]
 
