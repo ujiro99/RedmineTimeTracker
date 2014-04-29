@@ -33,9 +33,10 @@ module.exports = (grunt) ->
       jade: (path) -> 'jade:develop'
 
     coffee:
+      options:
+        bare: true
       production:
         options:
-          bare: true
           join: true
         files: [
           '<%= config.dist %>/scripts/script.js': [
@@ -45,8 +46,6 @@ module.exports = (grunt) ->
           ]
         ]
       develop:
-        options:
-          bare: true
         files: [
           expand: true
           cwd: 'coffee/'
@@ -55,8 +54,6 @@ module.exports = (grunt) ->
           ext: '.js'
         ]
       test:
-        options:
-          bare: true
         files: [
           expand: true
           cwd: 'test/'
@@ -86,8 +83,7 @@ module.exports = (grunt) ->
     jade:
       production:
         options:
-          data: (dest, src) ->
-            return { production: true }
+          data: (dest, src) -> return { production: true }
         files: [
           expand: true
           cwd: 'jade/'
@@ -97,8 +93,7 @@ module.exports = (grunt) ->
         ]
       develop:
         options:
-          data: (dest, src) ->
-            return { production: false }
+          data: (dest, src) -> return { production: false }
         files: [
           expand: true
           cwd: 'jade/'
@@ -164,19 +159,19 @@ module.exports = (grunt) ->
 
 
   # tasks
-  grunt.registerTask "minify", ["ngmin", "uglify"]
+  grunt.registerTask 'minify', ['ngmin', 'uglify']
 
-  grunt.registerTask "dev", [
-    "bower:dev",
-    "coffee:develop",
-    "jade:develop",
-    "stylus:develop"]
+  grunt.registerTask 'dev', [
+    'bower:dev',
+    'coffee:develop',
+    'jade:develop',
+    'stylus:develop']
 
-  grunt.registerTask "production", [
-    "bower:install",
-    "chromeManifest:dist",
-    "coffee:production",
-    "jade:production",
-    "stylus:production",
-    "minify"]
+  grunt.registerTask 'production', [
+    'bower:production',
+    'chromeManifest:dist',
+    'coffee:production',
+    'jade:production',
+    'stylus:production',
+    'minify']
 
