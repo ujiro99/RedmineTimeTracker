@@ -1,9 +1,15 @@
 module.exports = (grunt) ->
 
+  # set variables
+  config =
+    app: 'app',
+    dist: 'dist',
+    manifest: grunt.file.readJSON('app/manifest.json'),
+
   # configure
   grunt.initConfig
 
-    pkg: grunt.file.readJSON('package.json')
+    config: config
 
     connect:
       server:
