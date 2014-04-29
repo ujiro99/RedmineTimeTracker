@@ -1,11 +1,8 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, BaseEditState, IssueEditState, ProjectEditState) ->
-
-  MODE = {ISSUE: "Issues", PROJECT: "Projects"}
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, BaseEditState, IssueEditState) ->
 
   $scope.accounts = []
   $scope.issues = []
   $scope.itemsPerPage = 25
-  $scope.mode = MODE.ISSUE
   $scope.projects = []
   $scope.projectsInList = []
   $scope.searchField = text: ''
@@ -84,18 +81,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     if not found
       $scope.selectedProject[0] = $scope.projects[0]
   , true
-
-
-  ###
-   change edit mode.
-  ###
-  $scope.changeMode = () ->
-    if $scope.mode is MODE.ISSUE
-      $scope.mode = MODE.PROJECT
-      $scope.editState = new ProjectEditState($scope)
-    else
-      $scope.mode = MODE.ISSUE
-      $scope.editState = new IssueEditState($scope)
 
 
   ###

@@ -1,17 +1,12 @@
 div#issue(ng-controller='IssueCtrl')
 
   header
-    div.caption.hover-action(ng-click="changeMode()", ga-click='changeListMode')
-      i.fa.fa-angle-left
+    div.caption
       div.title
         div.icon
           span.icon-list
-        span {{mode}}
-      i.fa.fa-angle-right
+        span Issues
 
   // edit list
-  div.animate-switch-container(ng-switch on='mode', uz-auto-height='section')
-    section.animate-switch(ng-switch-when="Issues")
-      div(ng-include="'editIssueList.html'")
-    section.animate-switch(ng-switch-when="Projects")
-      div(ng-include="'editProjectList.html'")
+  div.animate-switch-container(uz-auto-height='section')
+    div(ng-include="'editIssueList.html'")
