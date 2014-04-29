@@ -29,7 +29,7 @@ module.exports = (grunt) ->
           return 'coffee:test'
         else
           return 'coffee:develop'
-      stylus: (path) -> 'stylus:develop'
+      styl: (path) -> 'stylus:develop'
       jade: (path) -> 'jade:develop'
 
     coffee:
