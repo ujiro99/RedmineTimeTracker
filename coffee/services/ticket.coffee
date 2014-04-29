@@ -99,25 +99,36 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
           console.debug 'project or ticket does not exists'
           callback? null; return
 
-        tmp = []
-        missing = []
-        for t in tickets[TICKET]
-          # search url
-          url = PROJECT_NOT_FOUND
-          for key, obj of projects when obj.index is t[TICKET_URL_INDEX]
-            url = key
-            break
-          # url not found ...
-          if url is PROJECT_NOT_FOUND
-            missing.push t[TICKET_URL_INDEX]
-          tmp.push new TicketModel(
-            t[TICKET_ID],
-            t[TICKET_TEXT],
-            url,
-            { id: t[TICKET_PRJ_ID] },
-            t[TICKET_SHOW])
+        synced = _syncWithProject tickets[TICKET], projects
+        Project.set Project.sanitize(projects)
+        callback? synced.tickets, synced.missing
 
-        callback? tmp, missing
+
+  ###
+   syncronize tickets and projects.
+   chrome format.
+  ###
+  _syncWithProject = (tickets, projects) ->
+    tmp = []
+    missing = []
+
+    for t in tickets
+      # search url
+      url = PROJECT_NOT_FOUND
+      for key, obj of projects when obj.index is t[TICKET_URL_INDEX]
+        url = key
+        break
+      # url not found ...
+      if url is PROJECT_NOT_FOUND
+        missing.push t[TICKET_URL_INDEX]
+      tmp.push new TicketModel(
+        t[TICKET_ID],
+        t[TICKET_TEXT],
+        url,
+        { id: t[TICKET_PRJ_ID] },
+        t[TICKET_SHOW])
+
+    return { tickets: tmp, missing: missing }
 
 
   ###

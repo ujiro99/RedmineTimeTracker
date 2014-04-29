@@ -9,6 +9,7 @@ describe 'ticket.coffee', ->
   Chrome = null
   TestData = null
 
+
   beforeEach () ->
     angular.mock.module('timeTracker')
     # initialize object
@@ -267,10 +268,10 @@ describe 'ticket.coffee', ->
       callback = sinon.spy (loaded, msg) ->
         expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
         expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
-        expect(loaded[2].id).to.equal(TestData.ticketList2[1].id)
-        expect(loaded[2].url).to.equal(TestData.ticketList2[1].url)
-        expect(loaded[1].id).to.equal(TestData.ticketList2[2].id)
-        expect(loaded[1].url).to.equal(TestData.ticketList2[2].url)
+        expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
+        expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
+        expect(loaded[2].id).to.equal(TestData.ticketList2[2].id)
+        expect(loaded[2].url).to.equal(TestData.ticketList2[2].url)
         expect(msg).to.be.empty
       Ticket.load callback
       expect(callback.called).is.true
@@ -289,11 +290,33 @@ describe 'ticket.coffee', ->
           return true
       # exec
       callback = sinon.spy (loaded, msg) ->
-        expect(loaded[0].id).to.equal(TestData.ticketList[0].id)
-        expect(loaded[0].url).to.equal(TestData.ticketList[0].url)
-        expect(loaded[2].id).to.equal(TestData.ticketList2[1].id)
-        expect(loaded[2].url).to.equal(TestData.ticketList2[1].url)
+        expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
+        expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
+        expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
+        expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
         expect(msg.missing[0]).to.equal(3)
         console.log msg
       Ticket.load callback
       expect(callback.called).is.true
+
+    it 'compatibility (version <= 0.5.7): index start changed.', () ->
+      expect(Ticket.get()).to.be.empty
+      # put test data.
+      sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
+        callback true
+      sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
+        if arg1 is "PROJECT"
+          callback PROJECT: TestData.prjOldFormat
+          return true
+        else
+          callback TICKET: TestData.ticketOnChromeOld
+          return true
+      # exec
+      Ticket.load (loaded) ->
+        expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
+        expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
+        expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
+        expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
+        expect(loaded[2].id).to.equal(TestData.ticketList2[2].id)
+        expect(loaded[2].url).to.equal(TestData.ticketList2[2].url)
+
