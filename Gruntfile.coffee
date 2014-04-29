@@ -12,18 +12,17 @@ module.exports = (grunt) ->
     config: config
 
     connect:
-      server:
-        options:
-          port: 35729
-          base: '.'
+      options:
+        livereload: 35729,
+        hostname: 'localhost',
+        base: '<%= config.app %>'
 
     watch:
+      options:
+        livereload: true
       coffee:
         files: "coffee/**/*.coffee",
         tasks: ["coffee:develop"]
-        options:
-          livereload: true
-
       test:
         files: "test/**/*.coffee"
         tasks: ["coffee:test"]
@@ -42,7 +41,11 @@ module.exports = (grunt) ->
           bare: true
           join: true
         files: [
-          'dist/scripts/script.js': ['coffee/app.coffee', 'coffee/**/*.coffee']
+          '<%= config.dist %>/scripts/script.js': [
+            'coffee/app.coffee',
+            'coffee/**/*.coffee',
+            '!coffee/chromereload.coffee'
+          ]
         ]
       develop:
         options:
@@ -126,6 +129,7 @@ module.exports = (grunt) ->
 
   # plugins
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'

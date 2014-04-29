@@ -14,7 +14,10 @@
 
   "app": {
     "background": {
-      "scripts": ["/scripts/eventPage.js"]
+      "scripts": [
+        "/scripts/eventPage.js",
+        "/scripts/chromereload.js"
+      ]
     }
   },
 
