@@ -37,7 +37,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
   ###
    load from any area.
   ###
-  _get = (storage, callback) ->
+  _load = (storage, callback) ->
     if not storage? then callback? null; return
     storage.get PROJECT, (projects) ->
       if Chrome.runtime.lastError? then callback? null; return
@@ -217,13 +217,13 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
      load all projects from chrome sync.
     ###
     load: (callback) ->
-      _get Chrome.storage.local, (local) =>
+      _load Chrome.storage.local, (local) =>
         if local?
           console.log 'project loaded from local'
           @set _sanitize local
           callback local
         else
-          _get Chrome.storage.sync, (sync) =>
+          _load Chrome.storage.sync, (sync) =>
             console.log 'project loaded from sync'
             @set _sanitize sync
             callback sync

@@ -66,23 +66,23 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
 
 
   ###
-   get tickets from local storage.
+   load tickets from local storage.
   ###
-  _getLocal = (callback) ->
-    _get(Chrome.storage.local, callback)
+  _loadLocal = (callback) ->
+    _load(Chrome.storage.local, callback)
 
 
   ###
-   get tickets from sync storage.
+   load tickets from sync storage.
   ###
-  _getSync = (callback) ->
-    _get(Chrome.storage.sync, callback)
+  _loadSync = (callback) ->
+    _load(Chrome.storage.sync, callback)
 
 
   ###
-   get tickets from any area.
+   load tickets from any area.
   ###
-  _get = (storage, callback) ->
+  _load = (storage, callback) ->
     if not storage? then callback? null; return
 
     storage.get TICKET, (tickets) ->
@@ -339,7 +339,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
      load all tickets from chrome sync.
     ###
     load: (callback) ->
-      _getLocal (localTickets, missingUrlIndex) =>
+      _loadLocal (localTickets, missingUrlIndex) =>
         if localTickets?
           console.log 'tikcet loaded from local'
           @set localTickets, (res, msg) ->
@@ -348,7 +348,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
               msg = Object.merge(msg, {missing: missingUrlIndex})
             callback localTickets, msg
         else
-          _getSync (syncTickets, missingUrlIndex) =>
+          _loadSync (syncTickets, missingUrlIndex) =>
             console.log 'tikcet loaded from sync'
             @set syncTickets, (res, msg) ->
               if not missingUrlIndex.isEmpty()
