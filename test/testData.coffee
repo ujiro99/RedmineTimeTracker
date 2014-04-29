@@ -25,6 +25,7 @@ timeTracker.value "TestData", ()->
         show: SHOW.DEFAULT
       }
     ]
+
     prj2: [
       {
         url: "http://redmine.com2"
@@ -46,6 +47,7 @@ timeTracker.value "TestData", ()->
         show: SHOW.DEFAULT
       }
     ]
+
     prj3: [
       {
         url: "http://redmine.com3"
@@ -67,6 +69,7 @@ timeTracker.value "TestData", ()->
         show: SHOW.DEFAULT
       }
     ]
+
     prjObj:
       "http://redmine.com" :
         index: 0
@@ -99,6 +102,7 @@ timeTracker.value "TestData", ()->
         0:
           text: "prj3_0"
           show: SHOW.DEFAULT
+
     ticketList: [
       {
         id: 0,
@@ -126,6 +130,7 @@ timeTracker.value "TestData", ()->
         show: SHOW.SHOW
       }
     ]
+
     ticketList2: [
       {
         id: 0,
@@ -153,6 +158,7 @@ timeTracker.value "TestData", ()->
         show: SHOW.SHOW
       }
     ]
+
     ticketOnChrome: [
       # id | text      | url_index | prj_id |    show
       [ 0,  "ticket0",      0,         0,     SHOW.DEFAULT ],
