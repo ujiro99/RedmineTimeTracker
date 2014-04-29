@@ -22,7 +22,7 @@ module.exports = (grunt) ->
         livereload:
           enabled: true
           port: 35729
-          extensions: ['coffee', 'stylus', 'jade']
+          extensions: ['coffee', 'stylus', 'jade', 'html']
       # extession settings
       coffee: (path) ->
         if path.match(/test/)
