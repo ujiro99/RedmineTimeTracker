@@ -26,11 +26,9 @@ module.exports = (grunt) ->
       test:
         files: "test/**/*.coffee"
         tasks: ["coffee:test"]
-
       stylus:
         files: "stylus/**/*.styl",
-        tasks: ["stylus"]
-
+        tasks: ["stylus:develop"]
       jade:
         files: "jade/**/*.jade",
         tasks: ["jade:develop"]
@@ -54,7 +52,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'coffee/'
           src: ['**/*.coffee']
-          dest: 'dist/scripts/'
+          dest: '<%= config.app %>/scripts/'
           ext: '.js'
         ]
       test:
@@ -69,12 +67,20 @@ module.exports = (grunt) ->
         ]
 
     stylus:
-      compile:
+      production:
         files: [
           expand: true
           cwd: 'stylus/'
           src: ['**/*.styl']
-          dest: 'dist/css/'
+          dest: '<%= config.dist%>/css/'
+          ext: '.css'
+        ]
+      develop:
+        files: [
+          expand: true
+          cwd: 'stylus/'
+          src: ['**/*.styl']
+          dest: '<%= config.app %>/css/'
           ext: '.css'
         ]
 
@@ -87,7 +93,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'jade/'
           src: ['**/*.jade']
-          dest: 'dist/views/'
+          dest: '<%= config.dist %>/views/'
           ext: '.html'
         ]
       develop:
@@ -98,33 +104,42 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'jade/'
           src: ['**/*.jade']
-          dest: 'dist/views/'
+          dest: '<%= config.app %>/views/'
           ext: '.html'
         ]
 
     bower:
-      install:
+      options:
+        targetDir: './'
+        install: true
+        verbose: true
+        cleanTargetDir: false
+        cleanBowerDir: false
+      dev:
         options:
-          targetDir: './'
           layout: (type, component) ->
             if type is 'css'
-              return 'dist/css/lib'
+              return config.app + '/css/lib'
             else
-              return 'dist/scripts/lib'
-          install: true
-          verbose: true
-          cleanTargetDir: false
-          cleanBowerDir: false
+              return config.app + '/scripts/lib'
+      production:
+        options:
+          layout: (type, component) ->
+            if type is 'css'
+              return config.dist + '/css/lib'
+            else
+              return config.dist + '/scripts/lib'
 
     ngmin:
       production:
-        src: 'dist/scripts/script.js'
-        dest: 'dist/scripts/script.js'
+        src: '<%= config.dist %>/scripts/script.js'
+        dest: '<%= config.dist %>/scripts/script.js'
 
     uglify:
       production:
-        src: 'dist/scripts/script.js'
-        dest: 'dist/scripts/script.min.js'
+        src: '<%= config.dist %>/scripts/script.js'
+        dest: '<%= config.dist %>/scripts/script.min.js'
+
     chromeManifest:
       dist:
         options:
@@ -153,7 +168,13 @@ module.exports = (grunt) ->
   # tasks
   grunt.registerTask "run", ["connect", "watch"]
   grunt.registerTask "minify", ["ngmin", "uglify"]
-  grunt.registerTask "dev", ["bower:install", "coffee:develop", "jade:develop", "stylus"]
+
+  grunt.registerTask "dev", [
+    "bower:dev",
+    "coffee:develop",
+    "jade:develop",
+    "stylus:develop"]
+
   grunt.registerTask "production", [
     "bower:install",
     "chromeManifest:dist",
