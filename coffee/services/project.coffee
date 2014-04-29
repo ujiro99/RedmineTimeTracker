@@ -65,17 +65,6 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
 
   ###
-   sanitize format of prject data.
-  ###
-  _sanitize = (prjObj) ->
-    # fix url index
-    urlIndex = 0
-    for url, param of prjObj
-      param.index = urlIndex++
-    return prjObj
-
-
-  ###
    Project data model.
   ###
   class ProjectModel
@@ -220,12 +209,12 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
       _load Chrome.storage.local, (local) =>
         if local?
           console.log 'project loaded from local'
-          @set _sanitize local
+          @set local
           callback local
         else
           _load Chrome.storage.sync, (sync) =>
             console.log 'project loaded from sync'
-            @set _sanitize sync
+            @set _sync
             callback sync
 
 
@@ -263,6 +252,17 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
         callback? false
       else
         callback? true
+
+
+    ###
+     sanitize format of prject data.
+    ###
+    sanitize: (prjObj) ->
+      # fix url index
+      urlIndex = 0
+      for url, param of prjObj
+        param.index = urlIndex++
+      return prjObj
 
   }
 )

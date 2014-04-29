@@ -454,12 +454,12 @@ describe 'project.coffee', ->
             text: "prj1_0"
             show: SHOW.DEFAULT
         "http://redmine.com2" :
-          index: 0
+          index: 1
           0:
             text: "prj2_0"
             show: SHOW.DEFAULT
         "http://redmine.com3" :
-          index: 0
+          index: 2
           0:
             text: "prj3_0"
             show: SHOW.DEFAULT
@@ -493,7 +493,7 @@ describe 'project.coffee', ->
       )
 
       Project.load () ->
-        loaded = Project.get()
+        loaded = Project.sanitize Project.get()
         expect(loaded[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
         expect(loaded[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
         expect(loaded[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
