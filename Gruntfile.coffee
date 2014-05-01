@@ -159,6 +159,7 @@ module.exports = (grunt) ->
 
 
   # tasks
+  grunt.registerTask 'watch', ['esteWatch']
   grunt.registerTask 'minify', ['ngmin', 'uglify']
 
   grunt.registerTask 'dev', [
