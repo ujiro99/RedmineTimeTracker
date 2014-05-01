@@ -214,7 +214,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
         else
           _load Chrome.storage.sync, (sync) =>
             console.log 'project loaded from sync'
-            @set _sync
+            @set sync
             callback sync
 
 
