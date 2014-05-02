@@ -1,12 +1,18 @@
 timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics) ->
 
-
   _redmines = {}
 
   return {
 
-    ###
+    ###*
      get redmine instance.
+     @method get
+     @param auth {Object} Authentication infomation for Redmine.
+     @param auth.url {String} Redmine server's url.
+     @param auth.id {String} ID for redmine account.
+     @param auth.pass {String} Password for redmine account.
+     @param auth.apiKey {String} API Key for redmine account (optional).
+     @param auth.userId {Number} account UserID.
     ###
     get: (auth) ->
       if not _redmines[auth.url]
