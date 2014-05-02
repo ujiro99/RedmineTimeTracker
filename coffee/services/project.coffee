@@ -28,13 +28,6 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
 
   ###
-   compare projects.
-  ###
-  _equals = (x, y) ->
-    x.url is y.url and x.id is y.id
-
-
-  ###
    load from any area.
   ###
   _load = (storage, callback) ->
@@ -76,9 +69,10 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
     ###
      compare project.
-     true: same / false: defferent
+     true: same / false: different
     ###
     equals: (y) ->
+      return false if not y?
       return @url is y.url and @id is y.id
 
 
