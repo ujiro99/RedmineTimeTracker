@@ -1,0 +1,44 @@
+div#query(ng-controller='QueryCtrl')
+
+  header
+    div.caption
+      div.title
+        div.icon
+          span.icon-list
+        span Query
+
+
+  // edit area will change height
+  div.animate-height(uz-auto-height='section')
+
+    section
+
+      // edit list
+      div.form-group.project
+        uz-dropdown(items='selectable',
+                    selected='selected',
+                    format='item.text',
+                    selected-format='selected[0].text')
+
+      // search
+      div.form-group.search
+        label.sr-only Search
+        input.form-control.input-sm(type='search',
+                                    placeholder='search...',
+                                    ng-model='searchField.text')
+        i.fa.fa-search
+
+      // issues
+      div.issueList
+        ul
+          li(ng-repeat='item in queries | filter:editState.listFilter | orderBy:"id"',
+             ng-mousemove='editState.onMouseMove($event)')
+            button.issue(type='button', ng-click="editState.onClickItem(item)", ga-click='queryItem')
+              span.id {{item.id}}
+              span.subject {{item.name}}
+
+      // page
+      div.page
+        uz-pagination.pagination-small(total-items='totalItems',
+                                       page='editState.currentPage',
+                                       items-per-page='itemsPerPage')
