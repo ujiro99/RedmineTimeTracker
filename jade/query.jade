@@ -28,12 +28,15 @@ div#query(ng-controller='QueryCtrl')
                                     ng-model='searchField.text')
         i.fa.fa-search
 
-      // issues
+      // queries
       div.issueList
         ul
           li(ng-repeat='item in queries | filter:editState.listFilter | orderBy:"id"',
+             ng-class="{active: item.id == selected[0].queryId}",
              ng-mousemove='editState.onMouseMove($event)')
-            button.issue(type='button', ng-click="editState.onClickItem(item)", ga-click='queryItem')
+            button.issue(type='button',
+                         ng-click="editState.onClickItem(item)",
+                         ga-click='queryItem')
               span.id {{item.id}}
               span.subject {{item.name}}
 

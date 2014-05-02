@@ -393,6 +393,10 @@ body.modal-open
       .btn.external-link:hover
         color: color_key
 
+      &.active
+        background-color: color_key
+        border-radius: 10px
+        transition: background-color ease 0.35s
 
     .issue
       color #555
@@ -417,6 +421,12 @@ body.modal-open
         flex: 1
         text-align: left
         text-ellipsis()
+
+    .active .issue, .active .issue:hover
+      margin-left: 5px
+      color: #fff
+      span
+        color #fff
 
     .issue:hover
       margin-left: 5px

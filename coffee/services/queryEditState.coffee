@@ -7,11 +7,11 @@ timeTracker.factory "QueryEditState", ($window, Redmine, Message, Resource) ->
 
     constructor: (@$scope) ->
 
-
     ###
      on user selected item.
     ###
     onClickItem: (item) ->
+      @$scope.selected[0].queryId = item.id
 
 
     ###
