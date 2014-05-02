@@ -71,6 +71,11 @@ class Redmine
 
     return result
 
+  @extends: (p) ->
+    p.success = (fn) -> p.then(fn); return p
+    p.error = (fn) -> p.then(null, fn); return p
+    return p
+
 
   ###
    set basic configs for $http.
@@ -263,3 +268,24 @@ class Redmine
         success?(data, status, headers, config))
       .error(error or Redmine.NULLFUNC)
 
+
+  ###
+   laod queries. uses promise.
+  ###
+  loadQueries: (params) ->
+    deferred = @$q.defer()
+
+    params = params or {}
+    params.limit = params.limit or 50
+    config =
+      method: "GET"
+      url: @auth.url + "/queries.json"
+      params: params
+    config = @setBasicConfig config, @auth
+    @$http(config)
+      .success((args...) =>
+        args[0].url = @auth.url
+        deferred.resolve(args[0]))
+      .error((args...) -> deferred.reject(args[0]))
+
+    return Redmine.extends(deferred.promise)

@@ -166,4 +166,23 @@ timeTracker.value "TestData", ()->
       [ 0,  "ticket2",      1,         0,     SHOW.NOT     ],
       [ 0,  "ticket3",      2,         0,     SHOW.SHOW    ]
     ]
+
+    queries: {
+      "queries": [{"id":0, "name":"aaa", "is_public":true}, {"id":2, "name":"bbb"}]
+      "total_count":2
+      "offset":0
+      "limit":25
+    }
+
+    user: {
+      "user":{
+        "id":1
+        "login":"admin"
+        "firstname":"Redmine"
+        "lastname":"Admin"
+        "mail":"test@gmail.com"
+        "created_on":"2013-08-22T14:24:27Z"
+      }
+    }
+
   }
