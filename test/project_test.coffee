@@ -210,6 +210,74 @@ describe 'project.coffee', ->
   ###
   describe 'setParam(url, id, params)', ->
 
+    it 'should changes parameter.', () ->
+      expect(Project.get()).to.be.empty
+      Project.add(prj1[0])
+
+      # before setParam
+      added = Project.get()
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].queryId).to.be.equal(prj1[0].queryId)
+      selectable = Project.getSelectable()
+      expect(selectable[0].urlIndex).to.be.equal(prj1[0].urlIndex)
+      expect(selectable[0].text).to.be.equal(prj1[0].text)
+      expect(selectable[0].queryId).to.be.equal(prj1[0].queryId)
+
+      # execute
+      Project.setParam(prj1[0].url, prj1[0].id, { queryId: 1 })
+
+      # after setParam
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
+      expect(added[prj1[0].url][prj1[0].id].queryId).to.be.equal(1) # changed
+      expect(selectable[0].urlIndex).to.be.equal(prj1[0].urlIndex)
+      expect(selectable[0].text).to.be.equal(prj1[0].text)
+      expect(selectable[0].queryId).to.be.equal(1) # changed
+
+    it 'shouldn\'t change references.', () ->
+      expect(Project.get()).to.be.empty
+      Project.add(prj1[0])
+
+      # before setParam
+      added = Project.get()
+      prj = added[prj1[0].url][prj1[0].id]
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(prj.text).to.be.equal(prj1[0].text)
+      expect(prj.queryId).to.be.equal(prj1[0].queryId)
+      selectable = Project.getSelectable()[0]
+      expect(selectable.urlIndex).to.be.equal(prj1[0].urlIndex)
+      expect(selectable.text).to.be.equal(prj1[0].text)
+      expect(selectable.queryId).to.be.equal(prj1[0].queryId)
+
+      # execute
+      Project.setParam(prj1[0].url, prj1[0].id, { queryId: 1 })
+
+      # after setParam
+      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
+      expect(prj.text).to.be.equal(prj1[0].text)
+      expect(prj.queryId).to.be.equal(1) # changed
+      expect(selectable.urlIndex).to.be.equal(prj1[0].urlIndex)
+      expect(selectable.text).to.be.equal(prj1[0].text)
+      expect(selectable.queryId).to.be.equal(1) # changed
+
+    it 'should remove project from selectable when set SHOW.NOT.', () ->
+      expect(Project.get()).to.be.empty
+      Project.add(prj1[0])
+
+      # before setParam
+      prj = Project.get()[prj1[0].url][prj1[0].id]
+      expect(prj.show).to.be.equal(prj1[0].show)
+      selectable = Project.getSelectable()[0]
+      expect(selectable).to.exists
+
+      # execute
+      Project.setParam(prj1[0].url, prj1[0].id, { show: SHOW.NOT })
+
+      # after setParam
+      expect(prj.show).to.be.equal(SHOW.NOT) # changed
+      selectable = Project.getSelectable()
+      expect(selectable).to.be.empty
 
 
   ###

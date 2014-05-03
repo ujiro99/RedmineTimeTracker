@@ -120,6 +120,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
     ###
      set parameter to project.
+     doesnt't chagne references.
     ###
     setParam: (url, id, params) ->
       # set param
@@ -127,16 +128,12 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
       for k, v of params
         _projects[url][id][k] = v
       # update selectable
-      prj = new ProjectModel(url,
-                             _projects[url].index,
-                             id,
-                             _projects[url][id].text,
-                             _projects[url][id].show)
-      for p, i in _selectableProjects when p.equals prj
-        _selectableProjects.splice i, 1
+      for p, i in _selectableProjects when p.equals {url: url, id: id}
+        if _projects[url][id].show isnt SHOW.NOT
+          for k, v of params then p[k] = v
+        else
+          _selectableProjects.splice(i, 1)
         break
-      if _projects[url][id].show isnt SHOW.NOT
-        _selectableProjects.push prj
       _setLocal()
 
 
