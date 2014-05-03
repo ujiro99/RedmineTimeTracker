@@ -28,17 +28,19 @@ module.exports = (grunt) ->
         grunt.config 'coffee.options.bare', true
         if path.match(/test/)
           grunt.config 'coffee.compile.files', [
+            nonull: true
             expand: true
             cwd: 'test/'
-            src: path
+            src: path.slice(path.indexOf('/'))
             dest: 'test/'
             ext: '.js'
           ]
         else
           grunt.config 'coffee.compile.files', [
+            nonull: true
             expand: true
             cwd: 'coffee/'
-            src: path
+            src: path.slice(path.indexOf('/'))
             dest: '<%= config.app %>/scripts/'
             ext: '.js'
           ]
@@ -46,9 +48,10 @@ module.exports = (grunt) ->
       styl: (path) ->
         grunt.config 'stylus.options.compress', false
         grunt.config 'stylus.compile.files', [
+          nonull: true
           expand: true
           cwd: 'stylus/'
-          src: path
+          src: path.slice(path.indexOf('/'))
           dest: '<%= config.app %>/css/'
           ext: '.css'
         ]
@@ -57,10 +60,11 @@ module.exports = (grunt) ->
         grunt.config 'jade.options.data', { production: false }
         grunt.config 'jade.options.pretty', true
         grunt.config 'jade.compile.files', [
+          nonull: true
           expand: true
           cwd: 'jade/'
           ext: '.html'
-          src: path
+          src: path.slice(path.indexOf('/'))
           dest: '<%= config.app %>/views/'
         ]
         'jade:compile'
