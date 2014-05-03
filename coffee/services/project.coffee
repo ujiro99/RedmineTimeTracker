@@ -65,7 +65,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
     ###
      constructor.
     ###
-    constructor: (@url, @urlIndex, @id, @text, @show) ->
+    constructor: (@url, @urlIndex, @id, @text, @show, @queryId) ->
 
     ###
      compare project.
@@ -111,7 +111,8 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
             _projects[url][id] = {}
             _projects[url][id].text = v.text
             _projects[url][id].show = v.show
-            prj = new ProjectModel(url, urlIndex, id, v.text, v.show)
+            _projects[url][id].queryId = v.queryId
+            prj = new ProjectModel(url, urlIndex, id, v.text, v.show, v.queryId)
             if prj.show isnt SHOW.NOT
               _selectableProjects.push prj
       _setLocal()
@@ -147,7 +148,8 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
                              project.urlIndex,
                              project.id,
                              project.text,
-                             project.show)
+                             project.show,
+                             project.queryId)
 
       # initialize if not exists
       _projects[prj.url] = _projects[prj.url] or {}
@@ -160,6 +162,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
       _projects[prj.url][prj.id] =
         text: prj.text
         show: _projects[prj.url][prj.id].show or prj.show
+        queryId: prj.queryId
 
       # update selectable
       for p, i in _selectableProjects when p.equals prj
@@ -231,7 +234,8 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
                        params.urlIndex,
                        params.id,
                        params.text,
-                       params.show)
+                       params.show,
+                       params.queryId)
 
 
     ###
