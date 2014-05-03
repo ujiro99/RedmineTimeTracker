@@ -23,14 +23,47 @@ module.exports = (grunt) ->
           enabled: true
           port: 35729
           extensions: ['coffee', 'stylus', 'jade', 'html']
-      # extession settings
+      # extension settings
       coffee: (path) ->
+        grunt.config 'coffee.options.bare', true
         if path.match(/test/)
-          return 'coffee:test'
+          grunt.config 'coffee.compile.files', [
+            expand: true
+            cwd: 'test/'
+            src: path
+            dest: 'test/'
+            ext: '.js'
+          ]
         else
-          return 'coffee:develop'
-      styl: (path) -> 'stylus:develop'
-      jade: (path) -> 'jade:develop'
+          grunt.config 'coffee.compile.files', [
+            expand: true
+            cwd: 'coffee/'
+            src: path
+            dest: '<%= config.app %>/scripts/'
+            ext: '.js'
+          ]
+        'coffee:compile'
+      styl: (path) ->
+        grunt.config 'stylus.options.compress', false
+        grunt.config 'stylus.compile.files', [
+          expand: true
+          cwd: 'stylus/'
+          src: path
+          dest: '<%= config.app %>/css/'
+          ext: '.css'
+        ]
+        'stylus:compile'
+      jade: (path) ->
+        grunt.config 'jade.options.data', { production: false }
+        grunt.config 'jade.options.pretty', true
+        grunt.config 'jade.compile.files', [
+          expand: true
+          cwd: 'jade/'
+          ext: '.html'
+          src: path
+          dest: '<%= config.app %>/views/'
+        ]
+        'jade:compile'
 
     coffee:
       options:
