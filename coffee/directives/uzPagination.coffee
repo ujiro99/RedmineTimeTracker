@@ -22,11 +22,6 @@ timeTracker.directive 'uzPagination', ($window) ->
 
     link: (scope, element, attrs) ->
 
-      fullJustyfy =
-        'width': '100%'
-        'display': 'flex'
-        'justify-content': 'space-between'
-
       # Limit number for pagination size.
       scope.maxSize = 1
 
@@ -42,10 +37,6 @@ timeTracker.directive 'uzPagination', ($window) ->
         buttonWidth = Math.max.apply({}, wlist)
         scope.maxSize = Math.floor((element.outerWidth() - arrowWidth) / buttonWidth)
         scope.maxSize = 1 if scope.maxSize < 1
-
-        pageNum = scope.totalItems / scope.itemsPerPage + 1
-        if scope.maxSize < pageNum
-          $(element.find('.pagination')).css(fullJustyfy)
 
       # resize pagination bar
       scope.$watch 'page', fixSize

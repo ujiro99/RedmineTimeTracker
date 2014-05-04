@@ -1,5 +1,6 @@
 color_key = #f7505a
 color_key_down = #e55050
+color_key_weak = rgba(247, 80, 90, 0.75)
 height_input = 28
 
 
@@ -446,6 +447,9 @@ body.modal-open
 
   .pagination
     margin: 10px 10px
+    width: auto
+    display: flex
+    justify-content: space-between
     &>li:nth-child(1)>a
     &>li:nth-last-child(1)>a
       padding: 2px 6px
@@ -457,10 +461,10 @@ body.modal-open
       border-radius: 12px
       padding: 2px 7px
       margin: 0 2px
-      color: #888
+      color: #666
       cursor: pointer
     &>.active>a
-      background-color: color_key
+      background-color: color_key_weak
       color: #fff
     &>.disabled>a
       color: #ccc
