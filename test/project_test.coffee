@@ -238,14 +238,15 @@ describe 'project.coffee', ->
     it 'shouldn\'t change references.', () ->
       expect(Project.get()).to.be.empty
       Project.add(prj1[0])
-
-      # before setParam
       added = Project.get()
       prj = added[prj1[0].url][prj1[0].id]
+      selectable = Project.getSelectable()[0]
+
+      # before setParam
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(prj.text).to.be.equal(prj1[0].text)
       expect(prj.queryId).to.be.equal(prj1[0].queryId)
-      selectable = Project.getSelectable()[0]
+      expect(Project.getSelectable().length).to.be.equal(1)
       expect(selectable.urlIndex).to.be.equal(prj1[0].urlIndex)
       expect(selectable.text).to.be.equal(prj1[0].text)
       expect(selectable.queryId).to.be.equal(prj1[0].queryId)
@@ -257,9 +258,25 @@ describe 'project.coffee', ->
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(prj.text).to.be.equal(prj1[0].text)
       expect(prj.queryId).to.be.equal(1) # changed
+      expect(Project.getSelectable().length).to.be.equal(1)
       expect(selectable.urlIndex).to.be.equal(prj1[0].urlIndex)
       expect(selectable.text).to.be.equal(prj1[0].text)
       expect(selectable.queryId).to.be.equal(1) # changed
+
+    it 'should add project to selectable when set SHOW.SHOW.', () ->
+      expect(Project.get()).to.be.empty
+      prj1[0].show = SHOW.NOT
+      Project.add(prj1[0])
+      prj = Project.get()[prj1[0].url][prj1[0].id]
+      selectable = Project.getSelectable()
+      # before setParam
+      expect(prj.show).to.be.equal(SHOW.NOT)
+      expect(selectable).to.be.empty
+      # execute
+      Project.setParam(prj1[0].url, prj1[0].id, { show: SHOW.SHOW })
+      # after setParam
+      expect(prj.show).to.be.equal(SHOW.SHOW)  # changed
+      expect(selectable.length).to.be.equal(1) # changed
 
     it 'should remove project from selectable when set SHOW.NOT.', () ->
       expect(Project.get()).to.be.empty
@@ -303,6 +320,7 @@ describe 'project.coffee', ->
         id: 0         # same id
         text: "prj_updated"
         show: SHOW.SHOW
+        queryId: 1
 
       # execute
       Project.add(prj1[0])
@@ -310,12 +328,49 @@ describe 'project.coffee', ->
 
       # assert
       added = Project.get()
+      selectable = Project.getSelectable()
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(added[prj1[0].url][prj1[0].id].text).to.not.be.equal(prj1[0].text)
       expect(added[prj1[0].url][prj1[0].id].show).to.not.be.equal(prj1[0].show)
       expect(added[updated.url].index).to.be.equal(updated.urlIndex)
       expect(added[updated.url][updated.id].text).to.be.equal(updated.text)
       expect(added[updated.url][updated.id].show).to.be.equal(updated.show)
+      expect(selectable[0].show).to.be.equal(updated.show)
+      expect(selectable[0].queryId).to.be.equal(updated.queryId)
+
+    it 'doesn\'t update param if undefined', () ->
+      expect(Project.get()).to.be.empty
+
+      # create test data
+      prj =
+        url: "http://redmine.com"
+        urlIndex: 0
+        id: 0
+        text: "prj"
+        show: SHOW.SHOW
+        queryId: 1
+      updated =
+        url: "http://redmine.com"
+        urlIndex: 0   # same url and urlIndex
+        id: 0         # same id
+        text: undefined
+        show: undefined
+        queryId: undefined
+
+      # execute
+      Project.add(prj)
+      Project.add(updated)
+
+      # assert
+      added = Project.get()
+      selectable = Project.getSelectable()
+      expect(added[prj.url].index).to.be.equal(prj.urlIndex)
+      expect(added[prj.url][prj.id].text).to.be.equal(prj.text)
+      expect(added[prj.url][prj.id].show).to.be.equal(prj.show)
+      expect(added[prj.url][prj.id].queryId).to.be.equal(prj.queryId)
+      expect(selectable[0].text).to.be.equal(prj.text)
+      expect(selectable[0].show).to.be.equal(prj.show)
+      expect(selectable[0].queryId).to.be.equal(prj.queryId)
 
     it 'add 2 projects on same redmine server', () ->
       expect(Project.get()).to.be.empty

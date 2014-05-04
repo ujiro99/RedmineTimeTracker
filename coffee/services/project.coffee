@@ -120,47 +120,56 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
     setParam: (url, id, params) ->
       # set param
       if not url? or not url? or not id? then return
-      for k, v of params
-        _projects[url][id][k] = v
+      target = _projects[url][id]
+      for k, v of params then target[k] = v
+
       # update selectable
-      for p, i in _selectableProjects when p.equals {url: url, id: id}
-        if _projects[url][id].show isnt SHOW.NOT
-          for k, v of params then p[k] = v
-        else
-          _selectableProjects.splice(i, 1)
-        break
+      isSelectable = target.show isnt SHOW.NOT
+      found = _selectableProjects.find((p) -> p.equals {url: url, id: id})
+      if found and isSelectable
+        for k, v of params then found[k] = v
+      else if found and not isSelectable
+        _selectableProjects.remove((p) -> p.equals {url: url, id: id})
+      else if not found and isSelectable
+        prj = new ProjectModel(url,
+                               target.index,
+                               id,
+                               target.text,
+                               target.show,
+                               target.queryId)
+        _selectableProjects.push prj
       _setLocal()
 
 
     ###
      add a project. all projects are unique.
     ###
-    add: (project) ->
-      prj = new ProjectModel(project.url,
-                             project.urlIndex,
-                             project.id,
-                             project.text,
-                             project.show,
-                             project.queryId)
-
+    add: (prj) ->
       # initialize if not exists
       _projects[prj.url] = _projects[prj.url] or {}
-      _projects[prj.url][prj.id] = _projects[prj.url][prj.id] or {}
+      target = _projects[prj.url][prj.id] = _projects[prj.url][prj.id] or {}
+
+      # set params
       if _projects[prj.url].index >= 0
         prj.urlIndex = _projects[prj.url].index
       else
         prj.urlIndex = Object.keys(_projects).length - 1
-      _projects[prj.url]['index'] = prj.urlIndex
-      _projects[prj.url][prj.id] =
-        text: prj.text
-        show: _projects[prj.url][prj.id].show or prj.show
-        queryId: prj.queryId
+      _projects[prj.url].index = prj.urlIndex
+      target.text    = prj.text or target.text
+      target.show    = if prj.show? then prj.show else target.show
+      target.queryId = if prj.queryId? then prj.queryId else target.queryId
 
       # update selectable
       for p, i in _selectableProjects when p.equals prj
         _selectableProjects.splice i, 1
         break
-      if _projects[prj.url][prj.id].show isnt SHOW.NOT
+      if target.show isnt SHOW.NOT
+        prj = new ProjectModel(prj.url,
+                               prj.urlIndex,
+                               prj.id,
+                               target.text,
+                               target.show,
+                               target.queryId)
         _selectableProjects.push prj
       _setLocal()
 
