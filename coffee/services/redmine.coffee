@@ -211,10 +211,8 @@ class Redmine
           data.projects = for prj in data.projects
             newPrj =
               url: @auth.url,
-              urlIndex: prj.urlIndex,  # undefined
               id: prj.id,
               text: prj.name,
-              show: Redmine.SHOW.NOT
             @Project.add(newPrj)
             @Project.new(newPrj)
         success?(data, status, headers, config))
