@@ -19,12 +19,19 @@ timeTracker.factory "QueryEditState", ($window, Project, Redmine, Message, Resou
 
 
     ###
-     filter issues by searchField.text.
+     filter issues by searchField.text and item.project_id.
     ###
     listFilter: (item) =>
-      if @$scope.searchField.text.isBlank() then return true
-      return (item.id + "").contains(@$scope.searchField.text) or
-             item.name.toLowerCase().contains(@$scope.searchField.text.toLowerCase())
+      if @$scope.searchField.text.isBlank()
+        matchText = true
+      else
+        matchText = (item.id + "").contains(@$scope.searchField.text) or
+          item.name.toLowerCase().contains(@$scope.searchField.text.toLowerCase())
+      if item.project_id?
+        matchProject = item.project_id is @$scope.selected[0].id
+      else
+        matchProject = true
+      return matchText and matchProject
 
 
     ###
