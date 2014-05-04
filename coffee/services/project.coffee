@@ -106,15 +106,10 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
         _projects[url] = params
         urlIndex = params.index
         for k, v of params
-          if k isnt 'index'
-            id = k - 0
-            _projects[url][id] = {}
-            _projects[url][id].text = v.text
-            _projects[url][id].show = v.show
-            _projects[url][id].queryId = v.queryId
-            prj = new ProjectModel(url, urlIndex, id, v.text, v.show, v.queryId)
-            if prj.show isnt SHOW.NOT
-              _selectableProjects.push prj
+          if k is 'index' then continue
+          if v.show isnt SHOW.NOT
+            prj = new ProjectModel(url, urlIndex, k - 0, v.text, v.show, v.queryId)
+            _selectableProjects.push prj
       _setLocal()
 
 
