@@ -1,5 +1,7 @@
 timeTracker.factory "QueryEditState", ($window, Project, Redmine, Message, Resource) ->
 
+  STATUS_CANCEL = 0
+
   ###
    controller for issue edit mode.
   ###
@@ -13,9 +15,12 @@ timeTracker.factory "QueryEditState", ($window, Project, Redmine, Message, Resou
     onClickItem: (item) ->
       if @$scope.selected[0].queryId is item.id
         queryId = undefined
+        queryName = 'All'
       else
         queryId = item.id
+        queryName = item.name
       Project.setParam @$scope.selected[0].url, @$scope.selected[0].id, { queryId: queryId }
+      Message.toast Resource.string("msgSetQuery").format(queryName, @$scope.selected[0].text)
 
 
     ###
@@ -70,8 +75,8 @@ timeTracker.factory "QueryEditState", ($window, Project, Redmine, Message, Resou
 
 
     loadError: (data, status) =>
-      if status is 0 then return
-      Message.toast Resource.string("msgLoadIssueFail")
+      if status is STATUS_CANCEL then return
+      Message.toast Resource.string("msgLoadQueryFail")
 
 
   return QueryEditState

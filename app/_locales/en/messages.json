@@ -75,6 +75,11 @@
   },
   "msgLoadProjectFail": {
     "message": "Load failed."
+  },
+  "msgSetQuery": {
+    "message": "{0} will be used in {1}."
+  },
+  "msgLoadQueryFail": {
+    "message": "Failed to load custom queries."
   }
 }
-

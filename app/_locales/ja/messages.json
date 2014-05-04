@@ -74,7 +74,13 @@
     "message": "{0} を読み込みました。"
   },
   "msgLoadProjectFail": {
-    "message": "読み込みに失敗しました。"
+    "message": "プロジェクトの読み込みに失敗しました。"
+  },
+  "msgSetQuery": {
+    "message": "{0} がプロジェクト {1} で使用されます."
+  },
+  "msgLoadQueryFail": {
+    "message": "カスタムクエリの読み込みに失敗しました。"
   }
 }
 
