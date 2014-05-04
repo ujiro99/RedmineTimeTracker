@@ -29,6 +29,7 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
       params =
         page: page
         limit: @$scope.itemsPerPage
+        query_id: @$scope.selectedProject[0].queryId
       Redmine.get(account).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
 
 

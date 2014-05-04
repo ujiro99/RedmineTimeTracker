@@ -1,4 +1,4 @@
-timeTracker.factory "QueryEditState", ($window, Redmine, Message, Resource) ->
+timeTracker.factory "QueryEditState", ($window, Project, Redmine, Message, Resource) ->
 
   ###
    controller for issue edit mode.
@@ -11,7 +11,11 @@ timeTracker.factory "QueryEditState", ($window, Redmine, Message, Resource) ->
      on user selected item.
     ###
     onClickItem: (item) ->
-      @$scope.selected[0].queryId = item.id
+      if @$scope.selected[0].queryId is item.id
+        queryId = undefined
+      else
+        queryId = item.id
+      Project.setParam @$scope.selected[0].url, @$scope.selected[0].id, { queryId: queryId }
 
 
     ###
