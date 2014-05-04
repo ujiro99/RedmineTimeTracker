@@ -277,6 +277,12 @@ describe 'project.coffee', ->
       # after setParam
       expect(prj.show).to.be.equal(SHOW.SHOW)  # changed
       expect(selectable.length).to.be.equal(1) # changed
+      expect(selectable[0].url).to.be.equal(prj1[0].url)
+      expect(selectable[0].urlIndex).to.be.equal(prj1[0].urlIndex)
+      expect(selectable[0].id).to.be.equal(prj1[0].id)
+      expect(selectable[0].text).to.be.equal(prj1[0].text)
+      expect(selectable[0].show).to.be.equal(SHOW.SHOW)
+      expect(selectable[0].queryId).to.be.equal(prj1[0].queryId)
 
     it 'should remove project from selectable when set SHOW.NOT.', () ->
       expect(Project.get()).to.be.empty
@@ -310,7 +316,7 @@ describe 'project.coffee', ->
       expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
       expect(added[prj1[0].url][prj1[0].id].show).to.be.equal(prj1[0].show)
 
-    it 'update a project', () ->
+    it 'update a project, doesn\'t change references.', () ->
       expect(Project.get()).to.be.empty
 
       # create test data
@@ -322,21 +328,18 @@ describe 'project.coffee', ->
         show: SHOW.SHOW
         queryId: 1
 
-      # execute
       Project.add(prj1[0])
+      added = Project.get()[updated.url][updated.id]
+      selectable = Project.getSelectable()[0]
+
+      # execute
       Project.add(updated)
 
       # assert
-      added = Project.get()
-      selectable = Project.getSelectable()
-      expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
-      expect(added[prj1[0].url][prj1[0].id].text).to.not.be.equal(prj1[0].text)
-      expect(added[prj1[0].url][prj1[0].id].show).to.not.be.equal(prj1[0].show)
-      expect(added[updated.url].index).to.be.equal(updated.urlIndex)
-      expect(added[updated.url][updated.id].text).to.be.equal(updated.text)
-      expect(added[updated.url][updated.id].show).to.be.equal(updated.show)
-      expect(selectable[0].show).to.be.equal(updated.show)
-      expect(selectable[0].queryId).to.be.equal(updated.queryId)
+      expect(added.text).to.be.equal(updated.text)
+      expect(added.show).to.be.equal(updated.show)
+      expect(selectable.show).to.be.equal(updated.show)
+      expect(selectable.queryId).to.be.equal(updated.queryId)
 
     it 'doesn\'t update param if undefined', () ->
       expect(Project.get()).to.be.empty

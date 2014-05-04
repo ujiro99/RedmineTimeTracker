@@ -132,7 +132,7 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
         _selectableProjects.remove((p) -> p.equals {url: url, id: id})
       else if not found and isSelectable
         prj = new ProjectModel(url,
-                               target.index,
+                               _projects[url].index,
                                id,
                                target.text,
                                target.show,
@@ -142,7 +142,9 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
 
 
     ###
-     add a project. all projects are unique.
+     add a project.
+     - all projects are unique.
+     - doesnt't chagne references.
     ###
     add: (prj) ->
       # initialize if not exists
@@ -160,10 +162,13 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
       target.queryId = if prj.queryId? then prj.queryId else target.queryId
 
       # update selectable
-      for p, i in _selectableProjects when p.equals prj
-        _selectableProjects.splice i, 1
-        break
-      if target.show isnt SHOW.NOT
+      isSelectable = target.show isnt SHOW.NOT
+      found = _selectableProjects.find((p) -> p.equals prj)
+      if found and isSelectable
+        for k, v of target then found[k] = v
+      else if found and not isSelectable
+        _selectableProjects.remove((p) -> p.equals prj)
+      else if not found and isSelectable
         prj = new ProjectModel(prj.url,
                                prj.urlIndex,
                                prj.id,
