@@ -133,6 +133,40 @@ html, body
         text-align: center
         vertical-align: middle
 
+  .headroom
+    transition: all ease 0.2s
+    background-color: rgba(255, 255, 255, .95)
+    box-shadow: 0 0 1px rgba(0, 0, 0, .2)
+    height: 25px
+    position: fixed
+    z-index: 10
+    right: 0
+    left: 0
+    top: 0
+
+    ul
+      padding: 0 10px
+      margin: 0
+      height 100%
+      display: flex
+      justify-content: space-around
+      align-items: center
+
+    li
+      list-style: none
+
+    .btn
+      padding: 0
+      color: #bbb
+      &:hover
+        color: color_key
+
+  .headroom--unpinned
+    -webkit-transform: translateY(-100%)
+
+  .headroom--pinned
+    -webkit-transform: translateY(0)
+
 
 .frame
   margin: 0 10px

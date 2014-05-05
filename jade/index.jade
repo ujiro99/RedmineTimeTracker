@@ -17,6 +17,33 @@ html(ng-app='timeTracker', ng-csp="")
   body(ng-controller='MainCtrl')
 
     .wrap
+     headroom(frame='.wrap')
+       ul
+         li
+           button.btn(ng-click="scroll('timer')")
+             div.icon
+               span.icon-clock
+         li
+           button.btn(ng-click="scroll('issue')")
+             div.icon
+               span.icon-docs
+         li
+           button.btn(ng-click="scroll('query')")
+             div.icon
+               span.icon-puzzle
+         li
+           button.btn(ng-click="scroll('project')")
+             div.icon
+               span.icon-folder-alt
+         li
+           button.btn(ng-click="scroll('accounts')")
+             div.icon
+               span.icon-users
+         li
+           button.btn(ng-click="scroll('options')")
+             div.icon
+               span.icon-settings
+
       .frame
         section(ng-include="'timer.html'")
         section(ng-include="'issue.html'")
@@ -39,6 +66,8 @@ html(ng-app='timeTracker', ng-csp="")
       script(src='/scripts/lib/ladda.min.js')
       script(src='/scripts/lib/google-analytics-bundle.js')
       script(src='/scripts/lib/sugar.min.js')
+      script(src='/scripts/lib/angular.headroom.js')
+      script(src='/scripts/lib/headroom.js')
 
       if production
         script(src='/scripts/script.min.js')
