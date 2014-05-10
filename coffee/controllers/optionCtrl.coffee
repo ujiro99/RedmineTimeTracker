@@ -1,19 +1,9 @@
 timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project, Account, Option, Analytics, State, Resource) ->
 
-  DEFAULT_OPTION = { reportUsage: true }
+  DEFAULT_OPTION = { reportUsage: true , showNavigation: true }
   $scope.options = {}
   $scope.state = State
   $scope.isSetting = false
-
-
-  ###
-   restore option, and start watching options.
-  ###
-  Option.getOptions (options) ->
-    $scope.options = options or DEFAULT_OPTION
-    Analytics.setPermission $scope.options.reportUsage
-    # start watch changing.
-    $scope.$watch 'options', watchOptions, true
 
 
   ###
@@ -29,6 +19,16 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project
         else
           Message.toast Resource.string("msgOptionSaveFailed")
     , 500
+
+
+  ###
+   restore option, and start watching options.
+  ###
+  Option.getOptions (options) ->
+    $scope.options = options or DEFAULT_OPTION
+    Analytics.setPermission $scope.options.reportUsage
+    # start watch changing.
+    $scope.$watch 'options', watchOptions, true
 
 
   ###

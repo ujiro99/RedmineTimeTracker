@@ -3,6 +3,8 @@ timeTracker.factory("Option", (Chrome) ->
   OPTIONS = "OPTIONS"
   NULLFUNC = () ->
 
+  _options = null
+
   return {
 
     ###
@@ -10,11 +12,14 @@ timeTracker.factory("Option", (Chrome) ->
     ###
     getOptions: (callback) ->
       callback = callback or NULLFUNC
+      if _options isnt null then callback _options; return
+
       Chrome.storage.sync.get OPTIONS, (item) ->
         if Chrome.runtime.lastError? or not item[OPTIONS]?
           callback null
         else
-          callback item[OPTIONS]
+          _options = item[OPTIONS]
+          callback _options
 
 
     ###
@@ -22,6 +27,7 @@ timeTracker.factory("Option", (Chrome) ->
     ###
     setOptions: (options, callback) ->
       callback = callback or NULLFUNC
+      _options = options
       Chrome.storage.sync.set OPTIONS: options, () ->
         if Chrome.runtime.lastError?
           callback false

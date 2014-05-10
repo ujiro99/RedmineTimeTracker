@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, Message, Analytics, Chrome, Resource) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, Message, Analytics, Chrome, Resource, Option) ->
 
   DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
@@ -13,6 +13,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     if not tickets?
       return
     updateIssues()
+
+
+  Option.getOptions (options) ->
+    $scope.options = options
 
 
   ###
