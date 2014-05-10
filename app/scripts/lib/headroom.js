@@ -57,6 +57,15 @@
     }
   };
   /**
+   * Check if object is part of the DOM
+   * @constructor
+   * @param {Object} obj element to check
+   */
+  function isDOMElement(obj) {
+    return obj && typeof window !== 'undefined' && (obj === window || obj.nodeType);
+  }
+  
+  /**
    * Helper function for extending objects
    */
   function extend (object /*, objectN ... */) {
@@ -72,7 +81,8 @@
       var replacement = arguments[i] || {};
   
       for (key in replacement) {
-        if(typeof result[key] === 'object') {
+        // Recurse into object except if the object is a DOM element
+        if(typeof result[key] === 'object' && ! isDOMElement(result[key])) {
           result[key] = extend(result[key], replacement[key]);
         }
         else {
@@ -92,7 +102,7 @@
    * @param {DOMElement} elem the header element
    * @param {Object} options options for the widget
    */
-  function Headroom (elem, options, frame) {
+  function Headroom (elem, options) {
     options = extend(options, Headroom.options);
   
     this.lastKnownScrollY = 0;
@@ -101,12 +111,12 @@
     this.tolerance        = options.tolerance;
     this.classes          = options.classes;
     this.offset           = options.offset;
+    this.scroller         = options.scroller;
     this.initialised      = false;
     this.onPin            = options.onPin;
     this.onUnpin          = options.onUnpin;
     this.onTop            = options.onTop;
     this.onNotTop         = options.onNotTop;
-    this.frame            = frame || window;
   }
   Headroom.prototype = {
     constructor : Headroom,
@@ -135,7 +145,7 @@
       var classes = this.classes;
   
       this.initialised = false;
-      this.frame.removeEventListener('scroll', this.debouncer, false);
+      this.scroller.removeEventListener('scroll', this.debouncer, false);
       this.elem.classList.remove(classes.unpinned, classes.pinned, classes.top, classes.initial);
     },
   
@@ -147,7 +157,7 @@
       if(!this.initialised){
         this.lastKnownScrollY = this.getScrollY();
         this.initialised = true;
-        this.frame.addEventListener('scroll', this.debouncer, false);
+        this.scroller.addEventListener('scroll', this.debouncer, false);
   
         this.debouncer.handleEvent();
       }
@@ -215,7 +225,11 @@
      * @return {Number} pixels the page has scrolled along the Y-axis
      */
     getScrollY : function() {
-      return (this.frame || document.documentElement || document.body.parentNode || document.body).scrollTop;
+      return (this.scroller.pageYOffset !== undefined)
+        ? this.scroller.pageYOffset
+        : (this.scroller.scrollTop !== undefined)
+          ? this.scroller.scrollTop
+          : (document.documentElement || document.body.parentNode || document.body).scrollTop;
     },
   
     /**
@@ -224,7 +238,7 @@
      * @return {int} the height of the viewport in pixels
      */
     getViewportHeight : function () {
-      return this.frame.clientHeight
+      return window.innerHeight
         || document.documentElement.clientHeight
         || document.body.clientHeight;
     },
@@ -237,12 +251,35 @@
     getDocumentHeight : function () {
       var body = document.body,
         documentElement = document.documentElement;
-  
+    
       return Math.max(
-          body.scrollHeight, documentElement.scrollHeight,
-          body.offsetHeight, documentElement.offsetHeight,
-          body.clientHeight, documentElement.clientHeight
+        body.scrollHeight, documentElement.scrollHeight,
+        body.offsetHeight, documentElement.offsetHeight,
+        body.clientHeight, documentElement.clientHeight
       );
+    },
+  
+    /**
+     * Gets the height of the DOM element
+     * @param  {Object}  elm the element to calculate the height of which
+     * @return {int}     the height of the element in pixels
+     */
+    getElementHeight : function (elm) {
+      return Math.max(
+        elm.scrollHeight,
+        elm.offsetHeight,
+        elm.clientHeight
+      );
+    },
+  
+    /**
+     * Gets the height of the scroller element
+     * @return {int} the height of the scroller element in pixels
+     */
+    getScrollerHeight : function () {
+      return (this.scroller === window || this.scroller === document.body)
+        ? this.getDocumentHeight()
+        : this.getElementHeight(this.scroller);
     },
   
     /**
@@ -252,8 +289,7 @@
      */
     isOutOfBounds : function (currentScrollY) {
       var pastTop  = currentScrollY < 0,
-        // pastBottom = currentScrollY + this.getViewportHeight() > this.getDocumentHeight();
-        pastBottom = false;
+        pastBottom = currentScrollY + this.getViewportHeight() > this.getScrollerHeight();
       
       return pastTop || pastBottom;
     },
@@ -300,7 +336,6 @@
       var currentScrollY  = this.getScrollY(),
         toleranceExceeded = this.toleranceExceeded(currentScrollY);
   
-      // can not get document height in chrome app...
       if(this.isOutOfBounds(currentScrollY)) { // Ignore bouncy scrolling in OSX
         return;
       }
@@ -312,10 +347,10 @@
       }
   
       if(this.shouldUnpin(currentScrollY, toleranceExceeded)) {
-        this.pin();
+        this.unpin();
       }
       else if(this.shouldPin(currentScrollY, toleranceExceeded)) {
-        this.unpin();
+        this.pin();
       }
   
       this.lastKnownScrollY = currentScrollY;
@@ -328,6 +363,7 @@
   Headroom.options = {
     tolerance : 0,
     offset: 0,
+    scroller: window,
     classes : {
       pinned : 'headroom--pinned',
       unpinned : 'headroom--unpinned',
