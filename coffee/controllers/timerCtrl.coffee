@@ -7,9 +7,10 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.state = State
   $scope.projects = {}
   $scope.selectedActivity = []
-  $scope.comment = { text: "" }
-  $scope.commentMaxLength = COMMENT_MAX
-  $scope.commentRemain = COMMENT_MAX
+  $scope.comment =
+    text: ""
+    MaxLength: COMMENT_MAX
+    remain: COMMENT_MAX
   $scope.mode = "auto"
   $scope.time = { min: 0 }
   $scope.tickets = []
@@ -102,6 +103,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.clickSubmitButton = () ->
     if not $scope.selectedTicket[0] then return
     if State.isTracking
+      if $scope.comment.remain < 0
+        Message.toast Resource.string("msgCommentTooLong")
+        return
       State.isTracking = false
       $scope.$broadcast 'timer-stop'
     else
@@ -113,6 +117,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    on clicked manual post button, send time entry.
   ###
   $scope.clickManual = () ->
+    if $scope.comment.remain < 0
+      Message.toast Resource.string("msgCommentTooLong")
+      return
     postEntry($scope.time.min)
 
 

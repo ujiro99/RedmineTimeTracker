@@ -81,6 +81,9 @@
   },
   "msgLoadQueryFail": {
     "message": "カスタムクエリの読み込みに失敗しました。"
+  },
+  "msgCommentTooLong": {
+    "message": "コメント は255文字以内で入力してください。"
   }
 }
 

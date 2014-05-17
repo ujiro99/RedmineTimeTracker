@@ -75,6 +75,9 @@
   },
   "msgLoadProjectFail": {
     "message": "Ładowanie nie powiodło się."
+  },
+  "msgCommentTooLong": {
+    "message": "Komentarz jest za długie (maksymalnie 255 znaków)"
   }
 }
 

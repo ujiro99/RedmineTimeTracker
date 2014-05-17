@@ -33,9 +33,8 @@ div.form-inline
 div.comment
   textarea.form-control(name='comment',
                         rows='2',
-                        ng-model='comment.text',
-                        ng-maxlength='commentMaxLength',
                         placeholder='comments...',
-                        ng-change='commentRemain = commentMaxLength - comment.length')
+                        ng-model='comment.text',
+                        ng-change='comment.remain = comment.MaxLength - comment.text.length')
   div
-    span.label.label-danger(ng-show="commentRemain < 0") {{commentRemain}}
+    span.label.label-danger(ng-show="comment.remain < 0") {{comment.remain}}

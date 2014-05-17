@@ -81,5 +81,8 @@
   },
   "msgLoadQueryFail": {
     "message": "Failed to load custom queries."
+  },
+  "msgCommentTooLong": {
+    "message": "Comment is too long (maximum is 255 characters)"
   }
 }
