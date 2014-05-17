@@ -1,5 +1,8 @@
 module.exports = (grunt) ->
 
+  # Load plugins automatically
+  require("load-grunt-tasks") grunt
+
   # set variables
   config =
     app: 'app',
@@ -184,15 +187,6 @@ module.exports = (grunt) ->
         dest: '<%= config.dist %>'
 
 
-  # plugins
-  grunt.loadNpmTasks 'grunt-este-watch'
-  grunt.loadNpmTasks 'grunt-chrome-manifest'
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-contrib-jade'
-  grunt.loadNpmTasks 'grunt-contrib-stylus'
-  grunt.loadNpmTasks 'grunt-contrib-uglify'
-  grunt.loadNpmTasks 'grunt-ngmin'
-  grunt.loadNpmTasks 'grunt-bower-task'
 
 
   # tasks
