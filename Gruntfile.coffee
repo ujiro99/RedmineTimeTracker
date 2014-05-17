@@ -149,20 +149,11 @@ module.exports = (grunt) ->
         verbose: true
         cleanTargetDir: false
         cleanBowerDir: false
-      dev:
-        options:
-          layout: (type, component) ->
-            if type is 'css'
-              return config.app + '/css/lib'
-            else
-              return config.app + '/scripts/lib'
-      production:
-        options:
-          layout: (type, component) ->
-            if type is 'css'
-              return config.dist + '/css/lib'
-            else
-              return config.dist + '/scripts/lib'
+        layout: (type, component) ->
+          if type is 'css'
+            return config.app + '/css/lib'
+          else
+            return config.app + '/scripts/lib'
 
     ngmin:
       production:
@@ -186,7 +177,45 @@ module.exports = (grunt) ->
         src: '<%= config.app %>'
         dest: '<%= config.dist %>'
 
+    # Empties folders to start fresh
+    clean:
+      dist:
+        files: [
+          dot: true
+          src: ["<%= config.dist %>/*"]
+        ]
 
+    # Copies remaining files to places other tasks can use
+    copy:
+      dist:
+        files: [
+          expand: true
+          dot: true
+          cwd: "<%= config.app %>"
+          dest: "<%= config.dist %>"
+          src: [
+            "_locales/{,*/}*.json"
+            "css/lib/*.css"
+            "fonts/*.*"
+            "images/*.png"
+            "scripts/lib/*.js"
+            "scripts/eventPage.js"
+            "views/template/**/*.html"
+          ]
+        ]
+
+    # Compress files in dist to make Chromea Apps package
+    compress:
+      dist:
+        options:
+          archive: "package/chrome-<%= config.manifest.version %>.zip"
+
+        files: [
+          expand: true
+          cwd: "dist/"
+          src: ["**"]
+          dest: ""
+        ]
 
 
   # tasks
@@ -194,16 +223,20 @@ module.exports = (grunt) ->
   grunt.registerTask 'minify', ['ngmin', 'uglify']
 
   grunt.registerTask 'dev', [
-    'bower:dev',
+    'bower',
     'coffee:develop',
     'jade:develop',
     'stylus:develop']
 
   grunt.registerTask 'production', [
-    'bower:production',
+    'clean',
+    'bower',
+    'copy:dist',
     'chromeManifest:dist',
     'coffee:production',
     'jade:production',
     'stylus:production',
-    'minify']
+    'minify',
+    'compress'
+  ]
 
