@@ -172,7 +172,7 @@ module.exports = (grunt) ->
     uglify:
       production:
         src: '<%= config.dist %>/scripts/script.js'
-        dest: '<%= config.dist %>/scripts/script.min.js'
+        dest: '<%= config.dist %>/scripts/script.js'
 
     chromeManifest:
       dist:
