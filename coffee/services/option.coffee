@@ -1,5 +1,6 @@
 timeTracker.factory("Option", (Chrome) ->
 
+  DEFAULT_OPTION = { reportUsage: true , showNavigation: true }
   OPTIONS = "OPTIONS"
   NULLFUNC = () ->
 
@@ -15,10 +16,10 @@ timeTracker.factory("Option", (Chrome) ->
       if _options isnt null then callback _options; return
 
       Chrome.storage.sync.get OPTIONS, (item) ->
-        if Chrome.runtime.lastError? or not item[OPTIONS]?
+        if Chrome.runtime.lastError?
           callback null
         else
-          _options = item[OPTIONS]
+          _options = item[OPTIONS] or DEFAULT_OPTION
           callback _options
 
 
