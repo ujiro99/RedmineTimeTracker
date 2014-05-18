@@ -5,27 +5,27 @@ headroom(scroller=".wrap",
          offset-top="20",
          offset-bottom="91")
   ul
-    li(spy="timer")
+    li(spy="timer", ga-click='scroll_timer')
       button.btn
         div.icon
           span.icon-clock
-    li(spy="issue")
+    li(spy="issue", ga-click='scroll_issue')
       button.btn
         div.icon
           span.icon-speech
-    li(spy="query")
+    li(spy="query", ga-click='scroll_query')
       button.btn
         div.icon
           span.icon-equalizer
-    li(spy="project")
+    li(spy="project", ga-click='scroll_project')
       button.btn
         div.icon
           span.icon-folder-alt
-    li(spy="accounts")
+    li(spy="accounts", ga-click='scroll_accounts')
       button.btn
         div.icon
           span.icon-users
-    li(spy="options")
+    li(spy="options", ga-click='scroll_options')
       button.btn
         div.icon
           span.icon-settings
