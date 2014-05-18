@@ -168,7 +168,7 @@ module.exports = (grunt) ->
     chromeManifest:
       dist:
         options:
-          buildnumber: true
+          buildnumber: false
           background:
             target: 'scripts/eventPage.js'
             exclude: [
