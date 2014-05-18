@@ -84,14 +84,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     , 2500
 
 
-  ###
-   scroll to positon.
-  ###
-  $scope.scroll = (position) ->
-    $location.hash(position)
-    $anchorScroll()
-
-
   alarmInfo =
     when: Date.now() + 1
     periodInMinutes: MINUTE_5

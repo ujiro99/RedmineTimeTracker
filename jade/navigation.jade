@@ -1,27 +1,32 @@
-headroom(scroller=".wrap", reverse="true")
+headroom(scroller=".wrap",
+         reverse="true",
+         scroll-spy,
+         scroll-doc=".frame",
+         offset-top="20",
+         offset-bottom="91")
   ul
-    li
-      button.btn(ng-click="scroll('timer')")
+    li(spy="timer")
+      button.btn
         div.icon
           span.icon-clock
-    li
-      button.btn(ng-click="scroll('issue')")
+    li(spy="issue")
+      button.btn
         div.icon
           span.icon-speech
-    li
-      button.btn(ng-click="scroll('query')")
+    li(spy="query")
+      button.btn
         div.icon
           span.icon-equalizer
-    li
-      button.btn(ng-click="scroll('project')")
+    li(spy="project")
+      button.btn
         div.icon
           span.icon-folder-alt
-    li
-      button.btn(ng-click="scroll('accounts')")
+    li(spy="accounts")
+      button.btn
         div.icon
           span.icon-users
-    li
-      button.btn(ng-click="scroll('options')")
+    li(spy="options")
+      button.btn
         div.icon
           span.icon-settings
 
