@@ -143,17 +143,18 @@ module.exports = (grunt) ->
         ]
 
     bower:
-      options:
-        targetDir: './'
-        install: true
-        verbose: true
-        cleanTargetDir: false
-        cleanBowerDir: false
-        layout: (type, component) ->
-          if type is 'css'
-            return config.app + '/css/lib'
-          else
-            return config.app + '/scripts/lib'
+      install:
+        options:
+          targetDir: './'
+          install: true
+          verbose: true
+          cleanTargetDir: false
+          cleanBowerDir: false
+          layout: (type, component) ->
+            if type is 'css'
+              return config.app + '/css/lib'
+            else
+              return config.app + '/scripts/lib'
 
     ngmin:
       production:
@@ -223,14 +224,14 @@ module.exports = (grunt) ->
   grunt.registerTask 'minify', ['ngmin', 'uglify']
 
   grunt.registerTask 'dev', [
-    'bower',
+    'bower:install',
     'coffee:develop',
     'jade:develop',
     'stylus:develop']
 
   grunt.registerTask 'production', [
     'clean',
-    'bower',
+    'bower:install',
     'copy:dist',
     'chromeManifest:dist',
     'coffee:production',
