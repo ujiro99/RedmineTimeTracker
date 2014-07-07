@@ -194,6 +194,29 @@ class Redmine
 
 
   ###
+   laod time entry. uses promise.
+  ###
+  loadTimeEntries: (params) ->
+    deferred = @$q.defer()
+
+    params = params or {}
+    params.limit = params.limit or 50
+    config =
+      method: "GET"
+      url: @auth.url + "/time_entries.json"
+      params: params
+    config = @setBasicConfig config, @auth
+    @$http(config)
+      .success((args...) =>
+        args[0].url = @auth.url
+        deferred.resolve(args[0]))
+      .error((args...) -> deferred.reject(args[0]))
+
+    return Redmine.extends(deferred.promise)
+
+
+
+  ###
    Load projects on url
   ###
   loadProjects: (success, error, params) ->
