@@ -90,7 +90,7 @@ class Redmine
     config.headers = "Content-Type": Redmine.CONTENT_TYPE
     config.timeout = config.timeout or Redmine.AJAX_TIME_OUT
     if auth.apiKey? and auth.apiKey.length > 0
-      config.headers["X-Redmine-API-Key"] = auth.apiKey
+      @$http.defaults.headers.common["X-Redmine-API-Key"] = auth.apiKey
     else
       @$http.defaults.headers.common['Authorization'] = 'Basic ' + @Base64.encode(auth.id + ':' + auth.pass)
     return config
