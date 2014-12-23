@@ -18,6 +18,7 @@
     "grunt-contrib-uglify": "~0.2.7",
     "grunt-contrib-yuidoc": "~0.5.0",
     "grunt-este-watch": "^0.1.16",
+    "grunt-exec": "^0.4.6",
     "grunt-ngmin": "0.0.3",
     "load-grunt-tasks": "^0.4.0",
     "mocha": "~1.14.0",

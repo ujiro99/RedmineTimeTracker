@@ -218,10 +218,14 @@ module.exports = (grunt) ->
           dest: ""
         ]
 
+    # Excec test.
+    exec:
+      test: "open ./test/test.html"
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
   grunt.registerTask 'minify', ['ngmin', 'uglify']
+  grunt.registerTask 'test', ['exec:test']
 
   grunt.registerTask 'dev', [
     'bower:install',
@@ -240,4 +244,3 @@ module.exports = (grunt) ->
     'minify',
     'compress'
   ]
-
