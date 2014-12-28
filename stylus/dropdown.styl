@@ -1,5 +1,8 @@
+@import "icon.css"
+
 height = 28
-key_color = #f7505a
+hover_color = #f7505a
+selected_color = #f7505a
 
 .dropdown
   position: relative
@@ -19,8 +22,8 @@ key_color = #f7505a
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
   border-radius: .3125em!important
   &:after
-    content: '\f107'
-    font-family: 'FontAwesome'
+    content: '\e800'
+    font-family: 'icon'
     font-size: 1.3em
     opacity: .4
     position: absolute
@@ -60,7 +63,6 @@ key_color = #f7505a
   width: 100%
 
 .dropdown-toggle
-  font-size: 0
   z-index: 1
   cursor: pointer
   position: absolute
@@ -69,7 +71,6 @@ key_color = #f7505a
   padding: 0
   margin: 0 0 0 1px
   background: transparent
-  text-indent: -10px
   height: height px
   width: 100%
 
@@ -96,11 +97,18 @@ key_color = #f7505a
     transition: .25s ease
     padding-right: 5px
     &:hover
-      background: key_color
+      background: hover_color
       padding-left: 5px
       a
         text-decoration: none
         color: snow
+
+  li.active
+    background: selected_color
+    padding-left: 5px
+    a
+      text-decoration: none
+      color: snow
 
   li:first-child
     padding-top: 5px
@@ -127,4 +135,3 @@ key_color = #f7505a
   opacity: 1
   visibility: visible
   top: 38px
-
