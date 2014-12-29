@@ -21,7 +21,8 @@
     "angular": "~1.2.16",
     "angular-animate": "~1.2.16",
     "bootstrap": "~3.1.1",
-    "ladda": "~0.9.3"
+    "ladda": "~0.9.3",
+    "uz-dropdown": "~0.2.0"
   },
   "exportsOverride": {
     "jquery": {
