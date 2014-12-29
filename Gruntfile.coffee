@@ -25,7 +25,7 @@ module.exports = (grunt) ->
         livereload:
           enabled: true
           port: 35729
-          extensions: ['coffee', 'stylus', 'jade', 'html']
+          extensions: ['coffee', 'styl', 'jade', 'html']
       # extension settings
       coffee: (path) ->
         grunt.config 'coffee.options.bare', true
