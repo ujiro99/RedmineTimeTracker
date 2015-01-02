@@ -162,6 +162,14 @@ module.exports = (grunt) ->
         src: '<%= config.dist %>/scripts/script.js'
         dest: '<%= config.dist %>/scripts/script.js'
 
+     cssmin:
+      minify:
+        expand: true
+        src:  '*.css'
+        cwd:  '<%= config.dist %>/css/'
+        dest: '<%= config.dist %>/css/'
+        ext:  '.min.css'
+
     chromeManifest:
       dist:
         options:
@@ -201,6 +209,14 @@ module.exports = (grunt) ->
           ]
         ]
 
+    release:
+      options:
+        file: 'package.json'
+        additionalFiles: [
+          'bower.json',
+          'app/manifest.json'
+        ]
+
     # Compress files in dist to make Chromea Apps package
     compress:
       dist:
@@ -220,7 +236,7 @@ module.exports = (grunt) ->
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
-  grunt.registerTask 'minify', ['ngmin', 'uglify']
+  grunt.registerTask 'minify', ['ngmin', 'uglify', 'cssmin']
   grunt.registerTask 'test', ['exec:test']
 
   grunt.registerTask 'dev', [
@@ -238,5 +254,6 @@ module.exports = (grunt) ->
     'jade:production',
     'stylus:production',
     'minify',
+    'release:minor',
     'compress'
   ]
