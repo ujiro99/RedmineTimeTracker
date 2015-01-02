@@ -145,16 +145,12 @@ module.exports = (grunt) ->
     bower:
       install:
         options:
-          targetDir: './'
+          targetDir: './<%= config.app %>/components'
           install: true
           verbose: true
-          cleanTargetDir: false
+          cleanTargetDir: true
           cleanBowerDir: false
-          layout: (type, component) ->
-            if type is 'css'
-              return config.app + '/css/lib'
-            else
-              return config.app + '/scripts/lib'
+          layout: 'byComponent'
 
     ngmin:
       production:

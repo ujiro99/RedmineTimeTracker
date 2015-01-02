@@ -2,6 +2,8 @@ node_modules
 bower_components
 dist
 package
+fonts
+app/components
 *.js
 *.css
 *.html
