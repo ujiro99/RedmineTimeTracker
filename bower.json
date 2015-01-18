@@ -22,7 +22,7 @@
     "angular-animate": "~1.2.16",
     "bootstrap": "~3.1.1",
     "ladda": "~0.9.3",
-    "uz-dropdown": "~0.4.5"
+    "angular-typeahead": "~0.2.1"
   },
   "exportsOverride": {
     "jquery": {
@@ -40,16 +40,14 @@
       "css": "**/bootstrap.min.css"
     },
     "ladda": {
-      "js": ["**/ladda.min.js", "**/spin.min.js" ],
+      "js": [
+        "**/ladda.min.js",
+        "**/spin.min.js"
+      ],
       "css": "**/ladda-themeless.min.css"
     },
     "spin.js": {
       "js": "spin.min.js"
-    },
-    "uz-dropdown": {
-      "js": "**/*.min.js",
-      "css": "**/*.min.css",
-      "font": "dist/font/*"
     }
   },
   "resolutions": {

@@ -13,22 +13,43 @@ div#issue(ng-controller='IssueCtrl')
 
     section
 
-      // edit list
-      div.form-group.project
-        uz-dropdown(items='projects',
-                    selected='selectedProject',
-                    format='item.text',
-                    selected-format='selected[0].text')
-
-      // search
-      div.form-group.search
-        label.sr-only Search
-        input.form-control.input-sm(type='search',
-                                    placeholder='search...',
-                                    ng-model='searchField.text')
+      // ------------------------------------
+      //              Account
+      // ------------------------------------
+      div.searchform.searchform-icon
+        input.sfTypeahead.form-control.input-sm(type="text"
+          options="inputOptions"
+          datasets="accountData"
+          ng-model="selectedAccount"
+          placeholder='Redmine server...')
         i.fa.fa-search
 
-      // issues
+      // ------------------------------------
+      //              Project
+      // ------------------------------------
+      div.searchform.searchform-icon
+        input.sfTypeahead.form-control.input-sm(type="text"
+          options="inputOptions"
+          datasets="projectData"
+          ng-model="selectedProject"
+          placeholder='Project...')
+        i.fa.fa-search
+
+      // ------------------------------------
+      //               Query
+      // ------------------------------------
+      div.searchform.searchform-icon
+        input.sfTypeahead.form-control.input-sm(type="text"
+          options="inputOptions"
+          datasets="queryData"
+          ng-model="selectedQuery"
+          placeholder='Query...')
+        i.fa.fa-search
+
+
+      // ------------------------------------
+      //            Issue List
+      // ------------------------------------
       div.issueList
         ul
           li(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',

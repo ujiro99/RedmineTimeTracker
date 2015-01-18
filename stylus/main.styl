@@ -91,20 +91,6 @@ html, body
     border-color: #e9322d
     box-shadow: 0 0 6px #f8b9b7
 
-  .search
-    margin-right -5px
-    padding-right 5px
-    position: relative
-    input
-      padding-right: 20px
-    i
-      opacity: .5
-      position: absolute
-      top: 8px
-      right: 12px
-    &:hover i
-      opacity: .7
-
   header
     height: 5em
     .caption
@@ -281,6 +267,20 @@ body.modal-open
   position: absolute
   width: 100%
 
+.searchform-icon
+  margin-right -5px
+  padding-right 5px
+  position: relative
+  input
+    padding-right: 22px
+  i
+    opacity: .5
+    position: absolute
+    top: 8px
+    right: 12px
+    padding-left: 2px
+  &:hover i
+    opacity: .7
 
 #timer
 
@@ -402,22 +402,53 @@ body.modal-open
     slideIn()
 
 
-#issue, #query, #project
+#issue
 
   .animate-height
     transition: height .32s ease
 
-  .form-group
+  .searchform
+    width: 100%
     display: inline-block
     margin-bottom: 0
+    margin-right: 5px
     vertical-align: middle
 
-  .project
-    width: 60%
-    margin-right: 5px
+    .twitter-typeahead
+      width: 100%
 
-  .search
-    width: 40%
+    .tt-input
+    .tt-hint
+      width: 100%
+      height: height_input px
+      border: 0
+      border-radius: .3125em !important
+      outline: none
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+      &:hover,
+      &:focus
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
+
+    .tt-hint
+      color: #aaa
+
+    .tt-dropdown-menu
+      width: 100%
+      margin-top: 10px
+      padding: 5px 0
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: .3125em
+      box-shadow: 0 5px 10px rgba(0,0,0,.2)
+
+    .tt-suggestion
+      padding: 0px 5px
+      height: height_input px
+      line-height: height_input px
+
+    .tt-suggestion.tt-cursor
+      color: #fff
+      background-color: color_key_weak
 
   .issueList
     ul
@@ -725,7 +756,7 @@ body.modal-open
     margin-bottom: 3px
 
   .setting-description
-    margin-left: 5px
+   margin-left: 5px
     color: #999
 
   .setting-options

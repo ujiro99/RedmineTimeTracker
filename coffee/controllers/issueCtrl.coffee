@@ -1,15 +1,26 @@
 timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, IssueEditState) ->
 
+  # list data
   $scope.accounts = []
-  $scope.issues = []
-  $scope.itemsPerPage = 25
   $scope.projects = []
-  $scope.searchField = text: ''
-  $scope.selected = []
+  $scope.queries  = []
+  $scope.issues   = []
+  # selected
+  $scope.selectedAccount = []
   $scope.selectedProject = []
+  $scope.selectedQuery   = []
+  # typeahead data
+  $scope.accountData = null
+  $scope.projectData = null
+  $scope.queryData   = null
+
   $scope.tooltipPlace = 'top'
   $scope.totalItems = 0
   $scope.state = State
+
+  # typeahead options
+  $scope.inputOptions =
+    highlight: true
 
 
   ###
@@ -18,11 +29,44 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   init = () ->
     Account.getAccounts (accounts) ->
       $scope.accounts = accounts
-    $scope.projects = Project.getSelectable()
+      $scope.selectedAccount[0] = $scope.accounts[0]
+      initializeSearchform()
     $scope.editState = new IssueEditState($scope)
 
 
   ###
+   Initialize .
+  ###
+  initializeSearchform = () ->
+    # account
+    accountsBh = new Bloodhound
+      datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.url)
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+      local: $scope.accounts
+    accountsBh.initialize()
+    $scope.accountData =
+      displayKey: 'url'
+      source: accountsBh.ttAdapter()
+    # projects
+    projectsBh = new Bloodhound
+      datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.text)
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+      local: $scope.projects
+    projectsBh.initialize()
+    $scope.projectData =
+      displayKey: 'text'
+      source: projectsBh.ttAdapter()
+    # query
+    queryBh = new Bloodhound
+      datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.name)
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+      local: $scope.queries
+    queryBh.initialize()
+    $scope.queryData =
+      displayKey: 'name'
+      source: queryBh.ttAdapter()
+
+
    remove project and issues.
   ###
   $scope.$on 'accountRemoved', (e, url) ->
