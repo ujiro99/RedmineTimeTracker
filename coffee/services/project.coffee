@@ -62,8 +62,16 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
   ###
   class ProjectModel
 
-    ###
+    ###*
      constructor.
+     @class ProjectModel
+     @constructor
+     @param url {String} Redmine server's url.
+     @param urlIndex {Number} project id's index on Chrome.storage.
+     @param id {Number} project id.
+     @param text {String} project's name.
+     @param show {Number} can this project show? (DEFAULT: 0, NOT: 1, SHOW: 2)
+     @param queryId {Number} Used query ID
     ###
     constructor: (@url, @urlIndex, @id, @text, @show, @queryId) ->
 

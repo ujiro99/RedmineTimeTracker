@@ -82,6 +82,10 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
     ###
      get all account data.
      if account was not loaded, load from chrome sync.
+     @return {Array} { url:    String,
+                       apiKey: String,
+                       id:     String,
+                       pass:   String }
     ###
     getAccounts: (callback) ->
       callback = callback or NULLFUNC
