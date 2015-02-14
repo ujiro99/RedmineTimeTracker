@@ -15,15 +15,6 @@ if not ('isBlank' in String.prototype)
 
 
 ###
- clear array.
-###
-if not ('clear' in Array.prototype)
-  Array.prototype.clear = () ->
-    while (this.length > 0) then this.pop()
-    return
-
-
-###
  format string.
 ###
 if not ('format' in String.prototype)
@@ -35,6 +26,24 @@ if not ('format' in String.prototype)
         args = arguments
         rep_fn = (m, k) ->  return args[parseInt(k)]
     return this.replace /\{(\w+)\}/g, rep_fn
+
+
+###
+ clear array.
+###
+if not ('clear' in Array.prototype)
+  Array.prototype.clear = () ->
+    while (this.length > 0) then this.pop()
+    return
+
+
+###
+ remove all elements in array, and insert new array's all element.
+###
+if not ('set' in Array.prototype)
+  Array.prototype.set = (newArray) ->
+    [].splice.apply(this, [0, this.length].concat(newArray))
+    return
 
 
 @util = {
