@@ -53,6 +53,12 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //            Issue List
       // ------------------------------------
+      div.searchform.searchform-icon
+        input.form-control.input-sm(type="text"
+          ng-model="searchField.text"
+          ng-click="searchField.text = ''"
+          placeholder='Issue...')
+        i.fa.fa-search
       div.issueList
         ul
           li(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',

@@ -5,6 +5,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.projects = []
   $scope.queries  = []
   $scope.issues   = []
+
   # selected
   $scope.selectedAccount = []
   $scope.selectedProject = []
@@ -14,6 +15,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.projectData = null
   $scope.queryData   = null
 
+  $scope.searchField = text: ''
   $scope.tooltipPlace = 'top'
   $scope.totalItems = 0
   $scope.state = State
