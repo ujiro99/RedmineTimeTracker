@@ -22,7 +22,7 @@
     "angular-animate": "~1.2.16",
     "bootstrap": "~3.1.1",
     "ladda": "~0.9.3",
-    "angular-typeahead": "~0.2.1"
+    "angular-typeahead": "git://github.com/ujiro99/angular-typeahead#use-local-typeahead.js"
   },
   "exportsOverride": {
     "jquery": {

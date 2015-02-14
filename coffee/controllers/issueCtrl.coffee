@@ -23,6 +23,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   # typeahead options
   $scope.inputOptions =
     highlight: true
+    minLength: 0
+
 
 
   ###
