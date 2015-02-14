@@ -21,6 +21,7 @@ div#issue(ng-controller='IssueCtrl')
           options="inputOptions"
           datasets="accountData"
           ng-model="selectedAccount"
+          ng-click="selectedAccount = null"
           placeholder='Redmine server...')
         i.fa.fa-search
 
@@ -32,6 +33,7 @@ div#issue(ng-controller='IssueCtrl')
           options="inputOptions"
           datasets="projectData"
           ng-model="selectedProject"
+          ng-click="selectedProject = null"
           placeholder='Project...')
         i.fa.fa-search
 
@@ -43,6 +45,7 @@ div#issue(ng-controller='IssueCtrl')
           options="inputOptions"
           datasets="queryData"
           ng-model="selectedQuery"
+          ng-click="selectedQuery = null"
           placeholder='Query...')
         i.fa.fa-search
 
