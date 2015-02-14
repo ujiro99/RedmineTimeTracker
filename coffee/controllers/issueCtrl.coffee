@@ -42,33 +42,40 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    Initialize .
   ###
   initializeSearchform = () ->
+
     # account
-    accountsBh = new Bloodhound
-      datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.url)
-      queryTokenizer: Bloodhound.tokenizers.whitespace
-      local: $scope.accounts
-    accountsBh.initialize()
     $scope.accountData =
       displayKey: 'url'
-      source: accountsBh.ttAdapter()
+      source: substringMatcher($scope.accounts, 'url')
+
     # projects
-    projectsBh = new Bloodhound
-      datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.text)
-      queryTokenizer: Bloodhound.tokenizers.whitespace
-      local: $scope.projects
-    projectsBh.initialize()
     $scope.projectData =
       displayKey: 'text'
-      source: projectsBh.ttAdapter()
+      source: substringMatcher($scope.projects, 'text')
+
     # query
-    queryBh = new Bloodhound
-      datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.name)
-      queryTokenizer: Bloodhound.tokenizers.whitespace
-      local: $scope.queries
-    queryBh.initialize()
     $scope.queryData =
       displayKey: 'name'
-      source: queryBh.ttAdapter()
+      source: substringMatcher($scope.queries, 'name')
+
+
+  substringMatcher = (objects, key) ->
+    return findMatches = (query, cb) ->
+      matches = []
+      substrRegexs = []
+      queries = []
+      for q in query.split(' ') when not q.isBlank()
+        queries.push q
+        substrRegexs.push new RegExp(q, 'i')
+
+      for obj in objects
+        isAllMatch = true
+        for r in substrRegexs
+          isAllMatch = isAllMatch and r.test(obj[key])
+
+        matches.push(obj) if isAllMatch
+
+      cb(matches, queries)
 
 
    remove project and issues.
