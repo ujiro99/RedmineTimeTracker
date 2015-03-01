@@ -26,6 +26,11 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     highlight: true
     minLength: 0
 
+  # http request canceled.
+  STATUS_CANCEL = 0
+
+  # don't use query
+  QUERY_ALL_ID = 'All'
 
 
   ###
@@ -79,6 +84,15 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       cb(matches, queries)
 
 
+  ###
+   When account added and not selected, update selected account.
+  ###
+  $scope.$on 'accountAdded', (e, account) ->
+    if not $scope.selectedAccount
+      $scope.selectedAccount = $scope.accounts[0]
+
+
+  ###
    remove project and issues.
   ###
   $scope.$on 'accountRemoved', (e, url) ->
@@ -116,6 +130,104 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   , true)
 
 
+  ###
+   on change selected Account, load projects.
+  ###
+  $scope.$watch 'selectedAccount', (newVal) ->
+    account = newVal
+    # if account is fixed, load projects from redmine.
+    if account and account.url
+      params =
+        page: 1
+        limit: 50
+      Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
+
+
+  ###
+   update projects by redmine's data.
+  ###
+  _updateProject = (data) =>
+    return if not $scope.selectedAccount
+    return if $scope.selectedAccount.url isnt data.url
+    if data.projects?
+      $scope.projects.set(data.projects)
+    else
+      loadError data
+
+
+  ###
+   show error message.
+  ###
+  _errorLoadProject = (data, status) =>
+    if status is STATUS_CANCEL then return
+    Message.toast Resource.string("msgLoadFail")
+
+
+  ###
+   on change selected Project, load issues and queries.
+  ###
+  $scope.$watch 'selectedProject', (newVal) ->
+    if not newVal
+      $scope.queries.clear()
+      return
+
+    # load issues
+    loadIssuesFirstPage()
+
+    account = $scope.selectedAccount
+    if account and account.url
+      params =
+        page: 1
+        limit: 50
+      Redmine.get(account).loadQueries(params)
+        .success(_updateQuery)
+        .error(_errorLoadQuery)
+
+
+  ###
+   update query by redmine's data.
+  ###
+  _updateQuery = (data) =>
+    return if not $scope.selectedProject
+    return if $scope.selectedProject.url isnt data.url
+    newQueries = []
+    newQueries.push {id: QUERY_ALL_ID, name: 'All'}
+    for query in data.queries
+      # filter the project-specific query
+      if query.project_id
+        if query.project_id is $scope.selectedProject.id
+          newQueries.push query
+      else
+        newQueries.push query
+    $scope.queries.set(newQueries)
+
+
+  ###
+   show error messaga.
+  ###
+  _errorLoadQuery = (data, status) =>
+    if status is STATUS_CANCEL then return
+    Message.toast Resource.string("msgLoadQueryFail")
+
+
+  ###
+   on change selected Query, set query to project, and udpate issues.
+  ###
+  $scope.$watch 'selectedQuery.id', (newVal) ->
+    if not $scope.selectedProject then return
+    if not $scope.selectedQuery then return
+
+    targetId  = $scope.selectedProject.id
+    targetUrl = $scope.selectedProject.url
+    queryId = $scope.selectedQuery.id
+    if queryId is QUERY_ALL_ID then queryId = undefined
+    $scope.selectedProject.queryId = queryId
+    Project.setParam(targetUrl, targetId, { 'queryId': queryId })
+    loadIssuesFirstPage()
+
+
+  # load issues on P.1
+  loadIssuesFirstPage = () ->
     $scope.editState.currentPage = 1
     $scope.editState.load()
 
