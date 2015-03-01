@@ -7,9 +7,10 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.issues   = []
 
   # selected
-  $scope.selectedAccount = []
-  $scope.selectedProject = []
-  $scope.selectedQuery   = []
+  $scope.selectedAccount = {}
+  $scope.selectedProject = {}
+  $scope.selectedQuery   = {}
+
   # typeahead data
   $scope.accountData = null
   $scope.projectData = null
@@ -32,8 +33,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   ###
   init = () ->
     Account.getAccounts (accounts) ->
-      $scope.accounts = accounts
-      $scope.selectedAccount[0] = $scope.accounts[0]
+      $scope.accounts.set(accounts)
+      $scope.selectedAccount = $scope.accounts[0]
       initializeSearchform()
     $scope.editState = new IssueEditState($scope)
 
@@ -81,12 +82,15 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    remove project and issues.
   ###
   $scope.$on 'accountRemoved', (e, url) ->
+    # remove a account
+    if $scope.selectedAccount?.url is url
+      $scope.selectedAccount = $scope.accounts[0]
     # remove projects
-    newPrjs = (p for p, i in $scope.projects when p.url isnt url)
-    $scope.projects.clear()
-    for p in newPrjs then $scope.projects.push p
-    if $scope.selectedProject[0]?.url is url
-      $scope.selectedProject[0] = $scope.projects[0]
+    newPrjs = (p for p in $scope.projects when p.url isnt url)
+    $scope.projects.set(newPrjs)
+    # update selected project if remoed.
+    if $scope.selectedProject?.url is url
+      $scope.selectedProject = $scope.projects[0]
 
 
   ###

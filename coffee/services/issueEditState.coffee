@@ -21,27 +21,28 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
 
     load: (page) ->
       page = @currentPage if not page?
-      if not @$scope.selectedProject[0]?
+      if not @$scope.selectedProject?
         @$scope.issues.clear()
         return
-      account = (a for a in @$scope.accounts when @$scope.selectedProject[0].url is a.url)[0]
-      projectId = @$scope.selectedProject[0].id
+      account = (a for a in @$scope.accounts when @$scope.selectedProject.url is a.url)[0]
+      if not (account and account.url) then return
+      projectId = @$scope.selectedProject.id
       params =
         page: page
         limit: @itemsPerPage
-        query_id: @$scope.selectedProject[0].queryId
+        query_id: @$scope.selectedProject.queryId
       Redmine.get(account).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
 
 
     loadSuccess: (data) =>
-      return if not @$scope.selectedProject[0]
-      return if @$scope.selectedProject[0].url isnt data.url
+      return if not @$scope.selectedProject
+      return if @$scope.selectedProject.url isnt data.url
       return if @currentPage - 1 isnt data.offset / data.limit
       @$scope.totalItems = data.total_count
       for issue in data.issues
         for t in Ticket.get() when issue.equals t
           issue.show = t.show
-      @$scope.issues = data.issues
+      @$scope.issues.set(data.issues)
 
 
     loadError: (data, status) =>
