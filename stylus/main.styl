@@ -2,7 +2,7 @@ color_key = #f7505a
 color_key_down = #e55050
 color_key_weak = rgba(247, 80, 90, 0.75)
 height_input = 28
-
+field_border_radius = .3125em
 
 clearfix()
   &:before,
@@ -11,6 +11,7 @@ clearfix()
     display: table
   &:after
     clear: both
+
 
 slideIn()
   &.ng-enter
@@ -172,6 +173,7 @@ html, body
   & > section
     padding: 0 0 25px 0
 
+
 .message
   position: fixed
   padding: 0
@@ -202,6 +204,7 @@ html, body
     font-size: 0.9em
     padding-right: 8px
 
+
 .tooltip
 
   color_tooltip = #f0f0f0
@@ -225,6 +228,49 @@ html, body
     color: #555
     text-align: left
     background-color: color_tooltip
+
+
+.searchform
+  margin-bottom: 5px
+
+.twitter-typeahead
+  width: 100%
+
+.tt-input
+.tt-hint
+  border: 0
+  border-radius: field_border_radius !important
+  outline: none
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+  &:hover,
+  &:focus
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
+  text-ellipsis()
+
+.tt-hint
+  color: #aaa
+
+.tt-dropdown-menu
+  width: 100%
+  margin-top: 10px
+  padding: 5px 0
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: field_border_radius
+  box-shadow: 0 5px 10px rgba(0,0,0,.2)
+
+.tt-suggestion
+  padding: 0px 8px
+  height: height_input px
+  line-height: height_input px
+  text-ellipsis()
+
+.tt-suggestion.tt-cursor
+  color: #fff
+  background-color: color_key_weak
+
+.tt-highlight
+  color: color_key_weak
 
 
 body.modal-open
@@ -257,13 +303,13 @@ body.modal-open
 .btn-default:hover
    background-color: #ebebeb
 
-
 .animate-switch-container
   position: relative
 
 .animate-switch
   position: absolute
   width: 100%
+
 
 .searchform-icon
   margin-right -5px
@@ -308,27 +354,20 @@ body.modal-open
     position: relative
     height: height_input px
     background-color: color_key
-    border-radius: .3125em !important
+    border-radius: field_border_radius !important
 
   .inputWidhButton
     padding-right width_button px
 
-    .dropdown
+    input
       border-right: solid 1px #f5f5f5
-
-    .dropdown-text
+      border-radius: field_border_radius 0 0 field_border_radius !important
       box-shadow: none
       background-color: color_key
       color: #fff
-      &:after
-        opacity: .9
 
-    .dropdown-toggle:hover ~ .dropdown-text,
-    .dropdown-toggle:focus ~ .dropdown-text
-      box-shadow: none
-      background-color: color_key_down
-      &:after
-        opacity: 1
+    input::-webkit-input-placeholder
+      color: rgba(255, 255, 255, 0.9)
 
   .btn
     padding: 0px
@@ -403,6 +442,7 @@ body.modal-open
 
     textarea
       margin 6px 0 0 0px
+      border-radius: field_border_radius !important
 
     div
       height: 0
@@ -424,52 +464,6 @@ body.modal-open
 
   .animate-height
     transition: height .32s ease
-
-  .searchform
-    width: 100%
-    display: inline-block
-    margin-bottom: 0
-    margin-right: 5px
-    vertical-align: middle
-
-    .twitter-typeahead
-      width: 100%
-
-    .tt-input
-    .tt-hint
-      width: 100%
-      height: height_input px
-      border: 0
-      border-radius: .3125em !important
-      outline: none
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
-      &:hover,
-      &:focus
-        box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
-
-    .tt-hint
-      color: #aaa
-
-    .tt-dropdown-menu
-      width: 100%
-      margin-top: 10px
-      padding: 5px 0
-      background-color: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: .3125em
-      box-shadow: 0 5px 10px rgba(0,0,0,.2)
-
-    .tt-suggestion
-      padding: 0px 5px
-      height: height_input px
-      line-height: height_input px
-
-    .tt-suggestion.tt-cursor
-      color: #fff
-      background-color: color_key_weak
-
-    .tt-highlight
-      color: color_key_weak
 
   .issueList
     ul
