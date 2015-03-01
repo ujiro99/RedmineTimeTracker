@@ -16,7 +16,9 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //              Account
       // ------------------------------------
-      div.searchform.searchform-icon
+      div.searchform.searchform-icon-before
+        div.icon
+          span.icon-users
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="accountData"
@@ -28,7 +30,9 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //              Project
       // ------------------------------------
-      div.searchform.searchform-icon
+      div.searchform.searchform-icon-before
+        div.icon
+          span.icon-folder-alt
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="projectData"
@@ -40,7 +44,9 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //               Query
       // ------------------------------------
-      div.searchform.searchform-icon
+      div.searchform.searchform-icon-before
+        div.icon
+          span.icon-magnifier
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="queryData"
@@ -53,7 +59,7 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //            Issue List
       // ------------------------------------
-      div.searchform.searchform-icon
+      div.searchform.searchform-icon-before
         input.form-control.input-sm(type="text"
           ng-model="searchField.text"
           ng-click="searchField.text = ''"
