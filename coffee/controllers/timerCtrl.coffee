@@ -18,6 +18,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
 
   trackedTime = {}
 
+  # typeahead options
+  $scope.inputOptions =
+    highlight: true
+    minLength: 0
+
+
   ###
    Initialize.
   ###
@@ -28,6 +34,16 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
         loadActivities account
     $scope.tickets = Ticket.getSelectable()
     $scope.selectedTicket = Ticket.getSelected()
+    initializeSearchform()
+
+
+  ###
+   Initialize search form.
+  ###
+  initializeSearchform = () ->
+    $scope.ticketData =
+      displayKey: 'text'
+      source: util.substringMatcher($scope.tickets, 'text')
 
 
   ###
@@ -76,6 +92,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.$watch 'selectedTicket[0].url', ->
     if not $scope.selectedTicket[0]? then return
     url = $scope.selectedTicket[0].url
+    $scope.activityData =
+      displayKey: 'text'
+      source: util.substringMatcher(projects[url].activities, 'text')
     $scope.selectedActivity[0] = $scope.projects[url].activities?[0]
 
 

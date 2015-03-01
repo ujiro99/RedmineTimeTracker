@@ -1,10 +1,12 @@
 // time track
 div.select
   div.inputWidhButton
-    uz-dropdown(items='tickets',
-                selected='selectedTicket',
-                format="item.id + ' ' + item.text",
-                selected-format="selected[0].id + ' ' + selected[0].text")
+    input.sfTypeahead.form-control.input-sm(type="text"
+      options="inputOptions"
+      datasets="ticketData"
+      ng-model="selectedTicket"
+      ng-click="selectedTicket = null"
+      placeholder='Select issue...')
 
   button.btn(type='button', ng-click='clickManual()', ga-click='postManual')
     i.fa.fa-check
@@ -13,8 +15,12 @@ div.select
 div.form-inline
 
   div.activity
-    uz-dropdown(items='projects[selectedTicket[0].url].activities',
-                selected='selectedActivity')
+    input.sfTypeahead.form-control.input-sm(type="text"
+      options="inputOptions"
+      datasets="projects[selectedTicket[0].url].activities"
+      ng-model="selectedActivity"
+      ng-click="selectedActivity = null"
+      placeholder='Select activity...')
 
   div.separater
 
