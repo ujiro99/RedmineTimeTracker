@@ -52,36 +52,17 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     # account
     $scope.accountData =
       displayKey: 'url'
-      source: substringMatcher($scope.accounts, 'url')
+      source: util.substringMatcher($scope.accounts, 'url')
 
     # projects
     $scope.projectData =
       displayKey: 'text'
-      source: substringMatcher($scope.projects, 'text')
+      source: util.substringMatcher($scope.projects, 'text')
 
     # query
     $scope.queryData =
       displayKey: 'name'
-      source: substringMatcher($scope.queries, 'name')
-
-
-  substringMatcher = (objects, key) ->
-    return findMatches = (query, cb) ->
-      matches = []
-      substrRegexs = []
-      queries = []
-      for q in query.split(' ') when not q.isBlank()
-        queries.push q
-        substrRegexs.push new RegExp(q, 'i')
-
-      for obj in objects
-        isAllMatch = true
-        for r in substrRegexs
-          isAllMatch = isAllMatch and r.test(obj[key])
-
-        matches.push(obj) if isAllMatch
-
-      cb(matches, queries)
+      source: util.substringMatcher($scope.queries, 'name')
 
 
   ###

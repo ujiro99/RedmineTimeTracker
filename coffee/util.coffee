@@ -77,4 +77,29 @@ if not ('set' in Array.prototype)
         return false
     return true
 
+
+  ###
+   Search items which matches query.
+   this function is for typeahead.js.
+  ###
+  substringMatcher: (objects, key) ->
+    return findMatches = (query, cb) ->
+      matches = []
+      substrRegexs = []
+      queries = []
+      for q in query.split(' ') when not q.isBlank()
+        queries.push q
+        substrRegexs.push new RegExp(q, 'i')
+
+      for obj in objects
+        isAllMatch = true
+        for r in substrRegexs
+          isAllMatch = isAllMatch and r.test(obj[key])
+
+        matches.push(obj) if isAllMatch
+
+      cb(matches, queries)
+
+
+
 }
