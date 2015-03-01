@@ -94,9 +94,28 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
 
   ###
-   on change selected, start loading.
+   on change projects, update selected project.
+   - if projects is empty.
+   - if project not selected.
+   - if selected project is not included current projects.
   ###
-  $scope.$watch 'selected[0]', () ->
+  $scope.$watch('projects', () ->
+    if $scope.projects.length is 0
+      $scope.selectedProject = null
+      return
+
+    selected = $scope.selectedProject
+    if not selected?
+      $scope.selectedProject = $scope.projects[0]
+      return
+
+    found = $scope.projects.some (ele) -> ele.equals(selected)
+    if not found
+      $scope.selectedProject = $scope.projects[0]
+
+  , true)
+
+
     $scope.editState.currentPage = 1
     $scope.editState.load()
 
@@ -107,25 +126,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   $scope.$watch 'editState.currentPage', ->
     Analytics.sendEvent 'user', 'clicked', 'pagination'
     $scope.editState.load()
-
-
-  ###
-   on change projects, update selected.
-  ###
-  $scope.$watch 'projects', () ->
-    if $scope.projects.length is 0
-      $scope.selectedProject.clear()
-      return
-
-    selected = $scope.selectedProject[0]
-    if not selected?
-      $scope.selectedProject[0] = $scope.projects[0]
-      return
-
-    found = $scope.projects.some (ele) -> ele.equals(selected)
-    if not found
-      $scope.selectedProject[0] = $scope.projects[0]
-  , true
 
 
   ###
