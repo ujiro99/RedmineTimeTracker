@@ -14,6 +14,7 @@ chrome.app.runtime.onLaunched.addListener () ->
     windowOptions =
       'id': ID
       'innerBounds': bounds.BOUND or DEFAULT_BOUNDS # restore window size.
+      'frame': "none"
 
     # create window.
     chrome.app.window.create URL, windowOptions, () ->
