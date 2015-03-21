@@ -10,18 +10,6 @@ div#options(ng-controller='OptionCtrl')
 
   div.settings-section.form-group
     div.setting-labels
-      label.control-label Show Navigation
-      div.setting-description
-        span Show the navigation bar when scrolling.
-    div.setting-options
-      input.btn(type="checkbox",
-                name="showNavigation",
-                ng-model="options.showNavigation",
-                ga-click="showNavigation")
-
-
-  div.settings-section.form-group
-    div.setting-labels
       label.control-label Reports Usage
       div.setting-description
         span Automatically send anonymous usage statistics and crash reports. This function uses cookie.
