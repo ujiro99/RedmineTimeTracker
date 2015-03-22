@@ -22,7 +22,8 @@
     "angular-animate": "~1.2.16",
     "bootstrap": "~3.1.1",
     "ladda": "~0.9.3",
-    "angular-typeahead": "git://github.com/ujiro99/angular-typeahead#use-local-typeahead.js"
+    "angular-typeahead": "git://github.com/ujiro99/angular-typeahead#use-local-typeahead.js",
+    "angular-bootstrap": "0.10.0"
   },
   "exportsOverride": {
     "jquery": {
@@ -31,6 +32,9 @@
     "angular": {
       "js": "**/angular.min.js",
       "css": "**/angular-csp.css"
+    },
+    "angular-bootstrap": {
+      "js": "**/ui-bootstrap.min.js"
     },
     "angular-animate": {
       "js": "**/angular-animate.min.js"
