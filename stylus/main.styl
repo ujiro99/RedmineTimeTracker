@@ -1,42 +1,5 @@
-color_key = #f7505a
-color_key_down = #e55050
-color_key_weak = rgba(247, 80, 90, 0.75)
-height_input = 28
-field_border_radius = .3125em
-
-clearfix()
-  &:before,
-  &:after
-    content: " "
-    display: table
-  &:after
-    clear: both
-
-
-slideIn()
-  &.ng-enter
-  &.ng-leave
-    transition: 0.32s ease
-  &.ng-enter
-    left: 100%
-    &.ng-enter-active
-      left: 0
-  &.ng-leave
-    left: 0
-    &.ng-leave-active
-      left: -100%
-
-
-text-ellipsis()
-  white-space: nowrap
-  text-overflow: ellipsis
-  overflow: hidden
-
-
-align-center()
-  display: flex
-  justify-content: center
-  align-items: center
+@import '_variable'
+@import '_mixin'
 
 
 html, body
