@@ -19,7 +19,7 @@ div#accounts(ng-controller='AccountCtrl')
       span.icon-plus
 
   // add
-  div.add-account.collapse(uz-collapse='state.isAdding')
+  div.add-account.collapse(collapse='!state.isAdding')
     form.well(name='account')
 
       // Auth way
