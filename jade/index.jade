@@ -18,6 +18,7 @@ html(ng-app='timeTracker', ng-csp="")
   body(ng-controller='MainCtrl')
 
     div.wrap
+      section(ng-include="'header.html'")
       .frame
         section(ng-include="'timer.html'")
         section(ng-include="'issue.html'")
@@ -64,6 +65,7 @@ html(ng-app='timeTracker', ng-csp="")
         script(src='/scripts/services/queryEditState.js')
         script(src='/scripts/filters/numLength.js')
         script(src='/scripts/controllers/mainCtrl.js')
+        script(src='/scripts/controllers/headerCtrl.js')
         script(src='/scripts/controllers/timerCtrl.js')
         script(src='/scripts/controllers/issueCtrl.js')
         script(src='/scripts/controllers/accountCtrl.js')

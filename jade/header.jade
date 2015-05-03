@@ -1,0 +1,29 @@
+div#header(ng-controller="headerCtrl")
+
+  div.header-bar
+    div.project
+
+      button.project-toggle.project-title(type="button")
+        span.project-id
+          {{selectedProject.id}}
+        span.project-text
+          {{selectedProject.text}}
+
+      div.project-content
+
+        div.project-search
+          input.form-control.input-sm(type="search"
+            ng-model="projectSearchText"
+            ng-click="projectSearchText = ''"
+            placeholder='Project...'
+            autocomplete='on')
+
+        div.project-list
+          ul
+            li(ng-repeat='project in projects |filter:projectFilter | orderBy:"id"')
+              button(type='button', ng-click="selectProject(project)")
+                span.project-id
+                  {{project.id}}
+                span.project-text
+                  {{project.text}}
+

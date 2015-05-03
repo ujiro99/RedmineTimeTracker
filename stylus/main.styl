@@ -91,7 +91,8 @@ input, textarea
 
 
 .frame
-  margin: 0 10px
+  margin: 10px
+  margin-top: height_header px
   overflow: hidden
 
   & > section
@@ -268,6 +269,102 @@ body.modal-open
     width: 20px
   .twitter-typeahead
     flex: 1
+
+
+
+.header-bar
+  position: fixed
+  width: 100%
+  height: height_header px
+  background: #fff
+  card(1)
+  z-index: 1
+
+.project-title
+  width: 100%
+  border: none
+  padding: 0
+  height: height_header px
+  background-color: transparent
+  text-ellipsis()
+
+.project-content
+  visibility: hidden
+  opacity: 0
+  top: 0
+  width: 100%
+  position: absolute
+
+  .project-search
+    position: relative
+    z-index: 1
+    display: flex
+    justify-content: center
+    background-color: #fff
+    input
+      transition: width .2s ease
+      width: 6em
+
+.project-toggle:focus + .project-content
+.project-content:hover
+  visibility: visible
+  opacity: 1
+  & > .project-search input
+    width: 100%
+    box-shadow: none
+  & > .project-list
+    top: -5px
+
+.project-list
+  background-color: #fff
+  transition: top .2s ease
+  top: -15px
+  position: relative
+  padding: 1px 0
+  card(3)
+
+  ul
+    margin: 5px 0
+    padding-left: 0px
+
+  li
+    color #555
+    list-style-type: none
+    padding-left: 8px
+    height: 24px
+    transition: background-color .20s ease
+    &:hover
+      background-color: color_key_weak
+      & span
+        color: #fff
+
+    button
+      color #555
+      border: none
+      padding: 0 3px 0 0
+      background-color: transparent
+      outline: none
+      transition: .2s ease
+      display: flex
+      width: 100%
+      height: 24px
+
+      &:hover
+        padding-left: 5px
+
+      & > span
+        vertical-align: middle
+        display: inline-block
+
+      & > span:nth-child(1)
+        padding-right: 5px
+        min-width: 15px
+        color #aaa
+
+      & > span:nth-child(2)
+        flex: 1
+        text-align: left
+        text-ellipsis()
 
 
 #timer
