@@ -13,19 +13,20 @@ html, body
 input, textarea
   -webkit-app-region: no-drag
 
+
+.form-control
+  border: none
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+  &:hover,
+  &:focus
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
+
 .wrap
   height: 100%
   overflow-y: scroll
 
   input.input-sm
     height height_input px
-
-  .form-control
-    border: none
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
-    &:hover,
-    &:focus
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
 
   .btn
     box-shadow: none
@@ -280,46 +281,54 @@ body.modal-open
   card(1)
   z-index: 1
 
+.project
+  height: 0
+
 .project-title
   width: 100%
   border: none
   padding: 0
   height: height_header px
-  background-color: transparent
+  background-color: #fff
+  position: absolute
+  z-index: 1
+  outline: none
   text-ellipsis()
 
-.project-content
+.project-search
+.project-list
   visibility: hidden
   opacity: 0
+
+.project-search
   top: 0
-  width: 100%
   position: absolute
+  z-index: 2
+  background-color: #fff
+  transition: left .2s ease
+  left: 40%
 
-  .project-search
-    position: relative
-    z-index: 1
-    display: flex
-    justify-content: center
-    background-color: #fff
-    input
-      transition: width .2s ease
-      width: 6em
-
-.project-toggle:focus + .project-content
-.project-content:hover
+.project-toggle:focus + .project-search
+.project-search:hover
+.project-search:focus
   visibility: visible
   opacity: 1
-  & > .project-search input
-    width: 100%
-    box-shadow: none
-  & > .project-list
-    top: -5px
+  left: 0
+  box-shadow: none
+
+.project-toggle:focus + .project-search + .project-list
+.project-search:hover + .project-list
+.project-search:focus + .project-list
+  visibility: visible
+  opacity: 1
+  top: 20px
 
 .project-list
+  position: relative
   background-color: #fff
   transition: top .2s ease
-  top: -15px
-  position: relative
+  top: -40px
+  width: 100%
   padding: 1px 0
   card(3)
 
