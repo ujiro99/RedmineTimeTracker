@@ -18,9 +18,9 @@ div#header(ng-controller="headerCtrl")
       div.project-list
         ul
           li(ng-repeat='project in projects |filter:projectFilter | orderBy:"id"')
-            button(type='button', ng-click="selectProject(project)")
-              span.project-id
+            button.numberedLabel(type='button', ng-click="selectProject(project)")
+              span.numberedLabel-number
                 {{project.id}}
-              span.project-text
+              span.numberedLabel-label
                 {{project.text}}
 
