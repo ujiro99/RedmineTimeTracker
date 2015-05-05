@@ -284,6 +284,16 @@ body.modal-open
 .project
   height: 0
 
+.project-id
+  color #aaa
+
+.project-label
+  padding: 0 1em 0 .5em
+  max-width: 80%
+  display: inline-block
+  vertical-align: bottom
+  text-ellipsis()
+
 .project-title
   width: 100%
   border: none
@@ -294,6 +304,12 @@ body.modal-open
   z-index: 1
   outline: none
   text-ellipsis()
+  .fa
+    font-size: 1.3em
+    color #ccc
+    transition: color .2s ease
+  &:hover .fa
+    color #666
 
 .project-search
 .project-list

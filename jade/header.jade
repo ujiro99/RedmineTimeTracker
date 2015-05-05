@@ -6,8 +6,9 @@ div#header(ng-controller="headerCtrl")
       button.project-toggle.project-title(type="button")
         span.project-id
           {{selectedProject.id}}
-        span.project-text
+        span.project-label
           {{selectedProject.text}}
+        i.fa.fa-angle-down
 
       input.form-control.input-sm.project-search(type="search"
         ng-model="projectSearchText"
