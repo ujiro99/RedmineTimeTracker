@@ -280,7 +280,7 @@ body.modal-open
   content: "\f002"
   color: #ccc
   position: absolute
-  left: 0px
+  left: 0
   top: 0.6em
 
 .header-bar
@@ -313,7 +313,6 @@ body.modal-open
   position: absolute
   z-index: 1
   outline: none
-  text-ellipsis()
   .fa
     font-size: 1.3em
     color #ccc
@@ -327,10 +326,8 @@ body.modal-open
   opacity: 0
 
 .project-search
-  top: 0
   position: absolute
   z-index: 2
-  background-color: #fff
   transition: left .2s ease
   left: 40%
 
@@ -367,7 +364,6 @@ body.modal-open
     list-style-type: none
     padding-left: 8px
     height: 24px
-    transition: background-color .20s ease
     &:hover
       background-color: color_key_weak
       & span
