@@ -271,7 +271,17 @@ body.modal-open
   .twitter-typeahead
     flex: 1
 
+.search-icon
+  padding-left: 1.4em
+  margin-left: 0.5em
 
+.search-icon::-webkit-input-placeholder::before
+  fa()
+  content: "\f002"
+  color: #ccc
+  position: absolute
+  left: 0px
+  top: 0.6em
 
 .header-bar
   position: fixed
