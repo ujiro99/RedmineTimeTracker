@@ -275,13 +275,18 @@ body.modal-open
   padding-left: 1.4em
   margin-left: 0.5em
 
-.search-icon::-webkit-input-placeholder::before
+.search-icon::-webkit-search-decoration::before
   fa()
   content: "\f002"
-  color: #ccc
   position: absolute
   left: 0
   top: 0.6em
+  color: #aaa
+  transition: color .2s ease
+
+.search-icon:hover::-webkit-search-decoration::before
+.search-icon:focus::-webkit-search-decoration::before
+  color: #777
 
 .header-bar
   position: fixed
