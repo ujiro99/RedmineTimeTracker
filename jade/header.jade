@@ -10,11 +10,11 @@ div#header(ng-controller="headerCtrl")
           {{selectedProject.text}}
         i.fa.fa-angle-down
 
-      input.form-control.input-sm.project-search.search-icon(type="search"
+      input.form-control.input-sm.project-search.search-icon(
+        type="search",
         ng-model="projectSearchText"
         ng-click="projectSearchText = ''"
-        placeholder='Project...'
-        autocomplete='on')
+        placeholder="Project...")
 
       div.project-list
         ul
