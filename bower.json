@@ -23,7 +23,8 @@
     "bootstrap": "~3.1.1",
     "ladda": "~0.9.3",
     "angular-typeahead": "git://github.com/ujiro99/angular-typeahead#use-local-typeahead.js",
-    "angular-bootstrap": "0.10.0"
+    "angular-bootstrap": "0.10.0",
+    "angular-route": "1.2.19"
   },
   "exportsOverride": {
     "jquery": {
