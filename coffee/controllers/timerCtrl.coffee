@@ -6,7 +6,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
 
   $scope.state = State
   $scope.projects = {}
-  $scope.selectedActivity = []
+  $scope.selectedActivity = {}
   $scope.comment =
     text: ""
     MaxLength: COMMENT_MAX
@@ -14,7 +14,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.mode = "auto"
   $scope.time = { min: 0 }
   $scope.tickets = []
-  $scope.selectedTicket = []
+  $scope.selectedTicket = {}
 
   trackedTime = {}
 
@@ -44,6 +44,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     $scope.ticketData =
       displayKey: 'text'
       source: util.substringMatcher($scope.tickets, 'text')
+    $scope.activityData =
+      displayKey: 'name'
+      source: util.substringMatcher([], 'name')
 
 
   ###
@@ -63,39 +66,34 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
 
 
   ###
-   on first, set selectedActivity.
-  ###
-  _getActivitiesSuccessFirst = (data, status, headers, config) ->
-    _getActivitiesSuccess(data, status, headers, config)
-    getActivitiesSuccess = _getActivitiesSuccess
-    $scope.selectedActivity[0] = $scope.projects[data.url].activities[0]
-
-
-  ###
    show loaded activities.
   ###
   _getActivitiesSuccess = (data, status, headers, config) ->
     if not data?.time_entry_activities? then return
-    $scope.projects[data.url].activities = for a in data.time_entry_activities
-      a.text = a.name; a
+    $scope.projects[data.url].activities = data.time_entry_activities
 
 
   ###
    show loaded activities.
   ###
-  getActivitiesSuccess = _getActivitiesSuccessFirst
+  getActivitiesSuccess = (data, status, headers, config) ->
+    _getActivitiesSuccess(data, status, headers, config)
+    getActivitiesSuccess = _getActivitiesSuccess
+
+    # on first, set selectedActivity.
+    $scope.selectedActivity = $scope.projects[data.url].activities[0]
 
 
   ###
    change activity according to selected ticket
   ###
-  $scope.$watch 'selectedTicket[0].url', ->
-    if not $scope.selectedTicket[0]? then return
-    url = $scope.selectedTicket[0].url
+  $scope.$watch 'selectedTicket.url', (url) ->
+    if not url then return
+    if not $scope.selectedTicket? then return
     $scope.activityData =
-      displayKey: 'text'
-      source: util.substringMatcher(projects[url].activities, 'text')
-    $scope.selectedActivity[0] = $scope.projects[url].activities?[0]
+      displayKey: 'name'
+      source: util.substringMatcher($scope.projects[url].activities, 'name')
+    $scope.selectedActivity = $scope.projects[url].activities?[0]
 
 
   ###
@@ -120,7 +118,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
-    if not $scope.selectedTicket[0] then return
+    if not $scope.selectedTicket then return
     if State.isTracking
       if $scope.comment.remain < 0
         Message.toast Resource.string("msgCommentTooLong")
@@ -158,18 +156,18 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     if minutes >= ONE_MINUTE
       hours = minutes / 60
       hours = Math.floor(hours * 100) / 100
-      total = $scope.selectedTicket[0].total + hours
-      $scope.selectedTicket[0].total = Math.floor(total * 100) / 100
+      total = $scope.selectedTicket.total + hours
+      $scope.selectedTicket.total = Math.floor(total * 100) / 100
       conf =
-        issueId:    $scope.selectedTicket[0].id
+        issueId:    $scope.selectedTicket.id
         hours:      hours
         comment:    $scope.comment.text
-        activityId: $scope.selectedActivity[0].id
-      url = $scope.selectedTicket[0].url
+        activityId: $scope.selectedActivity.id
+      url = $scope.selectedTicket.url
       account = $scope.projects[url].account
       redmine = Redmine.get(account)
       redmine.submitTime(conf, submitSuccess, submitError)
-      Message.toast Resource.string("msgSubmitTimeEntry").format($scope.selectedTicket[0].text, hours)
+      Message.toast Resource.string("msgSubmitTimeEntry").format($scope.selectedTicket.text, hours)
     else
       Message.toast Resource.string("msgShortTime")
 

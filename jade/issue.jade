@@ -14,37 +14,9 @@ div#issue(ng-controller='IssueCtrl')
     section
 
       // ------------------------------------
-      //              Account
-      // ------------------------------------
-      div.searchform.searchform-icon-before
-        div.icon
-          span.icon-users
-        input.sfTypeahead.form-control.input-sm(type="text"
-          options="inputOptions"
-          datasets="accountData"
-          ng-model="selectedAccount"
-          ng-click="selectedAccount = null"
-          placeholder='Redmine server...')
-        i.fa.fa-search
-
-      // ------------------------------------
-      //              Project
-      // ------------------------------------
-      div.searchform.searchform-icon-before
-        div.icon
-          span.icon-folder-alt
-        input.sfTypeahead.form-control.input-sm(type="text"
-          options="inputOptions"
-          datasets="projectData"
-          ng-model="selectedProject"
-          ng-click="selectedProject = null"
-          placeholder='Project...')
-        i.fa.fa-search
-
-      // ------------------------------------
       //               Query
       // ------------------------------------
-      div.searchform.searchform-icon-before
+      div.searchform.searchform-icon.searchform-icon-before
         div.icon
           span.icon-magnifier
         input.sfTypeahead.form-control.input-sm(type="text"
@@ -59,7 +31,7 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //            Issue List
       // ------------------------------------
-      div.searchform.searchform-icon-before
+      div.searchform.searchform-icon
         input.form-control.input-sm(type="text"
           ng-model="searchField.text"
           ng-click="searchField.text = ''"
@@ -69,9 +41,9 @@ div#issue(ng-controller='IssueCtrl')
         ul
           li(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',
              ng-mousemove='editState.onMouseMove($event)')
-            button.numberedLabel(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
-              span.numberedLabel-number {{item.id}}
-              span.numberedLabel-label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",
+            button.issue(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
+              span.id {{item.id}}
+              span.subject(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",
                            tooltip-animation="",
                            tooltip-popup-delay='700',
                            tooltip-placement='{{tooltipPlace}}') {{item.text}}

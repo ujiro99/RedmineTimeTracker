@@ -2,18 +2,14 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
   # list data
   $scope.accounts = []
-  $scope.projects = []
   $scope.queries  = []
   $scope.issues   = []
 
   # selected
-  $scope.selectedAccount = {}
   $scope.selectedProject = {}
   $scope.selectedQuery   = {}
 
   # typeahead data
-  $scope.accountData = null
-  $scope.projectData = null
   $scope.queryData   = null
 
   $scope.searchField = text: ''
@@ -40,108 +36,18 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
     Account.getAccounts (accounts) ->
       $scope.accounts.set(accounts)
       $scope.selectedAccount = $scope.accounts[0]
+      $scope.editState = new IssueEditState($scope)
       initializeSearchform()
-    $scope.editState = new IssueEditState($scope)
 
 
   ###
-   Initialize .
+   Initialize.
   ###
   initializeSearchform = () ->
-
-    # account
-    $scope.accountData =
-      displayKey: 'url'
-      source: util.substringMatcher($scope.accounts, 'url')
-
-    # projects
-    $scope.projectData =
-      displayKey: 'text'
-      source: util.substringMatcher($scope.projects, 'text')
-
     # query
     $scope.queryData =
       displayKey: 'name'
       source: util.substringMatcher($scope.queries, 'name')
-
-
-  ###
-   When account added and not selected, update selected account.
-  ###
-  $scope.$on 'accountAdded', (e, account) ->
-    if not $scope.selectedAccount
-      $scope.selectedAccount = $scope.accounts[0]
-
-
-  ###
-   remove project and issues.
-  ###
-  $scope.$on 'accountRemoved', (e, url) ->
-    # remove a account
-    if $scope.selectedAccount?.url is url
-      $scope.selectedAccount = $scope.accounts[0]
-    # remove projects
-    newPrjs = (p for p in $scope.projects when p.url isnt url)
-    $scope.projects.set(newPrjs)
-    # update selected project if remoed.
-    if $scope.selectedProject?.url is url
-      $scope.selectedProject = $scope.projects[0]
-
-
-  ###
-   on change projects, update selected project.
-   - if projects is empty.
-   - if project not selected.
-   - if selected project is not included current projects.
-  ###
-  $scope.$watch('projects', () ->
-    if $scope.projects.length is 0
-      $scope.selectedProject = null
-      return
-
-    selected = $scope.selectedProject
-    if not selected?
-      $scope.selectedProject = $scope.projects[0]
-      return
-
-    found = $scope.projects.some (ele) -> ele.equals(selected)
-    if not found
-      $scope.selectedProject = $scope.projects[0]
-
-  , true)
-
-
-  ###
-   on change selected Account, load projects.
-  ###
-  $scope.$watch 'selectedAccount', (newVal) ->
-    account = newVal
-    # if account is fixed, load projects from redmine.
-    if account and account.url
-      params =
-        page: 1
-        limit: 50
-      Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
-
-
-  ###
-   update projects by redmine's data.
-  ###
-  _updateProject = (data) =>
-    return if not $scope.selectedAccount
-    return if $scope.selectedAccount.url isnt data.url
-    if data.projects?
-      $scope.projects.set(data.projects)
-    else
-      loadError data
-
-
-  ###
-   show error message.
-  ###
-  _errorLoadProject = (data, status) =>
-    if status is STATUS_CANCEL then return
-    Message.toast Resource.string("msgLoadFail")
 
 
   ###
