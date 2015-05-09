@@ -27,7 +27,7 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
       return @url is y.url and @id is y.id
 
 
-  class Project extends EventDispatcher
+  class Project
 
     ## class variables
 
@@ -123,7 +123,6 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
     ###
     setSelected: (project) ->
       @_selectedProject = project
-      this.fireEvent(Project.CHANGE_SELECTED)
 
 
     ###
@@ -146,7 +145,6 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
             prj = new ProjectModel(url, urlIndex, k - 0, v.text, v.show, v.queryId)
             @_selectableProjects.push prj
       _setLocal()
-      this.fireEvent(Project.CHANGE)
 
 
     ###
@@ -213,7 +211,6 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
                                target.queryId)
         @_selectableProjects.push prj
       _setLocal()
-      this.fireEvent(Project.CHANGE)
 
 
     ###
@@ -231,7 +228,6 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
         @_selectableProjects.splice i, 1
         break
       _setLocal()
-      this.fireEvent(Project.CHANGE)
 
 
     ###
@@ -252,13 +248,11 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
           console.log 'project loaded from local'
           @set local
           callback local
-          this.fireEvent(Project.CHANGE)
         else
           _load Chrome.storage.sync, (sync) =>
             console.log 'project loaded from sync'
             @set sync
             callback sync
-            this.fireEvent(Project.CHANGE)
 
 
     ###
@@ -296,7 +290,6 @@ timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
         callback? false
       else
         callback? true
-      this.fireEvent(Project.CHANGE)
 
 
     ###
