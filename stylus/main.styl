@@ -271,16 +271,11 @@ body.modal-open
   .twitter-typeahead
     flex: 1
 
-.search-icon
-  padding-left: 1.4em
-  margin-left: 0.5em
-
 .search-icon::-webkit-search-decoration::before
   fa()
   content: "\f002"
-  position: absolute
-  left: 0
-  top: 0.6em
+  position: relative
+  left: -5px
   color: #aaa
   transition: color .2s ease
 
@@ -328,14 +323,14 @@ body.modal-open
     color #666
 
 .project-search
-.project-list
+.project-content
   visibility: hidden
   opacity: 0
 
 .project-search
   position: absolute
   z-index: 102
-  transition: left .2s ease
+  transition: left .3s ease
   left: 40%
 
 .project-toggle:focus + .project-search
@@ -346,32 +341,46 @@ body.modal-open
   left: 0
   box-shadow: none
 
-.project-toggle:focus + .project-search + .project-list
-.project-search:hover + .project-list
-.project-search:focus + .project-list
+.project-toggle:focus + .project-search + .project-content
+.project-search:hover + .project-content
+.project-search:focus + .project-content
   visibility: visible
   opacity: 1
   top: 20px
 
-.project-list
-  position: relative
-  background-color: #fff
-  transition: top .2s ease
-  top: -40px
+.project-content
+  position: fixed
   width: 100%
-  padding: 1px 0
+  max-height: 90%
+  top: -50%
+  background-color: #fff
   card(3)
+  transition: top .3s ease
+  overflow-y: scroll
 
-  ul
-    margin: 5px 0
-    padding-left: 0px
+.account-list
+  margin: 0
+  padding-left: 0
+  &>li
+    counter-increment: account
+    &>.numberedLabel
+      line-height: height_input px
+      margin-left: 0.5em
+      padding-left: 0.2em
+      border-bottom: solid 1px #ccc
+    &>.numberedLabel:before
+      content: counter(account)
+      padding-right: 0.5em
+      color #aaa
 
-  li
-    color #555
+.project-list
+  padding-left: 0
+  &>li
+    padding-left: 1em
     list-style-type: none
-    padding-left: 8px
-    height: 24px
+    transition: padding-left .2s ease
     &:hover
+      padding-left: 1.5em
       background-color: color_key_weak
       & span
         color: #fff
@@ -380,22 +389,19 @@ body.modal-open
       width: 100%
       height: 24px
 
+
 .numberedLabel
   color #555
   border: none
   padding: 0 3px 0 0
   background-color: transparent
   outline: none
-  transition: .2s ease
   display: flex
   flex: 1
 
   & > span
     vertical-align: middle
     display: inline-block
-
-  &:hover
-    margin-left: 5px
 
 .numberedLabel-number
   padding-right: 5px
@@ -406,6 +412,11 @@ body.modal-open
   flex: 1
   text-align: left
   text-ellipsis()
+
+#header
+  .account-list
+    &>li
+      margin-top: -12px
 
 #timer
 

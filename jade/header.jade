@@ -5,9 +5,9 @@ div#header(ng-controller="headerCtrl")
 
       button.project-toggle.project-title(type="button")
         span.project-id
-          {{selectedProject.id}}
+          {{data.selectedProject.id}}
         span.project-label
-          {{selectedProject.text}}
+          {{data.selectedProject.text}}
         i.fa.fa-angle-down
 
       input.form-control.input-sm.project-search.search-icon(
@@ -16,12 +16,17 @@ div#header(ng-controller="headerCtrl")
         ng-click="projectSearchText = ''"
         placeholder="Project...")
 
-      div.project-list
-        ul
-          li(ng-repeat='project in projects |filter:projectFilter | orderBy:"id"')
-            button.numberedLabel(type='button', ng-click="selectProject(project)")
-              span.numberedLabel-number
-                {{project.id}}
+      div.project-content
+        ul.account-list
+          li(ng-repeat='account in data.accounts | orderBy:"url"')
+            div.numberedLabel
               span.numberedLabel-label
-                {{project.text}}
+                {{account.url}}
+            ul.project-list
+              li(ng-repeat='project in account.projects | orderBy:"id"')
+                button.numberedLabel(type='button', ng-click="selectProject(project)")
+                  span.numberedLabel-number
+                    {{project.id}}
+                  span.numberedLabel-label
+                    {{project.text}}
 

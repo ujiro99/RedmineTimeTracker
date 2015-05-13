@@ -1,9 +1,12 @@
-timeTracker.factory("Project", (Analytics, Chrome, EventDispatcher) ->
+timeTracker.factory("Project", (Analytics, Chrome) ->
 
   ###
    Project data model.
   ###
   class ProjectModel
+
+    # Ticket Model list.
+    tickets: []
 
     ###*
      constructor.

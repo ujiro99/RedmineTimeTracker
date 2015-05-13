@@ -1,12 +1,6 @@
-timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, Message, Resource, Analytics) ->
+timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAdapter, Message, Resource, Analytics) ->
 
-  # list data
-  $scope.accounts = []
-  $scope.projects = [] # projectModel
-
-  # selected
-  $scope.selectedAccount = {}
-  $scope.selectedProject = {}
+  $scope.data = DataAdapter
 
   # project filter string.
   $scope.projectSearchText = ""
@@ -20,53 +14,23 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, Message
   ###
   init = () ->
     Account.getAccounts (accounts) ->
-      $scope.accounts.set(accounts)
-      $scope.selectedAccount = $scope.accounts[0]
-
-
-  ###
-   When account added and not selected, update selected account.
-  ###
-  $scope.$on 'accountAdded', (e, account) ->
-    if not $scope.selectedAccount
-      $scope.selectedAccount = $scope.accounts[0]
-
-
-  ###
-   remove project and issues.
-  ###
-  $scope.$on 'accountRemoved', (e, url) ->
-    # remove a account
-    if $scope.selectedAccount?.url is url
-      $scope.selectedAccount = $scope.accounts[0]
-    # remove projects
-    newPrjs = (p for p in $scope.projects when p.url isnt url)
-    $scope.projects.set(newPrjs)
-    # update selected project if removed.
-    if $scope.selectedProject?.url is url
-      $scope.selectedProject = $scope.projects[0]
-
-
-  ###
-   on change selected Account, load projects.
-  ###
-  $scope.$watch 'selectedAccount', (account) ->
-    # if account is fixed, load projects from redmine.
-    if account and account.url
-      params =
-        page: 1
-        limit: 50
-      Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
+      $scope.data._accounts.set(accounts)
+      $scope.data.accounts.set(accounts)
+      for account in $scope.data.accounts
+        account.projects = []
+        params =
+          page: 1
+          limit: 50
+        Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
 
 
   ###
    update projects by redmine's data.
   ###
   _updateProject = (data) =>
-    return if not $scope.selectedAccount
-    return if $scope.selectedAccount.url isnt data.url
     if data.projects?
-      $scope.projects.set(data.projects)
+      for account in $scope.data.accounts when account.url is data.projects[0].url
+        account.projects.set(data.projects)
     else
       _errorLoadProject data
 
@@ -80,45 +44,11 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, Message
 
 
   ###
-   on change projects, update selected project.
-   - if projects is empty.
-   - if project not selected.
-   - if selected project is not included current projects.
-  ###
-  $scope.$watch('projects', () ->
-    if $scope.projects.length is 0
-      $scope.selectedProject = null
-      return
-
-    selected = $scope.selectedProject
-    if not selected?
-      $scope.selectedProject = $scope.projects[0]
-      return
-
-    found = $scope.projects.some (ele) -> ele.equals(selected)
-    if not found
-      $scope.selectedProject = $scope.projects[0]
-
-  , true)
-
-
-  ###
-   filter project.
-   @param {projectModel} project - filtering object.
-  ###
-  $scope.projectFilter = (project) ->
-    if $scope.projectSearchText.isBlank() then return true
-    # reg = new RegExp($scope.projectSearchText, 'i')
-    # return reg.test(project.id + " " + project.text)
-    return (project.id + " " + project.text).toLowerCase().contains($scope.projectSearchText.toLowerCase())
-
-
-  ###
    select project.
    @param {projectModel} project - clicked object.
   ###
   $scope.selectProject = (project) ->
-    $scope.selectedProject = project
+    $scope.data.selectedProject = project
 
 
   ###
