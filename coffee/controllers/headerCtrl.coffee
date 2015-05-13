@@ -1,7 +1,9 @@
 timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAdapter, Message, Resource, Analytics) ->
 
+  # data
   $scope.data = DataAdapter
-
+  # is header dropdown active?
+  $scope.isActive = false
   # project filter string.
   $scope.projectSearchText = ""
 
@@ -49,10 +51,11 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   ###
   $scope.selectProject = (project) ->
     $scope.data.selectedProject = project
+    $scope.isActive = false
 
 
   ###
    Start Initialize.
   ###
   init()
-  
+

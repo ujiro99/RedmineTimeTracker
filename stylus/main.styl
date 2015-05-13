@@ -333,17 +333,13 @@ body.modal-open
   transition: left .3s ease
   left: 40%
 
-.project-toggle:focus + .project-search
-.project-search:hover
-.project-search:focus
+.project-search.active
   visibility: visible
   opacity: 1
   left: 0
   box-shadow: none
 
-.project-toggle:focus + .project-search + .project-content
-.project-search:hover + .project-content
-.project-search:focus + .project-content
+.project-content.active
   visibility: visible
   opacity: 1
   top: 20px
@@ -384,11 +380,9 @@ body.modal-open
       background-color: color_key_weak
       & span
         color: #fff
-
     .numberedLabel
       width: 100%
       height: 24px
-
 
 .numberedLabel
   color #555

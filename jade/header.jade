@@ -3,7 +3,7 @@ div#header(ng-controller="headerCtrl")
   div.header-bar
     div.project
 
-      button.project-toggle.project-title(type="button")
+      button.project-toggle.project-title(type="button", ng-click="isActive = true")
         span.project-id
           {{data.selectedProject.id}}
         span.project-label
@@ -14,9 +14,10 @@ div#header(ng-controller="headerCtrl")
         type="search",
         ng-model="projectSearchText"
         ng-click="projectSearchText = ''"
+        ng-class="{active : isActive}"
         placeholder="Project...")
 
-      div.project-content
+      div.project-content(ng-class="{active: isActive}")
         ul.account-list
           li(ng-repeat='account in data.accounts | orderBy:"url"')
             div.numberedLabel
