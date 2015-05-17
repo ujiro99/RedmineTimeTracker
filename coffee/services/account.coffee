@@ -4,72 +4,97 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
   PHRASE = "hello, redmine time traker."
   NULLFUNC = () ->
 
+  ###*
+   Account infomation for login to redmine.
+   @class AccountModel
   ###
-   JSON formatter for cipherParams.
-  ###
-  _Json =
-    stringify: (cipherParams) ->
-      jsonObj = ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)
-      if cipherParams.iv then jsonObj.iv = cipherParams.iv.toString()
-      if cipherParams.salt then jsonObj.s = cipherParams.salt.toString()
-      return JSON.stringify(jsonObj)
+  class AccountModel
 
-    parse: (jsonStr) ->
-      jsonObj = JSON.parse(jsonStr)
-      cipherParams = CryptoJS.lib.CipherParams.create {
-          ciphertext: CryptoJS.enc.Base64.parse(jsonObj.ct)
-      }
-      if jsonObj.iv then cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
-      if jsonObj.s then cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
-      return cipherParams
+    ###*
+     @constructor
+     @param url {String} Redmine server's url.
+     @param apiKey {String} Redmine server's apiKey.
+     @param id {String} User id.
+     @param pass {String} User password.
+     @param name {String} Redmine's name for identify by user.
+    ###
+    constructor: (@url, @apiKey, @id, @pass, @name) ->
 
+    ###
+     set parameters from Object.
+    ###
+    @fromObject: (obj) ->
+      return new AccountModel(
+        obj.url
+        obj.apiKey
+        obj.id
+        obj.pass
+        obj.name
+      )
 
-  ###
-   decrypt object. this is used for compatibility.
-  ###
-  _decryptObject = (obj) ->
-    return CryptoJS.AES.decrypt(obj, PHRASE).toString(CryptoJS.enc.Utf8)
+    ###
+     JSON formatter for cipherParams.
+    ###
+    _Json:
+      stringify: (cipherParams) ->
+        jsonObj = ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)
+        if cipherParams.iv then jsonObj.iv = cipherParams.iv.toString()
+        if cipherParams.salt then jsonObj.s = cipherParams.salt.toString()
+        return JSON.stringify(jsonObj)
 
+      parse: (jsonStr) ->
+        jsonObj = JSON.parse(jsonStr)
+        cipherParams = CryptoJS.lib.CipherParams.create {
+            ciphertext: CryptoJS.enc.Base64.parse(jsonObj.ct)
+        }
+        if jsonObj.iv then cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
+        if jsonObj.s then cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
+        return cipherParams
 
-  ###
-   decrypt string.
-  ###
-  _decryptString = (str) ->
-    return CryptoJS.AES.decrypt(_Json.parse(str), PHRASE).toString(CryptoJS.enc.Utf8)
+    ###
+     decrypt object. this is used for compatibility.
+    ###
+    _decryptObject: (obj) ->
+      return CryptoJS.AES.decrypt(obj, PHRASE).toString(CryptoJS.enc.Utf8)
 
+    ###
+     decrypt string.
+    ###
+    _decryptString: (str) ->
+      return CryptoJS.AES.decrypt(@_Json.parse(str), PHRASE).toString(CryptoJS.enc.Utf8)
 
-  ###
-   decrypt according it type.
-  ###
-  _decrypt = (any) ->
-    if typeof any is "string"
-      return _decryptString(any)
-    else
-      return _decryptObject(any)
+    ###
+     decrypt according it type.
+    ###
+    _decrypt: (any) ->
+      if typeof any is "string"
+        return @_decryptString(any)
+      else
+        return @_decryptObject(any)
 
+    ###
+     decrypt the account data, only to sync on chrome.
+    ###
+    decrypt: () ->
+      return new AccountModel(
+        @url
+        @_decrypt @apiKey
+        @_decrypt @id
+        @_decrypt @pass
+        @name
+      )
 
-  ###
-   decrypt the account data, only to sync on chrome.
-  ###
-  _decryptAuth = () ->
-    return {
-      url:    @url
-      apiKey: _decrypt @apiKey
-      id:     _decrypt @id
-      pass:   _decrypt @pass
-    }
-
-
-  ###
-   encrypt the account data, only to sync on chrome.
-  ###
-  _encrypt = () ->
-    return {
-      url:    @url
-      apiKey: _Json.stringify CryptoJS.AES.encrypt(@apiKey, PHRASE)
-      id:     _Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
-      pass:   _Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
-    }
+    ###
+     encrypt the account data, only to sync on chrome.
+    ###
+    encrypt: () ->
+      return new AccountModel(
+        @url
+        @_Json.stringify CryptoJS.AES.encrypt(@apiKey, PHRASE)
+        @_Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
+        @_Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
+        @name
+      )
 
 
   ###
@@ -82,10 +107,7 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
     ###
      get all account data.
      if account was not loaded, load from chrome sync.
-     @return {Array} { url:    String,
-                       apiKey: String,
-                       id:     String,
-                       pass:   String }
+     @return {Array} AccountModel[]
     ###
     getAccounts: (callback) ->
       callback = callback or NULLFUNC
@@ -98,7 +120,7 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
         else
           _accounts.clear()
           for a in item[ACCOUNTS]
-            _accounts.push _decryptAuth.apply(a)
+            _accounts.push AccountModel.fromObject(a).decrypt()
           callback _accounts
 
 
@@ -106,6 +128,7 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
      add a account data using chrome sync
     ###
     addAccount: (account, callback) ->
+      account = AccountModel.fromObject(account)
       if not account? then callback false; return
       callback = callback or NULLFUNC
       @getAccounts (accounts) ->
@@ -113,9 +136,9 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
         # merge accounts.
         newArry = []
         newArry = for a in accounts when a.url isnt account.url
-          _encrypt.apply(a)
+          a.encrypt()
         accounts = newArry
-        accounts.push _encrypt.apply(account)
+        accounts.push account.encrypt()
         Chrome.storage.sync.set ACCOUNTS: accounts, () ->
           if Chrome.runtime.lastError?
             callback false
@@ -139,7 +162,7 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
         accounts = accounts or []
         # select other url account
         accounts = for a in accounts when a.url isnt url
-          _encrypt.apply(a)
+          a.encrypt()
         Chrome.storage.sync.set ACCOUNTS: accounts, () ->
           if Chrome.runtime.lastError?
             callback false
