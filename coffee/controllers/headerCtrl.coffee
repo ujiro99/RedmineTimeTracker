@@ -16,10 +16,8 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   ###
   init = () ->
     Account.getAccounts (accounts) ->
-      $scope.data._accounts.set(accounts)
-      $scope.data.accounts.set(accounts)
-      for account in $scope.data.accounts
-        account.projects = []
+      DataAdapter.addAccounts(accounts)
+      for account in accounts
         params =
           page: 1
           limit: 50
@@ -31,8 +29,7 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   ###
   _updateProject = (data) =>
     if data.projects?
-      for account in $scope.data.accounts when account.url is data.projects[0].url
-        account.projects.set(data.projects)
+      DataAdapter.addProjects(data.projects)
     else
       _errorLoadProject data
 
@@ -50,7 +47,7 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
    @param {projectModel} project - clicked object.
   ###
   $scope.selectProject = (project) ->
-    $scope.data.selectedProject = project
+    DataAdapter.selectedProject = project
     $scope.isActive = false
 
 

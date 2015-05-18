@@ -45,6 +45,13 @@ if not ('set' in Array.prototype)
     [].splice.apply(this, [0, this.length].concat(newArray))
     return
 
+###
+ define getter, setter.
+ @ref http://stackoverflow.com/questions/11587231/coffeescript-getter-setter-in-object-initializers
+###
+Function::property = (prop, desc) ->
+  Object.defineProperty @prototype, prop, desc
+
 
 @util = {
 

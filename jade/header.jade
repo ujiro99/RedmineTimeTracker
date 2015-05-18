@@ -12,14 +12,14 @@ div#header(ng-controller="headerCtrl")
 
       input.form-control.input-sm.project-search.search-icon(
         type="search",
-        ng-model="projectSearchText"
-        ng-click="projectSearchText = ''"
+        ng-model="data.projectQuery"
+        ng-click="data.projectQuery = ''"
         ng-class="{active : isActive}"
         placeholder="Project...")
 
       div.project-content(ng-class="{active: isActive}")
         ul.account-list
-          li(ng-repeat='account in data.accounts | orderBy:"url"')
+          li(ng-repeat='account in data.accounts')
             div.numberedLabel
               span.numberedLabel-label
                 {{account.url}}

@@ -1,5 +1,13 @@
 timeTracker.factory("DataAdapter", (Analytics) ->
 
+
+  class DataModel
+
+    constructor: () ->
+      @account = {}
+      @projects = []
+
+
   class DataAdapter
 
     ## class variables
@@ -8,30 +16,94 @@ timeTracker.factory("DataAdapter", (Analytics) ->
     @CHANGE_SELECTED: "change_selected"
 
     ## instance variables
-    # all account.
-    _accounts: []
-    # selected account.
-    accounts: []
-    # selected project.
-    selectedProject: {}
-    # selected ticket.
-    selectedTicket: {}
 
+    ###*
+    # all data.
+    # @param {Object} data
+    # @param {Object.AccountModel} account
+    # @param {Object.ProjectModel[]} projects
     ###
-     filter project.
+    _data: {}
+    # filtered data.
+    _filteredData: []
+    # query string for projects
+    _projectQuery: ""
+    # selected project.
+    selectedProject: null
+    # selected ticket.
+    selectedTicket: null
+
+    # accounts accessor.
+    @property 'accounts',
+      get: -> @_filteredData
+
+    # projectQuery accessor.
+    @property 'projectQuery',
+      get: () -> return @_projectQuery
+      set: (query) ->
+        @_projectQuery = query
+        @_filteredData = []
+        if not query? or query.isBlank()
+          for url, dataModel of @_data
+            @_filteredData.push dataModel.account
+            dataModel.account.projects = dataModel.projects
+        else
+          for url, dataModel of @_data
+            filteredProjects = []
+            for p in dataModel.projects
+              if (p.id + " " + p.text).toLowerCase().contains(query.toLowerCase())
+                filteredProjects.push p
+            if filteredProjects.length > 0
+              @_filteredData.push dataModel.account
+              dataModel.account.projects = filteredProjects
+        # reg = new RegExp($scope.projectSearchText, 'i')
+        # return reg.test(project.id + " " + project.text)
+
+    ###*
+    # add accounts
+    # @param {Array} accounts - array of AccountModel.
     ###
-    projectFilter: (keyword) ->
-      if keyword.isBlank()
-        accounts.set _accounts
-      else
-        for a,i in _accounts
-          filteredProjects = []
-          for p in a.projects
-            if (p.id + " " + p.text).toLowerCase().contains(keyword.toLowerCase())
-              filteredProjects.push p
-          accounts[i].projects.set filteredProjects
-      # reg = new RegExp($scope.projectSearchText, 'i')
-      # return reg.test(project.id + " " + project.text)
+    addAccounts: (accounts) ->
+      if not accounts? or accounts.length is 0 then return
+      for a in accounts
+        @_data[a.url] = new DataModel()
+        @_data[a.url].account = a
+      @_filteredData.add(accounts)
+
+    ###*
+    # remove accounts
+    # @param {Array} accounts - array of AccountModel.
+    ###
+    removeAccounts: (accounts) ->
+      if not accounts? or accounts.length is 0 then return
+      for a in accounts
+        delete @_data[a.url]
+        @_filteredData.remove((n) -> return n.url is a.url)
+        if @selectedProject.url is a.url
+          @selectedProject = _filteredData[0].projects[0]
+
+    ###*
+    # add project to account.
+    # @param {Array} projects - array of ProjectModel.
+    ###
+    addProjects: (projects) ->
+      if not projects? or projects.length is 0 then return
+      if not @selectedProject then @selectedProject = projects[0]
+      @_data[projects[0].url].projects.add(projects)
+      for a in @_filteredData when a.url is projects[0].url
+        a.projects = a.projects or []
+        a.projects.add(projects)
+
+    ###*
+    # remove project from account.
+    # @param {Array} projects - array of ProjectModel
+    ###
+    removeProjects: (projects) ->
+      if not projects? or projects.length is 0 then return
+      for p in projects
+        @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
+      for a in @_filteredData when a.url is projects[0].url
+        a.projects.remove((n) -> return n.equals(p))
 
   return new DataAdapter
 
