@@ -41,6 +41,7 @@ timeTracker.factory("DataAdapter", (Analytics) ->
     @property 'projectQuery',
       get: () -> return @_projectQuery
       set: (query) ->
+        # console.time('projectQuery\t')
         @_projectQuery = query
         @_filteredData = []
         if not query? or query.isBlank()
@@ -48,16 +49,15 @@ timeTracker.factory("DataAdapter", (Analytics) ->
             @_filteredData.push dataModel.account
             dataModel.account.projects = dataModel.projects
         else
+          query = query.toLowerCase()
           for url, dataModel of @_data
-            filteredProjects = []
-            for p in dataModel.projects
-              if (p.id + " " + p.text).toLowerCase().contains(query.toLowerCase())
-                filteredProjects.push p
-            if filteredProjects.length > 0
+            filtered = []
+            for n in dataModel.projects
+              filtered.push n if (n.id + " " + n.text).toLowerCase().contains(query)
+            if filtered.length > 0
               @_filteredData.push dataModel.account
-              dataModel.account.projects = filteredProjects
-        # reg = new RegExp($scope.projectSearchText, 'i')
-        # return reg.test(project.id + " " + project.text)
+              dataModel.account.projects = filtered
+        # console.timeEnd('projectQuery\t')
 
     ###*
     # add accounts
