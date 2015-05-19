@@ -374,12 +374,14 @@ body.modal-open
   &>li
     padding-left: 1em
     list-style-type: none
-    transition: padding-left .2s ease
+    & span:nth-child(1)
+      transition: text-indent .2s ease
     &:hover
-      padding-left: 1.5em
       background-color: color_key_weak
       & span
         color: #fff
+      & span:nth-child(1)
+        text-indent: 0.5em
     .numberedLabel
       width: 100%
       height: 24px
