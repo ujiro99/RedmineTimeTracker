@@ -30,6 +30,7 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   _updateProject = (data) =>
     if data.projects?
       DataAdapter.addProjects(data.projects)
+      Message.toast Resource.string("msgLoadProjectSuccess").format(data.projects[0].url)
     else
       _errorLoadProject data
 
@@ -39,7 +40,7 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   ###
   _errorLoadProject = (data, status) =>
     if status is STATUS_CANCEL then return
-    Message.toast Resource.string("msgLoadFail")
+    Message.toast Resource.string("msgLoadProjectFail")
 
 
   ###

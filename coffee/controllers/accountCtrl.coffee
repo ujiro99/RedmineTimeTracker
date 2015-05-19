@@ -1,53 +1,13 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, Message, State, Resource, Analytics) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics) ->
 
   ID_PASS = 'id_pass'
 
-  $scope.accounts = []
+  $scope.accounts = DataAdapter.accounts
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = ID_PASS
   $scope.searchField = text: ''
   $scope.state = State
   $scope.R = Resource
-
-
-  ###
-   Initialize.
-  ###
-  init = ->
-    Account.getAccounts (accounts) ->
-      if not accounts? or not accounts[0]? then return
-      for account in accounts
-        loadProject account
-
-
-  ###
-   load project.
-  ###
-  loadProject = (account) ->
-    Redmine.get(account).loadProjects loadProjectSuccess(account), loadProjectError
-
-
-  ###
-   show loaded project.
-   if project is already loaded, overwrites by new project.
-  ###
-  loadProjectSuccess = (account) -> (msg) ->
-    if msg.projects?
-      for a, i in $scope.accounts when a.url is msg.url
-        $scope.accounts.splice i, 1
-        break
-      account.projectCount = msg.projects.length
-      $scope.accounts.push account
-      Message.toast Resource.string("msgLoadProjectSuccess").format(account.url)
-    else
-      loadProjectError msg
-
-
-  ###
-   show fail message.
-  ###
-  loadProjectError = (msg) ->
-    Message.toast Resource.string("msgLoadProjectFail")
 
 
   ###
@@ -157,15 +117,10 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   removeAccount = (url) ->
     Account.removeAccount url, () ->
       Redmine.remove({url: url})
-      for a, i in $scope.accounts when a.url is url
-        $scope.accounts.splice i, 1
-        break
+      # for a, i in $scope.accounts when a.url is url
+      #   $scope.accounts.splice i, 1
+      #   break
       Project.removeUrl url
       Ticket.removeUrl url
       Message.toast Resource.string("msgAccountRemoved").format(url)
 
-
-  ###
-   Start Initialize.
-  ###
-  init()

@@ -84,11 +84,14 @@ timeTracker.factory("DataAdapter", (Analytics) ->
 
     ###*
     # add project to account.
+    # if project is already loaded, overwrites by new project.
     # @param {Array} projects - array of ProjectModel.
     ###
     addProjects: (projects) ->
       if not projects? or projects.length is 0 then return
       if not @selectedProject then @selectedProject = projects[0]
+      for p in projects
+        @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
       @_data[projects[0].url].projects.add(projects)
       for a in @_filteredData when a.url is projects[0].url
         a.projects = a.projects or []
