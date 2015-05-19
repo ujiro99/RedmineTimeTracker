@@ -1,4 +1,4 @@
-timeTracker.factory("DataAdapter", (Analytics) ->
+timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
 
 
   class DataModel
@@ -8,14 +8,11 @@ timeTracker.factory("DataAdapter", (Analytics) ->
       @projects = []
 
 
-  class DataAdapter
-
-    ## class variables
-    # events
-    @CHANGE: "change"
-    @CHANGE_SELECTED: "change_selected"
+  class DataAdapter extends EventDispatcher
 
     ## instance variables
+    ACCOUNT_ADDED:   "account_added"
+    ACCOUNT_REMOVED: "account_removed"
 
     ###*
     # all data.
@@ -69,6 +66,7 @@ timeTracker.factory("DataAdapter", (Analytics) ->
         @_data[a.url] = new DataModel()
         @_data[a.url].account = a
       @_filteredData.add(accounts)
+      @fireEvent(@ACCOUNT_ADDED, @, accounts)
 
     ###*
     # remove accounts
@@ -80,7 +78,8 @@ timeTracker.factory("DataAdapter", (Analytics) ->
         delete @_data[a.url]
         @_filteredData.remove((n) -> return n.url is a.url)
         if @selectedProject.url is a.url
-          @selectedProject = _filteredData[0].projects[0]
+          @selectedProject = @_filteredData[0].projects[0]
+      @fireEvent(@ACCOUNT_REMOVED, @, accounts)
 
     ###*
     # add project to account.

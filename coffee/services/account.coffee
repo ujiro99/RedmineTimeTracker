@@ -147,7 +147,7 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
               _accounts.splice i, 1
               break
             _accounts.push account
-            callback true
+            callback true, account
             $rootScope.$broadcast 'accountAdded', account
             Analytics.sendEvent 'internal', 'account', 'add', _accounts.length
 

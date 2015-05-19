@@ -15,13 +15,14 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
    Initialize.
   ###
   init = () ->
-    Account.getAccounts (accounts) ->
-      DataAdapter.addAccounts(accounts)
+    DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
       for account in accounts
         params =
           page: 1
           limit: 50
         Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
+    Account.getAccounts (accounts) ->
+      DataAdapter.addAccounts(accounts)
 
 
   ###

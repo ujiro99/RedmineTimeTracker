@@ -39,35 +39,16 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   addAccount = (msg) ->
     if msg?.user?.id?
       $scope.option.url = msg.account.url
-      Account.addAccount msg.account, (result) ->
+      Account.addAccount msg.account, (result, account) ->
         if result
           State.isSaving = State.isAdding = false
-          Redmine.get(msg.account).getIssuesOnUser(getIssuesSuccess)
+          DataAdapter.addAccounts([account])
           Message.toast Resource.string("msgAuthSuccess"), 3000
           Analytics.sendEvent 'internal', 'auth', 'success'
-          loadProject msg.account
         else
           failAuthentication null
     else
       failAuthentication msg
-
-
-  ###
-   add assigned issues and projects.
-  ###
-  getIssuesSuccess = (data) ->
-    if not data? then return
-    # show assigned project.
-    activeProject = {}
-    for i in data.issues
-      activeProject[i.url] = activeProject[i.url] or {}
-      activeProject[i.url][i.project.id] = true
-    for url, ids of activeProject
-      for id in Object.keys(ids)
-        Project.setParam url, id - 0, {show: Project.SHOW.SHOW}
-    # show assigned ticket.
-    Ticket.addArray data.issues
-    Ticket.sync()
 
 
   ###
@@ -117,9 +98,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   removeAccount = (url) ->
     Account.removeAccount url, () ->
       Redmine.remove({url: url})
-      # for a, i in $scope.accounts when a.url is url
-      #   $scope.accounts.splice i, 1
-      #   break
+      DataAdapter.removeAccounts([{url:url}])
       Project.removeUrl url
       Ticket.removeUrl url
       Message.toast Resource.string("msgAccountRemoved").format(url)
