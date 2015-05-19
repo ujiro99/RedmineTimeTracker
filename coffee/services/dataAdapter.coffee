@@ -49,11 +49,11 @@ timeTracker.factory("DataAdapter", (Analytics) ->
             @_filteredData.push dataModel.account
             dataModel.account.projects = dataModel.projects
         else
-          query = query.toLowerCase()
+          substrRegexs = query.split(' ').map (q) -> new RegExp(q, 'i')
           for url, dataModel of @_data
-            filtered = []
-            for n in dataModel.projects
-              filtered.push n if (n.id + " " + n.text).toLowerCase().contains(query)
+            filtered = dataModel.projects.filter (n) ->
+              text = n.id + " " + n.text
+              return substrRegexs.every (r) -> r.test(text)
             if filtered.length > 0
               @_filteredData.push dataModel.account
               dataModel.account.projects = filtered
