@@ -33,14 +33,8 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
   class Project
 
     ## class variables
-
     @PROJECT = "PROJECT"
     @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
-
-    # events
-    @CHANGE: "change"
-    @CHANGE_SELECTED: "change_selected"
-
 
     ## instance variables
 

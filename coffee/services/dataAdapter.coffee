@@ -11,8 +11,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
   class DataAdapter extends EventDispatcher
 
     ## instance variables
-    ACCOUNT_ADDED:   "account_added"
-    ACCOUNT_REMOVED: "account_removed"
+
+    # event
+    ACCOUNT_ADDED:            "account_added"
+    ACCOUNT_REMOVED:          "account_removed"
+    SELECTED_ACCOUNT_CHANGED: "selected_account_changed"
+    SELECTED_PROJECT_CHANGED: "selected_project_changed"
+    SELECTED_TICKET_CHANGED:  "selected_ticket_changed"
+    SELECTED_QUERY_CHANGED:   "selected_query_changed"
 
     ###*
     # all data.
@@ -21,20 +27,54 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
     # @param {Object.ProjectModel[]} projects
     ###
     _data: {}
-    # filtered data.
-    _filteredData: []
-    # query string for projects
-    _projectQuery: ""
-    # selected project.
-    selectedProject: null
+
     # selected ticket.
     selectedTicket: null
 
-    # accounts accessor.
+    # filtered data.
+    _filteredData: []
     @property 'accounts',
       get: -> @_filteredData
 
-    # projectQuery accessor.
+    # selected account.
+    _selectedAccount: null
+    @property 'selectedAccount',
+      get: -> @_selectedAccount
+      set: (n) ->
+        if @_selectedAccount isnt n
+          @_selectedAccount = n
+          @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
+
+    # selected project.
+    _selectedProject: null
+    @property 'selectedProject',
+      get: -> @_selectedProject
+      set: (n) ->
+        if @_selectedProject isnt n
+          @_selectedProject = n
+          @_selectedAccount = @_data[@_selectedProject.url].account
+          @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
+
+    # selected ticket.
+    _selectedTicket: null
+    @property 'selectedTicket',
+      get: -> @_selectedTicket
+      set: (n) ->
+        if @_selectedTicket isnt n
+          @_selectedTicket = n
+          @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
+
+    # selected query.
+    _selectedQuery: null
+    @property 'selectedQuery',
+      get: -> @_selectedQuery
+      set: (n) ->
+        if @_selectedQuery isnt n
+          @_selectedQuery = n
+          @fireEvent(@SELECTED_QUERY_CHANGED, @, n)
+
+    # query string for projects
+    _projectQuery: ""
     @property 'projectQuery',
       get: () -> return @_projectQuery
       set: (query) ->

@@ -1,4 +1,4 @@
-timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message, Resource, BaseEditState) ->
+timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, State, Message, Resource, BaseEditState) ->
 
   ###
    controller for issue edit mode.
@@ -8,8 +8,6 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
     constructor: (@$scope) ->
       super()
       @listData = Ticket
-      @$scope.selected = @$scope.selectedProject
-
 
     removeItem: (item) ->
       selected = @listData.getSelected()[0]
@@ -21,22 +19,20 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, State, Message,
 
     load: (page) ->
       page = @currentPage if not page?
-      if not @$scope.selectedProject?
+      if not DataAdapter.selectedProject?
         @$scope.issues.clear()
         return
-      account = (a for a in @$scope.accounts when @$scope.selectedProject.url is a.url)[0]
-      if not (account and account.url) then return
-      projectId = @$scope.selectedProject.id
+      projectId = DataAdapter.selectedProject.id
       params =
         page: page
         limit: @itemsPerPage
-        query_id: @$scope.selectedProject.queryId
-      Redmine.get(account).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
+        query_id: DataAdapter.selectedProject.queryId
+      Redmine.get(DataAdapter.selectedAccount).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
 
 
     loadSuccess: (data) =>
-      return if not @$scope.selectedProject
-      return if @$scope.selectedProject.url isnt data.url
+      return if not DataAdapter.selectedProject
+      return if DataAdapter.selectedProject.url isnt data.url
       return if @currentPage - 1 isnt data.offset / data.limit
       @$scope.totalItems = data.total_count
       for issue in data.issues

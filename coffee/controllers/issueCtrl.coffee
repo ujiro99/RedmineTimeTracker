@@ -1,13 +1,11 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, Message, State, Resource, Analytics, IssueEditState) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, DataAdapter, Message, State, Resource, Analytics, IssueEditState) ->
 
   # list data
-  $scope.accounts = []
   $scope.queries  = []
   $scope.issues   = []
 
-  # selected
-  $scope.selectedProject = {}
-  $scope.selectedQuery   = {}
+  # data
+  $scope.data = DataAdapter
 
   # typeahead data
   $scope.queryData   = null
@@ -33,11 +31,26 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    Initialize.
   ###
   init = () ->
-    Account.getAccounts (accounts) ->
-      $scope.accounts.set(accounts)
-      $scope.selectedAccount = $scope.accounts[0]
-      $scope.editState = new IssueEditState($scope)
-      initializeSearchform()
+    $scope.editState = new IssueEditState($scope)
+    initializeSearchform()
+
+    # on change selected Project, load issues and queries.
+    DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_CHANGED, (project) ->
+      if not project?
+        $scope.queries.clear()
+        return
+
+      # load issues
+      loadIssuesFirstPage()
+
+      account = DataAdapter.selectedAccount
+      if account and account.url
+        params =
+          page: 1
+          limit: 50
+        Redmine.get(account).loadQueries(params)
+          .success(_updateQuery)
+          .error(_errorLoadQuery)
 
 
   ###
@@ -51,38 +64,17 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
 
 
   ###
-   on change selected Project, load issues and queries.
-  ###
-  $scope.$watch 'selectedProject', (newVal) ->
-    if not newVal
-      $scope.queries.clear()
-      return
-
-    # load issues
-    loadIssuesFirstPage()
-
-    account = $scope.selectedAccount
-    if account and account.url
-      params =
-        page: 1
-        limit: 50
-      Redmine.get(account).loadQueries(params)
-        .success(_updateQuery)
-        .error(_errorLoadQuery)
-
-
-  ###
    update query by redmine's data.
   ###
   _updateQuery = (data) =>
-    return if not $scope.selectedProject
-    return if $scope.selectedProject.url isnt data.url
+    return if not DataAdapter.selectedProject
+    return if DataAdapter.selectedProject.url isnt data.url
     newQueries = []
     newQueries.push {id: QUERY_ALL_ID, name: 'All'}
     for query in data.queries
       # filter the project-specific query
       if query.project_id
-        if query.project_id is $scope.selectedProject.id
+        if query.project_id is DataAdapter.selectedProject.id
           newQueries.push query
       else
         newQueries.push query
@@ -101,14 +93,14 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    on change selected Query, set query to project, and udpate issues.
   ###
   $scope.$watch 'selectedQuery.id', (newVal) ->
-    if not $scope.selectedProject then return
-    if not $scope.selectedQuery then return
+    if not DataAdapter.selectedProject then return
+    if not DataAdapter.selectedQuery then return
 
-    targetId  = $scope.selectedProject.id
-    targetUrl = $scope.selectedProject.url
-    queryId = $scope.selectedQuery.id
+    targetId  = DataAdapter.selectedProject.id
+    targetUrl = DataAdapter.selectedProject.url
+    queryId = DataAdapter.selectedQuery.id
     if queryId is QUERY_ALL_ID then queryId = undefined
-    $scope.selectedProject.queryId = queryId
+    DataAdapter.selectedProject.queryId = queryId
     Project.setParam(targetUrl, targetId, { 'queryId': queryId })
     loadIssuesFirstPage()
 

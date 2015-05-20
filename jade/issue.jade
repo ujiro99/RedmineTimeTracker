@@ -22,8 +22,8 @@ div#issue(ng-controller='IssueCtrl')
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="queryData"
-          ng-model="selectedQuery"
-          ng-click="selectedQuery = null"
+          ng-model="data.selectedQuery"
+          ng-click="data.selectedQuery = null"
           placeholder='Query...')
         i.fa.fa-search
 
