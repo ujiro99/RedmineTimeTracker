@@ -1,41 +1,75 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, Message, Analytics, Chrome, Resource, Option) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Analytics, Chrome, Resource, Option) ->
 
   DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
   TICKET_CLOSED = 5
   NOT_FOUND = 404
   UNAUTHORIZED = 401
+  # http request canceled.
+  STATUS_CANCEL = 0
 
   $rootScope.messages = []
 
+  ###
+   Initialize.
+  ###
+  init = () ->
+    # load options frome chrome storage.
+    Option.getOptions (options) -> $scope.options = options
+    # initialize events.
+    DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
+      for account in accounts
+        params =
+          page: 1
+          limit: 50
+        Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
+    _setDataSyncAlarms()
+    # initialize data.
+    Account.getAccounts (accounts) ->
+      if not accounts? or not accounts?[0]?
+        _requestAddAccount()
+        return
+      DataAdapter.addAccounts(accounts)
+      Ticket.load (tickets) ->
+        if not tickets? then return
+        _updateIssues()
+    # initialize others.
+    _initializeGoogleAnalytics()
 
-  Ticket.load (tickets) ->
-    if not tickets?
-      return
-    updateIssues()
+
+  ###
+   update projects by redmine's data.
+  ###
+  _updateProject = (data) =>
+    if data.projects?
+      DataAdapter.addProjects(data.projects)
+      Message.toast Resource.string("msgLoadProjectSuccess").format(data.projects[0].url)
+    else
+      _errorLoadProject data
 
 
-  Option.getOptions (options) ->
-    $scope.options = options
+  ###
+   show error message.
+  ###
+  _errorLoadProject = (data, status) =>
+    if status is STATUS_CANCEL then return
+    Message.toast Resource.string("msgLoadProjectFail")
 
 
   ###
    update issues status.
   ###
-  updateIssues = () ->
-    Account.getAccounts (accounts) ->
-      if not accounts? or not accounts?[0]?
-        return
-      for t in Ticket.get()
-        for account in accounts when account.url is t.url
-          Redmine.get(account).getIssuesById t.id, issueFound, issueNotFound
-          break
+  _updateIssues = () ->
+    for t in Ticket.get()
+      for account in DataAdapter.accounts when account.url is t.url
+        Redmine.get(account).getIssuesById t.id, _issueFound, _issueNotFound
+        break
 
 
   ###
    when issue found, update according to status.
   ###
-  issueFound = (data) ->
+  _issueFound = (data) ->
     newParam =
       text: data.issue.subject
     Ticket.setParam  data.issue.url, data.issue.id, newParam
@@ -50,25 +84,16 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
    when issue not found, remove issue.
   ###
-  issueNotFound = (data, status) ->
+  _issueNotFound = (data, status) ->
     if status is NOT_FOUND or status is UNAUTHORIZED
       Ticket.remove {url: data.issue.url, id: data.issue.id }
       return
 
 
   ###
-   check account exist.
-  ###
-  Account.getAccounts (accounts) ->
-    if not accounts? or not accounts?[0]?
-      requestAddAccount()
-      return
-
-
-  ###
    request a setup of redmine account to user.
   ###
-  requestAddAccount = () ->
+  _requestAddAccount = () ->
     $timeout () ->
       State.isAdding = true
     , 500
@@ -84,19 +109,33 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     , 2500
 
 
-  alarmInfo =
-    when: Date.now() + 1
-    periodInMinutes: MINUTE_5
-  Chrome.alarms.create(DATA_SYNC, alarmInfo)
-  Chrome.alarms.onAlarm.addListener (alarm) ->
-    if alarm.name is DATA_SYNC
+  ###
+   set datasync event to chrome alarms.
+  ###
+  _setDataSyncAlarms = () ->
+    alarmInfo =
+      when: Date.now() + 1
+      periodInMinutes: MINUTE_5
+    Chrome.alarms.create(DATA_SYNC, alarmInfo)
+    Chrome.alarms.onAlarm.addListener (alarm) ->
+      return if not alarm.name is DATA_SYNC
       Ticket.sync()
       Project.sync()
 
 
-  Analytics.init {
-    serviceName:   "RedmineTimeTracker"
-    analyticsCode: "UA-32234486-7"
-  }
-  Analytics.sendView("/app/")
+  ###
+   initialize GoogleAnalytics.
+  ###
+  _initializeGoogleAnalytics = () ->
+    Analytics.init {
+      serviceName:   "RedmineTimeTracker"
+      analyticsCode: "UA-32234486-7"
+    }
+    Analytics.sendView("/app/")
+
+
+  ###
+   Start Initialize.
+  ###
+  init()
 

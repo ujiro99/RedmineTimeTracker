@@ -4,45 +4,6 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   $scope.data = DataAdapter
   # is header dropdown active?
   $scope.isActive = false
-  # project filter string.
-  $scope.projectSearchText = ""
-
-  # http request canceled.
-  STATUS_CANCEL = 0
-
-
-  ###
-   Initialize.
-  ###
-  init = () ->
-    DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
-      for account in accounts
-        params =
-          page: 1
-          limit: 50
-        Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
-    Account.getAccounts (accounts) ->
-      DataAdapter.addAccounts(accounts)
-
-
-  ###
-   update projects by redmine's data.
-  ###
-  _updateProject = (data) =>
-    if data.projects?
-      DataAdapter.addProjects(data.projects)
-      Message.toast Resource.string("msgLoadProjectSuccess").format(data.projects[0].url)
-    else
-      _errorLoadProject data
-
-
-  ###
-   show error message.
-  ###
-  _errorLoadProject = (data, status) =>
-    if status is STATUS_CANCEL then return
-    Message.toast Resource.string("msgLoadProjectFail")
-
 
   ###
    select project.
@@ -51,10 +12,3 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   $scope.selectProject = (project) ->
     DataAdapter.selectedProject = project
     $scope.isActive = false
-
-
-  ###
-   Start Initialize.
-  ###
-  init()
-
