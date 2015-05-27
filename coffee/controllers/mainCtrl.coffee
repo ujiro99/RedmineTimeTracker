@@ -18,11 +18,12 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Option.getOptions (options) -> $scope.options = options
     # initialize events.
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
-      for account in accounts
+      for a in accounts
         params =
           page: 1
           limit: 50
-        Redmine.get(account).loadProjects _updateProject, _errorLoadProject, params
+        Redmine.get(a).loadProjects _updateProjects, _errorLoadProject, params
+        _loadActivities(a)
     _setDataSyncAlarms()
     # initialize data.
     Account.getAccounts (accounts) ->
@@ -30,9 +31,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         _requestAddAccount()
         return
       DataAdapter.addAccounts(accounts)
-      Ticket.load (tickets) ->
-        if not tickets? then return
-        _updateIssues()
+      Ticket.load () -> _updateIssues()
     # initialize others.
     _initializeGoogleAnalytics()
 
@@ -40,7 +39,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
    update projects by redmine's data.
   ###
-  _updateProject = (data) =>
+  _updateProjects = (data) =>
     if data.projects?
       DataAdapter.addProjects(data.projects)
       Message.toast Resource.string("msgLoadProjectSuccess").format(data.projects[0].url)
@@ -88,6 +87,15 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     if status is NOT_FOUND or status is UNAUTHORIZED
       Ticket.remove {url: data.issue.url, id: data.issue.id }
       return
+
+
+  ###
+   load activities for account.
+  ###
+  _loadActivities = (account) ->
+    Redmine.get(account).getActivities (data) ->
+      if not data?.time_entry_activities? then return
+      DataAdapter.setActivities(data.url, data.time_entry_activities)
 
 
   ###

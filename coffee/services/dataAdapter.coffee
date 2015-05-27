@@ -1,11 +1,40 @@
 timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
 
 
+  ###*
+  ###
   class DataModel
 
     constructor: () ->
+      ###*
+      # @property account
+      # @type AccountModel
+      ###
       @account = {}
+
+      ###*
+      # @property projects
+      # @type Array of ProjectModel
+      ###
       @projects = []
+
+      ###*
+      # @property tickets
+      # @type Array of TicketModel
+      ###
+      @tickets = []
+
+      ###*
+      # @property Activities
+      # @type Array of ActivityModel
+      ###
+      @activities = []
+
+      ###*
+      # @property Queries
+      # @type Array of QueryModel
+      ###
+      @queries = []
 
 
   class DataAdapter extends EventDispatcher
@@ -22,9 +51,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
 
     ###*
     # all data.
-    # @param {Object} data
-    # @param {Object.AccountModel} account
-    # @param {Object.ProjectModel[]} projects
+    # @param {DataModel}  data's url
     ###
     _data: {}
 
@@ -43,6 +70,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
       set: (n) ->
         if @_selectedAccount isnt n
           @_selectedAccount = n
+          @selectedActivity = @_data[n.url].activities[0]
+          @selectedQuery    = @_data[n.url].queries[0]
           @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
 
     # selected project.
@@ -52,7 +81,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
       set: (n) ->
         if @_selectedProject isnt n
           @_selectedProject = n
-          @_selectedAccount = @_data[@_selectedProject.url].account
+          @selectedAccount = @_data[n.url].account
           @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
 
     # selected ticket.
@@ -64,6 +93,12 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
           @_selectedTicket = n
           @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
 
+    # selected activity.
+    _selectedActivity: null
+    @property 'selectedActivity',
+      get: -> @_selectedActivity
+      set: (n) -> @_selectedActivity = n
+
     # selected query.
     _selectedQuery: null
     @property 'selectedQuery',
@@ -72,6 +107,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
         if @_selectedQuery isnt n
           @_selectedQuery = n
           @fireEvent(@SELECTED_QUERY_CHANGED, @, n)
+
 
     # query string for projects
     _projectQuery: ""
@@ -146,6 +182,25 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
         @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
       for a in @_filteredData when a.url is projects[0].url
         a.projects.remove((n) -> return n.equals(p))
+
+    ###*
+    # set activites.
+    # @param {String} url        - url of redmine server.
+    # @param {Array}  activities - array of activiy. activiy: { id: Number, name: String }.
+    ###
+    setActivities: (url, activities) ->
+      if not url? or not activities? then return
+      @_data[url].activities = activities
+
+
+    ###*
+    # set queries.
+    # @param {String} url      - url of redmine server.
+    # @param {Array}  queries  - array of query. query: { id: Number, name: String }.
+    ###
+    setQueries: (url, queries) ->
+      if not url? or not queries? then return
+      @_data[url].queries = queries
 
   return new DataAdapter
 

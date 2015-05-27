@@ -4,8 +4,8 @@ div.select
     input.sfTypeahead.form-control.input-sm(type="text"
       options="inputOptions"
       datasets="ticketData"
-      ng-model="selectedTicket"
-      ng-click="selectedTicket = null"
+      ng-model="data.selectedTicket"
+      ng-click="data.selectedTicket = null"
       placeholder='Select issue...')
 
   button.btn(type='button', ng-click='clickManual()', ga-click='postManual')
@@ -17,9 +17,9 @@ div.form-inline
   div.activity
     input.sfTypeahead.form-control.input-sm(type="text"
       options="inputOptions"
-      datasets="projects[selectedTicket[0].url].activities"
-      ng-model="selectedActivity"
-      ng-click="selectedActivity = null"
+      datasets="activityData"
+      ng-model="data.selectedActivity"
+      ng-click="data.selectedActivity = null"
       placeholder='Select activity...')
 
   div.separater

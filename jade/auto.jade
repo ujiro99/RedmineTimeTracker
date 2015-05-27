@@ -6,13 +6,13 @@ div.select
       input.sfTypeahead.form-control.input-sm(type="text"
         options="inputOptions"
         datasets="ticketData"
-        ng-model="selectedTicket"
-        ng-click="selectedTicket = null"
+        ng-model="data.selectedTicket"
+        ng-click="data.selectedTicket = null"
         placeholder='Select issue...')
 
     div.progress.progress-striped.active(ng-show="state.isTracking")
       div.progress-bar(role="progressbar")
-        span {{selectedTicket[0].id}} {{selectedTicket[0].text}}
+        span {{data.selectedTicket.id}} {{data.selectedTicket.text}}
         timer(autostart='false', interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
   button.btn(type='button', ng-click='clickSubmitButton()', ga-click='postAuto')
@@ -26,14 +26,14 @@ div.form-inline
     input.sfTypeahead.form-control.input-sm(type="text"
       options="inputOptions"
       datasets="activityData"
-      ng-model="selectedActivity"
-      ng-click="selectedActivity = null"
+      ng-model="data.selectedActivity"
+      ng-click="data.selectedActivity = null"
       placeholder='Select activity...')
 
   div.separater
 
   div.time
-    span total {{selectedTicket[0].total}} hr
+    span total {{data.selectedTicket.total}} hr
 
 
 // comment

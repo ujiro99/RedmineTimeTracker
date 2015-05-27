@@ -1,12 +1,12 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, Message, State, Resource) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, DataAdapter, Message, State, Resource) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
   SWITCHING_TIME = 300
 
   $scope.state = State
+  $scope.data = DataAdapter
   $scope.projects = {}
-  $scope.selectedActivity = {}
   $scope.comment =
     text: ""
     MaxLength: COMMENT_MAX
@@ -14,7 +14,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   $scope.mode = "auto"
   $scope.time = { min: 0 }
   $scope.tickets = []
-  $scope.selectedTicket = {}
 
   trackedTime = {}
 
@@ -28,13 +27,19 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Initialize.
   ###
   init = () ->
-    Account.getAccounts (accounts) ->
-      if not accounts then return
-      for account in accounts
-        loadActivities account
     $scope.tickets = Ticket.getSelectable()
-    $scope.selectedTicket = Ticket.getSelected()
+    DataAdapter.selectedTicket = Ticket.getSelected()
     initializeSearchform()
+
+
+  ###
+   change activity according to selected ticket
+  ###
+  $scope.$watch 'selectedTicket.url', (url) ->
+    if not url then return
+    $scope.activityData =
+      displayKey: 'name'
+      source: util.substringMatcher($scope.projects[url].activities, 'name')
 
 
   ###
@@ -47,53 +52,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     $scope.activityData =
       displayKey: 'name'
       source: util.substringMatcher([], 'name')
-
-
-  ###
-   load activities for new account.
-  ###
-  $scope.$on 'accountAdded', (e, account) ->
-    loadActivities account
-
-
-  ###
-   load activities for account.
-  ###
-  loadActivities = (account) ->
-    $scope.projects[account.url] = $scope.projects[account.url] or {}
-    $scope.projects[account.url].account = account
-    Redmine.get(account).getActivities(getActivitiesSuccess)
-
-
-  ###
-   show loaded activities.
-  ###
-  _getActivitiesSuccess = (data, status, headers, config) ->
-    if not data?.time_entry_activities? then return
-    $scope.projects[data.url].activities = data.time_entry_activities
-
-
-  ###
-   show loaded activities.
-  ###
-  getActivitiesSuccess = (data, status, headers, config) ->
-    _getActivitiesSuccess(data, status, headers, config)
-    getActivitiesSuccess = _getActivitiesSuccess
-
-    # on first, set selectedActivity.
-    $scope.selectedActivity = $scope.projects[data.url].activities[0]
-
-
-  ###
-   change activity according to selected ticket
-  ###
-  $scope.$watch 'selectedTicket.url', (url) ->
-    if not url then return
-    if not $scope.selectedTicket? then return
-    $scope.activityData =
-      displayKey: 'name'
-      source: util.substringMatcher($scope.projects[url].activities, 'name')
-    $scope.selectedActivity = $scope.projects[url].activities?[0]
 
 
   ###
@@ -118,7 +76,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
-    if not $scope.selectedTicket then return
+    if not DataAdapter.selectedTicket then return
     if State.isTracking
       if $scope.comment.remain < 0
         Message.toast Resource.string("msgCommentTooLong")
@@ -156,18 +114,16 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     if minutes >= ONE_MINUTE
       hours = minutes / 60
       hours = Math.floor(hours * 100) / 100
-      total = $scope.selectedTicket.total + hours
-      $scope.selectedTicket.total = Math.floor(total * 100) / 100
+      total = DataAdapter.selectedTicket.total + hours
+      DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
       conf =
-        issueId:    $scope.selectedTicket.id
+        issueId:    DataAdapter.selectedTicket.id
         hours:      hours
         comment:    $scope.comment.text
-        activityId: $scope.selectedActivity.id
-      url = $scope.selectedTicket.url
-      account = $scope.projects[url].account
-      redmine = Redmine.get(account)
-      redmine.submitTime(conf, submitSuccess, submitError)
-      Message.toast Resource.string("msgSubmitTimeEntry").format($scope.selectedTicket.text, hours)
+        activityId: DataAdapter.selectedActivity.id
+      url = DataAdapter.selectedTicket.url
+      Redmine.get(DataAdapter.selectedAccount).submitTime(conf, submitSuccess, submitError)
+      Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
     else
       Message.toast Resource.string("msgShortTime")
 
