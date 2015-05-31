@@ -1,4 +1,4 @@
-timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
+timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
   TICKET = "TICKET"
 
@@ -87,16 +87,16 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
 
     storage.get TICKET, (tickets) ->
       if Chrome.runtime.lastError?
-        console.debug 'runtime error'
+        Log.error 'runtime error'
         callback? null; return
 
       Project.load (projects) ->
         if Chrome.runtime.lastError?
-          console.debug 'runtime error'
+          Log.error 'runtime error'
           callback? null; return
 
         if not tickets[TICKET]?
-          console.debug 'project or ticket does not exists'
+          Log.info 'project or ticket does not exists'
           callback? null; return
 
         synced = _syncWithProject tickets[TICKET], projects
@@ -242,7 +242,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
      set tickets.
     ###
     set: (ticketslist, callback) ->
-      console.log 'tikcet set'
+      Log.debug 'tikcet.set'
       if not ticketslist? then return
 
       tickets.clear()
@@ -278,7 +278,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
      add ticket array.
     ###
     addArray: (arr) ->
-      console.log 'tikcet addArray'
+      Log.debug 'tikcet.addArray'
       if not arr? then return
       for t in arr then _add t
       if selectedTickets.length is 0
@@ -352,7 +352,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
     load: (callback) ->
       _loadLocal (localTickets, missingUrlIndex) =>
         if localTickets?
-          console.log 'tikcet loaded from local'
+          Log.info 'tikcet loaded from local'
           @set localTickets, (res, msg) ->
             if not missingUrlIndex.isEmpty()
               msg = msg or {}
@@ -360,7 +360,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome) ->
             callback localTickets, msg
         else
           _loadSync (syncTickets, missingUrlIndex) =>
-            console.log 'tikcet loaded from sync'
+            Log.info 'tikcet loaded from sync'
             @set syncTickets, (res, msg) ->
               if not missingUrlIndex.isEmpty()
                 msg = msg or {}

@@ -1,4 +1,4 @@
-timeTracker.factory("Project", (Analytics, Chrome) ->
+timeTracker.factory("Project", (Analytics, Chrome, Log) ->
 
   ###
    Project data model.
@@ -242,12 +242,12 @@ timeTracker.factory("Project", (Analytics, Chrome) ->
     load: (callback) ->
       _load Chrome.storage.local, (local) =>
         if local?
-          console.log 'project loaded from local'
+          Log.info 'project loaded from local'
           @set local
           callback local
         else
           _load Chrome.storage.sync, (sync) =>
-            console.log 'project loaded from sync'
+            Log.info 'project loaded from sync'
             @set sync
             callback sync
 

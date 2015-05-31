@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics) ->
+timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics, Log) ->
 
   _redmines = {}
 
@@ -162,7 +162,7 @@ class Redmine
             url: @auth.url
             id:  issueId
         else
-          console.debug data
+          Log.debug data
           @Analytics.sendException("Error: getIssuesById")
         error(data, status))
 
@@ -188,7 +188,7 @@ class Redmine
         @Analytics.sendEvent 'internal', 'submitTime', 'success', config.hours
         success(data))
       .error((data) =>
-        console.debug data
+        Log.debug data
         @Analytics.sendException("Error: submitTime")
         error(data))
 

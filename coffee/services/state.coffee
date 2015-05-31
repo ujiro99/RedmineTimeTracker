@@ -1,10 +1,15 @@
-timeTracker.factory("State", () ->
+timeTracker.provider("State", () ->
 
-  return  {
-    debug: false
-    isTracking: false
-    isAdding: false
-    isSaving: false
+  state =
+    debug:       true
+    isTracking:  false
+    isAdding:    false
+    isSaving:    false
+
+  return {
+    State: state
+    $get: () -> return state
   }
 
 )
+
