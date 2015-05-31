@@ -1,1 +1,1 @@
-timeTracker = angular.module('timeTracker', ['analytics', 'chrome', 'uz'])
+timeTracker = angular.module('timeTracker', ['analytics', 'chrome'])

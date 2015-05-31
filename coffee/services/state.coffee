@@ -1,7 +1,8 @@
-timeTracker.provider("State", () ->
+timeTracker.provider("State", (LogProvider) ->
 
   state =
     debug:       true
+    logLevel:    LogProvider.Level.DEBUG
     isTracking:  false
     isAdding:    false
     isSaving:    false
