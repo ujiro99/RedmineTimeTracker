@@ -1,4 +1,4 @@
-timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
+timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
 
 
   ###*
@@ -73,6 +73,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
           @selectedActivity = @_data[n.url].activities[0]
           @selectedQuery    = @_data[n.url].queries[0]
           @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
+        Log.debug("selectedAccount set: " + n.url)
 
     # selected project.
     _selectedProject: null
@@ -83,6 +84,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
           @_selectedProject = n
           @selectedAccount = @_data[n.url].account
           @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
+        Log.debug("selectedProject set")
 
     # selected ticket.
     _selectedTicket: null
@@ -114,7 +116,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
     @property 'projectQuery',
       get: () -> return @_projectQuery
       set: (query) ->
-        # console.time('projectQuery\t')
+        Log.time('projectQuery\t')
         @_projectQuery = query
         @_filteredData = []
         if not query? or query.isBlank()
@@ -130,7 +132,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
             if filtered.length > 0
               @_filteredData.push dataModel.account
               dataModel.account.projects = filtered
-        # console.timeEnd('projectQuery\t')
+        Log.timeEnd('projectQuery\t')
 
     ###*
     # add accounts
@@ -138,6 +140,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
     ###
     addAccounts: (accounts) ->
       if not accounts? or accounts.length is 0 then return
+      Log.debug("addAccounts")
       for a in accounts
         @_data[a.url] = new DataModel()
         @_data[a.url].account = a
@@ -192,6 +195,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher) ->
       if not url? or not activities? then return
       @_data[url].activities = activities
 
+      Log.debug("setActivities")
 
     ###*
     # set queries.

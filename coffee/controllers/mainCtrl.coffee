@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Analytics, Chrome, Resource, Option) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Analytics, Chrome, Resource, Option, Log) ->
 
   DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
@@ -27,6 +27,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     _setDataSyncAlarms()
     # initialize data.
     Account.getAccounts (accounts) ->
+      Log.debug "Account.getAccounts success"
       if not accounts? or not accounts?[0]?
         _requestAddAccount()
         return
@@ -40,6 +41,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    update projects by redmine's data.
   ###
   _updateProjects = (data) =>
+    Log.debug("_updateProjects() start")
     if data.projects?
       DataAdapter.addProjects(data.projects)
       Message.toast Resource.string("msgLoadProjectSuccess").format(data.projects[0].url)
@@ -52,6 +54,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _errorLoadProject = (data, status) =>
     if status is STATUS_CANCEL then return
+    Log.debug("_errorLoadProjects() start")
     Message.toast Resource.string("msgLoadProjectFail")
 
 
@@ -95,6 +98,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _loadActivities = (account) ->
     Redmine.get(account).getActivities (data) ->
       if not data?.time_entry_activities? then return
+      Log.info "Redmine.getActivities success"
       DataAdapter.setActivities(data.url, data.time_entry_activities)
 
 

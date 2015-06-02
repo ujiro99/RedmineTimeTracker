@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, DataAdapter, Message, State, Resource) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, DataAdapter, Message, State, Resource, Log) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
@@ -46,12 +46,15 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Initialize search form.
   ###
   initializeSearchform = () ->
+    Log.groupCollapsed "initializeSearchform()"
     $scope.ticketData =
       displayKey: 'text'
       source: util.substringMatcher($scope.tickets, 'text')
     $scope.activityData =
       displayKey: 'name'
       source: util.substringMatcher([], 'name')
+    Log.debug DataAdapter.activities
+    Log.groupEnd "initializeSearchform()"
 
 
   ###
@@ -121,6 +124,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
         hours:      hours
         comment:    $scope.comment.text
         activityId: DataAdapter.selectedActivity.id
+      Log.debug conf
       url = DataAdapter.selectedTicket.url
       Redmine.get(DataAdapter.selectedAccount).submitTime(conf, submitSuccess, submitError)
       Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
@@ -143,6 +147,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   ###
   submitError = (msg) ->
     Message.toast Resource.string("msgSubmitTimeFail")
+    Log.warn conf
 
 
   ###
