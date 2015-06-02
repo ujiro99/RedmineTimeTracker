@@ -55,13 +55,32 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     ###
     _data: {}
 
-    # selected ticket.
-    selectedTicket: null
-
     # filtered data.
     _filteredData: []
     @property 'accounts',
       get: -> @_filteredData
+
+    ###*
+    # selectable activites
+    # @type Array of ActivityModel
+    ###
+    _activities: []
+    @property 'activities',
+      get: -> @_activities
+      set: (n) ->
+        @_activities.set n
+        @selectedActivity = n[0]
+
+    ###*
+    # selectable Queries
+    # @type Array of QueryModel
+    ###
+    _queries: []
+    @property 'queries',
+      get: -> @_queries
+      set: (n) ->
+        @_queries.set n
+        @selectedQuery = n[0]
 
     # selected account.
     _selectedAccount: null
@@ -70,8 +89,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       set: (n) ->
         if @_selectedAccount isnt n
           @_selectedAccount = n
-          @selectedActivity = @_data[n.url].activities[0]
-          @selectedQuery    = @_data[n.url].queries[0]
+          @activities = @_data[n.url].activities
+          @queries    = @_data[n.url].queries
           @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
         Log.debug("selectedAccount set: " + n.url)
 
@@ -99,7 +118,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     _selectedActivity: null
     @property 'selectedActivity',
       get: -> @_selectedActivity
-      set: (n) -> @_selectedActivity = n
+      set: (n) -> n is "" or @_selectedActivity = n
 
     # selected query.
     _selectedQuery: null
@@ -109,7 +128,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         if @_selectedQuery isnt n
           @_selectedQuery = n
           @fireEvent(@SELECTED_QUERY_CHANGED, @, n)
-
 
     # query string for projects
     _projectQuery: ""
@@ -122,7 +140,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         if not query? or query.isBlank()
           for url, dataModel of @_data
             @_filteredData.push dataModel.account
-            dataModel.account.projects = dataModel.projects
+            dataModel.account.projects.set(dataModel.projects)
         else
           substrRegexs = query.split(' ').map (q) -> new RegExp(q, 'i')
           for url, dataModel of @_data
@@ -144,6 +162,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       for a in accounts
         @_data[a.url] = new DataModel()
         @_data[a.url].account = a
+      if not @selectedAccount? then @selectedAccount = accounts[0]
       @_filteredData.add(accounts)
       @fireEvent(@ACCOUNT_ADDED, @, accounts)
 
@@ -167,10 +186,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     ###
     addProjects: (projects) ->
       if not projects? or projects.length is 0 then return
-      if not @selectedProject then @selectedProject = projects[0]
       for p in projects
         @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
       @_data[projects[0].url].projects.add(projects)
+      if not @selectedProject then @selectedProject = projects[0]
       for a in @_filteredData when a.url is projects[0].url
         a.projects = a.projects or []
         a.projects.add(projects)
@@ -187,14 +206,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         a.projects.remove((n) -> return n.equals(p))
 
     ###*
-    # set activites.
+    # set activities.
     # @param {String} url        - url of redmine server.
     # @param {Array}  activities - array of activiy. activiy: { id: Number, name: String }.
     ###
     setActivities: (url, activities) ->
       if not url? or not activities? then return
       @_data[url].activities = activities
-
+      @activities.length or @activities = activities
       Log.debug("setActivities")
 
     ###*
@@ -205,6 +224,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     setQueries: (url, queries) ->
       if not url? or not queries? then return
       @_data[url].queries = queries
+      @queries.length or @queries = queries
 
   return new DataAdapter
 

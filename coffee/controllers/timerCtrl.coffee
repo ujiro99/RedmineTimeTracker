@@ -33,16 +33,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
 
 
   ###
-   change activity according to selected ticket
-  ###
-  $scope.$watch 'selectedTicket.url', (url) ->
-    if not url then return
-    $scope.activityData =
-      displayKey: 'name'
-      source: util.substringMatcher($scope.projects[url].activities, 'name')
-
-
-  ###
    Initialize search form.
   ###
   initializeSearchform = () ->
@@ -52,7 +42,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
       source: util.substringMatcher($scope.tickets, 'text')
     $scope.activityData =
       displayKey: 'name'
-      source: util.substringMatcher([], 'name')
+      source: util.substringMatcher(DataAdapter.activities, 'name')
     Log.debug DataAdapter.activities
     Log.groupEnd "initializeSearchform()"
 
