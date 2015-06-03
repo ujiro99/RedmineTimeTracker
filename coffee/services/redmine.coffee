@@ -38,7 +38,7 @@ class Redmine
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
   @NULLFUNC: () ->
 
-  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64, @Analytics) ->
+  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64, @Analytics, @Log) ->
     @url = auth.url
 
   _timeEntryData:
@@ -162,7 +162,7 @@ class Redmine
             url: @auth.url
             id:  issueId
         else
-          Log.debug data
+          @Log.debug data
           @Analytics.sendException("Error: getIssuesById")
         error(data, status))
 
@@ -188,7 +188,7 @@ class Redmine
         @Analytics.sendEvent 'internal', 'submitTime', 'success', config.hours
         success(data))
       .error((data) =>
-        Log.debug data
+        @Log.debug data
         @Analytics.sendException("Error: submitTime")
         error(data))
 
