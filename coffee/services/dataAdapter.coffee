@@ -61,6 +61,17 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       get: -> @_filteredData
 
     ###*
+    # selectable tickets
+    # @type Array of TicketModel
+    ###
+    _tickets: []
+    @property 'tickets',
+      get: -> @_tickets
+      set: (n) ->
+        @_tickets = n
+        @selectedTicket = n[0]
+
+    ###*
     # selectable activites
     # @type Array of ActivityModel
     ###

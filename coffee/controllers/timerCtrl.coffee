@@ -6,16 +6,15 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
 
   $scope.state = State
   $scope.data = DataAdapter
-  $scope.projects = {}
   $scope.comment =
     text: ""
     MaxLength: COMMENT_MAX
     remain: COMMENT_MAX
   $scope.mode = "auto"
   $scope.time = { min: 0 }
-  $scope.tickets = []
 
   trackedTime = {}
+
 
   # typeahead options
   $scope.inputOptions =
@@ -27,8 +26,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Initialize.
   ###
   init = () ->
-    $scope.tickets = Ticket.getSelectable()
-    DataAdapter.selectedTicket = Ticket.getSelected()
+    DataAdapter.tickets = Ticket.getSelectable()
     initializeSearchform()
 
 
@@ -39,7 +37,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     Log.groupCollapsed "initializeSearchform()"
     $scope.ticketData =
       displayKey: 'text'
-      source: util.substringMatcher($scope.tickets, 'text')
+      source: util.substringMatcher(DataAdapter.tickets, 'text')
     $scope.activityData =
       displayKey: 'name'
       source: util.substringMatcher(DataAdapter.activities, 'name')

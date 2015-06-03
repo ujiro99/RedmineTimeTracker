@@ -67,7 +67,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     ###
      load from any area.
     ###
-    _load = (storage, callback) ->
+    _load: (storage, callback) ->
       if not storage? then callback? null; return
       storage.get Project.PROJECT, (projects) ->
         if Chrome.runtime.lastError? then callback? null; return
@@ -79,7 +79,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     ###
      save all project to any area.
     ###
-    _set = (projects, storage, callback) ->
+    _set: (projects, storage, callback) ->
       storage.set PROJECT: projects, () ->
         if Chrome.runtime.lastError?
           callback? false
@@ -90,8 +90,8 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     ###
      save all project to local.
     ###
-    _setLocal = (callback) ->
-      _set @_projects, Chrome.storage.local, callback
+    _setLocal: (callback) ->
+      @_set @_projects, Chrome.storage.local, callback
 
 
     ###
@@ -144,7 +144,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
           if v.show isnt Project.SHOW.NOT
             prj = new ProjectModel(url, urlIndex, k - 0, v.text, v.show, v.queryId)
             @_selectableProjects.push prj
-      _setLocal()
+      @_setLocal()
 
 
     ###
@@ -172,7 +172,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
                                target.show,
                                target.queryId)
         @_selectableProjects.push prj
-      _setLocal()
+      @_setLocal()
 
 
     ###
@@ -210,7 +210,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
                                target.show,
                                target.queryId)
         @_selectableProjects.push prj
-      _setLocal()
+      @_setLocal()
 
 
     ###
@@ -227,7 +227,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
       for p, i in @_selectableProjects when p.equals {url: url, id: id}
         @_selectableProjects.splice i, 1
         break
-      _setLocal()
+      @_setLocal()
 
 
     ###
@@ -243,7 +243,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
      load all projects from chrome sync.
     ###
     load: (callback) ->
-      _load Chrome.storage.local, (local) =>
+      @_load Chrome.storage.local, (local) =>
         if local?
           Log.info 'project loaded from local'
           @set local
@@ -252,7 +252,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
           Log.table local
           Log.groupEnd "Project.load()"
         else
-          _load Chrome.storage.sync, (sync) =>
+          @_load Chrome.storage.sync, (sync) =>
             Log.info 'project loaded from sync'
             @set sync
             callback sync
@@ -262,7 +262,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
      sync all projects to chrome sync.
     ###
     sync: (callback) ->
-      _set @_projects, Chrome.storage.sync, callback
+      @_set @_projects, Chrome.storage.sync, callback
       count = 0
       for k, v of @_projects
         count += Object.keys(v).length - 1
