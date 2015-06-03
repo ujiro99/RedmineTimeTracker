@@ -112,6 +112,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       set: (n) ->
         if @_selectedTicket isnt n
           @_selectedTicket = n
+          @activities = @_data[n.url].activities if n and @_data[n.url]
           @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
 
     # selected activity.
