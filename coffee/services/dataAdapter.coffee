@@ -87,11 +87,11 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'selectedAccount',
       get: -> @_selectedAccount
       set: (n) ->
-        if @_selectedAccount isnt n
-          @_selectedAccount = n
-          @activities = @_data[n.url].activities
-          @queries    = @_data[n.url].queries
-          @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
+        return if @_selectedAccount is n
+        @_selectedAccount = n
+        @activities = @_data[n.url].activities
+        @queries    = @_data[n.url].queries
+        @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
         Log.debug("selectedAccount set: " + n.url)
 
     # selected project.
@@ -99,10 +99,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'selectedProject',
       get: -> @_selectedProject
       set: (n) ->
-        if @_selectedProject isnt n
-          @_selectedProject = n
-          @selectedAccount = @_data[n.url].account
-          @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
+        return if @_selectedProject is n
+        @_selectedProject = n
+        @selectedAccount = @_data[n.url].account
+        @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
         Log.debug("selectedProject set")
 
     # selected ticket.
@@ -110,10 +110,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'selectedTicket',
       get: -> @_selectedTicket
       set: (n) ->
-        if @_selectedTicket isnt n
-          @_selectedTicket = n
-          @activities = @_data[n.url].activities if n and @_data[n.url]
-          @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
+        return if @_selectedTicket is n or n is ""
+        @_selectedTicket = n
+        @activities = @_data[n.url].activities if n and @_data[n.url]
+        @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
 
     # selected activity.
     _selectedActivity: null
@@ -126,9 +126,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'selectedQuery',
       get: -> @_selectedQuery
       set: (n) ->
-        if @_selectedQuery isnt n
-          @_selectedQuery = n
-          @fireEvent(@SELECTED_QUERY_CHANGED, @, n)
+        return if @_selectedQuery is n
+        @_selectedQuery = n
+        @fireEvent(@SELECTED_QUERY_CHANGED, @, n)
 
     # query string for projects
     _projectQuery: ""
