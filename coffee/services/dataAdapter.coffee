@@ -103,7 +103,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         @_selectedProject = n
         @selectedAccount = @_data[n.url].account
         @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
-        Log.debug("selectedProject set")
+        Log.debug("selectedProject set: " + n)
 
     # selected ticket.
     _selectedTicket: null
@@ -114,6 +114,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         @_selectedTicket = n
         @activities = @_data[n.url].activities if n and @_data[n.url]
         @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
+        Log.debug("selectedTicket set: " + n)
 
     # selected activity.
     _selectedActivity: null

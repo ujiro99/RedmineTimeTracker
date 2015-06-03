@@ -13,6 +13,7 @@ timeTracker.provider("Log", () ->
     methods = [
       {name: 'log',             level:  Log.LogLevel.INFO}
       {name: 'debug',           level:  Log.LogLevel.DEBUG}
+      {name: 'table',           level:  Log.LogLevel.DEBUG}
       {name: 'info',            level:  Log.LogLevel.INFO}
       {name: 'warn',            level:  Log.LogLevel.WARN}
       {name: 'error',           level:  Log.LogLevel.ERROR}
@@ -20,9 +21,9 @@ timeTracker.provider("Log", () ->
       {name: 'trace',           level:  Log.LogLevel.INFO}
       {name: 'assert',          level:  Log.LogLevel.INFO}
       {name: 'dirxml',          level:  Log.LogLevel.INFO}
-      {name: 'group',           level:  Log.LogLevel.ERROR}
-      {name: 'groupCollapsed',  level:  Log.LogLevel.ERROR}
-      {name: 'groupEnd',        level:  Log.LogLevel.ERROR}
+      {name: 'group',           level:  Log.LogLevel.DEBUG}
+      {name: 'groupCollapsed',  level:  Log.LogLevel.DEBUG}
+      {name: 'groupEnd',        level:  Log.LogLevel.DEBUG}
       {name: 'time',            level:  Log.LogLevel.ALL}
       {name: 'timeEnd',         level:  Log.LogLevel.ALL}
       {name: 'count',           level:  Log.LogLevel.ALL}

@@ -16,7 +16,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64, Analytics)
+        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64, Analytics, Log)
       return _redmines[auth.url]
 
 
@@ -219,7 +219,8 @@ class Redmine
   ###
    Load projects on url
   ###
-  loadProjects: (success, error, params) ->
+  loadProjects: (success, error, params) =>
+    @Log.debug "loadProjects start"
     params = params or {}
     params.limit = params.limit or 50
     config =
@@ -238,6 +239,9 @@ class Redmine
               text: prj.name,
             @Project.add(newPrj)
             @Project.new(newPrj)
+          @Log.groupCollapsed "redmine.loadProjects()"
+          @Log.table data.projects
+          @Log.groupEnd "redmine.loadProjects()"
         success?(data, status, headers, config))
       .error(error or Redmine.NULLFUNC)
 

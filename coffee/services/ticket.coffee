@@ -150,6 +150,10 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
    save all tickets to any area.
   ###
   _set = (storage, callback) ->
+    Log.info "ticket.set"
+    Log.groupCollapsed "ticket.set"
+    Log.table tickets
+    Log.groupEnd "ticket.set"
     if not storage? then callback? null; return
     ticketArray = []
     errorTickets = []
@@ -164,6 +168,9 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
         errorTickets.push id: t.id, url: t.url
     # save to strage
+    Log.groupCollapsed "ticket.set to chrome"
+    Log.table ticketArray
+    Log.groupEnd "ticket.set to chrome"
     storage.set TICKET: ticketArray, () ->
       if Chrome.runtime.lastError?
         callback? false, {message: "Chrome.runtime error."}
@@ -353,6 +360,9 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       _loadLocal (localTickets, missingUrlIndex) =>
         if localTickets?
           Log.info 'tikcet loaded from local'
+          Log.groupCollapsed 'tikcet loaded'
+          Log.table localTickets
+          Log.groupEnd 'tikcet loaded'
           @set localTickets, (res, msg) ->
             if not missingUrlIndex.isEmpty()
               msg = msg or {}
@@ -361,6 +371,9 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         else
           _loadSync (syncTickets, missingUrlIndex) =>
             Log.info 'tikcet loaded from sync'
+            Log.groupCollapsed 'tikcet loaded'
+            Log.table localTickets
+            Log.groupEnd 'tikcet loaded'
             @set syncTickets, (res, msg) ->
               if not missingUrlIndex.isEmpty()
                 msg = msg or {}

@@ -127,6 +127,9 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     ###
     set: (newProjects) ->
       if not newProjects? then return
+      Log.groupCollapsed "Project.set()"
+      Log.table newProjects
+      Log.groupEnd "Project.set()"
 
       # clear old data
       @_selectableProjects.clear()
@@ -245,6 +248,9 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
           Log.info 'project loaded from local'
           @set local
           callback local
+          Log.groupCollapsed "Project.load()"
+          Log.table local
+          Log.groupEnd "Project.load()"
         else
           _load Chrome.storage.sync, (sync) =>
             Log.info 'project loaded from sync'
