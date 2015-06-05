@@ -26,7 +26,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Initialize.
   ###
   init = () ->
-    DataAdapter.tickets = Ticket.getSelectable()
     initializeSearchform()
 
 

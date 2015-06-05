@@ -62,6 +62,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    update issues status.
   ###
   _updateIssues = () ->
+    DataAdapter.tickets = Ticket.getSelectable()
     for t in Ticket.get()
       for account in DataAdapter.accounts when account.url is t.url
         Redmine.get(account).getIssuesById t.id, _issueFound, _issueNotFound

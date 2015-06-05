@@ -68,7 +68,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'tickets',
       get: -> @_tickets
       set: (n) ->
-        @_tickets = n
+        @_tickets.set n
         @selectedTicket = n[0]
 
     ###*
