@@ -1,4 +1,4 @@
-timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAdapter, Message, Resource, Analytics) ->
+timeTracker.controller 'headerCtrl', ($scope, DataAdapter) ->
 
   # data
   $scope.data = DataAdapter
@@ -12,3 +12,9 @@ timeTracker.controller 'headerCtrl', ($scope, Account, Redmine, Project, DataAda
   $scope.selectProject = (project) ->
     DataAdapter.selectedProject = project
     $scope.isActive = false
+
+  ###
+   Close application.
+  ###
+  $scope.closeWindow = () ->
+    window.close()

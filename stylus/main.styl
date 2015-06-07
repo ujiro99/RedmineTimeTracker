@@ -284,6 +284,22 @@ body.modal-open
 .search-icon:focus::-webkit-search-decoration::before
   color: #777
 
+.window-close
+  position: absolute
+  right: 0
+  outline: none
+  border: none
+  background-color: transparent
+  color: #ccc
+  height: height_header px
+  transition: color  .2s ease
+  z-index: 1
+  &:hover
+    color: color_key
+  span
+    font-size: 1.1em
+    vertical-align: middle
+
 .header-bar
   position: fixed
   width: 100%

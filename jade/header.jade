@@ -1,6 +1,10 @@
 div#header(ng-controller="headerCtrl")
 
   div.header-bar
+
+    button.window-close(ng-click="closeWindow()")
+      span.icon-close
+
     div.project
 
       button.project-toggle.project-title(type="button", ng-click="isActive = true")
