@@ -92,14 +92,14 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Ticket.remove {url: data.issue.url, id: data.issue.id }
       return
 
-
   ###
    load activities for account.
+   @param account {AccountModel} - load from this account.
   ###
   _loadActivities = (account) ->
-    Redmine.get(account).getActivities (data) ->
+    Redmine.get(account).loadActivities (data) ->
       if not data?.time_entry_activities? then return
-      Log.info "Redmine.getActivities success"
+      Log.info "Redmine.loadActivities success"
       DataAdapter.setActivities(data.url, data.time_entry_activities)
 
 

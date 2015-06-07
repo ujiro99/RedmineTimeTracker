@@ -288,7 +288,7 @@ class Redmine
   ###
    Load time entry activities.
   ###
-  getActivities: (success, error) ->
+  loadActivities: (success, error) ->
     config =
       method: "GET"
       url: @auth.url + "/enumerations/time_entry_activities.json"
