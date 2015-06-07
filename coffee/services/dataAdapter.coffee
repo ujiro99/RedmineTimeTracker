@@ -90,6 +90,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'queries',
       get: -> @_queries
       set: (n) ->
+        # filter the project-specific query
+        n = n.exclude (q) => q and q.project_id and q.project_id isnt @selectedProject.id
         @_queries.set n
         @selectedQuery = n[0]
 
@@ -100,8 +102,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       set: (n) ->
         return if @_selectedAccount is n
         @_selectedAccount = n
-        @activities = @_data[n.url].activities
-        @queries    = @_data[n.url].queries
+        @activities       = @_data[n.url].activities
         @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
         Log.debug("selectedAccount set: " + n.url)
 
@@ -112,9 +113,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       set: (n) ->
         return if @_selectedProject is n
         @_selectedProject = n
-        @selectedAccount = @_data[n.url].account
+        @queries          = @_data[n.url].queries
+        @selectedAccount  = @_data[n.url].account
         @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
-        Log.debug("selectedProject set: " + n)
+        Log.debug("selectedProject set: " + n.text)
 
     # selected ticket.
     _selectedTicket: null
@@ -226,8 +228,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     setActivities: (url, activities) ->
       if not url? or not activities? then return
       @_data[url].activities = activities
-      @activities.length or @activities = activities
-      Log.debug("setActivities")
+      Log.debug("setActivities: #{url}")
 
     ###*
     # set queries.
@@ -237,7 +238,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     setQueries: (url, queries) ->
       if not url? or not queries? then return
       @_data[url].queries = queries
-      @queries.length or @queries = queries
+      Log.debug("setQueries: #{url}")
 
   return new DataAdapter
 

@@ -7,6 +7,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   UNAUTHORIZED = 401
   # http request canceled.
   STATUS_CANCEL = 0
+  # don't use query
+  QUERY_ALL_ID = 'All'
+
 
   $rootScope.messages = []
 
@@ -24,6 +27,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
           limit: 50
         Redmine.get(a).loadProjects _updateProjects, _errorLoadProject, params
         _loadActivities(a)
+        _loadQueries(a)
     _setDataSyncAlarms()
     # initialize data.
     Account.getAccounts (accounts) ->
@@ -101,6 +105,32 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       if not data?.time_entry_activities? then return
       Log.info "Redmine.loadActivities success"
       DataAdapter.setActivities(data.url, data.time_entry_activities)
+
+  ###
+   load queries for account.
+   @param account {AccountModel} - load from this account.
+  ###
+  _loadQueries = (account) ->
+    params =
+      page: 1
+      limit: 50
+    Redmine.get(account).loadQueries(params)
+      .success(_updateQuery)
+      .error(_errorLoadQuery)
+
+  ###
+   update query by redmine's data.
+  ###
+  _updateQuery = (data) =>
+    data.queries.add({id: QUERY_ALL_ID, name: 'All'}, 0)
+    DataAdapter.setQueries(data.url, data.queries)
+
+  ###
+   show error messaga.
+  ###
+  _errorLoadQuery = (data, status) =>
+    if status is STATUS_CANCEL then return
+    Message.toast Resource.string("msgLoadQueryFail")
 
 
   ###
