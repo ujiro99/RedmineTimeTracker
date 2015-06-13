@@ -284,21 +284,30 @@ body.modal-open
 .search-icon:focus::-webkit-search-decoration::before
   color: #777
 
+.icon-cross:before
+  content: "+"
+  display:inline-block
+  width: 100%
+  -webkit-transform: rotate(45deg)
+
 .window-close
   position: absolute
   right: 0
-  outline: none
-  border: none
+  height: height_header px
   background-color: transparent
   color: #ccc
-  height: height_header px
   transition: color  .2s ease
+  outline: none
+  border: none
   z-index: 1
-  &:hover
-    color: color_key
-  span
-    font-size: 1.1em
-    vertical-align: middle
+  &:hover .icon-cross
+    color: #fff
+    background-color: color_key_weak
+  .icon-cross
+    width: icon_size px
+    line-height: icon_size px
+    border-radius: 50%
+    transition: background-color,color .2s ease
 
 .header-bar
   position: fixed
