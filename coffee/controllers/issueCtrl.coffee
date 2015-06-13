@@ -51,7 +51,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
       displayKey: 'name'
       source: util.substringMatcher(DataAdapter.queries, ['name', 'id'])
       templates:
-        suggestion: (n) -> "<div><span class='select-activity__name'>#{n.name}</span><span class='select-activity__id'>#{n.id}</span></div>"
+        suggestion: (n) -> "<div class='list-item'><span class='list-item__name'>#{n.name}</span><span class='list-item__id'>#{n.id}</span></div>"
 
 
   ###

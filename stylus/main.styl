@@ -199,6 +199,28 @@ input.input-sm
 .tt-highlight
   color: color_key_weak
 
+.list-item
+  width: 100%
+
+.list-item__label
+  text-ellipsis()
+
+.list-item__description
+  color: #aaa
+  padding-left: 10px
+
+  span
+    margin-right: 10px
+
+.list-item__id
+  color: #aaa
+  font-size: 0.9em
+  &:before
+    content: "id: "
+    margin-left: 0.5em
+
+.tt-cursor .list-item__id
+  color: #fff
 
 body.modal-open
   margin-right: 0
@@ -518,17 +540,6 @@ input.project-search
   .select-activity
     flex: 5
 
-  .select-activity__id
-    color: #aaa
-    font-size: 0.9em
-
-  .tt-cursor .select-activity__id
-    color: #fff
-
-  .select-activity__id:before
-    content: "id: "
-    margin-left: 0.5em
-
   .separater
     width: 5px
 
@@ -794,20 +805,6 @@ input.project-search
         border: none
         padding: 0 3px
         color: #aaa
-
-      .list-item
-        width: 100%
-
-      .list-label
-        text-ellipsis()
-
-      .list-description
-        color: #aaa
-        padding-left: 10px
-
-        span
-          margin-right: 10px
-
 
 #options
 

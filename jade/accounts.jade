@@ -52,9 +52,9 @@ div#accounts(ng-controller='AccountCtrl')
        ga-click='openRemoveAccount')
       .number
       .list-item
-        .list-label
+        .list-item__label
           span {{account.url}}
-        .list-description
+        .list-item__description
           span id: {{account.id}}
           span projects: {{account.projects.length}}
       button.btn(type='button')
