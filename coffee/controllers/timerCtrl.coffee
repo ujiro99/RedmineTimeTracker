@@ -33,7 +33,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    Initialize search form.
   ###
   initializeSearchform = () ->
-    Log.groupCollapsed "initializeSearchform()"
     $scope.ticketData =
       displayKey: 'text'
       source: util.substringMatcher(DataAdapter.tickets, 'text')
@@ -42,9 +41,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
       source: util.substringMatcher(DataAdapter.activities, 'name')
       templates:
         suggestion: (n) -> "<div><span class='select-activity__name'>#{n.name}</span><span class='select-activity__id'>#{n.id}</span></div>"
-    Log.debug DataAdapter.activities
-    Log.debug $scope.activityData
-    Log.groupEnd "initializeSearchform()"
 
 
   ###
