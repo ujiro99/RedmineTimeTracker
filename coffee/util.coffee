@@ -85,11 +85,19 @@ Function::property = (prop, desc) ->
     return true
 
 
-  ###
+  ###*
    Search items which matches query.
    this function is for typeahead.js.
+   @param objects {Array}  Array of object which being searched.
+   @param keys {Array}  Array of key which will be searched in object.
   ###
-  substringMatcher: (objects, key) ->
+  substringMatcher: (objects, keys) ->
+    keys = [keys] if not Array.isArray(keys)
+
+    ###
+     @param query {String} Search query. Multiple queries are separated with space.
+     @param cb {Function} Callback for result.
+    ###
     return findMatches = (query, cb) ->
       matches = []
       substrRegexs = []
@@ -101,12 +109,12 @@ Function::property = (prop, desc) ->
       for obj in objects
         isAllMatch = true
         for r in substrRegexs
-          isAllMatch = isAllMatch and r.test(obj[key])
+          isMatch = false
+          for key in keys then isMatch |= r.test(obj[key])
+          isAllMatch &= isMatch
 
         matches.push(obj) if isAllMatch
 
       cb(matches, queries)
-
-
 
 }
