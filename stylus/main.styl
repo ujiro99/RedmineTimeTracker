@@ -66,15 +66,16 @@ input.input-sm
       align-center()
       height 100%
       color: color_key
-      &.hover-action
-        cursor: pointer
-        .fa
-          transition: opacity 0.2s ease
-          padding: 0 4px
-          font-size: 1.4em
-          opacity: 0
-        &:hover > .fa
-          opacity: 1
+      cursor: pointer
+      .fa
+        padding: 0 4px
+        font-size: 1.4em
+        opacity: 0
+        visibility: hidden
+        transition: opacity 0.2s ease
+      &:hover > .fa
+        visibility: visible
+        opacity: 1
     .title
       align-center()
       font-size: 1.05em
