@@ -249,7 +249,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
           @set local
           callback local
           Log.groupCollapsed "Project.load()"
-          Log.table local
+          Log.debug local
           Log.groupEnd "Project.load()"
         else
           @_load Chrome.storage.sync, (sync) =>
