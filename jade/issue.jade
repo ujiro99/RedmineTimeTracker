@@ -37,9 +37,9 @@ div#issue(ng-controller='IssueCtrl')
           ng-click="searchField.text = ''"
           placeholder='Issue...')
         i.fa.fa-search
-      div.issueList
-        ul
-          li(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',
+      div.issue-list
+        ul.issue-list__content(ng-class="{'issue-list__content--empty':!issues.length}")
+          li.issue-list__item(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',
              ng-mousemove='editState.onMouseMove($event)')
             button.numberedLabel(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
               span.numberedLabel-number {{item.id}}

@@ -588,29 +588,7 @@ input.project-search
   .animate-height
     transition: height .32s ease
 
-  .issueList
-    ul
-      margin-top: 10px
-      padding-left: 4px
-
-    li
-      list-style-type: none
-      height: 20px
-      overflow: hidden
-      display: flex
-
-      .btn
-        border: none
-        padding: 0
-        color: #aaa
-
-      .btn.external-link:hover
-        color: color_key
-
-      &.active
-        background-color: color_key
-        border-radius: 10px
-        transition: background-color ease 0.2s
+  .issue-list
 
     .active .numberedLabel, .active .numberedLabel:hover
       margin-left: 5px
@@ -632,6 +610,37 @@ input.project-search
 
       .tooltip-inner span
         color: #555
+
+  .issue-list__content
+    margin-top: 10px
+    padding-left: 4px
+
+  .issue-list__content--empty
+    margin-bottom: 0px
+
+  .issue-list__content--empty:after
+    content: "not found ..."
+    color: #aaa
+    align-center()
+
+  .issue-list__item
+    list-style-type: none
+    height: 20px
+    overflow: hidden
+    display: flex
+
+    .btn
+      border: none
+      padding: 0
+      color: #aaa
+
+    .btn.external-link:hover
+      color: color_key
+
+    &.active
+      background-color: color_key
+      border-radius: 10px
+      transition: background-color ease 0.2s
 
   uz-pagination
     display: flex
