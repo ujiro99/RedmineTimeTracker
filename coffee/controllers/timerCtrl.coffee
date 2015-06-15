@@ -48,6 +48,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
    if tracking, restore tracked time.
   ###
   $scope.changeMode = () ->
+    restoreSelected()
     if $scope.mode is "auto"
       if State.isTracking
         $scope.$broadcast 'timer-stop'
@@ -59,6 +60,19 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
         $timeout () ->
           $scope.$broadcast 'timer-start', new Date() - trackedTime.millis
         , SWITCHING_TIME
+
+
+  ###
+   Workaround for restore selected state on switching view.
+  ###
+  restoreSelected = () ->
+    return if not DataAdapter.selectedTicket
+    tmpTicket   = DataAdapter.selectedTicket
+    tmpActivity = DataAdapter.selectedActivity
+    $timeout () ->
+      DataAdapter.selectedTicket   = tmpTicket
+      DataAdapter.selectedActivity = tmpActivity
+    , SWITCHING_TIME / 2
 
 
   ###
@@ -94,7 +108,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
     trackedTime = time
     if not State.isTracking
       postEntry(time.days * 60 * 24 + time.hours * 60 + time.minutes)
-
 
   ###
    send time entry.

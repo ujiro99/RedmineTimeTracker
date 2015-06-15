@@ -123,17 +123,17 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'selectedTicket',
       get: -> @_selectedTicket
       set: (n) ->
-        return if @_selectedTicket is n or n is ""
+        return if @_selectedTicket is n
         @_selectedTicket = n
         @activities = @_data[n.url].activities if n and @_data[n.url]
         @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
-        Log.debug("selectedTicket set: " + n)
+        Log.debug("selectedTicket set: " + n?.text)
 
     # selected activity.
     _selectedActivity: null
     @property 'selectedActivity',
       get: -> @_selectedActivity
-      set: (n) -> n is "" or @_selectedActivity = n
+      set: (n) -> @_selectedActivity = n
 
     # selected query.
     _selectedQuery: null
