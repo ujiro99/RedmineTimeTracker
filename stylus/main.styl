@@ -831,7 +831,6 @@ input.project-search
     position: relative
     cursor: pointer
     transition: all .3s ease-out
-    margin: 0px
     -webkit-transform: scale(.7) // Adjust size
     outline: none
     border: none
@@ -857,26 +856,29 @@ input.project-search
   input[type="radio"]:checked:after
     left: 22px
 
-  .settings-section
+  .setting__section
     display: flex
     align-items: center
 
-  .setting-labels
+  .setting__labels
     flex: 1
     margin-bottom: 3px
 
-  .setting-description
-   margin-left: 5px
+  .setting__description
+    margin-left: 5px
     color: #999
 
-  .setting-options
-    input
-      margin-right: -6px
+  .setting__options
     .btn-sm
       padding: 5px 7px
       margin: 0 0 0 5px
       line-height: 1.2
 
+  .setting__button
+    margin-right: -6px
+
+  .setting__input
+    width: 4em
 
 #about
   color: #fff

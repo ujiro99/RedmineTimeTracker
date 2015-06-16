@@ -25,7 +25,7 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, St
       projectId = DataAdapter.selectedProject.id
       params =
         page: page
-        limit: @itemsPerPage
+        limit: @$scope.options.itemsPerPage
         query_id: DataAdapter.selectedProject.queryId
       Redmine.get(DataAdapter.selectedAccount).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
 
@@ -35,6 +35,7 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, St
       return if DataAdapter.selectedProject.url isnt data.url
       return if @currentPage - 1 isnt data.offset / data.limit
       @$scope.totalItems = data.total_count
+      console.log "total count: " + @$scope.totalItems
       for issue in data.issues
         for t in Ticket.get() when issue.equals t
           issue.show = t.show

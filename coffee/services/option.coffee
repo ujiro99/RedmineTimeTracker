@@ -11,7 +11,14 @@ timeTracker.factory("Option", (Chrome) ->
     ###
      get all option data.
     ###
-    getOptions: (callback) ->
+    getOptions: () ->
+      return _options
+
+
+    ###
+     load all option data.
+    ###
+    loadOptions: (callback) ->
       callback = callback or NULLFUNC
       if _options isnt null then callback _options; return
 

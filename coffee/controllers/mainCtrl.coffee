@@ -18,7 +18,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   init = () ->
     # load options frome chrome storage.
-    Option.getOptions (options) -> $scope.options = options
+    Option.loadOptions (options) -> $scope.options = options
     # initialize events.
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
       for a in accounts

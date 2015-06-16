@@ -8,21 +8,30 @@ div#options(ng-controller='OptionCtrl')
         span Options
 
 
-  div.settings-section.form-group
-    div.setting-labels
+  div.setting__section.form-group
+    div.setting__labels
+      label.control-label Number of issues per Page.
+      div.setting__description
+        span (max: 50)
+    div.setting__options
+      input.form-control.input-sm.setting__input(type="number", name="itemsPerPage", max="50", min="1", ng-model="options.itemsPerPage")
+
+
+  div.setting__section.form-group
+    div.setting__labels
       label.control-label Reports Usage
-      div.setting-description
+      div.setting__description
         span Automatically send anonymous usage statistics and crash reports. This function uses cookie.
-    div.setting-options
-      input.btn(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
+    div.setting__options
+      input.setting__button(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
 
 
-  div.settings-section.form-group
-    div.setting-labels
+  div.setting__section.form-group
+    div.setting__labels
       label.control-label Clear Ticket & Project
-      div.setting-description
+      div.setting__description
         span Remove all tickets and project from list.
-    div.setting-options
+    div.setting__options
       button.btn.btn-default.btn-sm.ladda-button(ng-click='clearTickets()',
                                                  uz-loading='isSetting',
                                                  data-style='zoom-in',

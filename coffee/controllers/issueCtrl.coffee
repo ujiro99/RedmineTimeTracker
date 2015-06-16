@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, DataAdapter, Message, State, Resource, Analytics, IssueEditState) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState) ->
 
   # list data
   $scope.issues   = []
@@ -30,6 +30,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
    Initialize.
   ###
   init = () ->
+    $scope.options = Option.getOptions()
+
     $scope.editState = new IssueEditState($scope)
     initializeSearchform()
 
