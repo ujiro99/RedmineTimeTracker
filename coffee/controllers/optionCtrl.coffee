@@ -1,8 +1,14 @@
 timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project, Account, Option, Analytics, State, Resource) ->
 
+  # delay time for setOptions [ms]
+  DELAY_TIME = 500
+
   $scope.options = {}
   $scope.state = State
   $scope.isSetting = false
+
+  # promise object for cancel setOptions
+  timeoutPromise = null
 
 
   ###
@@ -11,13 +17,14 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project
   watchOptions = (newVal, oldVal) ->
     if util.equals(newVal, oldVal) then return
     Analytics.setPermission newVal.reportUsage
-    $timeout ->
+    $timeout.cancel(timeoutPromise)
+    timeoutPromise = $timeout ->
       Option.setOptions $scope.options, (result) ->
         if result
           Message.toast Resource.string("msgOptionSaved")
         else
           Message.toast Resource.string("msgOptionSaveFailed")
-    , 500
+    , DELAY_TIME
 
 
   ###
