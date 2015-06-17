@@ -241,6 +241,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     setQueries: (url, queries) ->
       if not url? or not queries? then return
       @_data[url].queries = queries
+      if @selectedProject and @selectedProject.url is url
+        @queries = queries
       Log.debug("setQueries: #{url}")
 
   return new DataAdapter
