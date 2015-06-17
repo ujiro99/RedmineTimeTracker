@@ -8,7 +8,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   # http request canceled.
   STATUS_CANCEL = 0
   # don't use query
-  QUERY_ALL_ID = 'All'
+  QUERY_ALL_ID = 0
 
 
   $rootScope.messages = []

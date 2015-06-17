@@ -92,6 +92,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       set: (n) ->
         # filter the project-specific query
         n = n.exclude (q) => q and q.project_id and q.project_id isnt @selectedProject.id
+        n = n.sortBy("id")
         @_queries.set n
         @selectedQuery = n[0]
 

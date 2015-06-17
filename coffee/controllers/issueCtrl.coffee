@@ -23,7 +23,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, 
   STATUS_CANCEL = 0
 
   # don't use query
-  QUERY_ALL_ID = 'All'
+  QUERY_ALL_ID = 0
 
 
   ###
