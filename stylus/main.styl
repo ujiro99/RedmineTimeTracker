@@ -1,6 +1,13 @@
 @import '_variable'
 @import '_mixin'
 @import 'components/numbered-label'
+@import 'components/message'
+@import 'components/tooltip'
+@import 'components/typeahead'
+@import 'components/list-item'
+@import 'components/modal'
+@import 'components/icon'
+@import 'components/pagination'
 
 
 html, body
@@ -17,7 +24,6 @@ input, textarea
 input.input-sm
   height height_input px
 
-
 .form-control
   border: none
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
@@ -29,7 +35,6 @@ input.input-sm
   height: 100%
   overflow-y: scroll
 
-
   .btn
     box-shadow: none
     background-color: transparent
@@ -39,21 +44,6 @@ input.input-sm
     &.loading
       background-color: #ebebeb
       border-color: #adadad
-    span.icon-minus
-      display: inline-block
-      width: 100%
-      height: 1em
-      line-height: 1
-      position: relative
-      width: 1em
-      border-radius: 50%
-      border: solid 1px
-      margin: -5px 0 0 0
-      vertical-align: middle
-      background-image: -webkit-gradient(linear,left center,right center,from(#aaa),to(#aaa));
-      background-size: 70% 1px;
-      background-repeat: no-repeat;
-      background-position: 45% 50%;
 
   .invalid
   .invalid:hover
@@ -101,149 +91,8 @@ input.input-sm
   & > section
     padding: 0 0 25px 0
 
-
-.message
-  position: fixed
-  padding: 0
-  bottom: 0
-  left: 0
-  right: 0
-  background: -webkit-gradient(linear, left top, left bottom, from(rgba(253, 253, 253, .925)), to(rgba(253, 253, 253, .8)))
-  box-shadow: 0 0 1px rgba(0, 0, 0, .2)
-  text-align: center
-  z-index: 1000
-
-  ul
-    padding-left: 0
-    margin-bottom: 0
-
-  li
-    padding: 0px 10px
-    height: 0
-    overflow: hidden
-    transition: height .2s ease
-    align-center()
-
-  span
-    color: #555
-
-  i
-    color: #aaa
-    font-size: 0.9em
-    padding-right: 8px
-
-
-.tooltip
-
-  color_tooltip = #f0f0f0
-
-  &.in
-    opacity: 1
-
-  &.top .tooltip-arrow
-    border-top-color:    color_tooltip
-
-  &.bottom .tooltip-arrow
-    border-bottom-color: color_tooltip
-
-  &.right .tooltip-arrow
-    border-right-color:  color_tooltip
-
-  &.left .tooltip-arrow
-    border-left-color:   color_tooltip
-
-  .tooltip-inner
-    color: #555
-    text-align: left
-    background-color: color_tooltip
-
-
 .searchform
   margin-bottom: 5px
-
-.twitter-typeahead
-  width: 100%
-
-.tt-input
-.tt-hint
-  border: 0
-  border-radius: field_border_radius !important
-  outline: none
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
-  &:hover,
-  &:focus
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
-  text-ellipsis()
-
-.tt-hint
-  color: #aaa
-
-.tt-dropdown-menu
-  width: 100%
-  margin-top: 5px
-  padding: 5px 0
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: field_border_radius
-  box-shadow: 0 5px 10px rgba(0,0,0,.2)
-
-.tt-suggestion
-  padding: 0px 8px
-  height: height_input px
-  line-height: height_input px
-  text-ellipsis()
-
-.tt-suggestion.tt-cursor
-  color: #fff
-  background-color: color_key_weak
-
-.tt-highlight
-  color: color_key_weak
-
-.list-item
-  width: 100%
-
-.list-item__label
-  text-ellipsis()
-
-.list-item__description
-  color: #aaa
-  padding-left: 10px
-
-  span
-    margin-right: 10px
-
-.list-item__id
-  color: #aaa
-  font-size: 0.9em
-  &:before
-    content: "id: "
-    margin-left: 0.5em
-
-.tt-cursor .list-item__id
-  color: #fff
-
-body.modal-open
-  margin-right: 0
-
-.modal-header
-  padding: 10px 15px
-  h4
-    margin: 5px 0
-
-.modal-body
-  padding: 15px
-  ul
-    padding-left: 25px
-    margin-bottom: 0
-
-.modal-footer
-  margin-top: 0
-  padding: 10px
-
-  .btn-sm
-    line-height: 1.2
-    width: 4.8em
 
 
 .btn-default:focus
@@ -259,7 +108,6 @@ body.modal-open
 .animate-switch
   position: absolute
   width: 100%
-
 
 .searchform-icon
   margin-right -5px
@@ -294,24 +142,6 @@ body.modal-open
     width: 20px
   .twitter-typeahead
     flex: 1
-
-.search-icon::-webkit-search-decoration::before
-  fa()
-  content: "\f002"
-  position: relative
-  left: -5px
-  color: #aaa
-  transition: color .2s ease
-
-.search-icon:hover::-webkit-search-decoration::before
-.search-icon:focus::-webkit-search-decoration::before
-  color: #777
-
-.icon-cross:before
-  content: "+"
-  display:inline-block
-  width: 100%
-  -webkit-transform: rotate(45deg)
 
 .window-close
   position: absolute
@@ -656,36 +486,6 @@ input.project-search
       background-color: color_key
       border-radius: 10px
       transition: background-color ease 0.2s
-
-  uz-pagination
-    display: flex
-    justify-content: center
-
-  .pagination
-    margin: 10px 10px
-    width: auto
-    display: flex
-    justify-content: space-between
-    &>li:nth-child(1)>a
-    &>li:nth-last-child(1)>a
-      padding: 2px 6px
-    &>li:nth-child(2)>a
-    &>li:nth-last-child(2)>a
-      padding: 2px 8px
-    &>li>a
-      border: none
-      border-radius: 12px
-      padding: 2px 7px
-      margin: 0 2px
-      color: #666
-      cursor: pointer
-    &>.active>a
-      background-color: color_key_weak
-      color: #fff
-    &>.disabled>a
-      color: #ccc
-      cursor: not-allowed
-
 
 #accounts
 

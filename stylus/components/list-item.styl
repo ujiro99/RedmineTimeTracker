@@ -1,0 +1,22 @@
+.list-item
+  width: 100%
+
+.list-item__label
+  text-ellipsis()
+
+.list-item__description
+  color: #aaa
+  padding-left: 10px
+
+  span
+    margin-right: 10px
+
+.list-item__id
+  color: #aaa
+  font-size: 0.9em
+  &:before
+    content: "id: "
+    margin-left: 0.5em
+
+.tt-cursor .list-item__id
+  color: #fff

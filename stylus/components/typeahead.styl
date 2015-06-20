@@ -1,0 +1,38 @@
+.twitter-typeahead
+  width: 100%
+
+.tt-input
+.tt-hint
+  border: 0
+  border-radius: field_border_radius !important
+  outline: none
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+  &:hover,
+  &:focus
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
+  text-ellipsis()
+
+.tt-hint
+  color: #aaa
+
+.tt-dropdown-menu
+  width: 100%
+  margin-top: 5px
+  padding: 5px 0
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: field_border_radius
+  box-shadow: 0 5px 10px rgba(0,0,0,.2)
+
+.tt-suggestion
+  padding: 0px 8px
+  height: height_input px
+  line-height: height_input px
+  text-ellipsis()
+
+.tt-suggestion.tt-cursor
+  color: #fff
+  background-color: color_key_weak
+
+.tt-highlight
+  color: color_key_weak
