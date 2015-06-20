@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, DataAdapter, Message, State, Resource, Log) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, Project, DataAdapter, Message, State, Resource, Log) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
@@ -28,6 +28,18 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   init = () ->
     initializeSearchform()
 
+  ###*
+   @param matches {Array}  Array of issues which matched.
+  ###
+  groupIssue = (matches) ->
+    Log.debug "groupIssue"
+    allProjects = Project.get()
+    obj = {}
+    for m in matches
+      if not obj[m.url] then obj[m.url] = {}
+      if not obj[m.url][m.project.id]
+        obj[m.url][m.project.id] = true
+        m.project.name = allProjects[m.url][m.project.id].text
 
   ###
    Initialize search form.
@@ -35,7 +47,22 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   initializeSearchform = () ->
     $scope.ticketData =
       displayKey: 'text'
-      source: util.substringMatcher(DataAdapter.tickets, 'text')
+      source: util.substringMatcher(DataAdapter.tickets, 'text', groupIssue)
+      templates:
+        suggestion: (n) ->
+          if n.project.name
+            "<div>
+              <span class='select-issues__project'>#{n.project.name}</span>
+            </div>
+            <div class='select-issues__item'>
+              <span class='select-issues__id'>#{n.id}</span>
+              <span class='select-issues__issue'>#{n.text}</span>
+            </div>"
+          else
+            "<div class='select-issues__item'>
+              <span class='select-issues__id'>#{n.id}</span>
+              <span class='select-issues__issue'>#{n.text}</span>
+            </div>"
     $scope.activityData =
       displayKey: 'name'
       source: util.substringMatcher(DataAdapter.activities, ['name', 'id'])

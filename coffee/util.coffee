@@ -90,9 +90,11 @@ Function::property = (prop, desc) ->
    this function is for typeahead.js.
    @param objects {Array}  Array of object which being searched.
    @param keys {Array}  Array of key which will be searched in object.
+   @param groupBy {Function}  Function to add group tag.
   ###
-  substringMatcher: (objects, keys) ->
+  substringMatcher: (objects, keys, groupBy) ->
     keys = [keys] if not Array.isArray(keys)
+    groupBy = groupBy or ()->
 
     ###
      @param query {String} Search query. Multiple queries are separated with space.
@@ -113,8 +115,9 @@ Function::property = (prop, desc) ->
           for key in keys then isMatch |= r.test(obj[key])
           isAllMatch &= isMatch
 
-        matches.push(obj) if isAllMatch
+         if isAllMatch then matches.push(obj)
 
+      groupBy(matches)
       cb(matches, queries)
 
 }

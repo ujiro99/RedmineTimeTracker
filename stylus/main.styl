@@ -468,10 +468,10 @@ input.project-search
 
 #timer
 
+  width_button = 34
+
   .caption
     cursor: pointer
-
-  width_button = 34
 
   .select
     position: relative
@@ -584,6 +584,43 @@ input.project-search
 
   .animate-switch
     slideIn()
+
+  .select-issues
+    .tt-suggestion
+      height: auto
+      padding: 0
+    .tt-cursor
+      background-color: #fff
+
+  .select-issues__project
+    display: block
+    height: 3em
+    width: 100%
+    font-size: 0.6em
+    margin: 0 0.5em
+    padding-left: 0.3em
+    border-bottom: solid 1px #ccc
+    text-ellipsis()
+
+  .select-issues__item
+    display: flex
+
+  .select-issues__id
+    min-width: 2em
+    margin-right: 0.5em
+    text-align: right
+    color: #555
+
+  .select-issues__issue
+    text-ellipsis()
+
+  .tt-cursor
+    .select-issues__project
+      color: #555
+    .select-issues__item
+      background-color: color_key_weak
+    .select-issues__id
+      color: #fff
 
 
 #issue
