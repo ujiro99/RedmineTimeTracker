@@ -41,9 +41,9 @@ div#issue(ng-controller='IssueCtrl')
         ul.issue-list__content(ng-class="{'issue-list__content--empty':!issues.length}")
           li.issue-list__item(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',
              ng-mousemove='editState.onMouseMove($event)')
-            button.numberedLabel(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
-              span.numberedLabel-number {{item.id}}
-              span.numberedLabel-label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",
+            button.numbered-label(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
+              span.numbered-label__number {{item.id}}
+              span.numbered-label__label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",
                            tooltip-animation="",
                            tooltip-popup-delay='700',
                            tooltip-placement='{{tooltipPlace}}') {{item.text}}

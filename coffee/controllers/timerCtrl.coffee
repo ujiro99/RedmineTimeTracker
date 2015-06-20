@@ -54,14 +54,14 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
             "<div>
               <span class='select-issues__project'>#{n.project.name}</span>
             </div>
-            <div class='numberedLabel'>
-              <span class='numberedLabel-number'>#{n.id}</span>
-              <span class='numberedLabel-label'>#{n.text}</span>
+            <div class='numbered-label'>
+              <span class='numbered-label__number'>#{n.id}</span>
+              <span class='numbered-label__label'>#{n.text}</span>
             </div>"
           else
-            "<div class='numberedLabel'>
-              <span class='numberedLabel-number'>#{n.id}</span>
-              <span class='numberedLabel-label'>#{n.text}</span>
+            "<div class='numbered-label'>
+              <span class='numbered-label__number'>#{n.id}</span>
+              <span class='numbered-label__label'>#{n.text}</span>
             </div>"
     $scope.activityData =
       displayKey: 'name'

@@ -24,14 +24,14 @@ div#header(ng-controller="headerCtrl")
       div.project-content(ng-class="{active: isActive}")
         ul.account-list
           li(ng-repeat='account in data.accounts')
-            div.numberedLabel
-              span.numberedLabel-label
+            div.numbered-label
+              span.numbered-label__label
                 {{account.url}}
             ul.project-list
               li(ng-repeat='project in account.projects | orderBy:"id"')
-                button.numberedLabel(type='button', ng-click="selectProject(project)")
-                  span.numberedLabel-number
+                button.numbered-label(type='button', ng-click="selectProject(project)")
+                  span.numbered-label__number
                     {{project.id}}
-                  span.numberedLabel-label
+                  span.numbered-label__label
                     {{project.text}}
 

@@ -1,5 +1,6 @@
 @import '_variable'
 @import '_mixin'
+@import 'components/numbered-label'
 
 
 html, body
@@ -411,12 +412,12 @@ input.project-search
   padding-left: 0
   &>li
     counter-increment: account
-    &>.numberedLabel
+    &>.numbered-label
       line-height: height_input px
       margin-left: 0.5em
       padding-left: 0.2em
       border-bottom: solid 1px #ccc
-    &>.numberedLabel:before
+    &>.numbered-label:before
       content: counter(account)
       padding-right: 0.5em
       color #aaa
@@ -434,29 +435,9 @@ input.project-search
         color: #fff
       & span:nth-child(1)
         margin-left: 0.5em
-    .numberedLabel
+    .numbered-label
       width: 100%
       height: 24px
-
-.numberedLabel
-  color #555
-  border: none
-  padding: 0 3px 0 0
-  background-color: transparent
-  outline: none
-  display: flex
-  flex: 1
-
-.numberedLabel-number
-  padding-right: 0.5em
-  min-width: 2em
-  text-align: right
-  color #aaa
-
-.numberedLabel-label
-  flex: 1
-  text-align: left
-  text-ellipsis()
 
 #header
   .account-list
@@ -601,19 +582,19 @@ input.project-search
     padding: 0.4em 0 0 0.3em
     border-bottom: solid 1px #ccc
 
-  .numberedLabel-number
+  .numbered-label__number
     margin-left: 0.6em
     transition: margin-left .2s ease
 
   .tt-cursor
     .select-issues__project
       color: #555
-    .numberedLabel
+    .numbered-label
       background-color: color_key_weak
-    .numberedLabel-number
+    .numbered-label__number
       margin-left: 1em
       color: #fff
-    .numberedLabel-label
+    .numbered-label__label
       color: #fff
 
 
@@ -624,16 +605,16 @@ input.project-search
 
   .issue-list
 
-    .active .numberedLabel, .active .numberedLabel:hover
+    .active .numbered-label, .active .numbered-label:hover
       margin-left: 5px
       color: #fff
       span
         color #fff
 
-    .numberedLabel
+    .numbered-label
       span:nth-child(1)
         transition: margin-left .2s ease
-    .numberedLabel:hover
+    .numbered-label:hover
       span
       .btn
         color: color_key
