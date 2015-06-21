@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Redmine, Ticket, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState) ->
 
   # list data
   $scope.issues   = []

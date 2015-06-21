@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket, Project, DataAdapter, Message, State, Resource, Log) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, DataAdapter, Message, State, Resource, Log) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
