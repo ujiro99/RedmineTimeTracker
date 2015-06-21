@@ -31,15 +31,13 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   ###*
    @param matches {Array}  Array of issues which matched.
   ###
-  groupIssue = (matches) ->
-    Log.debug "groupIssue"
+  groupByProject = (matches) ->
     allProjects = Project.get()
     obj = {}
     for m in matches
       if not obj[m.url] then obj[m.url] = {}
-      if not obj[m.url][m.project.id]
-        obj[m.url][m.project.id] = true
-        m.project.name = allProjects[m.url][m.project.id].text
+      m.groupTop = not obj[m.url][m.project.id]
+      obj[m.url][m.project.id] = true
 
   ###
    Initialize search form.
@@ -47,22 +45,16 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Account, Redmine, Ticket,
   initializeSearchform = () ->
     $scope.ticketData =
       displayKey: 'text'
-      source: util.substringMatcher(DataAdapter.tickets, 'text', groupIssue)
+      source: util.substringMatcher(DataAdapter.tickets, ['text', 'id', 'project.name'], groupByProject)
       templates:
         suggestion: (n) ->
-          if n.project.name
-            "<div>
-              <span class='select-issues__project'>#{n.project.name}</span>
-            </div>
-            <div class='numbered-label'>
-              <span class='numbered-label__number'>#{n.id}</span>
-              <span class='numbered-label__label'>#{n.text}</span>
-            </div>"
-          else
-            "<div class='numbered-label'>
-              <span class='numbered-label__number'>#{n.id}</span>
-              <span class='numbered-label__label'>#{n.text}</span>
-            </div>"
+          template = "<div class='numbered-label'>
+                        <span class='numbered-label__number'>#{n.id}</span>
+                        <span class='numbered-label__label'>#{n.text}</span>
+                      </div>"
+          if n.groupTop
+            template = template.insert("<div><span class='select-issues__project'>#{n.project.name}</span></div>", 0)
+          return template
     $scope.activityData =
       displayKey: 'name'
       source: util.substringMatcher(DataAdapter.activities, ['name', 'id'])

@@ -112,10 +112,13 @@ Function::property = (prop, desc) ->
         isAllMatch = true
         for r in substrRegexs
           isMatch = false
-          for key in keys then isMatch |= r.test(obj[key])
+          for key in keys
+            target = {}
+            for k in key.split('.') then target = target[k] or obj[k]
+            isMatch |= r.test(target)
           isAllMatch &= isMatch
 
-         if isAllMatch then matches.push(obj)
+        if isAllMatch then matches.push(obj)
 
       groupBy(matches)
       cb(matches, queries)
