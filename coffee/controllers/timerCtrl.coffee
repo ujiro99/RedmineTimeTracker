@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, DataAdapter, Message, State, Resource, Log) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Log) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
@@ -45,7 +45,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, DataAda
   initializeSearchform = () ->
     $scope.ticketData =
       displayKey: 'text'
-      source: util.substringMatcher(DataAdapter.tickets, ['text', 'id', 'project.name'], groupByProject)
+      source: util.substringMatcher(Ticket.getSelectable(), ['text', 'id', 'project.name'], groupByProject)
       templates:
         suggestion: (n) ->
           template = "<div class='numbered-label'>
