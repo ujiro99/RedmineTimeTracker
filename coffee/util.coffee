@@ -65,6 +65,13 @@ Function::property = (prop, desc) ->
     return (l.protocol + "//" + l.host + l.pathname).replace(/\/$/, '')
 
   ###
+   escape Regular Expression token in String.
+  ###
+  escapeRegExp: (str) ->
+    str = "" + str
+    return str.replace(/([\\\/\'*+?|()\[\]{}.^$-])/g,'\\$1')
+
+  ###
    deep compare object.
   ###
   equals: (x, y) ->
@@ -109,7 +116,7 @@ Function::property = (prop, desc) ->
       queries = []
       for q in query.split(' ') when not q.isBlank()
         queries.push q
-        substrRegexs.push new RegExp(q, 'i')
+        substrRegexs.push new RegExp(util.escapeRegExp(q), 'i')
 
       for obj in objects
         isAllMatch = true

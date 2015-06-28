@@ -158,7 +158,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
             @_filteredData.push dataModel.account
             dataModel.account.projects.set(dataModel.projects)
         else
-          substrRegexs = query.split(' ').map (q) -> new RegExp(q, 'i')
+          substrRegexs = query.split(' ').map (q) -> new RegExp(util.escapeRegExp(q), 'i')
           for url, dataModel of @_data
             filtered = dataModel.projects.filter (n) ->
               text = n.id + " " + n.text
