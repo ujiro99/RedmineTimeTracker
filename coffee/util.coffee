@@ -57,9 +57,12 @@ Function::property = (prop, desc) ->
 
   ###
    get url
+   @ref http://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
   ###
-  getUrl: (url) ->
-    return $.trim(url).replace(/\?.*$/, '').replace(/\/$/, '')
+  getUrl: (href) ->
+    l = document.createElement('a')
+    l.href = href
+    return (l.protocol + "//" + l.host + l.pathname).replace(/\/$/, '')
 
   ###
    deep compare object.
