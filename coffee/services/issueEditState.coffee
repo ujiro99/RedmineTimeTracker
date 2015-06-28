@@ -10,8 +10,7 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, St
       @listData = Ticket
 
     removeItem: (item) ->
-      selected = @listData.getSelected()[0]
-      if State.isTracking and item.equals selected
+      if State.isTracking and item.equals DataAdapter.selectedTicket
         return
       super(item)
       Message.toast Resource.string("msgRemoved").format(item.text)
