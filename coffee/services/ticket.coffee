@@ -45,12 +45,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
 
   ###
-   ticket that user selected
-  ###
-  selectedTickets = []
-
-
-  ###
    compare ticket.
    true: same / false: defferent
   ###
@@ -245,13 +239,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
 
     ###
-     get selected tickets.
-    ###
-    getSelected: () ->
-      return selectedTickets
-
-
-    ###
      set tickets.
     ###
     set: (ticketslist, callback) ->
@@ -266,8 +253,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         selectableTickets.push t
 
       selectableTickets.sortById()
-      if selectableTickets.length isnt 0
-        selectedTickets[0] = selectableTickets[0]
 
       _setLocal(callback)
 
@@ -279,11 +264,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     ###
     add: (ticket) ->
       _add(ticket)
-      if ticket.show isnt SHOW.NOT
-        if selectedTickets.length is 0
-          selectedTickets.push ticket
-        if not selectedTickets[0]?
-          selectedTickets[0] = ticket
       _setLocal()
 
 
@@ -294,10 +274,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       Log.debug 'tikcet.addArray'
       if not arr? then return
       for t in arr then _add t
-      if selectedTickets.length is 0
-        selectedTickets.push selectableTickets[0]
-      if not selectedTickets[0]?
-        selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
@@ -312,7 +288,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       for t, i in selectableTickets when _equals(t, ticket)
         selectableTickets.splice(i, 1)
         break
-      selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
@@ -325,7 +300,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       tickets.clear()
       selectableTickets.clear()
       @addArray newTickets
-      selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
@@ -344,18 +318,12 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         for t, i in selectableTickets when _equals(t, {url: url, id: id})
           selectableTickets.splice(i, 1)
           break
-        isSelected = selectedTickets.some (ele) -> _equals target, ele
-        if isSelected
-          selectedTickets[0] = selectableTickets[0]
       else
         # add selectable
         found = selectableTickets.some (ele) -> _equals target, ele
         if not found
           selectableTickets.push target
           selectableTickets.sortById()
-        # show in selection
-        if selectedTickets.isEmpty()
-          selectedTickets[0] = selectableTickets[0]
       _setLocal()
 
 
@@ -414,7 +382,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     clear: (callback) ->
       tickets.clear()
       selectableTickets.clear()
-      selectedTickets.clear()
       Chrome.storage.local.set TICKET: []
       Chrome.storage.sync.set TICKET: [], () ->
       if Chrome.runtime.lastError?

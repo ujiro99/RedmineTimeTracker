@@ -54,50 +54,6 @@ describe 'ticket.coffee', ->
       expect(selectable).to.have.length(2)
 
 
-  describe 'getSelected()', ->
-
-    it 'be empty', () ->
-      ticket = Ticket.getSelected()
-      expect(ticket).to.be.empty
-
-    it 'be empty, when added SHOW.NOT', () ->
-      ticket = Ticket.getSelected()
-      Project.set TestData.prjObj
-      Ticket.add(
-        id: 0
-        text: "ticket0"
-        url: "http://redmine.com"
-        project:
-          id: 0
-          text: "prj1_0"
-        show: SHOW.NOT
-      )
-      expect(ticket[0]).to.be.empty
-
-    it 'should select first ticket', () ->
-      expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
-      Ticket.set(TestData.ticketList)
-      selected = Ticket.getSelected()
-      expect(selected[0].id).to.equal(0)
-
-    it 'should not change selected ticket', () ->
-      expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
-      Ticket.set(TestData.ticketList)
-      Ticket.add(
-        id: 3
-        text: "ticket3"
-        url: "http://redmine.com"
-        project:
-          id: 0
-          text: "prj1_0"
-        show: SHOW.SHOW
-      )
-      selected = Ticket.getSelected()
-      expect(selected[0].id).to.equal(0)
-
-
   describe 'set(ticketList)', ->
 
     it '1 project, 3 ticket.', () ->
@@ -111,8 +67,6 @@ describe 'ticket.coffee', ->
       selectable = Ticket.getSelectable()
       expect(selectable[0].id).to.equal(0)
       expect(selectable[1].id).to.equal(2)
-      selected = Ticket.getSelected()
-      expect(selected[0].id).to.equal(0)
 
     it 'clear old list.', () ->
       expect(Ticket.get()).to.be.empty
@@ -206,15 +160,6 @@ describe 'ticket.coffee', ->
           text: "prj1_0"
         show: SHOW.SHOW
       )
-      ticket = Ticket.getSelected()
-      expect(ticket[0].id).to.equal(0)
-      Ticket.setParam(
-        "http://redmine.com",
-        0,
-        show: SHOW.NOT
-      )
-      ticket = Ticket.getSelected()
-      expect(ticket[0]).to.be.empty
 
     it 'SHOW.NOT to SHOW.SHOW', () ->
       Project.set(TestData.prjObj)
@@ -227,15 +172,6 @@ describe 'ticket.coffee', ->
           text: "prj1_0"
         show: SHOW.NOT
       )
-      ticket = Ticket.getSelected()
-      expect(ticket).to.be.empty
-      Ticket.setParam(
-        "http://redmine.com",
-        0,
-        show: SHOW.SHOW
-      )
-      ticket = Ticket.getSelected()
-      expect(ticket[0].id).to.equal(0)
 
 
   describe 'load(callback)', ->
