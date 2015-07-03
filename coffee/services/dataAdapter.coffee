@@ -114,8 +114,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       set: (n) ->
         return if @_selectedProject is n
         @_selectedProject = n
-        @queries          = @_data[n.url].queries
         @selectedAccount  = @_data[n.url].account
+        @queries          = @_data[n.url].queries
         @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
         Log.debug("selectedProject set: " + n.text)
 
