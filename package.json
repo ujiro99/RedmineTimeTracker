@@ -4,6 +4,7 @@
   "description": "Time Tracking tool for Redmine on GoogleChrome",
   "main": "index.js",
   "devDependencies": {
+    "angular-mocks": "^1.4.1",
     "chai": "~1.8.1",
     "grunt": "~0.4.1",
     "grunt-bower-task": "^0.3.4",
@@ -24,6 +25,7 @@
     "grunt-release": "^0.9.0",
     "load-grunt-tasks": "^0.4.0",
     "mocha": "~1.14.0",
+    "mocha-phantomjs": "^4.0.0-beta1",
     "sinon": "~1.9.1"
   },
   "scripts": {

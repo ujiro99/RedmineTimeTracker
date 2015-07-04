@@ -232,7 +232,7 @@ module.exports = (grunt) ->
 
     # Excec test.
     exec:
-      test: "open ./test/test.html"
+      test: "./node_modules/.bin/mocha-phantomjs -p ./node_modules/mocha-phantomjs/node_modules/phantomjs2/bin/phantomjs test/test.html"
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']

@@ -1,57 +1,64 @@
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Mocha Tests</title>
-  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  </head>
+  <body>
 
-  <div id="mocha"></div>
+    <div id="mocha"></div>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/sinon/pkg/sinon-1.9.1.js"></script>
 
-  <script src="http://localhost:35729/livereload.js"></script>
-  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="../bower_components/sugar/release/sugar.min.js"></script>
+    <script>
+      mocha.ui('bdd');
+      mocha.reporter('html');
+      expect = chai.expect;
+    </script>
 
-  <script src="../node_modules/mocha/mocha.js"></script>
-  <script src="../node_modules/chai/chai.js"></script>
-  <script src="../node_modules/sinon/pkg/sinon-1.9.1.js"></script>
-  <script>mocha.setup('bdd')</script>
+    <!-- vendor -->
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/sugar/release/sugar.min.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../node_modules/angular-mocks/angular-mocks.js"></script>
 
-  <script src="../bower_components/angular/angular.min.js"></script>
-  <script src="http://code.angularjs.org/1.2.3/angular-mocks.js"></script>
+    <!-- mock -->
+    <script src="app.js"></script>
+    <script src="chrome.js"></script>
 
-  <script src="app.js"></script>
-  <script src="chrome.js"></script>
-  <script src="../app/scripts/util.js"></script>
+    <!-- common -->
+    <script src="../app/scripts/util.js"></script>
 
-  <!-- service -->
-  <script src="../app/scripts/services/log.js"></script>
-  <script src="../app/scripts/services/eventDispatcher.js"></script>
-  <script src="../app/scripts/services/dataAdapter.js"></script>
-  <script src="../app/scripts/services/analytics.js"></script>
-  <script src="../app/scripts/services/project.js"></script>
-  <script src="../app/scripts/services/ticket.js"></script>
-  <script src="../app/scripts/services/redmine.js"></script>
-  <script src="../app/scripts/services/base64.js"></script>
-  <script src="../app/scripts/services/account.js"></script>
-  <script src="../app/scripts/services/analytics.js"></script>
-  <script src="../app/scripts/services/message.js"></script>
-  <script src="../app/scripts/services/state.js"></script>
-  <script src="../app/scripts/services/option.js"></script>
-  <script src="../app//scripts/config.js"></script>
+    <!-- service -->
+    <script src="../app/scripts/services/log.js"></script>
+    <script src="../app/scripts/services/eventDispatcher.js"></script>
+    <script src="../app/scripts/services/dataAdapter.js"></script>
+    <script src="../app/scripts/services/analytics.js"></script>
+    <script src="../app/scripts/services/project.js"></script>
+    <script src="../app/scripts/services/ticket.js"></script>
+    <script src="../app/scripts/services/redmine.js"></script>
+    <script src="../app/scripts/services/base64.js"></script>
+    <script src="../app/scripts/services/account.js"></script>
+    <script src="../app/scripts/services/analytics.js"></script>
+    <script src="../app/scripts/services/message.js"></script>
+    <script src="../app/scripts/services/state.js"></script>
+    <script src="../app/scripts/services/option.js"></script>
+    <script src="../app//scripts/config.js"></script>
 
-  <!-- test -->
-  <script src="testData.js"></script>
-  <script src="util_test.js"></script>
-  <script src="log_test.js"></script>
-  <script src="project_test.js"></script>
-  <script src="ticket_test.js"></script>
-  <script src="redmine_test.js"></script>
+    <!-- test -->
+    <script src="testData.js"></script>
+    <script src="util_test.js"></script>
+    <script src="log_test.js"></script>
+    <script src="project_test.js"></script>
+    <script src="ticket_test.js"></script>
+    <script src="redmine_test.js"></script>
 
-  <script>
-    mocha.checkLeaks();
-    mocha.globals(['jQuery']);
-    mocha.run();
-  </script>
-</body>
+    <script>
+      mocha.checkLeaks();
+      if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+      else { mocha.run(); }
+    </script>
+  </body>
 </html>
+
