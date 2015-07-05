@@ -1,4 +1,4 @@
-timeTracker.factory "BaseEditState", ($window, Message, Resource) ->
+timeTracker.factory "BaseEditState", ($window, Message, Resource, DataAdapter) ->
 
   ###
    base state.
@@ -14,9 +14,7 @@ timeTracker.factory "BaseEditState", ($window, Message, Resource) ->
      check item was contained in selectableTickets.
     ###
     isContained: (item) ->
-      selectable = @listData.getSelectable()
-      found = selectable.some (e) -> item.equals e
-      return found
+      return DataAdapter.tickets.some (e) -> item.equals e
 
 
     ###
@@ -34,8 +32,7 @@ timeTracker.factory "BaseEditState", ($window, Message, Resource) ->
     ###
     addItem: (item) ->
       item.show = BaseEditState.SHOW.SHOW
-      @listData.add item
-      @listData.setParam item.url, item.id, {show: BaseEditState.SHOW.SHOW}
+      DataAdapter.addTicket item
       Message.toast Resource.string("msgAdded").format(item.text)
 
 
@@ -44,7 +41,7 @@ timeTracker.factory "BaseEditState", ($window, Message, Resource) ->
     ###
     removeItem: (item) ->
       item.show = BaseEditState.SHOW.NOT
-      @listData.setParam item.url, item.id, {show: BaseEditState.SHOW.NOT}
+      DataAdapter.removeTicket item
 
 
     ###

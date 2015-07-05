@@ -44,6 +44,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     # event
     ACCOUNT_ADDED:            "account_added"
     ACCOUNT_REMOVED:          "account_removed"
+    TICKETS_CHANGED:          "tickets_changed"
     SELECTED_ACCOUNT_CHANGED: "selected_account_changed"
     SELECTED_PROJECT_CHANGED: "selected_project_changed"
     SELECTED_TICKET_CHANGED:  "selected_ticket_changed"
@@ -68,8 +69,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'tickets',
       get: -> @_tickets
       set: (n) ->
-        @_tickets.set n
+        @_tickets.set _sortTickets(n)
         @selectedTicket = n[0]
+        @fireEvent(@TICKETS_CHANGED, @)
 
     ###*
     # selectable activites
@@ -191,8 +193,11 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       for a in accounts
         delete @_data[a.url]
         @_filteredData.remove((n) -> return n.url is a.url)
+        @tickets.remove((n) -> return n.url is a.url)
         if @selectedProject.url is a.url
           @selectedProject = @_filteredData[0].projects[0]
+        if @selectedTicket.url is a.url
+          @selectedTicket = @tickets[0]
       @fireEvent(@ACCOUNT_REMOVED, @, accounts)
 
     ###*
@@ -222,6 +227,23 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         a.projects.remove((n) -> return n.equals(p))
 
     ###*
+    # add ticket.
+    # @param {TicketModel} ticket
+    ###
+    addTicket: (ticket) ->
+      @_tickets.add ticket
+      @_tickets.set _sortTickets(@_tickets)
+      @fireEvent(@TICKETS_CHANGED, @)
+
+    ###*
+    # remove ticket.
+    # @param {TicketModel} ticket
+    ###
+    removeTicket: (ticket) ->
+      @_tickets.remove (n) -> n.equals(ticket)
+      @fireEvent(@TICKETS_CHANGED, @)
+
+    ###*
     # set activities.
     # @param {String} url        - url of redmine server.
     # @param {Array}  activities - array of activiy. activiy: { id: Number, name: String }.
@@ -244,6 +266,18 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       if @selectedProject and @selectedProject.url is url
         @queries = queries
       Log.debug("setQueries: #{url}")
+
+
+    ###*
+    # sort tickets.
+    #  order: account -> project -> ticket
+    ###
+    _sortTickets = (tickets) ->
+      tickets = tickets.sortBy (n) -> n.id
+      tickets = tickets.sortBy (n) -> n.project.id
+      tickets = tickets.sortBy (n) -> n.url
+      return tickets
+
 
   return new DataAdapter
 

@@ -17,8 +17,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    Initialize.
   ###
   init = () ->
+
     # load options frome chrome storage.
     Option.loadOptions (options) -> $scope.options = options
+
     # initialize events.
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
       for a in accounts
@@ -28,7 +30,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         Redmine.get(a).loadProjects _updateProjects, _errorLoadProject, params
         _loadActivities(a)
         _loadQueries(a)
+    DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
+      Ticket.set(DataAdapter.tickets)
+      Ticket.sync()
     _setDataSyncAlarms()
+
     # initialize data.
     Account.getAccounts (accounts) ->
       Log.debug "Account.getAccounts success"
@@ -37,6 +43,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         return
       DataAdapter.addAccounts(accounts)
       Ticket.load () -> _updateIssues()
+
     # initialize others.
     _initializeGoogleAnalytics()
 
@@ -66,8 +73,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    update issues status.
   ###
   _updateIssues = () ->
-    DataAdapter.tickets = Ticket.getSelectable()
-    for t in Ticket.get()
+    DataAdapter.tickets = Ticket.get()
+    for t in DataAdapter.tickets
       for account in DataAdapter.accounts when account.url is t.url
         Redmine.get(account).getIssuesById t.id, _issueFound, _issueNotFound
         break
@@ -76,24 +83,25 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
    when issue found, update according to status.
   ###
-  _issueFound = (data) ->
-    newParam =
-      text: data.issue.subject
-    Ticket.setParam  data.issue.url, data.issue.id, newParam
-    if data.issue?.status.id is TICKET_CLOSED
-      Ticket.remove {url: data.issue.url, id: data.issue.id }
+  _issueFound = (issue) ->
+    if issue?.status.id is TICKET_CLOSED
+      DataAdapter.tickets.removeTicket(issue)
       return
-    if data.issue.spent_hours?
-      total = Math.floor(data.issue.spent_hours * 100) / 100
-      Ticket.setParam  data.issue.url, data.issue.id, total: total
+    target = DataAdapter.tickets.find (n) -> n.equals(issue)
+    target.text        = issue.subject
+    target.assigned_to = issue.assigned_to
+    target.priority    = issue.priority
+    target.status      = issue.status
+    if issue.spent_hours?
+      target.total = Math.floor(issue.spent_hours * 100) / 100
 
 
   ###
    when issue not found, remove issue.
   ###
-  _issueNotFound = (data, status) ->
+  _issueNotFound = (issue, status) ->
     if status is NOT_FOUND or status is UNAUTHORIZED
-      Ticket.remove {url: data.issue.url, id: data.issue.id }
+      DataAdapter.tickets.removeTicket(issue)
       return
 
   ###
@@ -162,6 +170,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Chrome.alarms.create(DATA_SYNC, alarmInfo)
     Chrome.alarms.onAlarm.addListener (alarm) ->
       return if not alarm.name is DATA_SYNC
+      Ticket.set(DataAdapter.tickets)
       Ticket.sync()
       Project.sync()
 

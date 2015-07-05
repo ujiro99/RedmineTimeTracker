@@ -168,9 +168,9 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
         errorTickets.push id: t.id, url: t.url
     # save to strage
-    Log.groupCollapsed "ticket.set to chrome"
+    Log.groupCollapsed "ticket.set to chrome: " + storage.QUOTA_BYTES
     Log.table ticketArray
-    Log.groupEnd "ticket.set to chrome"
+    Log.groupEnd "ticket.set to chrome: " + storage.QUOTA_BYTES
     storage.set TICKET: ticketArray, () ->
       if Chrome.runtime.lastError?
         callback? false, {message: "Chrome.runtime error."}

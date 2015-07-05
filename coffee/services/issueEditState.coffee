@@ -1,4 +1,4 @@
-timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, State, Message, Resource, BaseEditState) ->
+timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Message, Resource, BaseEditState) ->
 
   ###
    controller for issue edit mode.
@@ -7,7 +7,6 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, St
 
     constructor: (@$scope) ->
       super()
-      @listData = Ticket
 
     removeItem: (item) ->
       if State.isTracking and item.equals DataAdapter.selectedTicket
@@ -34,10 +33,10 @@ timeTracker.factory "IssueEditState", ($window, Ticket, Redmine, DataAdapter, St
       return if DataAdapter.selectedProject.url isnt data.url
       return if @currentPage - 1 isnt data.offset / data.limit
       @$scope.totalItems = data.total_count
-      console.log "total count: " + @$scope.totalItems
+      console.log "ticket total count: " + @$scope.totalItems
       for issue in data.issues
-        for t in Ticket.get() when issue.equals t
-          issue.show = t.show
+        saved = DataAdapter.tickets.find (n) -> n.equals(issue)
+        saved and issue.show = saved.show
       @$scope.issues.set(data.issues)
 
 

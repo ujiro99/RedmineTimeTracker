@@ -155,7 +155,7 @@ class Redmine
         if data?.issue?
           data.issue.show = Redmine.SHOW.DEFAULT
           data.issue.url = @auth.url
-        success?(data, status, headers, config))
+        success?(data.issue, status, headers, config))
       .error((data, status, headers, config) =>
         if status is Redmine.NOT_FOUND or status is Redmine.UNAUTHORIZED
           data = issue:
@@ -164,7 +164,7 @@ class Redmine
         else
           @Log.debug data
           @Analytics.sendException("Error: getIssuesById")
-        error(data, status))
+        error(data.issue, status))
 
 
   ###

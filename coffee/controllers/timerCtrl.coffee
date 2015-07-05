@@ -32,7 +32,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    @param matches {Array}  Array of issues which matched.
   ###
   groupByProject = (matches) ->
-    allProjects = Project.get()
     obj = {}
     for m in matches
       if not obj[m.url] then obj[m.url] = {}
@@ -45,7 +44,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   initializeSearchform = () ->
     $scope.ticketData =
       displayKey: 'text'
-      source: util.substringMatcher(Ticket.getSelectable(), ['text', 'id', 'project.name'], groupByProject)
+      source: util.substringMatcher(DataAdapter.tickets, ['text', 'id', 'project.name'], groupByProject)
       templates:
         suggestion: (n) ->
           template = "<div class='numbered-label'>

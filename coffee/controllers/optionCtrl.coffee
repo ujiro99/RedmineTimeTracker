@@ -1,4 +1,4 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project, Account, Option, Analytics, State, Resource) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project, Account, DataAdapter, Option, Analytics, State, Resource) ->
 
   # delay time for setOptions [ms]
   DELAY_TIME = 500
@@ -53,6 +53,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project
   ###
   $scope.clearTickets = () ->
     $scope.isSetting = true
+    DataAdapter.tickets = []
     Ticket.clear (result) ->
       $timeout ->
         if result
@@ -60,14 +61,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project
         else
           Message.toast Resource.string("msgClearDataFail")
       , 1000
-    Project.clear (result) ->
-      $timeout ->
-        $scope.isSetting = false
-        if result
-          Message.toast Resource.string("msgClearDataSucess").format('project')
-        else
-          Message.toast Resource.string("msgClearDataFail")
-      , 2000
 
 
   initialize()
