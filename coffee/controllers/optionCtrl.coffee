@@ -1,4 +1,4 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Project, Account, DataAdapter, Option, Analytics, State, Resource) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account, DataAdapter, Option, Analytics, State, Resource) ->
 
   # delay time for setOptions [ms]
   DELAY_TIME = 500

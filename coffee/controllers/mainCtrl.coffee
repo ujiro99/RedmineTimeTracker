@@ -32,7 +32,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         _loadQueries(a)
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.set(DataAdapter.tickets)
-      Ticket.sync()
     _setDataSyncAlarms()
 
     # initialize data.

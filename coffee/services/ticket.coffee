@@ -150,10 +150,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
    save all tickets to any area.
   ###
   _set = (storage, callback) ->
-    Log.info "ticket.set"
-    Log.groupCollapsed "ticket.set"
+    Log.groupCollapsed "ticket.set: " + storage.QUOTA_BYTES
     Log.table tickets
-    Log.groupEnd "ticket.set"
     if not storage? then callback? null; return
     ticketArray = []
     errorTickets = []
@@ -168,9 +166,9 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
         errorTickets.push id: t.id, url: t.url
     # save to strage
-    Log.groupCollapsed "ticket.set to chrome: " + storage.QUOTA_BYTES
+    Log.debug "to chrome"
     Log.table ticketArray
-    Log.groupEnd "ticket.set to chrome: " + storage.QUOTA_BYTES
+    Log.groupEnd "ticket.set: " + storage.QUOTA_BYTES
     storage.set TICKET: ticketArray, () ->
       if Chrome.runtime.lastError?
         callback? false, {message: "Chrome.runtime error."}

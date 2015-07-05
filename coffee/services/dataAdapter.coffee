@@ -69,7 +69,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'tickets',
       get: -> @_tickets
       set: (n) ->
-        @_sortTickets(n)
+        @_tickets.set(n)
+        @_sortTickets(@_tickets)
         @selectedTicket = n[0]
         @fireEvent(@TICKETS_CHANGED, @)
 
@@ -289,6 +290,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     # sort tickets by selectedProject.
     ###
     _sortSelectedProjectTop: (tickets) ->
+      return if not @selectedProject
       tickets.sort (a, b) =>
         isAselected = a.url is @selectedProject.url and a.project.id is @selectedProject.id
         isBselected = b.url is @selectedProject.url and b.project.id is @selectedProject.id
