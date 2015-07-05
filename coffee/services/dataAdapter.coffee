@@ -69,7 +69,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     @property 'tickets',
       get: -> @_tickets
       set: (n) ->
-        @_tickets.set _sortTickets(n)
+        @_sortTickets(n)
         @selectedTicket = n[0]
         @fireEvent(@TICKETS_CHANGED, @)
 
@@ -118,6 +118,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         @_selectedProject = n
         @selectedAccount  = @_data[n.url].account
         @queries          = @_data[n.url].queries
+        @_sortSelectedProjectTop(@_tickets)
         @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
         Log.debug("selectedProject set: " + n.text)
 
@@ -232,7 +233,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     ###
     addTicket: (ticket) ->
       @_tickets.add ticket
-      @_tickets.set _sortTickets(@_tickets)
+      @_sortTickets(@_tickets)
       @fireEvent(@TICKETS_CHANGED, @)
 
     ###*
@@ -272,12 +273,28 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     # sort tickets.
     #  order: account -> project -> ticket
     ###
-    _sortTickets = (tickets) ->
-      tickets = tickets.sortBy (n) -> n.id
-      tickets = tickets.sortBy (n) -> n.project.id
-      tickets = tickets.sortBy (n) -> n.url
-      return tickets
+    _sortTickets: (tickets) ->
+      tickets.sort (a, b) ->
+        if a.url > b.url then return  1
+        if a.url < b.url then return -1
+        if a.project.id > b.project.id then return  1
+        if a.project.id < b.project.id then return -1
+        if a.id > b.id then return  1
+        if a.id < b.id then return -1
+        return 0
+      @_sortSelectedProjectTop(tickets)
 
+
+    ###*
+    # sort tickets by selectedProject.
+    ###
+    _sortSelectedProjectTop: (tickets) ->
+      tickets.sort (a, b) =>
+        isAselected = a.url is @selectedProject.url and a.project.id is @selectedProject.id
+        isBselected = b.url is @selectedProject.url and b.project.id is @selectedProject.id
+        if isAselected is isBselected then return 0
+        if isAselected then return -1
+        if isBselected then return  1
 
   return new DataAdapter
 
