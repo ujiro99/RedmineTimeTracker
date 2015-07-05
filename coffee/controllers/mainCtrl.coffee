@@ -42,7 +42,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         _requestAddAccount()
         return
       DataAdapter.addAccounts(accounts)
-      Ticket.load () -> _updateIssues()
+      Ticket.load(_updateIssues)
 
     # initialize others.
     _initializeGoogleAnalytics()
