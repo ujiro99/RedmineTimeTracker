@@ -1,8 +1,6 @@
-timeTracker.factory("Option", (Chrome) ->
+timeTracker.factory("Option", (Chrome, Const) ->
 
   DEFAULT_OPTION = { reportUsage: true , showNavigation: true }
-  OPTIONS = "OPTIONS"
-  NULLFUNC = () ->
 
   _options = null
 
@@ -19,14 +17,14 @@ timeTracker.factory("Option", (Chrome) ->
      load all option data.
     ###
     loadOptions: (callback) ->
-      callback = callback or NULLFUNC
+      callback = callback or Const.NULLFUNC
       if _options isnt null then callback _options; return
 
-      Chrome.storage.sync.get OPTIONS, (item) ->
+      Chrome.storage.sync.get Const.OPTIONS, (item) ->
         if Chrome.runtime.lastError?
           callback null
         else
-          _options = item[OPTIONS] or DEFAULT_OPTION
+          _options = item[Const.OPTIONS] or DEFAULT_OPTION
           callback _options
 
 
@@ -34,9 +32,11 @@ timeTracker.factory("Option", (Chrome) ->
      set all option data.
     ###
     setOptions: (options, callback) ->
-      callback = callback or NULLFUNC
+      callback = callback or Const.NULLFUNC
       _options = options
-      Chrome.storage.sync.set OPTIONS: options, () ->
+      saveData = {}
+      saveData[Const.OPTIONS] = options
+      Chrome.storage.sync.set saveData, () ->
         if Chrome.runtime.lastError?
           callback false
         else
@@ -47,7 +47,7 @@ timeTracker.factory("Option", (Chrome) ->
      clear all data.
     ###
     clearAllData: (callback) ->
-      callback = callback or NULLFUNC
+      callback = callback or Const.NULLFUNC
       Chrome.storage.local.clear()
       Chrome.storage.sync.clear () ->
         if Chrome.runtime.lastError?
