@@ -124,6 +124,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
 
     ###
      set projects.
+     @param newProjects {Object} HashMap of ProjectModel. Key is Account URL.
     ###
     set: (newProjects) ->
       if not newProjects? then return
@@ -246,7 +247,6 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
       @_load Chrome.storage.local, (local) =>
         if local?
           Log.info 'project loaded from local'
-          @set local
           callback local
           Log.groupCollapsed "Project.load()"
           Log.debug local
@@ -254,7 +254,6 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
         else
           @_load Chrome.storage.sync, (sync) =>
             Log.info 'project loaded from sync'
-            @set sync
             callback sync
 
 
