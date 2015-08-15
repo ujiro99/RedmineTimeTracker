@@ -219,8 +219,10 @@ class Redmine
   ###
    Load projects on url
   ###
-  loadProjects: (success, error, params) =>
+  loadProjects: (params) =>
     @Log.debug "loadProjects start"
+    deferred = @$q.defer()
+
     params = params or {}
     params.limit = params.limit or 50
     config =
@@ -237,13 +239,15 @@ class Redmine
               url: @auth.url,
               id: prj.id,
               text: prj.name,
-            @Project.add(newPrj)
+              show: Redmine.SHOW.DEFAULT
             @Project.new(newPrj)
           @Log.groupCollapsed "redmine.loadProjects()"
           @Log.table data.projects
           @Log.groupEnd "redmine.loadProjects()"
-        success?(data, status, headers, config))
-      .error(error or Redmine.NULLFUNC)
+        deferred.resolve(data, status))
+      .error((args...) -> deferred.reject(args[0], args[1]))
+
+    return deferred.promise
 
 
   ###

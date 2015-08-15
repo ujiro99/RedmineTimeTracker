@@ -1,4 +1,4 @@
-timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
+timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
@@ -105,23 +105,32 @@ timeTracker.factory("Account", ($rootScope, Analytics, Chrome) ->
   return {
 
     ###
-     get all account data.
-     if account was not loaded, load from chrome sync.
+     load all account data from chrome sync.
      @return {Array} AccountModel[]
     ###
-    getAccounts: (callback) ->
-      callback = callback or NULLFUNC
-      if _accounts.length > 0
-        callback _accounts
-        return
+    load: () ->
+      deferred = $q.defer()
+
       Chrome.storage.sync.get ACCOUNTS, (item) ->
         if Chrome.runtime.lastError? or not item[ACCOUNTS]?
-          callback _accounts
+          Log.info 'account load failed.'
+          deferred.reject()
         else
+          Log.info 'account loaded'
           _accounts.clear()
           for a in item[ACCOUNTS]
             _accounts.push AccountModel.fromObject(a).decrypt()
-          callback _accounts
+          deferred.resolve(_accounts)
+
+      return deferred.promise
+
+
+    ###
+     get all account data.
+     @return {Array} AccountModel[]
+    ###
+    getAccounts: () ->
+      return _accounts
 
 
     ###

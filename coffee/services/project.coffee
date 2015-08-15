@@ -1,4 +1,4 @@
-timeTracker.factory("Project", (Analytics, Chrome, Log) ->
+timeTracker.factory("Project", ($q, Analytics, Chrome, Log) ->
 
   ###
    Project data model.
@@ -244,18 +244,20 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     ###
      load all projects from chrome sync.
     ###
-    load: (callback) ->
+    load: () =>
+      deferred = $q.defer()
       @_load Chrome.storage.local, (local) =>
         if local?
           Log.info 'project loaded from local'
-          callback local
           Log.groupCollapsed "Project.load()"
           Log.debug local
           Log.groupEnd "Project.load()"
+          deferred.resolve(local)
         else
           @_load Chrome.storage.sync, (sync) =>
             Log.info 'project loaded from sync'
-            callback sync
+            deferred.resolve(sync)
+      return deferred.promise
 
 
     ###
