@@ -19,6 +19,9 @@ timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const) ->
   $scope.closeWindow = () ->
     window.close()
 
+  ###
+   Toggle star on project.
+  ###
   $scope.toggleStar = (project) ->
     if project.show is Const.SHOW.DEFAULT
       project.show = Const.SHOW.SHOW

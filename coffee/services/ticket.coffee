@@ -240,7 +240,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      set tickets.
     ###
     set: (ticketslist, callback) ->
-      Log.debug 'tikcet.set'
+      Log.debug 'Ticket.set()'
       if not ticketslist? then return
 
       tickets.clear()
@@ -261,6 +261,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      if ticket can be shown and there is no selected ticket, it be selected.
     ###
     add: (ticket) ->
+      Log.debug 'Tikcet.add()'
       _add(ticket)
       _setLocal()
 
@@ -269,7 +270,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      add ticket array.
     ###
     addArray: (arr) ->
-      Log.debug 'tikcet.addArray'
+      Log.debug 'Tikcet.addArray()'
       if not arr? then return
       for t in arr then _add t
       _setLocal()
@@ -279,6 +280,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      remove ticket when exists.
     ###
     remove: (ticket) ->
+      Log.debug 'Tikcet.remove()'
       if not ticket? then return
       for t, i in tickets when _equals(t, ticket)
         tickets.splice(i, 1)
@@ -293,6 +295,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      remove ticket associated to url.
     ###
     removeUrl: (url) ->
+      Log.debug 'Tikcet.removeUrl()'
       if not url? then return
       newTickets = (t for t in tickets when t.url isnt url)
       tickets.clear()
@@ -307,6 +310,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      if ticket cannot be shown, it be deleted from selectable.
     ###
     setParam: (url, id, param) ->
+      Log.debug 'Tikcet.setParam()'
       if not url? or not id? or not param? then return
       # update parameter
       target = tickets.find (t) -> _equals(t, {url: url, id: id})
@@ -378,6 +382,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      clear ticket data on storage and local.
     ###
     clear: (callback) ->
+      Log.debug 'Tikcet.clear()'
       tickets.clear()
       selectableTickets.clear()
       Chrome.storage.local.set TICKET: []

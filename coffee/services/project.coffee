@@ -129,7 +129,7 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     set: (newProjects) ->
       if not newProjects? then return
       Log.groupCollapsed "Project.set()"
-      Log.table newProjects
+      Log.debug newProjects
       Log.groupEnd "Project.set()"
 
       # clear old data
@@ -154,7 +154,8 @@ timeTracker.factory("Project", (Analytics, Chrome, Log) ->
     ###
     setParam: (url, id, params) ->
       # set param
-      if not url? or not url? or not id? then return
+      if not url? or not id? then return
+      if not @_projects[url] or not @_projects[url][id] then return
       target = @_projects[url][id]
       for k, v of params then target[k] = v
 
