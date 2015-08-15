@@ -85,18 +85,17 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
         Log.error 'runtime error'
         callback? null; return
 
-      Project.load (projects) ->
-        if Chrome.runtime.lastError?
-          Log.error 'runtime error'
-          callback? null; return
+      projects = Project.get()
+      if Chrome.runtime.lastError?
+        Log.error 'runtime error'
+        callback? null; return
 
-        if not tickets[TICKET]?
-          Log.info 'project or ticket does not exists'
-          callback? null; return
+      if not tickets[TICKET]?
+        Log.info 'project or ticket does not exists'
+        callback? null; return
 
-        synced = _syncWithProject tickets[TICKET], projects
-        Project.set Project.sanitize(projects)
-        callback? synced.tickets, synced.missing
+      synced = _syncWithProject tickets[TICKET], projects
+      callback? synced.tickets, synced.missing
 
 
   ###
