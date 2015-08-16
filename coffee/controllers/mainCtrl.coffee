@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Analytics, Chrome, Resource, Option, Log) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Chrome, Resource, Option, Log, Analytics) ->
 
   DATA_SYNC = "DATA_SYNC"
   MINUTE_5 = 5
@@ -19,7 +19,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   init = () ->
     deferred = $q.defer()
     deferred.promise
-      .then(_initializeGoogleAnalytics)
       .then(_initializeEvents)
       .then(_initializeData)
       .then(_setDataSyncAlarms)
@@ -35,6 +34,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       serviceName:   "RedmineTimeTracker"
       analyticsCode: "UA-32234486-7"
     }
+    Log.debug("GoogleAnalytics is " + $scope.options.reportUsage)
+    Analytics.setPermission $scope.options.reportUsage
     Analytics.sendView("/app/")
 
 
@@ -153,6 +154,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Log.debug "start initialize data."
     Option.loadOptions()
       .then((options) -> $scope.options = options)
+      .then(_initializeGoogleAnalytics)
       .then(_initializeAccount)
       .then(_initializeProject)
       .then(_initializeIssues)
