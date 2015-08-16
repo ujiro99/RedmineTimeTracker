@@ -1,7 +1,9 @@
-timeTracker.controller 'headerCtrl', ($scope, Project, DataAdapter, Const) ->
+timeTracker.controller 'headerCtrl', ($scope, Project, DataAdapter, Const, Option) ->
 
   # data
   $scope.data = DataAdapter
+  # option
+  $scope.options = Option.getOptions()
   # is header dropdown active?
   $scope.isActive = false
 

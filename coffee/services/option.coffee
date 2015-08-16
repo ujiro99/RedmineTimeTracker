@@ -1,6 +1,6 @@
-timeTracker.factory("Option", ($q, Chrome, Const) ->
+timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
 
-  DEFAULT_OPTION = { reportUsage: true , showNavigation: true }
+  DEFAULT_OPTION = { reportUsage: true , itemsPerPage: 20}
 
   _options = DEFAULT_OPTION
 
@@ -19,15 +19,17 @@ timeTracker.factory("Option", ($q, Chrome, Const) ->
     loadOptions: () ->
       deferred = $q.defer()
 
-      if _options isnt null then deferred.resolve(_options)
       Chrome.storage.sync.get Const.OPTIONS, (item) ->
         if Chrome.runtime.lastError?
           deferred.reject()
         else
+          Log.info "option loaded."
+          Log.debug item
           _options = item[Const.OPTIONS] or DEFAULT_OPTION
           deferred.resolve(_options)
 
       return deferred.promise
+
 
     ###
      set all option data.

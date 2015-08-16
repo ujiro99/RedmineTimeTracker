@@ -34,6 +34,8 @@ div#header(ng-controller="headerCtrl")
                     {{project.id}}
                   span.numbered-label__label
                     {{project.text}}
-                button.btn.numbered-label__star(type='button', ng-click="toggleStar(project)")
+                button.btn.numbered-label__star(type='button',
+                                                ng-show="options.isProjectStarEnable",
+                                                ng-click="toggleStar(project)")
                   i.fa.fa-star(ng-class="{star__enable: project.show==2, star__disable: project.show<2}")
 
