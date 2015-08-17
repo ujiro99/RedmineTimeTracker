@@ -129,7 +129,7 @@ input.input-sm
   transition: color  .2s ease
   outline: none
   border: none
-  z-index: 1
+  z-index: 2
   &:hover .icon-cross
     color: #fff
     background-color: color_key_weak
@@ -171,6 +171,7 @@ input.input-sm
   background-color: #fff
   position: absolute
   outline: none
+  z-index: 1
   .fa
     font-size: 1.3em
     color #ccc
@@ -182,7 +183,6 @@ input.project-search
   height: 3em
 
 .project-search
-.project-content
   visibility: hidden
   opacity: 0
 
@@ -210,8 +210,6 @@ input.project-search
   overflow-y: scroll
 
 .project-content.active
-  visibility: visible
-  opacity: 1
   top: 2.5em
 
 .account-list
