@@ -23,7 +23,8 @@ div#header(ng-controller="headerCtrl")
 
       div.project-content(ng-class="{active: isActive}")
         ul.account-list
-          li(ng-repeat='account in data.accounts')
+          li(ng-repeat='account in data.accounts',
+             ng-class="{numbered: account.url!=='Starred', starred: account.url==='Starred'}")
             div.numbered-label
               span.numbered-label__label
                 {{account.name}}

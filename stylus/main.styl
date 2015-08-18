@@ -215,20 +215,24 @@ input.project-search
 .account-list
   margin: 0
   padding-left: 0
-  &>li
-    counter-increment: account
-    &>.numbered-label
-      line-height: height_input px
-      margin-left: 0.5em
-      padding-left: 0.2em
-      border-bottom: solid 1px #ccc
-    &>.numbered-label:before
-      content: counter(account)
-      padding-right: 0.5em
-      color #aaa
 
-  .list-item
-    flex: 1
+.numbered, .starred
+  &>.numbered-label
+    line-height: height_input px
+    margin-left: 0.5em
+    padding-left: 0.2em
+    border-bottom: solid 1px #ccc
+.numbered
+  counter-increment: account
+  &>.numbered-label:before
+    content: counter(account)
+    padding-right: 0.4em
+    color #aaa
+.starred
+  &>.numbered-label:before
+    content: "★"
+    padding-right: 0.5em
+    color #aaa
 
 .project-list
   padding-left: 0
