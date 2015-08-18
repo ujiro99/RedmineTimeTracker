@@ -1,4 +1,4 @@
-timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
+timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, Log) ->
 
 
   ###*
@@ -39,8 +39,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
 
   class DataAdapter extends EventDispatcher
 
-    ## instance variables
-
     # event
     ACCOUNT_ADDED:            "account_added"
     ACCOUNT_REMOVED:          "account_removed"
@@ -49,6 +47,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     SELECTED_PROJECT_CHANGED: "selected_project_changed"
     SELECTED_TICKET_CHANGED:  "selected_ticket_changed"
     SELECTED_QUERY_CHANGED:   "selected_query_changed"
+
+
+    ###*
+    # constructor
+    ###
+    constructor: () ->
+      Option.onChanged (e) =>
+        if e.hasOwnProperty("isProjectStarEnable")
+          @_updateStarredProjects()
 
     ###*
     # all data.
@@ -174,6 +181,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
             if filtered.length > 0
               @_filteredData.push dataModel.account
               dataModel.account.projects = filtered
+        @_updateStarredProjects()
         Log.timeEnd('projectQuery\t')
 
     ###*
@@ -219,6 +227,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         a.projects = a.projects or []
         a.projects.add(projects)
       if not @selectedProject then @selectedProject = projects[0]
+      @_updateStarredProjects()
 
     ###*
     # remove project from account.
@@ -230,6 +239,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
       for a in @_filteredData when a.projects and a.url is projects[0].url
         a.projects.remove((n) -> return n.equals(p))
+      @_updateStarredProjects()
 
     ###*
     # add ticket.
@@ -272,7 +282,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         @queries = queries
       Log.debug("setQueries: #{url}")
 
-
     ###*
     # sort tickets.
     #  order: account -> project -> ticket
@@ -288,7 +297,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         return 0
       @_sortSelectedProjectTop(tickets)
 
-
     ###*
     # sort tickets by selectedProject.
     ###
@@ -300,6 +308,23 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
         if isAselected is isBselected then return 0
         if isAselected then return -1
         if isBselected then return  1
+
+    ###*
+    # filter and add starred projects.
+    ###
+    _updateStarredProjects: () =>
+      @_filteredData.remove((n) -> n.url is Const.STARRED)
+      if not Option.getOptions().isProjectStarEnable then return
+
+      # find
+      starred = []
+      @_filteredData.map((a) -> starred.add(a.projects?.filter((n) -> n.show is Const.SHOW.SHOW)))
+      if starred.length is 0 then return
+
+      # update
+      starredAccount = { name: Const.STARRED, url: Const.STARRED ,projects: starred }
+      @_filteredData.add(starredAccount, 0)
+
 
   return new DataAdapter
 

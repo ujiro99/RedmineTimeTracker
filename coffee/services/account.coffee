@@ -19,6 +19,8 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
      @param name {String} Redmine's name for identify by user.
     ###
     constructor: (@url, @apiKey, @id, @pass, @name) ->
+      if not @name or @name.isBlank()
+        @name = @url
 
     ###
      set parameters from Object.

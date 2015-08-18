@@ -29,4 +29,5 @@ timeTracker.controller 'headerCtrl', ($scope, Project, DataAdapter, Const, Optio
       project.show = Const.SHOW.SHOW
     else
       project.show = project.show % 2 + 1
+    DataAdapter.addProjects([project])
     Project.setParam(project.url, project.id, {show: project.show})

@@ -1,17 +1,46 @@
 timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
 
-  DEFAULT_OPTION = { reportUsage: true , itemsPerPage: 20}
+  class Option
 
-  _options = DEFAULT_OPTION
+    # class variables
+    @DEFAULT_OPTION:
+      reportUsage: true
+      isProjectStarEnable: true
+      itemsPerPage: 20 
+    @_options: @DEFAULT_OPTION
+    @_events: []
 
-  return {
+    ###
+     constructor.
+    ###
+    constructor: () ->
+      for k, v of Option.DEFAULT_OPTION
+        @addOptionKey(k)
 
     ###
      get all option data.
     ###
     getOptions: () ->
-      return _options
+      return Option._options
 
+    ###
+     add a option's key name.
+     @param {String} key - option's key.
+    ###
+    addOptionKey: (key) ->
+      value = Option._options[key]
+      Object.defineProperty Option._options, key,
+        get: -> value
+        set: (n) ->
+          value = n
+          obj = {}
+          obj[key] = n
+          Option._events.map (e) -> e(obj)
+
+    ###
+     add a event listner for change value.
+    ###
+    onChanged: (f) -> Option._events.push f
 
     ###
      load all option data.
@@ -25,37 +54,47 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
         else
           Log.info "option loaded."
           Log.debug item
-          _options = item[Const.OPTIONS] or DEFAULT_OPTION
-          deferred.resolve(_options)
+          options = Object.merge(Option.DEFAULT_OPTION, item[Const.OPTIONS])
+          for k, v of options then Option._options[k] = v
+          deferred.resolve(Option._options)
+
+      return deferred.promise
+
+    ###
+     sync all option data.
+    ###
+    syncOptions: () ->
+      deferred = $q.defer()
+
+      saveData = {}
+      saveData[Const.OPTIONS] = Option._options
+      Chrome.storage.sync.set saveData, () ->
+        if Chrome.runtime.lastError?
+          deferred.reject(false)
+        else
+          Log.info "option synced."
+          Log.debug saveData
+          deferred.resolve(true)
+
+      return deferred.promise
+
+    ###
+     clear all option data.
+    ###
+    clearAllOptions: (callback) ->
+      deferred = $q.defer()
+
+      callback = callback or Const.NULLFUNC
+      Chrome.storage.local.clear()
+      Chrome.storage.sync.set saveData, () ->
+        if Chrome.runtime.lastError?
+          deferred.reject(false)
+        else
+          deferred.resolve(true)
 
       return deferred.promise
 
 
-    ###
-     set all option data.
-    ###
-    setOptions: (options, callback) ->
-      callback = callback or Const.NULLFUNC
-      _options = options
-      saveData = {}
-      saveData[Const.OPTIONS] = options
-      Chrome.storage.sync.set saveData, () ->
-        if Chrome.runtime.lastError?
-          callback false
-        else
-          callback true
+  return new Option()
 
-
-    ###
-     clear all data.
-    ###
-    clearAllData: (callback) ->
-      callback = callback or Const.NULLFUNC
-      Chrome.storage.local.clear()
-      Chrome.storage.sync.clear () ->
-        if Chrome.runtime.lastError?
-          callback false
-        else
-          callback true
-  }
 )

@@ -1,30 +1,14 @@
 timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account, DataAdapter, Option, Analytics, State, Resource) ->
 
-  # delay time for setOptions [ms]
+  # delay time for syncOptions [ms]
   DELAY_TIME = 500
 
   $scope.options = {}
   $scope.state = State
   $scope.isSetting = false
 
-  # promise object for cancel setOptions
+  # promise object for cancel syncOptions
   timeoutPromise = null
-
-
-  ###
-   if option was changed, save it.
-  ###
-  watchOptions = (newVal, oldVal) ->
-    if util.equals(newVal, oldVal) then return
-    Analytics.setPermission newVal.reportUsage
-    $timeout.cancel(timeoutPromise)
-    timeoutPromise = $timeout ->
-      Option.setOptions $scope.options, (result) ->
-        if result
-          Message.toast Resource.string("msgOptionSaved")
-        else
-          Message.toast Resource.string("msgOptionSaveFailed")
-    , DELAY_TIME
 
 
   ###
@@ -32,8 +16,33 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   ###
   initialize = () ->
     $scope.options = Option.getOptions()
-    # start watch changing.
-    $scope.$watch 'options', watchOptions, true
+    Option.onChanged syncOptions
+
+
+  ###
+   if option was changed, save it.
+  ###
+  syncOptions = (newVal) ->
+    if newVal.reportUsage
+      Analytics.setPermission newVal.reportUsage
+    $timeout.cancel(timeoutPromise)
+    timeoutPromise = $timeout ->
+      Option.syncOptions().then(sucessSyncOptions, failSyncOptions)
+    , DELAY_TIME
+
+
+  ###
+   show saved message.
+  ###
+  sucessSyncOptions = () ->
+    Message.toast Resource.string("msgOptionSaved")
+
+
+  ###
+   show save failed message.
+  ###
+  failSyncOptions = () ->
+    Message.toast Resource.string("msgOptionSaveFailed")
 
 
   ###

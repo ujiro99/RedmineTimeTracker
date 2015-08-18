@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Const) ->
 
   ID_PASS = 'id_pass'
 
@@ -64,6 +64,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
    filter account.
   ###
   $scope.accountFilter = (account) ->
+    if account.url is Const.STARRED then return false
     if $scope.searchField.text.isBlank() then return true
     return (account.url + "").contains($scope.searchField.text)
 

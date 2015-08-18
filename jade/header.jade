@@ -26,7 +26,7 @@ div#header(ng-controller="headerCtrl")
           li(ng-repeat='account in data.accounts')
             div.numbered-label
               span.numbered-label__label
-                {{account.url}}
+                {{account.name}}
             ul.project-list
               li(ng-repeat='project in account.projects | orderBy:"id"')
                 button.numbered-label(type='button', ng-click="selectProject(project)")
