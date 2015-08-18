@@ -52,11 +52,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
 
     ###*
     # all data.
-    # @param {DataModel}  data's url
+    # @type {object}
+    # @prop {DataModel} url of server - DataModel
     ###
     _data: {}
 
+    ###
     # filtered data.
+    # @type Array of AccountModel
+    ###
     _filteredData: []
     @property 'accounts',
       get: -> @_filteredData
@@ -209,13 +213,12 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
     ###
     addProjects: (projects) ->
       if not projects? or projects.length is 0 then return
-      for p in projects
-        @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
+      @removeProjects(projects)
       @_data[projects[0].url].projects.add(projects)
-      if not @selectedProject then @selectedProject = projects[0]
       for a in @_filteredData when a.url is projects[0].url
         a.projects = a.projects or []
         a.projects.add(projects)
+      if not @selectedProject then @selectedProject = projects[0]
 
     ###*
     # remove project from account.
@@ -225,7 +228,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Log) ->
       if not projects? or projects.length is 0 then return
       for p in projects
         @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
-      for a in @_filteredData when a.url is projects[0].url
+      for a in @_filteredData when a.projects and a.url is projects[0].url
         a.projects.remove((n) -> return n.equals(p))
 
     ###*
