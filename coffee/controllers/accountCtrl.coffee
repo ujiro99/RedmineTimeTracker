@@ -23,11 +23,13 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
     Redmine.remove({url: $scope.option.url})
     if $scope.authWay is ID_PASS
       option =
+        name:   $scope.option.name
         url:    $scope.option.url
         id:     $scope.option.id
         pass:   $scope.option.pass
     else
       option =
+        name:   $scope.option.name
         url:    $scope.option.url
         apiKey: $scope.option.apiKey
     Redmine.get(option).findUser(addAccount, failAuthentication)

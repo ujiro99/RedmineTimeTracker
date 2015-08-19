@@ -1,5 +1,5 @@
 // Host
-div.url.settings-section.form-group(ng-include="'template/url.html'")
+.settings-section.form-group.url(ng-include="'template/url.html'")
 
 // id
 .settings-section.form-group
@@ -14,3 +14,6 @@ div.url.settings-section.form-group(ng-include="'template/url.html'")
     label.control-label Password
   .setting-options
     input.form-control.input-sm(type='password', ng-model='option.pass', placeholder='ex) passw0rd')
+
+// Name
+.settings-section.form-group(ng-include="'template/name.html'")

@@ -208,9 +208,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         delete @_data[a.url]
         @_filteredData.remove((n) -> return n.url is a.url)
         @tickets.remove((n) -> return n.url is a.url)
-        if @selectedProject.url is a.url
+        @_updateStarredProjects()
+        if @selectedProject?.url is a.url
           @selectedProject = @_filteredData[0].projects[0]
-        if @selectedTicket.url is a.url
+        if @selectedTicket?.url is a.url
           @selectedTicket = @tickets[0]
       @fireEvent(@ACCOUNT_REMOVED, @, accounts)
 
@@ -223,6 +224,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not projects? or projects.length is 0 then return
       @removeProjects(projects)
       @_data[projects[0].url].projects.add(projects)
+      @_data[projects[0].url].account.projectsCount = @_data[projects[0].url].projects.length
       for a in @_filteredData when a.url is projects[0].url
         a.projects = a.projects or []
         a.projects.add(projects)

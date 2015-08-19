@@ -1,5 +1,5 @@
 // Host
-div.url.settings-section.form-group(ng-include="'template/url.html'")
+.settings-section.form-group.url(ng-include="'template/url.html'")
 
 // Api key
 .settings-section.form-group
@@ -8,3 +8,5 @@ div.url.settings-section.form-group(ng-include="'template/url.html'")
   .setting-options
     input.form-control.input-sm(type='text', ng-model='option.apiKey', placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5')
 
+// Name
+.settings-section.form-group(ng-include="'template/name.html'")

@@ -53,10 +53,11 @@ div#accounts(ng-controller='AccountCtrl')
       .number
       .list-item
         .list-item__label
-          span {{account.url}}
+          span {{account.name}}
         .list-item__description
-          span id: {{account.id}}
-          span projects: {{account.projects.length}}
+          span.list-item__id(ng-show="account.id") {{account.id}}
+          span.list-item__project {{account.projectsCount}}
+          span.list-item__url {{account.url}}
       button.btn(type='button')
         span.icon-minus
 

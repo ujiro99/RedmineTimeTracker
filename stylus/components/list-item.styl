@@ -7,17 +7,27 @@
 
 .list-item__description
   color: #aaa
-  padding-left: 10px
+  font-size: 0.9em
+  padding-left: 0.5em
+  text-ellipsis()
 
   span
     margin-right: 10px
 
 .list-item__id
-  color: #aaa
-  font-size: 0.9em
   &:before
     content: "id: "
     margin-left: 0.5em
 
 .tt-cursor .list-item__id
   color: #fff
+
+.list-item__project
+  &:before
+    content: "projects: "
+    margin-left: 0.5em
+
+.list-item__url
+  &:before
+    content: "url: "
+    margin-left: 0.5em
