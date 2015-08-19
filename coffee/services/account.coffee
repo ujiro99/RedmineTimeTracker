@@ -142,25 +142,24 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
       account = AccountModel.fromObject(account)
       if not account? then callback false; return
       callback = callback or NULLFUNC
-      @getAccounts (accounts) ->
-        accounts = accounts or []
-        # merge accounts.
-        newArry = []
-        newArry = for a in accounts when a.url isnt account.url
-          a.encrypt()
-        accounts = newArry
-        accounts.push account.encrypt()
-        Chrome.storage.sync.set ACCOUNTS: accounts, () ->
-          if Chrome.runtime.lastError?
-            callback false
-          else
-            for a, i in _accounts when a.url is account.url
-              _accounts.splice i, 1
-              break
-            _accounts.push account
-            callback true, account
-            $rootScope.$broadcast 'accountAdded', account
-            Analytics.sendEvent 'internal', 'account', 'add', _accounts.length
+      accounts = @getAccounts() or []
+      # merge accounts.
+      newArry = []
+      newArry = for a in accounts when a.url isnt account.url
+        a.encrypt()
+      accounts = newArry
+      accounts.push account.encrypt()
+      Chrome.storage.sync.set ACCOUNTS: accounts, () ->
+        if Chrome.runtime.lastError?
+          callback false
+        else
+          for a, i in _accounts when a.url is account.url
+            _accounts.splice i, 1
+            break
+          _accounts.push account
+          callback true, account
+          $rootScope.$broadcast 'accountAdded', account
+          Analytics.sendEvent 'internal', 'account', 'add', _accounts.length
 
 
     ###
@@ -169,21 +168,20 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
     removeAccount: (url, callback) ->
       if not url? then callback false; return
       callback = callback or NULLFUNC
-      @getAccounts (accounts) ->
-        accounts = accounts or []
-        # select other url account
-        accounts = for a in accounts when a.url isnt url
-          a.encrypt()
-        Chrome.storage.sync.set ACCOUNTS: accounts, () ->
-          if Chrome.runtime.lastError?
-            callback false
-          else
-            for a, i in _accounts when a.url is url
-              _accounts.splice i, 1
-              break
-            callback true
-            $rootScope.$broadcast 'accountRemoved', url
-            Analytics.sendEvent 'internal', 'account', 'remove', _accounts.length
+      accounts = @getAccounts() or []
+      # select other url account
+      accounts = for a in accounts when a.url isnt url
+        a.encrypt()
+      Chrome.storage.sync.set ACCOUNTS: accounts, () ->
+        if Chrome.runtime.lastError?
+          callback false
+        else
+          for a, i in _accounts when a.url is url
+            _accounts.splice i, 1
+            break
+          callback true
+          $rootScope.$broadcast 'accountRemoved', url
+          Analytics.sendEvent 'internal', 'account', 'remove', _accounts.length
 
 
     ###

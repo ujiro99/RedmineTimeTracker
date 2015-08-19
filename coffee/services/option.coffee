@@ -86,7 +86,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
 
       callback = callback or Const.NULLFUNC
       Chrome.storage.local.clear()
-      Chrome.storage.sync.set saveData, () ->
+      Chrome.storage.sync.clear () ->
         if Chrome.runtime.lastError?
           deferred.reject(false)
         else
