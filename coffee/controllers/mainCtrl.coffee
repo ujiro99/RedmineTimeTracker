@@ -214,7 +214,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _issueFound = (issue) ->
     if issue?.status.id is TICKET_CLOSED
-      DataAdapter.tickets.removeTicket(issue)
+      DataAdapter.removeTicket(issue)
       return
     target = DataAdapter.tickets.find (n) -> n.equals(issue)
     target.text        = issue.subject
