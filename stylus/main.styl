@@ -69,12 +69,11 @@ input.input-sm
 
 
 .frame
-  margin: 10px
   margin-top: height_header px
   overflow: hidden
 
   & > section
-    padding: 0 0 25px 0
+    padding: 0 10px 25px 10px
 
 .searchform
   margin-bottom: 5px
@@ -485,19 +484,28 @@ input.project-search
       height: height_input px
       line-height: height_input px
       font-size: 16px
-      color: #888
+      color: color_button_font
       transition: color .25s ease
       &:hover
         color: color_key
 
   .add-account
-    margin: 0
+    margin: 0 -10px
+    position: relative
+    &:before
+      content: " "
+      width: 0
+      height: 0
+      border: 10px solid transparent
+      border-top: 10px solid #fff
+      position: absolute
+      top: -1px
+      right: 9px
+      -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.1))
     .well
-      overflow: hidden
       margin-bottom: 10px
-      padding: 16px 8px
-    .btn
-      background-color: #fff
+      padding: 16px 12px
+      border-radius: 0
 
   .auth
     position: relative
@@ -543,12 +551,12 @@ input.project-search
     button
       border-color: color_key
       color: color_key
-      padding: 0px 15px
+      padding: 0.15em 1.8em
       transition: background-color .2s ease
       &:hover
         border-color: color_key_down
         color: color_key_down
-        background-color: #fff
+        background-color: rgba(0,0,0,0.05)
 
     .active
       background-color: color_key
@@ -560,9 +568,10 @@ input.project-search
   .save
     position: relative
     display: flex
-    justify-content: flex-end
+    justify-content: center
     button
-      padding: 2px 15px
+      padding: 0.25em 6.4em
+      color: color_button_font
 
   .clear
     align-center()
@@ -579,7 +588,7 @@ input.project-search
   .account-list
     padding-left: 4px
     .number
-      transition: ease .2s
+      transition: padding-left ease .2s
 
     & > li
       counter-increment: account
@@ -667,6 +676,7 @@ input.project-search
 
   .setting__options
     .btn-sm
+      color: color_button_font
       padding: 5px 7px
       margin: 0 0 0 5px
       line-height: 1.2
