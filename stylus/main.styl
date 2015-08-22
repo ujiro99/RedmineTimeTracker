@@ -500,7 +500,7 @@ input.project-search
       border-top: 10px solid #fff
       position: absolute
       top: -1px
-      right: 9px
+      right: 10px
       -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.1))
     .well
       margin-bottom: 10px
@@ -548,22 +548,21 @@ input.project-search
     margin: 0px auto 15px auto
     display: table
 
-    button
+  .selectAuth__button
+    border-color: color_key_weak
+    color: color_key_weak
+    padding: 0.15em 1.8em
+    transition: all .2s ease
+    &:hover
       border-color: color_key
       color: color_key
-      padding: 0.15em 1.8em
-      transition: background-color .2s ease
-      &:hover
-        border-color: color_key_down
-        color: color_key_down
-        background-color: rgba(0,0,0,0.05)
 
-    .active
-      background-color: color_key
+    &.active
+      background-color: color_key_weak
       color: snow
       &:hover
+        background-color: color_key
         color: snow
-        background-color: color_key_down
 
   .save
     position: relative
@@ -571,7 +570,10 @@ input.project-search
     justify-content: center
     button
       padding: 0.25em 6.4em
-      color: color_button_font
+      color: snow
+      background-color: color_key_weak
+      &:hover
+        background-color: color_key
 
   .clear
     align-center()

@@ -24,8 +24,8 @@ div#accounts(ng-controller='AccountCtrl')
 
       // Auth way
       div.btn-group.selectAuth
-        button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
-        button.btn.btn-default.btn-xs(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
+        button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
+        button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
       // Auth
       div.auth(ng-switch on="authWay")
@@ -36,7 +36,7 @@ div#accounts(ng-controller='AccountCtrl')
 
       // Add Button
       div.save
-        button.btn.btn-default.btn-sm.ladda-button(
+        button.btn.btn-sm.ladda-button(
           ng-click='findAccount()',
           ga-click='findAccount',
           uz-loading='state.isSaving',
