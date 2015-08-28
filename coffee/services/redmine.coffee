@@ -119,6 +119,7 @@ class Redmine
             issue.total   = issue.spent_hours or 0
             issue.project = issue.project
             new @Ticket.new(issue)
+        @Analytics.sendEvent 'internal', 'getIssues', 'total_count', data.total_count
         success?(data))
       .error(error or Redmine.NULLFUNC)
     return cancelDefer
@@ -185,7 +186,7 @@ class Redmine
     config.headers = "Content-Type": "application/xml"
     @$http(config)
       .success((data) =>
-        @Analytics.sendEvent 'internal', 'submitTime', 'success', config.hours
+        @Analytics.sendEvent 'internal', 'submitTime', 'success', @_timeEntryData.time_entry.hours
         success(data))
       .error((data) =>
         @Log.debug data
