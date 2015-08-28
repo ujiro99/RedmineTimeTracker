@@ -8,6 +8,10 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
     constructor: (@$scope) ->
       super()
 
+
+    ###
+     on click remove button, remove issue from selectable list.
+    ###
     removeItem: (item) ->
       if State.isTracking and item.equals DataAdapter.selectedTicket
         return
@@ -15,6 +19,9 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
       Message.toast Resource.string("msgRemoved").format(item.text)
 
 
+    ###
+     load issues from Redmine.
+    ###
     load: (page) ->
       page = @currentPage if not page?
       if not DataAdapter.selectedProject?
@@ -28,6 +35,9 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
       Redmine.get(DataAdapter.selectedAccount).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
 
 
+    ###
+     update issues.
+    ###
     loadSuccess: (data) =>
       return if not DataAdapter.selectedProject
       return if DataAdapter.selectedProject.url isnt data.url
@@ -40,6 +50,9 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
       @$scope.issues.set(data.issues)
 
 
+    ###
+     show error message.
+    ###
     loadError: (data, status) =>
       if status is BaseEditState.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
