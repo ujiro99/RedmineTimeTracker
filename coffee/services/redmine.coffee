@@ -86,7 +86,7 @@ class Redmine
   ###
    set basic configs for $http.
   ###
-  setBasicConfig: (config, auth) ->
+  _setBasicConfig: (config, auth) ->
     config.headers = "Content-Type": Redmine.CONTENT_TYPE
     config.timeout = config.timeout or Redmine.AJAX_TIME_OUT
     if auth.apiKey? and auth.apiKey.length > 0
@@ -97,7 +97,7 @@ class Redmine
 
 
   ###
-   load issues following selected project
+   load issues.
   ###
   getIssues: (success, error, params) ->
     params.limit = params.limit or 100
@@ -107,7 +107,7 @@ class Redmine
       url: @auth.url + "/issues.json"
       params: params
       timeout: cancelDefer.promise
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
         data.url = @auth.url
@@ -150,7 +150,7 @@ class Redmine
     config =
       method: "GET"
       url: @auth.url + "/issues/#{issueId}.json"
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
         if data?.issue?
@@ -182,7 +182,7 @@ class Redmine
       method: "POST"
       url: @auth.url + "/issues/#{@_timeEntryData.time_entry.issue_id}/time_entries.json"
       data: Redmine.JSONtoXML @_timeEntryData
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     config.headers = "Content-Type": "application/xml"
     @$http(config)
       .success((data) =>
@@ -206,7 +206,7 @@ class Redmine
       method: "GET"
       url: @auth.url + "/time_entries.json"
       params: params
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success((args...) =>
         args[0].url = @auth.url
@@ -230,7 +230,7 @@ class Redmine
       method: "GET"
       url: @auth.url + "/projects.json"
       params: params
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
         data.url = @auth.url
@@ -259,7 +259,7 @@ class Redmine
     config =
       method: "GET"
       url: @auth.url + "/users/current.json?include=memberships"
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
         if not data.user or not data.user.id
@@ -297,7 +297,7 @@ class Redmine
     config =
       method: "GET"
       url: @auth.url + "/enumerations/time_entry_activities.json"
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
         data.url = @auth.url
@@ -317,7 +317,7 @@ class Redmine
       method: "GET"
       url: @auth.url + "/queries.json"
       params: params
-    config = @setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth
     @$http(config)
       .success((args...) =>
         args[0].url = @auth.url
