@@ -84,6 +84,21 @@ class Redmine
 
 
   ###
+   bind log.
+  ###
+  _bindLog: (success, error, mothodName) ->
+    onSuccess = (args...) =>
+      @Analytics.sendEvent 'internal', mothodName, 'total_count', args[0].total_count
+      success?(args...)
+
+    onError = (args...) =>
+      @Analytics.sendException("Error: " + mothodName)
+      error?(args...)
+
+    return success: onSuccess, error: onError
+
+
+  ###
    set basic configs for $http.
   ###
   _setBasicConfig: (config, auth) ->
@@ -119,7 +134,6 @@ class Redmine
             issue.total   = issue.spent_hours or 0
             issue.project = issue.project
             new @Ticket.new(issue)
-        @Analytics.sendEvent 'internal', 'getIssues', 'total_count', data.total_count
         success?(data))
       .error(error or Redmine.NULLFUNC)
     return cancelDefer
@@ -131,7 +145,8 @@ class Redmine
   getIssuesOnUser: (success, error) ->
     params =
       assigned_to_id: @auth.userId
-    @getIssues(success, error, params)
+    o = @_bindLog(success, error, "getIssuesOnUser")
+    @getIssues(o.success, o.error, params)
 
 
   ###
@@ -140,7 +155,8 @@ class Redmine
   getIssuesOnProject: (projectId, params, success, error) ->
     params.project_id = projectId
     @getIssuesCanceler.resolve() if @getIssuesCanceler
-    @getIssuesCanceler = @getIssues(success, error, params)
+    o = @_bindLog(success, error, "getIssuesOnUser")
+    @getIssuesCanceler = @_getIssues(o.success, o.error, params)
 
 
   ###
