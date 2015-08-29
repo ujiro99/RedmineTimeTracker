@@ -79,11 +79,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     _tickets: []
     @property 'tickets',
       get: -> @_tickets
-      set: (n) ->
-        @_tickets.set(n)
-        @_sortTickets(@_tickets)
-        @selectedTicket = n[0]
-        @fireEvent(@TICKETS_CHANGED, @)
 
     ###*
     # selectable activites
@@ -92,9 +87,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     _activities: []
     @property 'activities',
       get: -> @_activities
-      set: (n) ->
-        @_activities.set n
-        @selectedActivity = n[0]
 
     ###*
     # selectable Queries
@@ -258,6 +250,13 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     removeTicket: (ticket) ->
       @_tickets.remove (n) -> n.equals(ticket)
+      @fireEvent(@TICKETS_CHANGED, @)
+
+    ###*
+    # clear all tickets.
+    ###
+    clearTicket: () ->
+      @_tickets = []
       @fireEvent(@TICKETS_CHANGED, @)
 
     ###*

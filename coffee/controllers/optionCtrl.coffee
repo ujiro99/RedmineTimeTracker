@@ -61,7 +61,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   ###
   $scope.clearTickets = () ->
     $scope.isSetting = true
-    DataAdapter.tickets = []
+    DataAdapter.clearTicket()
     Ticket.clear (result) ->
       $timeout ->
         if result

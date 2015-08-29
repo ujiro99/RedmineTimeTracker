@@ -200,7 +200,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Log.debug "start Ticket.load()"
     Ticket.load () ->
       Log.debug "Ticket.load() success"
-      DataAdapter.tickets = Ticket.get()
+      DataAdapter.addTicket(Ticket.get())
       for t in DataAdapter.tickets
         for account in Account.getAccounts() when account.url is t.url
           Redmine.get(account).getIssuesById t.id, _issueFound, _issueNotFound
@@ -230,7 +230,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _issueNotFound = (issue, status) ->
     if status is NOT_FOUND or status is UNAUTHORIZED
-      DataAdapter.tickets.removeTicket(issue)
+      DataAdapter.removeTicket(issue)
       return
 
 
