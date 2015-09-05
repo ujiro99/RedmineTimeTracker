@@ -21,27 +21,9 @@ timeTracker.factory "BaseEditState", ($window, Message, Resource, DataAdapter) -
      on user selected item.
     ###
     onClickItem: (item) ->
-      if @isContained(item)
-        @removeItem(item)
-      else
-        @addItem(item)
-
-
-    ###
-     add selected item.
-    ###
-    addItem: (item) ->
-      item.show = BaseEditState.SHOW.SHOW
-      DataAdapter.addTicket item
-      Message.toast Resource.string("msgAdded").format(item.text)
-
-
-    ###
-     remove selected item.
-    ###
-    removeItem: (item) ->
-      item.show = BaseEditState.SHOW.NOT
-      DataAdapter.removeTicket item
+      if not @isContained(item)
+        Message.toast Resource.string("msgAdded").format(item.text)
+      DataAdapter.toggleIsTicketShow item
 
 
     ###

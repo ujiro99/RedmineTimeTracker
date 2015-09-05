@@ -35,6 +35,7 @@ class Redmine
   @UNAUTHORIZED = 401
   @CONTENT_TYPE: "application/json"
   @AJAX_TIME_OUT: 30 * 1000
+  @LIMIT_MAX: 100
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
   @NULLFUNC: () ->
 
@@ -86,16 +87,19 @@ class Redmine
   ###
    bind log.
   ###
-  _bindLog: (success, error, mothodName) ->
+  _bindDefer: (success, error, mothodName) ->
+    deferred = @$q.defer()
     onSuccess = (args...) =>
       @Analytics.sendEvent 'internal', mothodName, 'total_count', args[0].total_count
+      deferred.resolve(args...)
       success?(args...)
 
     onError = (args...) =>
       @Analytics.sendException("Error: " + mothodName)
+      deferred.reject(args...)
       error?(args...)
 
-    return success: onSuccess, error: onError
+    return success: onSuccess, error: onError, promise: deferred.promise
 
 
   ###
@@ -114,14 +118,14 @@ class Redmine
   ###
    load issues.
   ###
-  getIssues: (success, error, params) ->
-    params.limit = params.limit or 100
-    cancelDefer = @$q.defer()
+  _getIssues: (params, success, error) ->
+    params.limit = params.limit or Redmine.LIMIT_MAX
+    deferred = @$q.defer()
     config =
       method: "GET"
       url: @auth.url + "/issues.json"
       params: params
-      timeout: cancelDefer.promise
+      timeout: deferred.promise
     config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
@@ -134,9 +138,44 @@ class Redmine
             issue.total   = issue.spent_hours or 0
             issue.project = issue.project
             new @Ticket.new(issue)
+        deferred.resolve(data)
         success?(data))
-      .error(error or Redmine.NULLFUNC)
-    return cancelDefer
+      .error((args...) =>
+        deferred.reject(args...)
+        error?(args...))
+    return deferred
+
+
+  ###
+   load issues.
+  ###
+  getIssues: (success, error, params) ->
+    o = @_bindDefer(success, error, "getIssues")
+    @_getIssues(params, o.success, o.error).promise
+
+
+  ###
+   load All issues.
+  ###
+  getIssuesRange: (params, start, end, success, error) ->
+    params = params or {}
+    params.limit = Redmine.LIMIT_MAX
+    pages = Math.ceil((end - start) / Redmine.LIMIT_MAX)
+    promises = [1..pages].map (n) =>
+      params = Object.clone(params)
+      params.offset = start + (n - 1) * Redmine.LIMIT_MAX
+      if params.offset + Redmine.LIMIT_MAX > end
+        params.limit = end - params.offset + 1
+      @_getIssues(params).promise
+
+    r = @_bindDefer(success, error, "getIssuesRange")
+    @$q.all(promises).then(
+      (dataAry) ->
+        data = dataAry.reduce((a, b) -> a.issues.add(b.issues);a)
+        r.success(data)
+    , (data) -> r.error(data))
+
+    return r.promise
 
 
   ###
@@ -145,8 +184,8 @@ class Redmine
   getIssuesOnUser: (success, error) ->
     params =
       assigned_to_id: @auth.userId
-    o = @_bindLog(success, error, "getIssuesOnUser")
-    @getIssues(o.success, o.error, params)
+    o = @_bindDefer(success, error, "getIssuesOnUser")
+    @_getIssues(params, o.success, o.error).promise
 
 
   ###
@@ -154,9 +193,12 @@ class Redmine
   ###
   getIssuesOnProject: (projectId, params, success, error) ->
     params.project_id = projectId
-    @getIssuesCanceler.resolve() if @getIssuesCanceler
-    o = @_bindLog(success, error, "getIssuesOnUser")
-    @getIssuesCanceler = @_getIssues(o.success, o.error, params)
+    if @getIssuesCanceler
+      @getIssuesCanceler.resolve()
+      @getIssuesCanceler = null
+    o = @_bindDefer(success, error, "getIssuesOnUser")
+    @getIssuesCanceler = @_getIssues(params, o.success, o.error)
+    @getIssuesCanceler.promise
 
 
   ###
@@ -217,7 +259,7 @@ class Redmine
     deferred = @$q.defer()
 
     params = params or {}
-    params.limit = params.limit or 50
+    params.limit = params.limit or Redmine.LIMIT_MAX
     config =
       method: "GET"
       url: @auth.url + "/time_entries.json"
@@ -241,7 +283,7 @@ class Redmine
     deferred = @$q.defer()
 
     params = params or {}
-    params.limit = params.limit or 50
+    params.limit = params.limit or Redmine.LIMIT_MAX
     config =
       method: "GET"
       url: @auth.url + "/projects.json"
@@ -328,7 +370,7 @@ class Redmine
     deferred = @$q.defer()
 
     params = params or {}
-    params.limit = params.limit or 50
+    params.limit = params.limit or Redmine.LIMIT_MAX
     config =
       method: "GET"
       url: @auth.url + "/queries.json"

@@ -18,8 +18,10 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Log) ->
      @param text {String} project's name.
      @param show {Number} can this project show? (DEFAULT: 0, NOT: 1, SHOW: 2)
      @param queryId {Number} Used query ID
+     @param tickets {Array} Array of TicketModel.
     ###
-    constructor: (@url, @urlIndex, @id, @text, @show, @queryId) ->
+    constructor: (@url, @urlIndex, @id, @text, @show, @queryId, @tickets) ->
+      @tickets = [] if not tickets
 
     ###
      compare project.

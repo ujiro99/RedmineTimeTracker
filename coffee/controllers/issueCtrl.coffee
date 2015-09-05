@@ -1,8 +1,5 @@
 timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState) ->
 
-  # list data
-  $scope.issues   = []
-
   # data
   $scope.data = DataAdapter
 
@@ -73,8 +70,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
 
   # load issues on P.1
   loadIssuesFirstPage = () ->
-    $scope.editState.currentPage = 1
-    $scope.editState.load()
+    # $scope.editState.currentPage = 1
+    $scope.editState.loadAllTicketOnProject()
 
 
   ###
@@ -82,7 +79,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
   ###
   $scope.$watch 'editState.currentPage', ->
     Analytics.sendEvent 'user', 'clicked', 'pagination'
-    $scope.editState.load()
+    $scope.editState.loadAllTicketOnProject()
 
 
   ###

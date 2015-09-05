@@ -45,6 +45,33 @@ if not ('set' in Array.prototype)
     [].splice.apply(this, [0, this.length].concat(newArray))
     return
 
+
+###
+ XOR to using hash() of each object in the Array.
+###
+if not ('xor' in Array.prototype)
+  Array.prototype.xor = (arr) ->
+    obj = {}
+    for x in this then obj[x.hash()] = x
+    for y in arr
+      if obj[y.hash()]
+        delete obj[y.hash()]
+      else
+        obj[y.hash()] = y
+    return (for key, value of obj then value)
+
+
+###
+ union to using hash() of each object in the Array.
+###
+if not ('union' in Array.prototype)
+  Array.prototype.union = (arr) ->
+    obj = {}
+    for x in this then obj[x.hash()] = x
+    for y in arr  then obj[y.hash()] = y
+    return (for key, value of obj then value)
+
+
 ###
  define getter, setter.
  @ref http://stackoverflow.com/questions/11587231/coffeescript-getter-setter-in-object-initializers

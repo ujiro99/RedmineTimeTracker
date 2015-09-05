@@ -38,8 +38,8 @@ div#issue(ng-controller='IssueCtrl')
           placeholder='Issue...')
         i.fa.fa-search
       div.issue-list
-        ul.issue-list__content(ng-class="{'issue-list__content--empty':!issues.length}")
-          li.issue-list__item(ng-repeat='item in issues | filter:editState.listFilter | orderBy:"id"',
+        ul.issue-list__content(ng-class="{'issue-list__content--empty':!data.selectedProject.tickets.length}")
+          li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:editState.listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (editState.currentPage - 1) * options.itemsPerPage',
              ng-mousemove='editState.onMouseMove($event)')
             button.numbered-label(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
               span.numbered-label__number {{item.id}}
@@ -56,7 +56,7 @@ div#issue(ng-controller='IssueCtrl')
 
       // page
       div.page
-        uz-pagination.pagination-small(total-items='totalItems',
+        uz-pagination.pagination-small(total-items='filtered.length',
                                        page='editState.currentPage',
                                        items-per-page='options.itemsPerPage')
 

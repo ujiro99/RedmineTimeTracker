@@ -109,7 +109,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       set: (n) ->
         return if @_selectedAccount is n
         @_selectedAccount = n
-        @activities       = @_data[n.url].activities
+        @_activities.set @_data[n.url].activities
         @fireEvent(@SELECTED_ACCOUNT_CHANGED, @, n)
         Log.debug("selectedAccount set: " + n.url)
 
@@ -133,9 +133,11 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       set: (n) ->
         return if @_selectedTicket is n
         @_selectedTicket = n
-        @activities = @_data[n.url].activities if n and @_data[n.url]
+        @_activities.set @_data[n.url].activities if n and @_data[n.url]
+        @_selectedActivity = @_activities[0]
         @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
         Log.debug("selectedTicket set: " + n?.text)
+        Log.debug("selectedActivity set: " + @_selectedActivity?.name)
 
     # selected activity.
     _selectedActivity: null
@@ -236,27 +238,32 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @_updateStarredProjects()
 
     ###*
-    # add ticket.
-    # @param {TicketModel} ticket
+    # toggle ticket's show/unshow status.
+    # @param {Array} tickets - array of TicketModel
     ###
-    addTicket: (ticket) ->
-      @_tickets.add ticket
+    toggleIsTicketShow: (tickets) ->
+      tickets = [tickets] if not Array.isArray(tickets)
+      obj = {}
+      @_tickets.set @_tickets.xor(tickets)
       @_sortTickets(@_tickets)
+      @selectedTicket = @_tickets[0]
       @fireEvent(@TICKETS_CHANGED, @)
 
     ###*
-    # remove ticket.
-    # @param {TicketModel} ticket
+    # add tickets to _data.
+    # @param {Array} tickets - array of TicketModel
     ###
-    removeTicket: (ticket) ->
-      @_tickets.remove (n) -> n.equals(ticket)
-      @fireEvent(@TICKETS_CHANGED, @)
+    addTickets: (tickets) ->
+      tickets = [tickets] if not Array.isArray(tickets)
+      tickets.map (n) -> @_data[n.url].tickets.add n
 
     ###*
     # clear all tickets.
     ###
     clearTicket: () ->
-      @_tickets = []
+      for url, data of @_data then data.tickets = []
+      @_tickets.set []
+      @selectedTicket = null
       @fireEvent(@TICKETS_CHANGED, @)
 
     ###*
@@ -268,7 +275,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not url? or not activities? then return
       @_data[url].activities = activities
       if @selectedAccount and @selectedAccount.url is url
-        @activities = activities
+        @_activities.set activities
       Log.debug("setActivities: #{url}")
 
     ###*

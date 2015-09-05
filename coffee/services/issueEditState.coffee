@@ -1,4 +1,4 @@
-timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Message, Resource, BaseEditState) ->
+timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Message, Resource, BaseEditState, Log) ->
 
   ###
    controller for issue edit mode.
@@ -20,19 +20,25 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
 
 
     ###
-     load issues from Redmine.
+     load all issues from Redmine on selected Project.
     ###
-    load: (page) ->
-      page = @currentPage if not page?
-      if not DataAdapter.selectedProject?
-        @$scope.issues.clear()
-        return
-      projectId = DataAdapter.selectedProject.id
+    loadAllTicketOnProject: () ->
+      return if not DataAdapter.selectedProject
       params =
-        page: page
-        limit: @$scope.options.itemsPerPage
         query_id: DataAdapter.selectedProject.queryId
-      Redmine.get(DataAdapter.selectedAccount).getIssuesOnProject(projectId, params, @loadSuccess, @loadError)
+        project_id: DataAdapter.selectedProject.id
+      redmine = Redmine.get(DataAdapter.selectedAccount)
+      redmine.getIssuesOnProject(params.project_id, params).then(
+        (data) =>
+          return if not data?
+          return if DataAdapter.selectedProject.tickets.length is data.total_count
+          if data.total_count <= data.issues.length
+            @loadSuccess(data)
+            return
+          start = 0
+          end = data.total_count - DataAdapter.selectedProject.tickets.length
+          redmine.getIssuesRange(params, start, end, @loadSuccess, @loadError)
+      , @loadError)
 
 
     ###
@@ -41,13 +47,11 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
     loadSuccess: (data) =>
       return if not DataAdapter.selectedProject
       return if DataAdapter.selectedProject.url isnt data.url
-      return if @currentPage - 1 isnt data.offset / data.limit
-      @$scope.totalItems = data.total_count
-      console.log "ticket total count: " + @$scope.totalItems
       for issue in data.issues
         saved = DataAdapter.tickets.find (n) -> n.equals(issue)
         saved and issue.show = saved.show
-      @$scope.issues.set(data.issues)
+      tickets = DataAdapter.selectedProject.tickets.union(data.issues)
+      DataAdapter.selectedProject.tickets.set(tickets)
 
 
     ###

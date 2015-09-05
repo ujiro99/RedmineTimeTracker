@@ -218,6 +218,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     equals: (y) ->
       return @url is y.url and @id is y.id
 
+    hash: () -> return @url + @id
+
 
   return {
 
