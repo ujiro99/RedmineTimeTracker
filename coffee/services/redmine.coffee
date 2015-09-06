@@ -129,15 +129,16 @@ class Redmine
     config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
-        data.url = @auth.url
-        if data?.issues?
-          data.issues = for issue in data.issues
-            issue.text    = issue.subject
-            issue.show    = Redmine.SHOW.DEFAULT
-            issue.url     = @auth.url
-            issue.total   = issue.spent_hours or 0
-            issue.project = issue.project
-            new @Ticket.new(issue)
+        data.params = params
+        data.url    = @auth.url
+        data.issues = data.issues or []
+        data.issues = for issue in data.issues
+          issue.text    = issue.subject
+          issue.show    = Redmine.SHOW.DEFAULT
+          issue.url     = @auth.url
+          issue.total   = issue.spent_hours or 0
+          issue.project = issue.project
+          new @Ticket.new(issue)
         deferred.resolve(data)
         success?(data))
       .error((args...) =>
@@ -149,9 +150,13 @@ class Redmine
   ###
    load issues.
   ###
-  getIssues: (success, error, params) ->
+  getIssues: (params, success, error) ->
+    if @getIssuesCanceler
+      @getIssuesCanceler.resolve()
+      @getIssuesCanceler = null
     o = @_bindDefer(success, error, "getIssues")
-    @_getIssues(params, o.success, o.error).promise
+    @getIssuesCanceler = @_getIssues(params, o.success, o.error)
+    @getIssuesCanceler.promise
 
 
   ###
@@ -186,19 +191,6 @@ class Redmine
       assigned_to_id: @auth.userId
     o = @_bindDefer(success, error, "getIssuesOnUser")
     @_getIssues(params, o.success, o.error).promise
-
-
-  ###
-   Load tickets on project.
-  ###
-  getIssuesOnProject: (projectId, params, success, error) ->
-    params.project_id = projectId
-    if @getIssuesCanceler
-      @getIssuesCanceler.resolve()
-      @getIssuesCanceler = null
-    o = @_bindDefer(success, error, "getIssuesOnUser")
-    @getIssuesCanceler = @_getIssues(params, o.success, o.error)
-    @getIssuesCanceler.promise
 
 
   ###
@@ -272,7 +264,6 @@ class Redmine
       .error((args...) -> deferred.reject(args[0]))
 
     return Redmine.extends(deferred.promise)
-
 
 
   ###

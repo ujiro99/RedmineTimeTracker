@@ -25,31 +25,49 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
     loadAllTicketOnProject: () ->
       return if not DataAdapter.selectedProject
       params =
-        query_id: DataAdapter.selectedProject.queryId
+        query_id:   DataAdapter.selectedProject.queryId
         project_id: DataAdapter.selectedProject.id
-      redmine = Redmine.get(DataAdapter.selectedAccount)
-      redmine.getIssuesOnProject(params.project_id, params).then(
-        (data) =>
-          return if not data?
-          return if DataAdapter.selectedProject.tickets.length is data.total_count
-          if data.total_count <= data.issues.length
-            @loadSuccess(data)
-            return
-          start = 0
-          end = data.total_count - DataAdapter.selectedProject.tickets.length
-          redmine.getIssuesRange(params, start, end, @loadSuccess, @loadError)
-      , @loadError)
+      Redmine.get(DataAdapter.selectedAccount)
+        .getIssues(params)
+        .then(@loadRemain, @loadError)
+        .then(@loadSuccess, @loadError)
+
+
+    ###
+     load remaining data.
+    ###
+    loadRemain: (data) =>
+      return if not data
+
+      storedCount = DataAdapter.selectedProject.tickets.length
+      remainCount = data.total_count - storedCount
+
+      # remaining tickets was already stored.
+      return if remainCount is 0
+
+      # remaining tickets was already loaded.
+      @loadSuccess(data)
+      return if remainCount <= data.issues.length
+
+      # load remain.
+      Redmine.get(DataAdapter.selectedAccount)
+        .getIssuesRange(data.params, data.issues.length, remainCount)
 
 
     ###
      update issues.
     ###
     loadSuccess: (data) =>
+      return if not data
       return if not DataAdapter.selectedProject
       return if DataAdapter.selectedProject.url isnt data.url
+
+      # merge issues status.
       for issue in data.issues
         saved = DataAdapter.tickets.find (n) -> n.equals(issue)
         saved and issue.show = saved.show
+
+      # merge arrays and set.
       tickets = DataAdapter.selectedProject.tickets.union(data.issues)
       DataAdapter.selectedProject.tickets.set(tickets)
 
