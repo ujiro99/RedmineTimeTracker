@@ -254,6 +254,16 @@ input.project-search
       height: 24px
 
 
+.input-and-btn
+  display: flex
+  .input
+    flex: 1
+  .btn
+    color: color_button_font
+    transition: color .25s ease
+    &:hover
+      color: color_key
+
 #header
   .account-list
     &>li
@@ -416,6 +426,10 @@ input.project-search
   .animate-height
     transition: height .32s ease
 
+  .input-and-btn .btn
+    margin: 0 0 7px 0.5em
+    font-size: 1.3em
+
   .issue-list
 
     .active .numbered-label, .active .numbered-label:hover
@@ -479,18 +493,11 @@ input.project-search
     align-items: center
 
   .input-and-btn
-    display: flex
-    .input
-      flex: 1
     .btn
       padding: 0 0 0 7px
       height: height_input px
       line-height: height_input px
       font-size: 16px
-      color: color_button_font
-      transition: color .25s ease
-      &:hover
-        color: color_key
 
   .add-account
     margin: 0 -10px

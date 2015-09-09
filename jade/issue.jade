@@ -9,38 +9,49 @@ div#issue(ng-controller='IssueCtrl')
 
 
   // edit area will change height
-  div.animate-height(uz-auto-height='section')
+  // div.animate-height(uz-auto-height='section')
+  div
 
     section
 
       // ------------------------------------
-      //               Query
+      //         Search by Keyword
       // ------------------------------------
-      div.searchform.searchform-icon.searchform-icon-before
-        div.icon
-          span.icon-magnifier
-        input.sfTypeahead.form-control.input-sm(type="text"
-          options="inputOptions"
-          datasets="queryData"
-          ng-model="data.selectedQuery"
-          ng-click="data.selectedQuery = null"
-          placeholder='Query...')
-        i.fa.fa-search
+      div.input-and-btn
+        div.searchform.searchform-icon.input
+          input.form-control.input-sm(type="text"
+            ng-model="searchField.text"
+            ng-click="searchField.text = ''"
+            placeholder='Issue...')
+          i.fa.fa-search
+        button.btn(ng-click="isOpen = !isOpen", ga-click='openSearch')
+          i.fa.fa-angle-down
 
+      // ------------------------------------
+      //         Search Parameters
+      // ------------------------------------
+      div.add-account.collapse(collapse='!isOpen')
+        form.well(name='account')
+
+          // Query
+          div.searchform.searchform-icon.searchform-icon-before
+            div.icon
+              span.icon-magnifier
+            input.sfTypeahead.form-control.input-sm(type="text"
+              options="inputOptions"
+              datasets="queryData"
+              ng-model="data.selectedQuery"
+              ng-click="data.selectedQuery = null"
+              placeholder='Query...')
+            i.fa.fa-search
 
       // ------------------------------------
       //            Issue List
       // ------------------------------------
-      div.searchform.searchform-icon
-        input.form-control.input-sm(type="text"
-          ng-model="searchField.text"
-          ng-click="searchField.text = ''"
-          placeholder='Issue...')
-        i.fa.fa-search
       div.issue-list
         ul.issue-list__content(ng-class="{'issue-list__content--empty':!data.selectedProject.tickets.length}")
           li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:editState.listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (editState.currentPage - 1) * options.itemsPerPage',
-             ng-mousemove='editState.onMouseMove($event)')
+            ng-mousemove='editState.onMouseMove($event)')
             button.numbered-label(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
               span.numbered-label__number {{item.id}}
               span.numbered-label__label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",

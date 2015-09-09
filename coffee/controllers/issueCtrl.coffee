@@ -10,6 +10,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
   $scope.tooltipPlace = 'top'
   $scope.totalItems = 0
   $scope.state = State
+  $scope.isOpen = false
 
   # typeahead options
   $scope.inputOptions =

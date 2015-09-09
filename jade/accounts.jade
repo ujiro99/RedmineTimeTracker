@@ -18,7 +18,7 @@ div#accounts(ng-controller='AccountCtrl')
     button.btn(ng-click='state.isAdding = !state.isAdding', ga-click='toggleForm')
       span.icon-plus
 
-  // add
+  // add (default collapsed)
   div.add-account.collapse(collapse='!state.isAdding')
     form.well(name='account')
 
