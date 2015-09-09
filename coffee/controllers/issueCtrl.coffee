@@ -34,7 +34,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
 
     # on change selected Project, load issues and queries.
     DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_CHANGED, () ->
-      loadIssuesFirstPage()
+      loadIssues()
 
    # on change selected Query, set query to project, and load issues.
     DataAdapter.addEventListener DataAdapter.SELECTED_QUERY_CHANGED, () ->
@@ -65,12 +65,11 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     if queryId is QUERY_ALL_ID then queryId = undefined
     DataAdapter.selectedProject.queryId = queryId
     Project.setParam(targetUrl, targetId, { 'queryId': queryId })
-    loadIssuesFirstPage()
+    loadIssues()
 
 
   # load issues on P.1
-  loadIssuesFirstPage = () ->
-    # $scope.editState.currentPage = 1
+  loadIssues = () ->
     $scope.editState.loadAllTicketOnProject()
 
 
