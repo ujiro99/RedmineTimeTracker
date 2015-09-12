@@ -7,7 +7,9 @@ div#header(ng-controller="headerCtrl")
 
     div.project
 
-      button.project-toggle.project-title(type="button", ng-click="isActive = true")
+      button.project-toggle.project-title(type="button",
+        ng-click="isActive = true",
+        uz-focus=".project-search")
         span.project-id
           {{data.selectedProject.id}}
         span.project-label

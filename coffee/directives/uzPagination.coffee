@@ -49,7 +49,6 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
         matchs = msec.exec(t)
         if matchs then return matchs[1] - 0
         matchs = sec.exec(t)
-        console.log(matchs)
         if matchs then return (matchs[1] - 0) * 1000
 
       ###*
