@@ -276,6 +276,9 @@ input.project-search
   to
     left: -100%
 
+.bottom-space
+  margin-bottom: 10px
+
 #header
   .account-list
     &>li
@@ -489,7 +492,6 @@ input.project-search
         color: #555
 
   .issue-list__content
-    margin-top: 10px
     padding-left: 4px
 
   .issue-list__content--empty
@@ -520,7 +522,7 @@ input.project-search
       transition: background-color ease 0.2s
 
   .issue-list__content.paging
-    transition: all .3s ease-out
+    transition-duration: .3s
 
   .issue-list__content:not(.paging-active)
     .ng-enter
@@ -565,24 +567,6 @@ input.project-search
       height: height_input px
       line-height: height_input px
       font-size: 16px
-
-  .add-account
-    margin: 0 -10px
-    position: relative
-    &:before
-      content: " "
-      width: 0
-      height: 0
-      border: 10px solid transparent
-      border-top: 10px solid #fff
-      position: absolute
-      top: -1px
-      right: 10px
-      -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.1))
-    .well
-      margin-bottom: 10px
-      padding: 16px 12px
-      border-radius: 0
 
   .auth
     position: relative

@@ -17,7 +17,7 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //         Search by Keyword
       // ------------------------------------
-      div.input-and-btn
+      div.input-and-btn.bottom-space
         div.searchform.searchform-icon.input
           input.form-control.input-sm(type="text"
             ng-model="searchField.text"
@@ -30,7 +30,7 @@ div#issue(ng-controller='IssueCtrl')
       // ------------------------------------
       //         Search Parameters
       // ------------------------------------
-      div.add-account.collapse(collapse='!isOpen')
+      div.well-container.collapse(collapse='!isOpen')
         form.well(name='account')
 
           // Query
