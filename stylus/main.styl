@@ -264,17 +264,30 @@ input.project-search
     &:hover
       color: color_key
 
-@keyframes slide-in
+@keyframes slide-in-left
   from
     left: 100%
   to
     left: 0
 
-@keyframes slide-out
+@keyframes slide-out-left
   from
     left: 0
   to
     left: -100%
+
+@keyframes slide-in-right
+  from
+    right: 100%
+  to
+    right: 0
+
+@keyframes slide-out-right
+  from
+    right: 0
+  to
+    right: -100%
+
 
 .bottom-space
   margin-bottom: 10px
@@ -419,10 +432,10 @@ input.project-search
       z-index: 1
 
   .animate-switch.ng-enter
-    animation: slide-in .32s ease-out
+    animation: slide-in-left .32s ease-out
 
   .animate-switch.ng-leave
-    animation: slide-out .32s ease-out
+    animation: slide-out-left .32s ease-out
 
   .select-issues
     .tt-dropdown-menu
@@ -530,9 +543,15 @@ input.project-search
     .ng-leave
       animation: fade-out .2s ease-out
 
-  .issue-list__content.paging-active
+  .issue-list__content.paging-left
     .ng-enter
-      animation: slide-in .2s ease-out
+      animation: slide-in-left .2s ease-out
+    .ng-leave
+      display: none
+
+  .issue-list__content.paging-right
+    .ng-enter
+      animation: slide-in-right .2s ease-out
     .ng-leave
       display: none
 

@@ -22,8 +22,12 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
       MIN_SIZE = 4
       # default class name for animation.
       CLASS_NAME = "paging"
-      # class name on animate.
+      # on animate.
       CLASS_NAME_ON_ANIMATE = "paging-active"
+      # on paging to left.
+      CLASS_NAME_PAGING_TO_LEFT = "paging-left"
+      # on paging to rignt.
+      CLASS_NAME_PAGING_TO_RIGHT = "paging-right"
 
       # Limit number for pagination size.
       scope.maxSize = 1
@@ -54,10 +58,16 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
       ###*
       # animate container, and fix pagination bar's size.
       ###
-      animate = () ->
+      animate = (newPage, oldPage) ->
+        if newPage > oldPage
+          direction = CLASS_NAME_PAGING_TO_RIGHT
+        else
+          direction = CLASS_NAME_PAGING_TO_LEFT
         container.addClass(CLASS_NAME_ON_ANIMATE)
+        container.addClass(direction)
         $timeout () ->
           container.removeClass(CLASS_NAME_ON_ANIMATE)
+          container.removeClass(direction)
         , duration
         fixSize()
 
