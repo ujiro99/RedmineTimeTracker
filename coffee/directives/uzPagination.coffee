@@ -60,9 +60,9 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
       ###
       animate = (newPage, oldPage) ->
         if newPage > oldPage
-          direction = CLASS_NAME_PAGING_TO_RIGHT
-        else
           direction = CLASS_NAME_PAGING_TO_LEFT
+        else
+          direction = CLASS_NAME_PAGING_TO_RIGHT
         container.addClass(CLASS_NAME_ON_ANIMATE)
         container.addClass(direction)
         $timeout () ->
