@@ -467,7 +467,8 @@ input.project-search
 
   .issue-list__item
     list-style-type: none
-    height: 20px
+    height: height_issue_list_item
+    position: relative
     overflow: hidden
     display: flex
 
@@ -482,6 +483,43 @@ input.project-search
       background-color: color_key
       border-radius: 10px
       transition: background-color ease 0.2s
+
+  .issue-list__content.paging
+    transition: all .3s ease-out
+
+  .issue-list__content:not(.paging-active)
+    .ng-enter
+      animation: fade-in .2s ease-out
+    .ng-leave
+      animation: fade-out .2s ease-out
+
+  .issue-list__content.paging-active
+    .ng-enter
+      animation: slide-in .2s ease-out
+    .ng-leave
+      display: none
+
+  @keyframes fade-in
+    from
+      height: 0px
+      opacity: 0
+    to
+      height: height_issue_list_item
+      opacity: 1
+
+  @keyframes fade-out
+    from
+      height: height_issue_list_item
+      opacity: 1
+    to
+      height: 0px
+      opacity: 0
+
+  @keyframes slide-in
+    from
+      left: 100%
+    to
+      left: 0
 
 #accounts
 

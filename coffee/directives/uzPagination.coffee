@@ -1,7 +1,4 @@
-timeTracker.directive 'uzPagination', ($window) ->
-
-  MIN_SIZE = 4
-
+timeTracker.directive 'uzPagination', ($window, $timeout) ->
   return {
     restrict: 'E'
     template: "<pagination class='pagination-small'" +
@@ -14,7 +11,6 @@ timeTracker.directive 'uzPagination', ($window) ->
                           "next-text='&rsaquo;'" +
                           "first-text='&laquo;'" +
                           "last-text='&raquo;'></pagination>"
-
     scope:
       page:         '='
       totalItems:   '='
@@ -22,12 +18,53 @@ timeTracker.directive 'uzPagination', ($window) ->
 
     link: (scope, element, attrs) ->
 
+      # minimum number of elements in the bar.
+      MIN_SIZE = 4
+      # default class name for animation.
+      CLASS_NAME = "paging"
+      # class name on animate.
+      CLASS_NAME_ON_ANIMATE = "paging-active"
+
       # Limit number for pagination size.
       scope.maxSize = 1
 
+      # width of all arrows
       arrowWidth = null
 
+      # paging content's container
+      container = null
+
+      # container's animation duration [msec]
+      duration = 0
+
+      ###*
+      # get element's duration.
+      # @param {Dom Object} elem - target element
+      # @return {Number} animation duration [msec]
+      ###
+      getTransitionDuration = (elem) ->
+        t = elem.css("transition-duration")
+        msec = /(\d*\.?\d+)ms$/
+        sec = /(\d*\.?\d+)s$/
+        matchs = msec.exec(t)
+        if matchs then return matchs[1] - 0
+        matchs = sec.exec(t)
+        console.log(matchs)
+        if matchs then return (matchs[1] - 0) * 1000
+
+      ###*
+      # animate container, and fix pagination bar's size.
+      ###
+      animate = () ->
+        container.addClass(CLASS_NAME_ON_ANIMATE)
+        $timeout () ->
+          container.removeClass(CLASS_NAME_ON_ANIMATE)
+        , duration
+        fixSize()
+
+      ###*
       # calculate pagination bar's size, and fix it.
+      ###
       fixSize = () ->
         alist = element.find('a')
         if alist.length <= MIN_SIZE then return
@@ -38,8 +75,13 @@ timeTracker.directive 'uzPagination', ($window) ->
         scope.maxSize = Math.floor((element.outerWidth() - arrowWidth) / buttonWidth)
         scope.maxSize = 1 if scope.maxSize < 1
 
-      # resize pagination bar
-      scope.$watch 'page', fixSize
+      # initialize variables
+      container = angular.element(attrs.container)
+      container.addClass(CLASS_NAME)
+      duration = getTransitionDuration(container)
+
+      # resize pagination bar and fire animation.
+      scope.$watch 'page', animate
       scope.$watch 'totalItems', fixSize
       angular.element($window).on 'resize', () ->
         scope.$apply fixSize
