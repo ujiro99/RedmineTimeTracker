@@ -7,20 +7,6 @@ clearfix()
     clear: both
 
 
-slideIn()
-  &.ng-enter
-  &.ng-leave
-    transition: 0.32s ease
-  &.ng-enter
-    left: 100%
-    &.ng-enter-active
-      left: 0
-  &.ng-leave
-    left: 0
-    &.ng-leave-active
-      left: -100%
-
-
 text-ellipsis()
   white-space: nowrap
   text-overflow: ellipsis

@@ -1,43 +1,56 @@
-// time track
-div.select
-  div.inputWidhButton
-    div.select-issues
+header
+  div.caption(ng-click="changeMode()", ga-click='changeMode')
+    i.fa.fa-angle-left
+    div.title
+      div.icon
+        span.icon-note
+      span Time Tracking
+      p.subtitle
+        span ~ manual ~
+    i.fa.fa-angle-right
+
+form(action='#', method='POST', name='time_entry')
+
+  // time track
+  div.select
+    div.inputWidhButton
+      div.select-issues
+        input.sfTypeahead.form-control.input-sm(type="text"
+          options="inputOptions"
+          datasets="ticketData"
+          ng-model="data.selectedTicket"
+          ng-click="data.selectedTicket = null"
+          placeholder='Select issue...')
+
+    button.btn(type='button', ng-click='clickManual()', ga-click='postManual')
+      i.fa.fa-check
+
+  // activity & total
+  div.form-inline
+
+    div.select-activity
       input.sfTypeahead.form-control.input-sm(type="text"
         options="inputOptions"
-        datasets="ticketData"
-        ng-model="data.selectedTicket"
-        ng-click="data.selectedTicket = null"
-        placeholder='Select issue...')
+        datasets="activityData"
+        ng-model="data.selectedActivity"
+        ng-click="data.selectedActivity = null"
+        placeholder='Select activity...')
 
-  button.btn(type='button', ng-click='clickManual()', ga-click='postManual')
-    i.fa.fa-check
+    div.separater
 
-// activity & total
-div.form-inline
-
-  div.select-activity
-    input.sfTypeahead.form-control.input-sm(type="text"
-      options="inputOptions"
-      datasets="activityData"
-      ng-model="data.selectedActivity"
-      ng-click="data.selectedActivity = null"
-      placeholder='Select activity...')
-
-  div.separater
-
-  div.time
-    label.sr-only input time
-    input.form-control.input-sm(type='text',
-                                ng-model='time.min')
-    span min
+    div.time
+      label.sr-only input time
+      input.form-control.input-sm(type='text',
+                                  ng-model='time.min')
+      span min
 
 
-// comment
-div.comment
-  textarea.form-control(name='comment',
-                        rows='2',
-                        placeholder='comments...',
-                        ng-model='comment.text',
-                        ng-change='comment.remain = comment.MaxLength - comment.text.length')
-  div
-    span.label.label-danger(ng-show="comment.remain < 0") {{comment.remain}}
+  // comment
+  div.comment
+    textarea.form-control(name='comment',
+                          rows='2',
+                          placeholder='comments...',
+                          ng-model='comment.text',
+                          ng-change='comment.remain = comment.MaxLength - comment.text.length')
+    div
+      span.label.label-danger(ng-show="comment.remain < 0") {{comment.remain}}

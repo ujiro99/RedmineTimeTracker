@@ -55,6 +55,8 @@ input.input-sm
       align-center()
       font-size: 1.05em
       flex: 1
+    .subtitle
+      margin: 0.1em -1.5em 0 0.7em
     .icon
       display: table
       font-size: 1.4em
@@ -253,7 +255,6 @@ input.project-search
       width: 100%
       height: 24px
 
-
 .input-and-btn
   display: flex
   .input
@@ -263,6 +264,18 @@ input.project-search
     transition: color .25s ease
     &:hover
       color: color_key
+
+@keyframes slide-in
+  from
+    left: 100%
+  to
+    left: 0
+
+@keyframes slide-out
+  from
+    left: 0
+  to
+    left: -100%
 
 #header
   .account-list
@@ -380,11 +393,34 @@ input.project-search
       opacity: 0.8
       float: right
 
+  container_height = 190px
   .animate-switch-container
-    height: 128px
+    height: container_height
 
-  .animate-switch
-    slideIn()
+    &:before
+      content: ""
+      background-color: #fff
+      width: 10px
+      height: container_height
+      position: relative
+      left: -10px
+      float: left
+      z-index: 1
+    &:after
+      content: ""
+      background-color: #fff
+      width: 10px
+      height: container_height
+      position: relative
+      right: -10px
+      float: right
+      z-index: 1
+
+  .animate-switch.ng-enter
+    animation: slide-in .32s ease-out
+
+  .animate-switch.ng-leave
+    animation: slide-out .32s ease-out
 
   .select-issues
     .tt-dropdown-menu
@@ -514,12 +550,6 @@ input.project-search
     to
       height: 0px
       opacity: 0
-
-  @keyframes slide-in
-    from
-      left: 100%
-    to
-      left: 0
 
 #accounts
 

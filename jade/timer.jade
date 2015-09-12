@@ -1,20 +1,7 @@
 div#timer(ng-controller='TimerCtrl')
 
-  header
-    div.caption(ng-click="changeMode()", ga-click='changeMode')
-      i.fa.fa-angle-left
-      div.title
-        div.icon(ng-switch on="mode")
-          span.icon-clock(ng-switch-when="auto")
-          span.icon-note(ng-switch-when="manual")
-        span Time Tracking
-      i.fa.fa-angle-right
-
-  form(action='#', method='POST', name='time_entry')
-
-    div.animate-switch-container(ng-switch on="mode")
-      section.animate-switch(ng-switch-when="auto")
-        div(ng-include="'auto.html'")
-      section.animate-switch(ng-switch-when="manual")
-        div(ng-include="'manual.html'")
-
+  div.animate-switch-container(ng-switch on="mode")
+    section.animate-switch(ng-switch-when="auto")
+      div(ng-include="'auto.html'")
+    section.animate-switch(ng-switch-when="manual")
+      div(ng-include="'manual.html'")
