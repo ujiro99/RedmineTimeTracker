@@ -15,7 +15,9 @@ div#accounts(ng-controller='AccountCtrl')
                                   placeholder='search...',
                                   ng-model='searchField.text')
       i.fa.fa-search
-    button.btn(ng-click='state.isAdding = !state.isAdding', ga-click='toggleForm')
+    button.btn(ng-click='state.isAdding = !state.isAdding',
+               ng-class="{rotate225: state.isAdding}",
+               ga-click='toggleForm')
       span.icon-plus
 
   // add (default collapsed)

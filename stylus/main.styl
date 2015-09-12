@@ -260,34 +260,34 @@ input.project-search
     flex: 1
   .btn
     color: color_button_font
-    transition: color .25s ease
+    transition: color, transform .25s ease
     &:hover
       color: color_key
 
 @keyframes slide-in-left
-  from
-    left: 100%
-  to
-    left: 0
+  from {left: 100%}
+  to   {left: 0}
 
 @keyframes slide-out-left
-  from
-    left: 0
-  to
-    left: -100%
+  from {left: 0}
+  to   {left: -100%}
 
 @keyframes slide-in-right
-  from
-    right: 100%
-  to
-    right: 0
+  from {right: 100%}
+  to   {right: 0}
 
 @keyframes slide-out-right
-  from
-    right: 0
-  to
-    right: -100%
+  from {right: 0}
+  to   {right: -100%}
 
+.rotate180
+  transform: rotate(180deg)
+
+.rotate225
+  transform: rotate(180deg + 45deg)
+
+.rotate360
+  transform: rotate(360deg)
 
 .bottom-space
   margin-bottom: 10px
@@ -582,7 +582,7 @@ input.project-search
 
   .input-and-btn
     .btn
-      padding: 0 0 0 7px
+      margin: 0 0 0 7px
       height: height_input px
       line-height: height_input px
       font-size: 16px
