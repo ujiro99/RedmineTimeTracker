@@ -137,7 +137,6 @@ class Redmine
           issue.show    = Redmine.SHOW.DEFAULT
           issue.url     = @auth.url
           issue.total   = issue.spent_hours or 0
-          issue.project = issue.project
           new @Ticket.new(issue)
         deferred.resolve(data)
         success?(data))
@@ -215,7 +214,7 @@ class Redmine
         else
           @Log.debug data
           @Analytics.sendException("Error: getIssuesById")
-        error(data.issue, status))
+        error?(data, status))
 
 
   ###

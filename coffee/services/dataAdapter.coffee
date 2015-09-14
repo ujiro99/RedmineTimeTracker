@@ -47,7 +47,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     SELECTED_PROJECT_CHANGED: "selected_project_changed"
     SELECTED_TICKET_CHANGED:  "selected_ticket_changed"
     SELECTED_QUERY_CHANGED:   "selected_query_changed"
-
+    SELECTED_PROJECT_UPDATED: "selected_project_updated"
 
     ###*
     # constructor
@@ -119,12 +119,18 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       get: -> @_selectedProject
       set: (n) ->
         return if @_selectedProject is n
+        @_selectedProject and @_selectedProject.removeEventListener(n.UPDATED, @_notifyProjectUpdated)
         @_selectedProject = n
+        @_selectedProject.addEventListener(n.UPDATED, @_notifyProjectUpdated)
         @selectedAccount  = @_data[n.url].account
         @queries          = @_data[n.url].queries
         @_sortSelectedProjectTop(@_tickets)
         @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
         Log.debug("selectedProject set: " + n.text)
+
+    # project updated event.
+    _notifyProjectUpdated: () =>
+      @fireEvent(@SELECTED_PROJECT_UPDATED, @)
 
     # selected ticket.
     _selectedTicket: null

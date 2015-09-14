@@ -13,6 +13,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
+  NOT_CONFIGED = { id: -1, name: "Not configured"}
+
   #
   # - in this app,
   #
@@ -195,6 +197,13 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
 
   ###
+   fix parameter's status.
+  ###
+  _sanitize = (params) ->
+    if not params.assigned_to then params.assigned_to = NOT_CONFIGED
+
+
+  ###
    Ticket data model.
   ###
   class TicketModel
@@ -208,7 +217,9 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
                   @project,
                   @show,
                   @priority,
-                  @assigned_to,
+                  @assignedTo,
+                  @status,
+                  @tracker,
                   @total) ->
 
     ###
@@ -369,6 +380,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      create new TicketModel instance.
     ###
     new: (params) ->
+      _sanitize(params)
       return new TicketModel(params.id,
                              params.text,
                              params.url,
@@ -376,6 +388,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
                              params.show,
                              params.priority,
                              params.assigned_to
+                             params.status
+                             params.tracker
                              params.total)
 
 

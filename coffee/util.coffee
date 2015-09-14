@@ -73,6 +73,21 @@ if not ('union' in Array.prototype)
 
 
 ###
+ change object to array.
+###
+if not ('toKeyValuePair' in Object)
+  Object.toKeyValuePair = (obj, keyValueNamePair) ->
+    arry = []
+    keyValueNamePair or keyValueNamePair = {key: "key", value: "value"}
+    for k, v of obj
+      pair = {}
+      pair[keyValueNamePair.key] = k
+      pair[keyValueNamePair.value] = v
+      arry.push pair
+    return arry
+
+
+###
  define getter, setter.
  @ref http://stackoverflow.com/questions/11587231/coffeescript-getter-setter-in-object-initializers
 ###

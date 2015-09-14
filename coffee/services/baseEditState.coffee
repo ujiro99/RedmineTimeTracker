@@ -27,15 +27,6 @@ timeTracker.factory "BaseEditState", ($window, Message, Resource, DataAdapter) -
 
 
     ###
-     filter issues by searchField.text.
-    ###
-    listFilter: (item) =>
-      if @$scope.searchField.text.isBlank() then return true
-      return (item.id + "").contains(@$scope.searchField.text) or
-             item.text.toLowerCase().contains(@$scope.searchField.text.toLowerCase())
-
-
-    ###
      load data.
     ###
     load: (page) ->

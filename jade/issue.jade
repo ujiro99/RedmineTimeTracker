@@ -33,19 +33,34 @@ div#issue(ng-controller='IssueCtrl')
       //         Search Parameters
       // ------------------------------------
       div.well-container.collapse(collapse='!isOpen')
-        form.well(name='account')
+        form.well.input-list(name='account')
 
           // Query
-          div.searchform.searchform-icon.searchform-icon-before
-            div.icon
-              span.icon-magnifier
+          div.searchform.searchform-icon-before
+            span Custom queries
             input.sfTypeahead.form-control.input-sm(type="text"
               options="inputOptions"
               datasets="queryData"
               ng-model="data.selectedQuery"
               ng-click="data.selectedQuery = null"
-              placeholder='Query...')
-            i.fa.fa-search
+              placeholder='Select Query...')
+            i.fa.fa-angle-down
+
+          // each Parameters
+          div.searchform(ng-repeat="prop in Const.ISSUE_PROPS")
+            span {{prop}}
+            ul
+              li(ng-show="data.selectedProject[prop].length > 2")
+                label All
+                  input(type="checkbox"
+                  ng-model="data.selectedProject[prop][0].checked"
+                  ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
+              li(ng-repeat="option in data.selectedProject[prop]| limitTo:50:1")
+                label {{option.name}}
+                  input(type="checkbox"
+                  ng-model="option.checked"
+                  ng-change="clickCheckbox(prop, option)")
+
 
       // ------------------------------------
       //            Issue List

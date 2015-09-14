@@ -1,7 +1,8 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState, Const) ->
 
   # data
   $scope.data = DataAdapter
+  $scope.Const = Const
 
   # typeahead data
   $scope.queryData = null
@@ -41,6 +42,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     DataAdapter.addEventListener DataAdapter.SELECTED_QUERY_CHANGED, () ->
       setQueryAndloadIssues()
 
+    DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_UPDATED, () ->
+      $scope.$apply()
+
 
   ###
    Initialize.
@@ -62,7 +66,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     if not DataAdapter.selectedQuery then return
     targetId  = DataAdapter.selectedProject.id
     targetUrl = DataAdapter.selectedProject.url
-    queryId = DataAdapter.selectedQuery.id
+    queryId   = DataAdapter.selectedQuery.id
     if queryId is QUERY_ALL_ID then queryId = undefined
     DataAdapter.selectedProject.queryId = queryId
     Project.setParam(targetUrl, targetId, { 'queryId': queryId })
@@ -72,6 +76,19 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
   # load issues on P.1
   loadIssues = () ->
     $scope.editState.loadAllTicketOnProject()
+
+
+  ###
+   on checkBox == All is clicked, change all property state.
+   on checkBox != All is clicked, change All's property state.
+  ###
+  $scope.clickCheckbox = (propertyName, option) ->
+    if option.name is "All"
+      DataAdapter.selectedProject[propertyName].map((p) -> p.checked = option.checked)
+    else if option.checked is false
+      DataAdapter.selectedProject[propertyName][0].checked = false
+    else if DataAdapter.selectedProject[propertyName].slice(1).all((p) -> p.checked)
+      DataAdapter.selectedProject[propertyName][0].checked = true
 
 
   ###

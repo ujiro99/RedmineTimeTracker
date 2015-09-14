@@ -1,4 +1,4 @@
-timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Message, Resource, BaseEditState, Log) ->
+timeTracker.factory "IssueEditState", (Redmine, DataAdapter, State, Message, Resource, BaseEditState, Const, Log) ->
 
   ###
    controller for issue edit mode.
@@ -78,6 +78,23 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
     loadError: (data, status) =>
       if status is BaseEditState.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
+
+
+    ###
+     filter issues by searchField.text and properties.
+    ###
+    listFilter: (item) =>
+
+      match = Const.ISSUE_PROPS.all (p) ->
+        DataAdapter.selectedProject[p].some (n) ->
+          return true if n.name is "All" and n.checked
+          return false if not n.checked
+          return item[p].id is (n.id|0)
+      return false if not match
+
+      if @$scope.searchField.text.isBlank() then return true
+      return (item.id + "").contains(@$scope.searchField.text) or
+             item.text.toLowerCase().contains(@$scope.searchField.text.toLowerCase())
 
 
   return IssueEditState

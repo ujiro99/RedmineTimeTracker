@@ -1,12 +1,11 @@
-timeTracker.factory("Project", ($q, Analytics, Chrome, Log) ->
+timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
   ###
    Project data model.
   ###
-  class ProjectModel
+  class ProjectModel extends EventDispatcher
 
-    # Ticket Model list.
-    tickets: []
+    UPDATED: "updated"
 
     ###*
      constructor.
@@ -20,8 +19,36 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Log) ->
      @param queryId {Number} Used query ID
      @param tickets {Array} Array of TicketModel.
     ###
-    constructor: (@url, @urlIndex, @id, @text, @show, @queryId, @tickets) ->
-      @tickets = [] if not tickets
+    constructor: (@url, @urlIndex, @id, @text, @show, @queryId, tickets) ->
+      Const.ISSUE_PROPS.map (p) => @[p] = []
+      @tickets  = tickets or []
+      Array.observe(@tickets, @updateProperties)
+      @updateProperties([{object: @tickets}]) if tickets and tickets.length > 0
+
+    ###
+     update property related to project.
+     @param changes {Object} what was changed.
+                             ex) [{type: 'splice', object: <arr>, index: 1, removed: ['B', 'c', 'd'], addedCount: 3}]
+    ###
+    updateProperties: (changes) =>
+      Log.time("updateProperties #{@text}\t")
+      tmp = {}
+      # create each property's id/name object.
+      Const.ISSUE_PROPS.map (p) => tmp[p] = {}
+      changes.map (c) => c.object.map (t) => Const.ISSUE_PROPS.map (p) =>
+        t[p] and tmp[p][t[p].id] = t[p].name
+      Const.ISSUE_PROPS.map (p) =>
+        # create id/name pair array.
+        tmpArray = Object.toKeyValuePair(tmp[p], {key: "id", value: "name"})
+        tmpArray.add({id: "", name: "All"}, 0)
+        tmpArray.map (t) -> t.checked = true
+        # restore old checked status
+        @[p].map (oldOption) ->
+          newOption = tmpArray.find (n) -> n.id is oldOption.id
+          newOption.checked = oldOption.checked
+        @[p].set(tmpArray)
+      Log.timeEnd("updateProperties #{@text}\t")
+      @fireEvent(@UPDATED, @)
 
     ###
      compare project.
