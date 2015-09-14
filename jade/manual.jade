@@ -14,13 +14,14 @@ form(action='#', method='POST', name='time_entry')
   // time track
   div.select
     div.inputWidhButton
-      div.select-issues
+      div.select-issues.searchform-icon
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="ticketData"
           ng-model="data.selectedTicket"
           ng-click="data.selectedTicket = null"
           placeholder='Select issue...')
+        i.fa.fa-angle-down
 
     button.btn(type='button', ng-click='clickManual()', ga-click='postManual')
       i.fa.fa-check
@@ -28,13 +29,14 @@ form(action='#', method='POST', name='time_entry')
   // activity & total
   div.form-inline
 
-    div.select-activity
+    div.select-activity.searchform-icon
       input.sfTypeahead.form-control.input-sm(type="text"
         options="inputOptions"
         datasets="activityData"
         ng-model="data.selectedActivity"
         ng-click="data.selectedActivity = null"
         placeholder='Select activity...')
+      i.fa.fa-angle-down
 
     div.separater
 

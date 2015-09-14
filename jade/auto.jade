@@ -12,13 +12,14 @@ form(action='#', method='POST', name='time_entry')
   // time track
   div.select
     div.inputWidhButton
-      div.select-issues(ng-hide='state.isTracking')
+      div.select-issues.searchform-icon(ng-hide='state.isTracking')
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="ticketData"
           ng-model="data.selectedTicket"
           ng-click="data.selectedTicket = null"
           placeholder='Select issue...')
+        i.fa.fa-angle-down
 
       div.progress.progress-striped.active(ng-show="state.isTracking")
         div.progress-bar(role="progressbar")
@@ -32,13 +33,14 @@ form(action='#', method='POST', name='time_entry')
   // activity & total
   div.form-inline
 
-    div.select-activity
+    div.select-activity.searchform-icon
       input.sfTypeahead.form-control.input-sm(type="text"
         options="inputOptions"
         datasets="activityData"
         ng-model="data.selectedActivity"
         ng-click="data.selectedActivity = null"
         placeholder='Select activity...')
+      i.fa.fa-angle-down
 
     div.separater
 
