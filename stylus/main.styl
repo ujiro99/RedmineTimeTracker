@@ -108,13 +108,9 @@ input.input-sm
   align-items: center
   display: flex
   position: relative
-  input
-    padding-right: 28px
   i
     opacity: .5
-    position: absolute
-    top: 8px
-    right: 10px
+    position: relative
     padding-left: 2px
     transition: opacity .3s ease
     pointer-events: none
@@ -295,6 +291,73 @@ input.project-search
 
 .bottom-space
   margin-bottom: 10px
+
+.property-list
+  display: flex
+  border-top: solid 1px #ddd
+  border-bottom: solid 1px #ddd
+  background-color: #fcfcfc
+  margin: 10px 0
+  padding: 5px 10px
+
+  &>span
+    width: 0
+
+  &>ul
+    width: 100%
+    text-align: right
+    color: #555
+    margin: 0
+    padding: 0
+    &>li
+      list-style-type: none
+    &>li:not(:last-child)
+      border-bottom: solid 1px #efefef
+
+  label
+    font-weight: normal
+    cursor: pointer
+    width: 100%
+    margin: 2px 0
+
+  input[type=checkbox]
+    -webkit-appearance: none
+    width: 1.2em
+    height: 1em
+    margin: 0
+    line-height: 1em
+    outline: none
+    border: none
+    position: relative
+    cursor: pointer
+
+  input[type=checkbox]:after
+    transition: border .2s ease
+
+  input[type=checkbox]:hover:after
+  input[type=checkbox]:checked:after
+    display: inline-block
+    transform: rotate(-45deg)
+    width: 10px
+    height: 5px
+    position: relative
+    top: -4px
+    left: 25%
+    content: ' '
+
+  input[type=checkbox]:hover:after
+    border: 1px solid #ccc
+    border-top: 0
+    border-right: 0
+
+  input[type=checkbox]:checked:after
+    border: 1px solid #888
+    border-top: 0
+    border-right: 0
+
+.searchform-icon-before.property-list
+  &>span
+    width: auto
 
 #header
   .account-list
@@ -587,7 +650,7 @@ input.project-search
       opacity: 0
 
   .well
-    padding: 15px 0 10px 10px
+    padding: 10px 0
 
 #accounts
 

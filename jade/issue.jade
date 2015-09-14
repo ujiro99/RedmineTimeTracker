@@ -33,7 +33,7 @@ div#issue(ng-controller='IssueCtrl')
         form.well.input-list(name='account')
 
           // Query
-          div.searchform.searchform-icon-before
+          div.searchform.searchform-icon-before.property-list
             span Custom queries
             input.sfTypeahead.form-control.input-sm(type="text"
               options="inputOptions"
@@ -44,19 +44,21 @@ div#issue(ng-controller='IssueCtrl')
             i.fa.fa-angle-down
 
           // each Parameters
-          div.searchform(ng-repeat="prop in Const.ISSUE_PROPS")
+          div.searchform.property-list(ng-repeat="prop in Const.ISSUE_PROPS")
             span {{prop}}
             ul
               li(ng-show="data.selectedProject[prop].length > 2")
-                label All
+                label(for="checkbox_{{prop}}_all") All
                   input(type="checkbox"
-                  ng-model="data.selectedProject[prop][0].checked"
-                  ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
+                        id="checkbox_{{prop}}_all"
+                        ng-model="data.selectedProject[prop][0].checked"
+                        ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
               li(ng-repeat="option in data.selectedProject[prop]| limitTo:50:1")
-                label {{option.name}}
+                label(for="checkbox_{{prop}}_{{option.id}}") {{option.name}}
                   input(type="checkbox"
-                  ng-model="option.checked"
-                  ng-change="clickCheckbox(prop, option)")
+                        id="checkbox_{{prop}}_{{option.id}}"
+                        ng-model="option.checked"
+                        ng-change="clickCheckbox(prop, option)")
 
 
       // ------------------------------------
