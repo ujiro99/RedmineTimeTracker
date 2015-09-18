@@ -137,7 +137,7 @@ class Redmine
           issue.show    = Redmine.SHOW.DEFAULT
           issue.url     = @auth.url
           issue.total   = issue.spent_hours or 0
-          new @Ticket.new(issue)
+          @Ticket.new(issue)
         deferred.resolve(data)
         success?(data))
       .error((args...) =>
@@ -203,18 +203,18 @@ class Redmine
     @$http(config)
       .success((data, status, headers, config) =>
         if data?.issue?
-          data.issue.show = Redmine.SHOW.DEFAULT
-          data.issue.url = @auth.url
+          data.issue.text  = data.issue.subject
+          data.issue.total = data.issue.spent_hours or 0
+          data.issue.show  = Redmine.SHOW.DEFAULT
+          data.issue.url   = @auth.url
+          data.issue       = @Ticket.new(data.issue)
         success?(data.issue, status, headers, config))
       .error((data, status, headers, config) =>
-        if status is Redmine.NOT_FOUND or status is Redmine.UNAUTHORIZED
-          data = issue:
-            url: @auth.url
-            id:  issueId
-        else
+        issue = @Ticket.new(url: @auth.url, id:  issueId)
+        if status isnt Redmine.NOT_FOUND or status isnt Redmine.UNAUTHORIZED
           @Log.debug data
           @Analytics.sendException("Error: getIssuesById")
-        error?(data, status))
+        error?(issue, status))
 
 
   ###

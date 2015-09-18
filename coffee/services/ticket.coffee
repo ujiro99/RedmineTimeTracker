@@ -114,14 +114,13 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       for key, obj of projects when obj.index is t[TICKET_URL_INDEX]
         url = key
         break
-      # url not found ...
-      if url is PROJECT_NOT_FOUND
+      if obj[t[TICKET_PRJ_ID]]
+        projectName = obj[t[TICKET_PRJ_ID]].text
+      else
         missing.push t[TICKET_URL_INDEX]
         projectName = PROJECT_NOT_FOUND_NAME
         Log.error("ticket can not sync with project.")
         Log.error(t)
-      else
-        projectName = obj[t[TICKET_PRJ_ID]].text
       tmp.push new TicketModel(
         t[TICKET_ID],
         t[TICKET_TEXT],
