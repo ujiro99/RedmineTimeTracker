@@ -6,10 +6,10 @@ timeTracker.directive 'uzHover', () ->
 
       element.on 'mouseenter', ->
         scope.$apply ->
-          scope[attrs.uzHover] = true
+          scope.$eval(attrs.uzHover + " = true")
 
       element.on 'mouseleave', ->
         scope.$apply ->
-          scope[attrs.uzHover] = false
+          scope.$eval(attrs.uzHover + " = false")
 
   }
