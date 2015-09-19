@@ -111,13 +111,11 @@ input.input-sm
   i
     opacity: .5
     position: relative
-    padding-left: 2px
+    left: -1px
     transition: opacity .3s ease
     pointer-events: none
   &:hover i
-    opacity: .7
-  .icon
-    width: 20px
+    opacity: .8
   .twitter-typeahead
     flex: 1
 
@@ -293,32 +291,16 @@ input.project-search
   margin-bottom: 10px
 
 .property-list
-  display: flex
-  border-top: solid 1px #ddd
   border-bottom: solid 1px #ddd
-  background-color: #fcfcfc
-  margin: 10px 0
   padding: 5px 10px
-
-  &>span
-    width: 0
-
-  &>ul
-    width: 100%
-    text-align: right
-    color: #555
-    margin: 0
-    padding: 0
-    &>li
-      list-style-type: none
-    &>li:not(:last-child)
-      border-bottom: solid 1px #efefef
+  display: flex
 
   label
     font-weight: normal
     cursor: pointer
     width: 100%
     margin: 2px 0
+    text-ellipsis()
 
   input[type=checkbox]
     -webkit-appearance: none
@@ -355,9 +337,31 @@ input.project-search
     border-top: 0
     border-right: 0
 
+.property-list:hover .property-list__selected
+  display: none
+
+.property-list__selected
+  text-align: right
+  color: #555
+  margin: 0
+  flex: 1
+  &>li
+    list-style-type: none
+    margin-right: 0.4em
+
+.property-list__selection
+  width: 100%
+  text-align: right
+  color: #555
+  margin: 0
+  padding: 0
+  &>li
+    list-style-type: none
+
 .searchform-with-icon.property-list
   &>span
     width: auto
+
 
 #header
   .account-list
