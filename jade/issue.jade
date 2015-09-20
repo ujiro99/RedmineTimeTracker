@@ -27,7 +27,7 @@ div#issue(ng-controller='IssueCtrl')
           i.fa.fa-angle-down
 
       // ------------------------------------
-      //         Search Parameters
+      //         Search by Parameters
       // ------------------------------------
       div.well-container.collapse(collapse='!isOpen')
         form.well.input-list(name='account')
@@ -64,10 +64,11 @@ div#issue(ng-controller='IssueCtrl')
                           id="checkbox_{{prop}}_{{option.id}}"
                           ng-model="option.checked"
                           ng-change="clickCheckbox(prop, option)")
-          div.property-list__selected
-            ul(ng-repeat="prop in Const.ISSUE_PROPS")
-              li(ng-repeat="option in data.selectedProject[prop]|checked")
-                span {{option.name}}
+            div.property-list__selected
+              ul(ng-repeat="prop in Const.ISSUE_PROPS")
+                li(ng-repeat="option in data.selectedProject[prop]|checked")
+                  span {{option.name}}
+
 
       // ------------------------------------
       //            Issue List

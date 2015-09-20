@@ -26,6 +26,7 @@ input.input-sm
   &:focus
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
 
+
 .wrap
   height: 100%
   overflow-y: scroll
@@ -315,11 +316,11 @@ $width_tab = 6.5em
   padding: 0
   margin: 0
   z-index: 1
-  li
+  &>li
     padding-left: 10px
     line-height: $height_property_list
     border-bottom: 1px solid $color_border
-  li.active a
+  &>li.active a
     width: $width_tab + 0.1
     display: inline-block
     background-color: $color_well_back
@@ -350,7 +351,7 @@ $width_tab = 6.5em
 
 .property-list__selected
   position: absolute
-  top: 55px
+  top: 0
   right: 0
   left: $width_tab
   z-index: 1
@@ -380,7 +381,7 @@ $width_tab = 6.5em
   text-align: right
   color: #555
   margin: 0
-  padding: 0 9px 0 0
+  padding: 5px 10px 0 0
   position: relative
   left: 200%
   transition: left .3s ease
@@ -389,6 +390,7 @@ $width_tab = 6.5em
     border-left: 1px solid $color_border
   &>li
     list-style-type: none
+    line-height: 1.8em
   label
     width: 100%
     cursor: pointer
