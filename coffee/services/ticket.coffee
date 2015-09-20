@@ -13,7 +13,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
-  NOT_CONFIGED = { id: -1, name: "Not configured"}
+  NOT_CONFIGED = { id: -1, name: "Not Assigned"}
 
   #
   # - in this app,

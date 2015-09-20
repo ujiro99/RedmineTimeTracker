@@ -29,6 +29,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
    Initialize.
   ###
   init = () ->
+
     $scope.options = Option.getOptions()
 
     $scope.editState = new IssueEditState($scope)
