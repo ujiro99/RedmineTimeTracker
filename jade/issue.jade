@@ -53,14 +53,14 @@ div#issue(ng-controller='IssueCtrl')
                 li(ng-show="data.selectedProject[prop].length > 2")
                   label(for="checkbox_{{prop}}_all")
                     span All
-                    input(type="checkbox"
+                    input.checkmark(type="checkbox"
                           id="checkbox_{{prop}}_all"
                           ng-model="data.selectedProject[prop][0].checked"
                           ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
                 li(ng-repeat="option in data.selectedProject[prop]|limitTo:50:1")
                   label(for="checkbox_{{prop}}_{{option.id}}")
                     span {{option.name}}
-                    input(type="checkbox"
+                    input.checkmark(type="checkbox"
                           id="checkbox_{{prop}}_{{option.id}}"
                           ng-model="option.checked"
                           ng-change="clickCheckbox(prop, option)")

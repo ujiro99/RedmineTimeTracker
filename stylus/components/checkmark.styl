@@ -1,0 +1,29 @@
+input[type=checkbox].checkmark
+  -webkit-appearance: none
+  width: 1.2em
+  height: 1em
+  margin: 0
+  outline: none
+  cursor: pointer
+
+  &:after
+    transition: border .2s ease
+
+  &:hover:after
+    border: 1px solid #ccc
+
+  &:checked:after
+    border: 1px solid #888
+
+  &:hover:after
+  &:checked:after
+    content: ' '
+    display: inline-block
+    width: 10px
+    height: 5px
+    position: relative
+    top: -50%
+    left: 25%
+    border-top: 0
+    border-right: 0
+    transform: rotate(-45deg)
