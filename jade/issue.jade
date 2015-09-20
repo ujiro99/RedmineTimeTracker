@@ -44,27 +44,30 @@ div#issue(ng-controller='IssueCtrl')
             i.fa.fa-angle-down
 
           // Other Parameters
-          div.searchform.property-list.property-list__block(ng-repeat="prop in Const.ISSUE_PROPS", uz-hover='hoverOn{{prop}}')
-            span {{prop}}
-            ul.property-list__selected
+          tabset.property-list__tab(vertical="true")
+            tab(heading="{{prop}}",
+                ng-repeat="prop in Const.ISSUE_PROPS",
+                uz-hover="tab.active",
+                active="tab.active")
+              ul.property-list.property-list__selection(uz-hover="tab.active")
+                li(ng-show="data.selectedProject[prop].length > 2")
+                  label(for="checkbox_{{prop}}_all") 
+                    span All
+                    input(type="checkbox"
+                          id="checkbox_{{prop}}_all"
+                          ng-model="data.selectedProject[prop][0].checked"
+                          ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
+                li(ng-repeat="option in data.selectedProject[prop]|limitTo:50:1")
+                  label(for="checkbox_{{prop}}_{{option.id}}")
+                    span {{option.name}}
+                    input(type="checkbox"
+                          id="checkbox_{{prop}}_{{option.id}}"
+                          ng-model="option.checked"
+                          ng-change="clickCheckbox(prop, option)")
+          div.property-list__selected
+            ul(ng-repeat="prop in Const.ISSUE_PROPS")
               li(ng-repeat="option in data.selectedProject[prop]|checked")
                 span {{option.name}}
-            ul.property-list__selection.collapse(collapse='!hoverOn{{prop}}')
-              li(ng-show="data.selectedProject[prop].length > 2")
-                label(for="checkbox_{{prop}}_all") All
-                  input(type="checkbox"
-                        id="checkbox_{{prop}}_all"
-                        ng-model="data.selectedProject[prop][0].checked"
-                        ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
-              li(ng-repeat="option in data.selectedProject[prop]|limitTo:50:1")
-                label(for="checkbox_{{prop}}_{{option.id}}") {{option.name}}
-                  input(type="checkbox"
-                        id="checkbox_{{prop}}_{{option.id}}"
-                        ng-model="option.checked"
-                        ng-change="clickCheckbox(prop, option)")
-
-          div.clearfix
-
 
       // ------------------------------------
       //            Issue List
