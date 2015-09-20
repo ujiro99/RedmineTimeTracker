@@ -292,7 +292,9 @@ input.project-search
 
 
 $color_border = #ddd
+$color_well_back = #f5f5f5
 $height_property_list = 3em
+$width_tab = 6.5em
 
 .property-list
   border-bottom: solid 1px $color_border
@@ -333,54 +335,52 @@ $height_property_list = 3em
     transform: rotate(-45deg)
 
 .property-list__tab
-  display: flex
-
-.property-list__tab:hover+.property-list__selected
-  display: none
+  position: relative
 
 .tab-list
-  width: 11.5em
   padding: 0
   margin: 0
   z-index: 1
   li
     padding-left: 10px
     line-height: $height_property_list
-    border-right:  1px solid $color_border
     border-bottom: 1px solid $color_border
+  li.active a
+    width: $width_tab + 0.1
+    display: inline-block
+    background-color: $color_well_back
+    position: relative
+    z-index: 2
   a
     color: #555
     cursor: default
     text-decoration: none
 
-.property-list__tab:not(:hover) .tab-list li
-.tab-list li.active
-  border-right: transparent
-
 .tab-content
-  position: relative
-  width: 100%
+  position: absolute
+  height: 100%
+  top: 0
+  right: 0
+  left: $width_tab
 
 .tab-content>.tab-pane
   position: absolute
+  display: block
   top: 0
   right: 0
   bottom: 0
   left: 0
-  border-bottom: 1px solid $color_border
-  padding-right: 9px
-  display: block
-
-.tab-content>.tab-pane.active .property-list__selection
-  left: 0
-  z-index: 1
+  &.active .property-list__selection
+    left: 0
+    z-index: 1
 
 .property-list__selected
-  width: calc(100% - 6em)
+  position: absolute
   top: 55px
   right: 0
-  position: absolute
-  z-index: 0
+  left: $width_tab
+  z-index: 1
+  background-color: $color_well_back
   ul
     height: 38px
     border-bottom: solid 1px $color_border
@@ -397,19 +397,24 @@ $height_property_list = 3em
     &:not(:last-child):after
       content: ', '
 
+.property-list__tab:hover+.property-list__selected
+  display: none
+
 .property-list__selection
   width: 100%
   height: 100%
   text-align: right
   color: #555
   margin: 0
-  padding: 0
+  padding: 0 9px 0 0
   position: relative
   left: 200%
+  transition: left .3s ease
+  background-color: $color_well_back
+  &.property-list
+    border-left: 1px solid $color_border
   &>li
     list-style-type: none
-  &.property-list
-    border: none
   label
     width: 100%
     cursor: pointer
