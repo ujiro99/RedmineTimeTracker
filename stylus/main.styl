@@ -314,6 +314,12 @@ $height_property_list = 3em
     transition: border .2s ease
 
   input[type=checkbox]:hover:after
+    border: 1px solid #ccc
+
+  input[type=checkbox]:checked:after
+    border: 1px solid #888
+
+  input[type=checkbox]:hover:after
   input[type=checkbox]:checked:after
     content: ' '
     display: inline-block
@@ -322,17 +328,9 @@ $height_property_list = 3em
     position: relative
     top: -60%
     left: 25%
+    border-top: 0
+    border-right: 0
     transform: rotate(-45deg)
-
-  input[type=checkbox]:hover:after
-    border: 1px solid #ccc
-    border-top: 0
-    border-right: 0
-
-  input[type=checkbox]:checked:after
-    border: 1px solid #888
-    border-top: 0
-    border-right: 0
 
 .property-list__tab
   display: flex
@@ -340,70 +338,24 @@ $height_property_list = 3em
 .property-list__tab:hover+.property-list__selected
   display: none
 
-.property-list__selected
-  width: calc(100% - 6em)
-  top: 55px
-  right: 0
-  position: absolute
-  z-index: 0
-  ul
-    height: 38px
-    border-bottom: solid 1px #ddd
-    margin: 0
-    padding: 0 10px 0 0
-    display: flex
-    align-items: center
-    justify-content: flex-end
-  li
-    list-style-type: none
-    font-size: .9em
-    margin-right: 0.4em
-    &:not(:last-child):after
-      content: ', '
-
-.property-list__selection
-  width: 100%
-  height: 100%
-  text-align: right
-  color: #555
-  margin: 0
-  padding: 0
-  position: relative
-  left: 150%
-  &>li
-    list-style-type: none
-  &.property-list
-    border: none
-  label
-    width: 100%
-    cursor: pointer
-  span
-    display: inline-block
-    width: calc(100% - 1.6em)
-    text-ellipsis()
-
 .tab-list
   width: 11.5em
   padding: 0
   margin: 0
   z-index: 1
-
-.tab-list li
-  padding-left: 10px
-  line-height: $height_property_list
-  border-right:  1px solid $color_border
-  border-bottom: 1px solid $color_border
+  li
+    padding-left: 10px
+    line-height: $height_property_list
+    border-right:  1px solid $color_border
+    border-bottom: 1px solid $color_border
+  a
+    color: #555
+    cursor: default
+    text-decoration: none
 
 .property-list__tab:not(:hover) .tab-list li
-  border-right: transparent
-
 .tab-list li.active
   border-right: transparent
-
-.tab-list a
-  color: #555
-  cursor: default
-  text-decoration: none
 
 .tab-content
   position: relative
@@ -422,6 +374,49 @@ $height_property_list = 3em
 .tab-content>.tab-pane.active .property-list__selection
   left: 0
   z-index: 1
+
+.property-list__selected
+  width: calc(100% - 6em)
+  top: 55px
+  right: 0
+  position: absolute
+  z-index: 0
+  ul
+    height: 38px
+    border-bottom: solid 1px $color_border
+    margin: 0
+    padding: 0 10px 0 0
+    display: flex
+    align-items: center
+    justify-content: flex-end
+  li
+    list-style-type: none
+    font-size: .9em
+    margin-right: 0.4em
+    text-align: right
+    &:not(:last-child):after
+      content: ', '
+
+.property-list__selection
+  width: 100%
+  height: 100%
+  text-align: right
+  color: #555
+  margin: 0
+  padding: 0
+  position: relative
+  left: 200%
+  &>li
+    list-style-type: none
+  &.property-list
+    border: none
+  label
+    width: 100%
+    cursor: pointer
+  span
+    display: inline-block
+    width: calc(100% - 1.6em)
+    text-ellipsis()
 
 #header
   .account-list
