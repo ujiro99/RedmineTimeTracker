@@ -47,25 +47,22 @@ div#issue(ng-controller='IssueCtrl')
           tabset.property-list__tab(vertical="true")
             tab(heading="{{prop}}",
                 ng-repeat="prop in Const.ISSUE_PROPS",
-                uz-hover="tab.active",
-                active="tab.active")
-              ul.property-list.property-list__selection(uz-hover="tab.active")
+                uz-hover="tabState[prop]",
+                active="tabState[prop]")
+              ul.property-list.property-list__selection(uz-hover="tabState[prop]", ng-click="tabState[prop] = false")
                 li(ng-show="data.selectedProject[prop].length > 2")
-                  label(for="checkbox_{{prop}}_all")
+                  label(ng-click="clickCheckbox(prop, data.selectedProject[prop][0], $event)")
                     span All
-                    input.checkmark(type="checkbox"
-                          id="checkbox_{{prop}}_all"
-                          ng-model="data.selectedProject[prop][0].checked"
-                          ng-change="clickCheckbox(prop, data.selectedProject[prop][0])")
+                    input.checkmark(type="checkbox",
+                                    ng-model="data.selectedProject[prop][0].checked")
                 li(ng-repeat="option in data.selectedProject[prop]|limitTo:50:1")
-                  label(for="checkbox_{{prop}}_{{option.id}}")
+                  label(ng-click="clickCheckbox(prop, option, $event)")
                     span {{option.name}}
-                    input.checkmark(type="checkbox"
-                          id="checkbox_{{prop}}_{{option.id}}"
-                          ng-model="option.checked"
-                          ng-change="clickCheckbox(prop, option)")
+                    input.checkmark(type="checkbox",
+                                    ng-model="option.checked")
             div.property-list__selected
-              ul(ng-repeat="prop in Const.ISSUE_PROPS")
+              ul.searchform-with-icon(ng-repeat="prop in Const.ISSUE_PROPS", ng-click="tabState[prop] = true")
+                i.fa.fa-angle-right
                 li(ng-repeat="option in data.selectedProject[prop]|checked")
                   span {{option.name}}
 

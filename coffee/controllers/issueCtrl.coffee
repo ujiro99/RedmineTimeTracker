@@ -18,6 +18,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     highlight: true
     minLength: 0
 
+  $scope.tabState = {}
+
   # http request canceled.
   STATUS_CANCEL = 0
 
@@ -83,7 +85,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
    on checkBox == All is clicked, change all property state.
    on checkBox != All is clicked, change All's property state.
   ###
-  $scope.clickCheckbox = (propertyName, option) ->
+  $scope.clickCheckbox = (propertyName, option, $event) ->
     if option.name is "All"
       DataAdapter.selectedProject[propertyName].map((p) -> p.checked = option.checked)
     else if option.checked is false
@@ -91,6 +93,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     else if DataAdapter.selectedProject[propertyName].slice(1).all((p) -> p.checked)
       DataAdapter.selectedProject[propertyName][0].checked = true
 
+    $event.stopPropagation()
 
   ###
    on change state.currentPage, start loading.

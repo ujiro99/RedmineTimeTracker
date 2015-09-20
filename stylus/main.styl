@@ -112,7 +112,6 @@ input.input-sm
   i
     opacity: .5
     position: relative
-    left: -1px
     transition: opacity .3s ease
     pointer-events: none
   &:hover i
@@ -294,7 +293,7 @@ input.project-search
 
 $color_border = #ddd
 $color_well_back = #f5f5f5
-$height_property_list = 3em
+$height_property_list = 38px
 $width_tab = 6.5em
 
 .property-list
@@ -315,6 +314,11 @@ $width_tab = 6.5em
   input.switch
     position: relative
     left: 6px
+
+.property-list
+.property-list__selected
+  .fa
+    font-size: 18px
 
 .property-list__tab
   position: relative
@@ -364,20 +368,23 @@ $width_tab = 6.5em
   z-index: 1
   background-color: $color_well_back
   ul
-    height: 38px
+    height: $height_property_list + 1
     border-bottom: solid 1px $color_border
     margin: 0
-    padding: 0 10px 0 0
-    display: flex
-    align-items: center
+    padding: 0 20px 0 0
     justify-content: flex-end
+    cursor: pointer
   li
     list-style-type: none
     font-size: .9em
-    margin-right: 0.4em
-    text-align: right
+    margin-right: 0.6em
     &:not(:last-child):after
       content: ', '
+  i
+    line-height: $height_property_list
+    position: absolute
+    top: -1px
+    right: 12px
 
 .property-list__tab:hover+.property-list__selected
   display: none
@@ -388,10 +395,10 @@ $width_tab = 6.5em
   text-align: right
   color: #555
   margin: 0
-  padding: 5px 10px 0 0
+  padding: 5px 0 0 0
   position: relative
   left: 200%
-  transition: left .3s ease
+  transition: left .2s ease
   background-color: $color_well_back
   &.property-list
     border-left: 1px solid $color_border
@@ -400,7 +407,7 @@ $width_tab = 6.5em
     line-height: 1.8em
   label
     width: 100%
-    cursor: pointer
+    padding-right: 10px
   span
     display: inline-block
     width: calc(100% - 1.6em)
