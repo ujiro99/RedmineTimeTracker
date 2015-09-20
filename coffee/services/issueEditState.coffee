@@ -85,6 +85,9 @@ timeTracker.factory "IssueEditState", (Redmine, DataAdapter, State, Message, Res
     ###
     listFilter: (item) =>
 
+      if @$scope.searchField.onlyContained
+        return if not @isContained(item)
+
       match = Const.ISSUE_PROPS.all (p) ->
         DataAdapter.selectedProject[p].some (n) ->
           return true if n.name is "All" and n.checked

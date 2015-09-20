@@ -69,6 +69,12 @@ div#issue(ng-controller='IssueCtrl')
                 li(ng-repeat="option in data.selectedProject[prop]|checked")
                   span {{option.name}}
 
+          // List added
+          div.property-list
+            label
+              span Added in list
+              input.switch(type="checkbox", ng-model="searchField.onlyContained")
+
 
       // ------------------------------------
       //            Issue List
