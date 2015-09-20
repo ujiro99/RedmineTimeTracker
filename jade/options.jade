@@ -22,7 +22,7 @@ div#options(ng-controller='OptionCtrl')
       div.setting__description
         span Use star in Project Selection.
     div.setting__options
-      input.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.isProjectStarEnable")
+      input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.isProjectStarEnable")
 
   div.setting__section.form-group
     div.setting__labels
@@ -30,7 +30,7 @@ div#options(ng-controller='OptionCtrl')
       div.setting__description
         span Automatically send anonymous usage statistics and crash reports. This function uses cookie.
     div.setting__options
-      input.setting__button(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
+      input.switch.setting__button(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
 
   div.setting__section.form-group
     div.setting__labels
