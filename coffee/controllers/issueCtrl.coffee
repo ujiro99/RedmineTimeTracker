@@ -1,41 +1,37 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdapter, Message, State, Option, Resource, Analytics, IssueEditState, Const) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueEditState, Const) ->
+
+  # http request canceled.
+  STATUS_CANCEL = 0
+  # don't use query
+  QUERY_ALL_ID = 0
 
   # data
   $scope.data = DataAdapter
+  # constant variables.
   $scope.Const = Const
-
-  # typeahead data
-  $scope.queryData = null
-
-  $scope.searchField = text: ''
+  # options. using in pagination.
+  $scope.options = Option.getOptions()
+  # search parameters.
+  $scope.searchField = text: '', onlyContained: false
+  # where does tooltip show.
   $scope.tooltipPlace = 'top'
-  $scope.totalItems = 0
-  $scope.state = State
+  # is search field open.
   $scope.isOpen = false
-
+  # typeahead data.
+  $scope.queryData = null
   # typeahead options
   $scope.inputOptions =
     highlight: true
     minLength: 0
-
   # property filter's tab state.
   $scope.tabState = {}
-
-  # http request canceled.
-  STATUS_CANCEL = 0
-
-  # don't use query
-  QUERY_ALL_ID = 0
-
+  # controll functions for issue list.
+  $scope.editState = new IssueEditState($scope)
 
   ###
    Initialize.
   ###
   init = () ->
-
-    $scope.options = Option.getOptions()
-
-    $scope.editState = new IssueEditState($scope)
     initializeSearchform()
 
     # on change selected Project, load issues and queries.
