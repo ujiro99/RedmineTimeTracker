@@ -111,7 +111,6 @@ input.input-sm
   position: relative
   i
     opacity: .5
-    position: relative
     transition: opacity .3s ease
     pointer-events: none
   &:hover i
@@ -290,16 +289,9 @@ input.project-search
 .bottom-space
   margin-bottom: 10px
 
-
-$color_border = #ddd
-$color_back = #f5f5f5
-$color_back_hover = #fcfcfc
-$height_property_list = 36px
-$width_tab = 6.5em
-
 .property-list
   border-bottom: solid 1px $color_border
-  padding: 2px 10px
+  padding: 2px 9px 2px 10px
   height: $height_property_list
   &:hover
     background-color: $color_back_hover
@@ -318,6 +310,10 @@ $width_tab = 6.5em
   input.switch
     position: relative
     left: 6px
+
+.property-list .input-sm
+  font-size: $font_size_selected
+  color: $color_font_selected
 
 .property-list
 .property-list__selected
@@ -381,15 +377,16 @@ $width_tab = 6.5em
     cursor: pointer
   li
     list-style-type: none
-    font-size: .9em
+    font-size: $font_size_selected
     margin-right: 0.6em
+    color: $color_font_selected
+    text-ellipsis()
     &:not(:last-child):after
       content: ', '
   i
     line-height: $height_property_list - 1
     position: absolute
-    top: -1px
-    right: 12px
+    right: 10px
 
 .property-list__selection
   width: 100%
