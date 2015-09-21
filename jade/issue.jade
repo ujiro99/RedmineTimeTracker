@@ -21,7 +21,7 @@ div#issue(ng-controller='IssueCtrl')
             ng-click="searchField.text = ''"
             placeholder='Issue...')
           i.fa.fa-search
-        button.btn(ng-click="isOpen = !isOpen",
+        button.btn(ng-click="toggleSearchForm()",
                    ng-class="{rotate180: isOpen}",
                    ga-click='openSearch')
           i.fa.fa-angle-down
@@ -33,7 +33,7 @@ div#issue(ng-controller='IssueCtrl')
         form.well.input-list(name='account')
 
           // Query
-          div.searchform.searchform-with-icon.property-list
+          div.searchform-with-icon.property-list
             span Custom queries
             input.sfTypeahead.form-control.input-sm(type="text"
               options="inputOptions"
@@ -46,10 +46,12 @@ div#issue(ng-controller='IssueCtrl')
           // Other Parameters
           tabset.property-list__tab(vertical="true")
             tab(heading="{{prop}}",
+                id="id_{{prop}}",
                 ng-repeat="prop in Const.ISSUE_PROPS",
-                uz-hover="tabState[prop]",
+                uz-hover="tabState[prop] = hover",
                 active="tabState[prop]")
-              ul.property-list.property-list__selection(uz-hover="tabState[prop]", ng-click="tabState[prop] = false")
+              ul.property-list.property-list__selection(uz-hover="tabState[prop] = hover",
+                                                        ng-click="tabState[prop] = false")
                 li(ng-show="data.selectedProject[prop].length > 2")
                   label(ng-click="clickCheckbox(prop, data.selectedProject[prop][0], $event)")
                     span All
@@ -61,7 +63,9 @@ div#issue(ng-controller='IssueCtrl')
                     input.checkmark(type="checkbox",
                                     ng-model="option.checked")
             div.property-list__selected
-              ul.searchform-with-icon(ng-repeat="prop in Const.ISSUE_PROPS", ng-click="tabState[prop] = true")
+              ul.searchform-with-icon(ng-repeat="prop in Const.ISSUE_PROPS",
+                                      ng-click="tabState[prop] = true",
+                                      uz-hover="toggleTabClass(prop)")
                 i.fa.fa-angle-right
                 li(ng-repeat="option in data.selectedProject[prop]|checked")
                   span {{option.name}}

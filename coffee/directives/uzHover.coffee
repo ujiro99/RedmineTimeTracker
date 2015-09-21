@@ -5,11 +5,9 @@ timeTracker.directive 'uzHover', () ->
     link: (scope, element, attrs) ->
 
       element.on 'mouseenter', ->
-        scope.$apply ->
-          scope.$eval(attrs.uzHover + " = true")
+        scope.$apply -> scope.$eval(attrs.uzHover, hover: true)
 
       element.on 'mouseleave', ->
-        scope.$apply ->
-          scope.$eval(attrs.uzHover + " = false")
+        scope.$apply -> scope.$eval(attrs.uzHover, hover: false)
 
   }

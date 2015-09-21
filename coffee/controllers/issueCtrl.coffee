@@ -18,6 +18,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     highlight: true
     minLength: 0
 
+  # property filter's tab state.
   $scope.tabState = {}
 
   # http request canceled.
@@ -81,7 +82,22 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
     $scope.editState.loadAllTicketOnProject()
 
 
+  ###*
+   Open or collapse search form. And initialize tab state.
   ###
+  $scope.toggleSearchForm = () ->
+    $scope.isOpen = !$scope.isOpen
+    for prop in Const.ISSUE_PROPS
+      $scope.tabState[prop] = false
+
+  ###*
+   toggle tab's hover class.
+  ###
+  $scope.toggleTabClass = (prop) ->
+    $('#id_' + prop).toggleClass('hover')
+    return false
+
+  ###*
    on checkBox == All is clicked, change all property state.
    on checkBox != All is clicked, change All's property state.
   ###
@@ -95,7 +111,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Account, Project, DataAdap
 
     $event.stopPropagation()
 
-  ###
+  ###*
    on change state.currentPage, start loading.
   ###
   $scope.$watch 'editState.currentPage', ->
