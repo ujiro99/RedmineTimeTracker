@@ -69,6 +69,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
     queryId   = DataAdapter.selectedQuery.id
     if queryId is QUERY_ALL_ID then queryId = undefined
     DataAdapter.selectedProject.queryId = queryId
+    DataAdapter.selectedProject.tickets.clear()
     Project.setParam(targetUrl, targetId, { 'queryId': queryId })
     loadIssues()
 

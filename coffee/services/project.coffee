@@ -45,7 +45,7 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
         # restore old checked status
         @[p].map (oldOption) ->
           newOption = tmpArray.find (n) -> n.id is oldOption.id
-          newOption.checked = oldOption.checked
+          newOption.checked = oldOption.checked if newOption
         @[p].set(tmpArray)
       Log.timeEnd("updateProperties #{@text}\t")
       @fireEvent(@UPDATED, @)
