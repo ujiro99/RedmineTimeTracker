@@ -86,8 +86,8 @@ div#issue(ng-controller='IssueCtrl')
             ng-mousemove='editState.onMouseMove($event)')
             button.numbered-label(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
               span.numbered-label__number {{item.id}}
-              span.numbered-label__label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assigned_to.name}}</span></p>",
-                           tooltip-animation="",
+              span.numbered-label__label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assignedTo.name}}</span></p>",
+                           tooltip-animation="false",
                            tooltip-popup-delay='700',
                            tooltip-placement='{{tooltipPlace}}') {{item.text}}
               div.btn(ng-hide='editState.isContained(item)')
