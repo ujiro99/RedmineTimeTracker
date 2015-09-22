@@ -31,6 +31,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
 
 class Redmine
 
+  @OK = 200
   @NOT_FOUND = 404
   @UNAUTHORIZED = 401
   @CONTENT_TYPE: "application/json"
@@ -280,7 +281,7 @@ class Redmine
       params: params
     config = @_setBasicConfig config, @auth
     @$http(config)
-      .success( (data, status, headers, config) =>
+      .success((data, status, headers, config) =>
         data.account = @auth
         if data?.projects?
           data.projects = for prj in data.projects
@@ -294,9 +295,10 @@ class Redmine
           @Log.table data.projects
           @Log.groupEnd "redmine.loadProjects()"
         deferred.resolve(data, status))
-      .error((args...) ->
-        args[0].account = @auth
-        deferred.reject(args[0], args[1]))
+      .error((data, status, headers, config) =>
+        if data is "" then data = {error: "Cann't connection.", stats: status}
+        data.account = @auth
+        deferred.reject(data, status))
 
     return deferred.promise
 
