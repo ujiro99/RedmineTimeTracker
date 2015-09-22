@@ -252,7 +252,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       obj = {}
       @_tickets.set @_tickets.xor(tickets)
       @_sortTickets(@_tickets)
-      @selectedTicket = @_tickets[0]
+      if not @selectedTicket or not @_tickets.some((n) => n.equals(@selectedTicket))
+        @selectedTicket = @_tickets[0]
       @fireEvent(@TICKETS_CHANGED, @)
 
     ###*
