@@ -333,7 +333,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
       # find
       starred = []
-      @_filteredData.map((a) -> starred.add(a.projects?.filter((n) -> n.show is Const.SHOW.SHOW)))
+      @_filteredData.map((a) ->
+        if not a.projects then return
+        starred.add(a.projects.filter((n) -> n.show is Const.SHOW.SHOW)))
       if starred.length is 0 then return
 
       # update
