@@ -1,22 +1,52 @@
-timeTracker.factory "IssueEditState", (Redmine, DataAdapter, State, Message, Resource, BaseEditState, Const, Log) ->
+timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Message, Resource, Const, Log) ->
 
   ###
    controller for issue edit mode.
   ###
-  class IssueEditState extends BaseEditState
+  class IssueEditState
 
     constructor: (@$scope) ->
-      super()
+
+    @STATUS_CANCEL : 0
+    @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
+    currentPage: 1
+
+    ###
+     check item was contained in selectableTickets.
+    ###
+    isContained: (item) ->
+      return DataAdapter.tickets.some (e) -> item.equals e
 
 
     ###
-     on click remove button, remove issue from selectable list.
+     on user selected item.
     ###
-    removeItem: (item) ->
-      if State.isTracking and item.equals DataAdapter.selectedTicket
-        return
-      super(item)
-      Message.toast Resource.string("msgRemoved").format(item.text)
+    onClickItem: (item) ->
+      if not @isContained(item)
+        Message.toast Resource.string("msgAdded").format(item.text)
+      else
+        Message.toast Resource.string("msgRemoved").format(item.text)
+      DataAdapter.toggleIsTicketShow item
+
+
+    ###
+     open link on other window.
+    ###
+    openLink: (url) ->
+      a = document.createElement('a')
+      a.href = url
+      a.target='_blank'
+      a.click()
+
+
+    ###
+     calculate tooltip position.
+    ###
+    onMouseMove: (e) =>
+      if e.clientY > $window.innerHeight / 2
+        @$scope.tooltipPlace = 'top'
+      else
+        @$scope.tooltipPlace = 'bottom'
 
 
     ###
