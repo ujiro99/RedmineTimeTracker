@@ -73,7 +73,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
           p.show = projects[p.url][p.id].show
         Project.add(p)
       DataAdapter.addProjects(data.projects)
-      Message.toast Resource.string("msgLoadProjectSuccess").format(data.projects[0].url)
+      Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name), 2000
     else
       _errorLoadProject data
 
@@ -84,7 +84,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _errorLoadProject = (data, status) =>
     if status is STATUS_CANCEL then return
     Log.debug("_errorLoadProjects() start")
-    Message.toast Resource.string("msgLoadProjectFail")
+    Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 2000
 
 
   ###

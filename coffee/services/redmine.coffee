@@ -281,7 +281,7 @@ class Redmine
     config = @_setBasicConfig config, @auth
     @$http(config)
       .success( (data, status, headers, config) =>
-        data.url = @auth.url
+        data.account = @auth
         if data?.projects?
           data.projects = for prj in data.projects
             newPrj =
@@ -294,7 +294,9 @@ class Redmine
           @Log.table data.projects
           @Log.groupEnd "redmine.loadProjects()"
         deferred.resolve(data, status))
-      .error((args...) -> deferred.reject(args[0], args[1]))
+      .error((args...) ->
+        args[0].account = @auth
+        deferred.reject(args[0], args[1]))
 
     return deferred.promise
 
