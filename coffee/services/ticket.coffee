@@ -41,25 +41,11 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
 
   ###
-   ticket that user can select
-  ###
-  selectableTickets = []
-
-
-  ###
    compare ticket.
    true: same / false: defferent
   ###
   _equals = (x, y) ->
     return x.url is y.url and x.id is y.id
-
-
-  ###
-   sort ticket by id
-  ###
-  selectableTickets.sortById = () ->
-    this.sort (x, y) ->
-      return x.id - y.id
 
 
   ###
@@ -188,11 +174,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
   _add = (ticket) ->
     if not ticket? then return
     found = tickets.some (ele) -> _equals ele, ticket
-    if not found
-      tickets.push ticket
-      if ticket.show is SHOW.NOT then return
-      selectableTickets.push ticket
-      selectableTickets.sortById()
+    tickets.push ticket if not found
 
 
   ###
@@ -241,13 +223,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
 
     ###
-     get selectable tickets.
-    ###
-    getSelectable: () ->
-      return selectableTickets
-
-
-    ###
      set tickets.
     ###
     set: (ticketslist, callback) ->
@@ -255,13 +230,8 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       if not ticketslist? then return
 
       tickets.clear()
-
       for t in ticketslist
         tickets.push t
-        if t.show is SHOW.NOT then continue
-        selectableTickets.push t
-
-      selectableTickets.sortById()
 
       _setLocal(callback)
 
@@ -296,9 +266,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       for t, i in tickets when _equals(t, ticket)
         tickets.splice(i, 1)
         break
-      for t, i in selectableTickets when _equals(t, ticket)
-        selectableTickets.splice(i, 1)
-        break
       _setLocal()
 
 
@@ -310,7 +277,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       if not url? then return
       newTickets = (t for t in tickets when t.url isnt url)
       tickets.clear()
-      selectableTickets.clear()
       @addArray newTickets
       _setLocal()
 
@@ -326,17 +292,6 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       # update parameter
       target = tickets.find (t) -> _equals(t, {url: url, id: id})
       for k, v of param then target[k] = v
-      if target.show is SHOW.NOT
-        # delete from selectable
-        for t, i in selectableTickets when _equals(t, {url: url, id: id})
-          selectableTickets.splice(i, 1)
-          break
-      else
-        # add selectable
-        found = selectableTickets.some (ele) -> _equals target, ele
-        if not found
-          selectableTickets.push target
-          selectableTickets.sortById()
       _setLocal()
 
 
@@ -398,12 +353,11 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     clear: (callback) ->
       Log.debug 'Tikcet.clear()'
       tickets.clear()
-      selectableTickets.clear()
       Chrome.storage.local.set TICKET: []
       Chrome.storage.sync.set TICKET: [], () ->
-      if Chrome.runtime.lastError?
-        callback? false
-      else
-        callback? true
+        if Chrome.runtime.lastError?
+          callback? false
+        else
+          callback? true
   }
 )

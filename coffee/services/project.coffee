@@ -82,18 +82,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
 
     ###
-     selectable project list.
-    ###
-    _selectableProjects: []
-
-
-    ###
-     selected one.
-    ###
-    _selectedProject: {}
-
-
-    ###
      load from any area.
     ###
     _load: (storage, callback) ->
@@ -131,27 +119,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
 
     ###
-     get selectable project data.
-    ###
-    getSelectable: () ->
-      return @_selectableProjects
-
-
-    ###
-     get selected project data.
-    ###
-    getSelected: () ->
-      return @_selectedProject
-
-
-    ###
-     set prject data.
-    ###
-    setSelected: (project) ->
-      @_selectedProject = project
-
-
-    ###
      set projects.
      @param newProjects {Object} HashMap of ProjectModel. Key is Account URL.
     ###
@@ -162,18 +129,11 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
       Log.groupEnd "Project.set()"
 
       # clear old data
-      @_selectableProjects.clear()
       for url, params of @_projects then delete @_projects[url]
 
       # set new project
       for url, params of newProjects
         @_projects[url] = params
-        urlIndex = params.index
-        for k, v of params
-          if k is 'index' then continue
-          if v.show isnt Project.SHOW.NOT
-            prj = new ProjectModel(url, urlIndex, k - 0, v.text, v.show, v.queryId)
-            @_selectableProjects.push prj
       @_setLocal()
 
 
@@ -182,27 +142,10 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
      doesnt't chagne references.
     ###
     setParam: (url, id, params) ->
-      # set param
       if not url? or not id? then return
       if not @_projects[url] or not @_projects[url][id] then return
       target = @_projects[url][id]
       for k, v of params then target[k] = v
-
-      # update selectable
-      isSelectable = target.show isnt Project.SHOW.NOT
-      found = @_selectableProjects.find((p) -> p.equals {url: url, id: id})
-      if found and isSelectable
-        for k, v of params then found[k] = v
-      else if found and not isSelectable
-        @_selectableProjects.remove((p) -> p.equals {url: url, id: id})
-      else if not found and isSelectable
-        prj = new ProjectModel(url,
-                               @_projects[url].index,
-                               id,
-                               target.text,
-                               target.show,
-                               target.queryId)
-        @_selectableProjects.push prj
       @_setLocal()
 
 
@@ -215,7 +158,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
       # initialize if not exists
       @_projects[prj.url] = @_projects[prj.url] or {}
       target = @_projects[prj.url][prj.id] = @_projects[prj.url][prj.id] or {}
-
       # set params
       if @_projects[prj.url].index >= 0
         prj.urlIndex = @_projects[prj.url].index
@@ -225,22 +167,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
       target.text    = prj.text or target.text
       target.show    = if prj.show? then prj.show else target.show
       target.queryId = if prj.queryId? then prj.queryId else target.queryId
-
-      # update selectable
-      isSelectable = target.show isnt Project.SHOW.NOT
-      found = @_selectableProjects.find((p) -> p.equals prj)
-      if found and isSelectable
-        for k, v of target then found[k] = v
-      else if found and not isSelectable
-        @_selectableProjects.remove((p) -> p.equals prj)
-      else if not found and isSelectable
-        prj = new ProjectModel(prj.url,
-                               prj.urlIndex,
-                               prj.id,
-                               target.text,
-                               target.show,
-                               target.queryId)
-        @_selectableProjects.push prj
       @_setLocal()
 
 
@@ -255,9 +181,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
         i = 0
         for redmineUrl, params of @_projects
           @_projects[redmineUrl].index = i++
-      for p, i in @_selectableProjects when p.equals {url: url, id: id}
-        @_selectableProjects.splice i, 1
-        break
       @_setLocal()
 
 
@@ -317,7 +240,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
     ###
     clear: (callback) ->
       for url, params of @_projects then delete @_projects[url]
-      @_selectableProjects.clear()
       Chrome.storage.local.set PROJECT: []
       Chrome.storage.sync.set PROJECT: [], () ->
       if Chrome.runtime.lastError?
