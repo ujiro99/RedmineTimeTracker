@@ -242,7 +242,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      if ticket can be shown and there is no selected ticket, it be selected.
     ###
     add: (ticket) ->
-      Log.debug 'Tikcet.add()'
+      Log.debug 'Ticket.add()'
       _add(ticket)
       _setLocal()
 
@@ -251,7 +251,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      add ticket array.
     ###
     addArray: (arr) ->
-      Log.debug 'Tikcet.addArray()'
+      Log.debug 'Ticket.addArray()'
       if not arr? then return
       for t in arr then _add t
       _setLocal()
@@ -261,7 +261,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      remove ticket when exists.
     ###
     remove: (ticket) ->
-      Log.debug 'Tikcet.remove()'
+      Log.debug 'Ticket.remove()'
       if not ticket? then return
       for t, i in tickets when _equals(t, ticket)
         tickets.splice(i, 1)
@@ -273,7 +273,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      remove ticket associated to url.
     ###
     removeUrl: (url) ->
-      Log.debug 'Tikcet.removeUrl()'
+      Log.debug 'Ticket.removeUrl()'
       if not url? then return
       newTickets = (t for t in tickets when t.url isnt url)
       tickets.clear()
@@ -287,7 +287,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      if ticket cannot be shown, it be deleted from selectable.
     ###
     setParam: (url, id, param) ->
-      Log.debug 'Tikcet.setParam()'
+      Log.debug 'Ticket.setParam()'
       if not url? or not id? or not param? then return
       # update parameter
       target = tickets.find (t) -> _equals(t, {url: url, id: id})
@@ -301,10 +301,10 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     load: (callback) ->
       _loadLocal (localTickets, missingUrlIndex) =>
         if localTickets?
-          Log.info 'tikcet loaded from local'
-          Log.groupCollapsed 'tikcet loaded'
+          Log.info 'ticket loaded from local'
+          Log.groupCollapsed 'ticket loaded'
           Log.table localTickets
-          Log.groupEnd 'tikcet loaded'
+          Log.groupEnd 'ticket loaded'
           @set localTickets, (res, msg) ->
             if not missingUrlIndex.isEmpty()
               msg = msg or {}
@@ -312,10 +312,10 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
             callback localTickets, msg
         else
           _loadSync (syncTickets, missingUrlIndex) =>
-            Log.info 'tikcet loaded from sync'
-            Log.groupCollapsed 'tikcet loaded'
+            Log.info 'ticket loaded from sync'
+            Log.groupCollapsed 'ticket loaded'
             Log.table localTickets
-            Log.groupEnd 'tikcet loaded'
+            Log.groupEnd 'ticket loaded'
             @set syncTickets, (res, msg) ->
               if not missingUrlIndex.isEmpty()
                 msg = msg or {}
@@ -351,7 +351,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      clear ticket data on storage and local.
     ###
     clear: (callback) ->
-      Log.debug 'Tikcet.clear()'
+      Log.debug 'Ticket.clear()'
       tickets.clear()
       Chrome.storage.local.set TICKET: []
       Chrome.storage.sync.set TICKET: [], () ->
