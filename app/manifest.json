@@ -1,17 +1,14 @@
 {
   "name": "__MSG_extName__",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "manifest_version": 2,
-
   "description": "__MSG_extDescription__",
   "default_locale": "en",
-
   "icons": {
-    "128": "images/icon_128.png",
+    "16": "images/icon_16.png",
     "48": "images/icon_48.png",
-    "16":  "images/icon_16.png"
+    "128": "images/icon_128.png"
   },
-
   "app": {
     "background": {
       "scripts": [
@@ -20,12 +17,10 @@
       ]
     }
   },
-
   "permissions": [
     "http://*/*",
     "https://*/*",
     "storage",
     "alarms"
   ]
-
 }
