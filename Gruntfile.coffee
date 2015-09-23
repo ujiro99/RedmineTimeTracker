@@ -201,6 +201,7 @@ module.exports = (grunt) ->
           src: [
             "_locales/{,*/}*.json"
             "css/lib/*.css"
+            "components/*.*"
             "fonts/*.*"
             "images/*.png"
             "scripts/lib/*.js"
