@@ -213,6 +213,7 @@ module.exports = (grunt) ->
     release:
       options:
         file: 'package.json'
+        npm: false
         additionalFiles: [
           'bower.json',
           'app/manifest.json'
