@@ -81,6 +81,9 @@ module.exports = (grunt) ->
         files: [
           '<%= config.dist %>/scripts/script.js': [
             'coffee/app.coffee',
+            'coffee/log.coffee',
+            'coffee/state.coffee',
+            'coffee/config.coffee',
             'coffee/**/*.coffee',
             '!coffee/chromereload.coffee'
           ]
