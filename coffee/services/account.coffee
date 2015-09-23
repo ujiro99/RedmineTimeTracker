@@ -114,9 +114,12 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
       deferred = $q.defer()
 
       Chrome.storage.sync.get ACCOUNTS, (item) ->
-        if Chrome.runtime.lastError? or not item[ACCOUNTS]?
+        if Chrome.runtime.lastError?
           Log.info 'account load failed.'
           deferred.reject()
+        else if not item[ACCOUNTS]
+          Log.info 'account was not created ever.'
+          deferred.resolve()
         else
           Log.info 'account loaded'
           _accounts.clear()
