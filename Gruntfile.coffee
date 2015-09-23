@@ -162,7 +162,7 @@ module.exports = (grunt) ->
         src: '<%= config.dist %>/scripts/script.js'
         dest: '<%= config.dist %>/scripts/script.js'
 
-     cssmin:
+    cssmin:
       minify:
         expand: true
         src:  '*.css'
@@ -233,6 +233,7 @@ module.exports = (grunt) ->
     # Excec test.
     exec:
       test: "./node_modules/.bin/mocha-phantomjs -p ./node_modules/mocha-phantomjs/node_modules/phantomjs2/bin/phantomjs test/test.html"
+
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
