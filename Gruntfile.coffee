@@ -108,11 +108,9 @@ module.exports = (grunt) ->
     stylus:
       production:
         files: [
-          expand: true
-          cwd: 'stylus/'
-          src: ['**/*.styl']
-          dest: '<%= config.dist%>/css/'
-          ext: '.css'
+          '<%= config.dist %>/css/main.css': [
+            'stylus/**/*.styl'
+          ]
         ]
       develop:
         files: [
@@ -171,7 +169,7 @@ module.exports = (grunt) ->
         src:  '*.css'
         cwd:  '<%= config.dist %>/css/'
         dest: '<%= config.dist %>/css/'
-        ext:  '.min.css'
+        ext:  '.css'
 
     chromeManifest:
       dist:

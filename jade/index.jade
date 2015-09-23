@@ -11,8 +11,11 @@ html(ng-app='timeTracker', ng-csp="")
     // other
     link(rel='stylesheet', href='/css/lib/font-awesome.min.css')
     link(rel='stylesheet', href='/css/lib/Simple-Line-Icons.css')
-    link(rel='stylesheet', href='/css/mplus-2c-font.css')
-    link(rel='stylesheet', href='/css/main.css')
+    if production
+      link(rel='stylesheet', href='/css/main.css')
+    else
+      link(rel='stylesheet', href='/css/mplus-2c-font.css')
+      link(rel='stylesheet', href='/css/main.css')
 
 
   body(ng-controller='MainCtrl')
