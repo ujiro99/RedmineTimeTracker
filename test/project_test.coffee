@@ -39,52 +39,6 @@ describe 'project.coffee', ->
 
 
   ###
-   test for getSelectable()
-  ###
-  describe 'getSelectable()', ->
-
-    it 'be empty', () ->
-      projects = Project.getSelectable()
-      expect(projects).to.be.empty
-
-    it 'SHOW.NOT expect to be empty', () ->
-      prj =
-        url: "https://github.com/ujiro99/RedmineTimeTracker"
-        urlIndex: 0
-        id: 0
-        text: ""
-        show: SHOW.NOT
-      Project.add(prj)
-
-      projects = Project.getSelectable()
-      expect(projects).to.be.empty
-
-    it 'SHOW.DEFAULT expect to not be empty', () ->
-      prj =
-        url: "https://github.com/ujiro99/RedmineTimeTracker"
-        urlIndex: 0
-        id: 0
-        text: ""
-        show: SHOW.DEFAULT
-      Project.add(prj)
-
-      projects = Project.getSelectable()
-      expect(projects).to.not.be.empty
-
-    it 'SHOW.SHOW expect to not be empty', () ->
-      prj =
-        url: "https://github.com/ujiro99/RedmineTimeTracker"
-        urlIndex: 0
-        id: 0
-        text: ""
-        show: SHOW.SHOW
-      Project.add(prj)
-
-      projects = Project.getSelectable()
-      expect(projects).to.not.be.empty
-
-
-  ###
    test for set(newProjects)
   ###
   describe 'set(newProjects)', ->
@@ -219,10 +173,6 @@ describe 'project.coffee', ->
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
       expect(added[prj1[0].url][prj1[0].id].queryId).to.be.equal(prj1[0].queryId)
-      selectable = Project.getSelectable()
-      expect(selectable[0].urlIndex).to.be.equal(prj1[0].urlIndex)
-      expect(selectable[0].text).to.be.equal(prj1[0].text)
-      expect(selectable[0].queryId).to.be.equal(prj1[0].queryId)
 
       # execute
       Project.setParam(prj1[0].url, prj1[0].id, { queryId: 1 })
@@ -231,25 +181,17 @@ describe 'project.coffee', ->
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(added[prj1[0].url][prj1[0].id].text).to.be.equal(prj1[0].text)
       expect(added[prj1[0].url][prj1[0].id].queryId).to.be.equal(1) # changed
-      expect(selectable[0].urlIndex).to.be.equal(prj1[0].urlIndex)
-      expect(selectable[0].text).to.be.equal(prj1[0].text)
-      expect(selectable[0].queryId).to.be.equal(1) # changed
 
     it 'shouldn\'t change references.', () ->
       expect(Project.get()).to.be.empty
       Project.add(prj1[0])
       added = Project.get()
       prj = added[prj1[0].url][prj1[0].id]
-      selectable = Project.getSelectable()[0]
 
       # before setParam
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(prj.text).to.be.equal(prj1[0].text)
       expect(prj.queryId).to.be.equal(prj1[0].queryId)
-      expect(Project.getSelectable().length).to.be.equal(1)
-      expect(selectable.urlIndex).to.be.equal(prj1[0].urlIndex)
-      expect(selectable.text).to.be.equal(prj1[0].text)
-      expect(selectable.queryId).to.be.equal(prj1[0].queryId)
 
       # execute
       Project.setParam(prj1[0].url, prj1[0].id, { queryId: 1 })
@@ -258,49 +200,6 @@ describe 'project.coffee', ->
       expect(added[prj1[0].url].index).to.be.equal(prj1[0].urlIndex)
       expect(prj.text).to.be.equal(prj1[0].text)
       expect(prj.queryId).to.be.equal(1) # changed
-      expect(Project.getSelectable().length).to.be.equal(1)
-      expect(selectable.urlIndex).to.be.equal(prj1[0].urlIndex)
-      expect(selectable.text).to.be.equal(prj1[0].text)
-      expect(selectable.queryId).to.be.equal(1) # changed
-
-    it 'should add project to selectable when set SHOW.SHOW.', () ->
-      expect(Project.get()).to.be.empty
-      prj1[0].show = SHOW.NOT
-      Project.add(prj1[0])
-      prj = Project.get()[prj1[0].url][prj1[0].id]
-      selectable = Project.getSelectable()
-      # before setParam
-      expect(prj.show).to.be.equal(SHOW.NOT)
-      expect(selectable).to.be.empty
-      # execute
-      Project.setParam(prj1[0].url, prj1[0].id, { show: SHOW.SHOW })
-      # after setParam
-      expect(prj.show).to.be.equal(SHOW.SHOW)  # changed
-      expect(selectable.length).to.be.equal(1) # changed
-      expect(selectable[0].url).to.be.equal(prj1[0].url)
-      expect(selectable[0].urlIndex).to.be.equal(prj1[0].urlIndex)
-      expect(selectable[0].id).to.be.equal(prj1[0].id)
-      expect(selectable[0].text).to.be.equal(prj1[0].text)
-      expect(selectable[0].show).to.be.equal(SHOW.SHOW)
-      expect(selectable[0].queryId).to.be.equal(prj1[0].queryId)
-
-    it 'should remove project from selectable when set SHOW.NOT.', () ->
-      expect(Project.get()).to.be.empty
-      Project.add(prj1[0])
-
-      # before setParam
-      prj = Project.get()[prj1[0].url][prj1[0].id]
-      expect(prj.show).to.be.equal(prj1[0].show)
-      selectable = Project.getSelectable()[0]
-      expect(selectable).to.exists
-
-      # execute
-      Project.setParam(prj1[0].url, prj1[0].id, { show: SHOW.NOT })
-
-      # after setParam
-      expect(prj.show).to.be.equal(SHOW.NOT) # changed
-      selectable = Project.getSelectable()
-      expect(selectable).to.be.empty
 
 
   ###
@@ -330,7 +229,6 @@ describe 'project.coffee', ->
 
       Project.add(prj1[0])
       added = Project.get()[updated.url][updated.id]
-      selectable = Project.getSelectable()[0]
 
       # execute
       Project.add(updated)
@@ -338,8 +236,6 @@ describe 'project.coffee', ->
       # assert
       expect(added.text).to.be.equal(updated.text)
       expect(added.show).to.be.equal(updated.show)
-      expect(selectable.show).to.be.equal(updated.show)
-      expect(selectable.queryId).to.be.equal(updated.queryId)
 
     it 'doesn\'t update param if undefined', () ->
       expect(Project.get()).to.be.empty
@@ -366,14 +262,10 @@ describe 'project.coffee', ->
 
       # assert
       added = Project.get()
-      selectable = Project.getSelectable()
       expect(added[prj.url].index).to.be.equal(prj.urlIndex)
       expect(added[prj.url][prj.id].text).to.be.equal(prj.text)
       expect(added[prj.url][prj.id].show).to.be.equal(prj.show)
       expect(added[prj.url][prj.id].queryId).to.be.equal(prj.queryId)
-      expect(selectable[0].text).to.be.equal(prj.text)
-      expect(selectable[0].show).to.be.equal(prj.show)
-      expect(selectable[0].queryId).to.be.equal(prj.queryId)
 
     it 'add 2 projects on same redmine server', () ->
       expect(Project.get()).to.be.empty

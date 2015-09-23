@@ -40,20 +40,6 @@ describe 'ticket.coffee', ->
       expect(Ticket.get()).to.not.be.empty
 
 
-  describe 'getSelectable()', ->
-
-    it 'be empty', () ->
-      tickets = Ticket.getSelectable()
-      expect(tickets).to.be.empty
-
-    it 'should have 1 ticket', () ->
-      expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
-      Ticket.set(TestData.ticketList)
-      selectable = Ticket.getSelectable()
-      expect(selectable).to.have.length(2)
-
-
   describe 'set(ticketList)', ->
 
     it '1 project, 3 ticket.', () ->
@@ -64,9 +50,6 @@ describe 'ticket.coffee', ->
       expect(tickets[0].id).to.equal(0) # SHOW.DEFAULT
       expect(tickets[1].id).to.equal(1) # SHOW.NOT
       expect(tickets[2].id).to.equal(2) # SHOW.SHOW
-      selectable = Ticket.getSelectable()
-      expect(selectable[0].id).to.equal(0)
-      expect(selectable[1].id).to.equal(2)
 
     it 'clear old list.', () ->
       expect(Ticket.get()).to.be.empty
@@ -147,6 +130,7 @@ describe 'ticket.coffee', ->
         expect(msg.message).to.not.be.empty
         expect(msg.param).to.have.length(2)
       )
+
   describe 'setParam(url, id, param)', ->
 
     it 'SHOW.SHOW to SHOW.NOT', () ->
@@ -180,14 +164,11 @@ describe 'ticket.coffee', ->
       sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
         callback true
       sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
-        if arg1 is "PROJECT"
-          callback PROJECT: TestData.prjObj
-          return true
-        else
-          callback TICKET: TestData.ticketOnChrome
-          return true
+        callback TICKET: TestData.ticketOnChrome
+        return true
 
     it 'callback called by chrome.', () ->
+      Project.set(TestData.prjObj)
       expect(Ticket.get()).to.be.empty
       # put test data.
       _setupChrome()
@@ -197,6 +178,7 @@ describe 'ticket.coffee', ->
       expect(callback.called).is.true
 
     it 'load data.', () ->
+      Project.set(TestData.prjObj)
       expect(Ticket.get()).to.be.empty
       # put test data.
       _setupChrome()
@@ -213,17 +195,14 @@ describe 'ticket.coffee', ->
       expect(callback.called).is.true
 
     it 'error: project not found.', () ->
+      Project.set(TestData.prjObj)
       expect(Ticket.get()).to.be.empty
       # put test data.
       sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
         callback true
       sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
-        if arg1 is "PROJECT"
-          callback PROJECT: TestData.prjObj
-          return true
-        else
-          callback TICKET: TestData.ticketOnChrome.union [[ 0, "ticket4", 3, 0, SHOW.SHOW]]
-          return true
+        callback TICKET: TestData.ticketOnChrome.add [[ 0, "ticket4", 3, 0, SHOW.SHOW]]
+        return true
       # exec
       callback = sinon.spy (loaded, msg) ->
         expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
@@ -231,7 +210,6 @@ describe 'ticket.coffee', ->
         expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
         expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
         expect(msg.missing[0]).to.equal(3)
-        console.log msg
       Ticket.load callback
       expect(callback.called).is.true
 
