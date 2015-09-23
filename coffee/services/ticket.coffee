@@ -87,7 +87,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
 
 
   ###
-   syncronize tickets and projects.
+   syncronize tickets and projects using urlIndex.
    chrome format.
   ###
   _syncWithProject = (tickets, projects) ->
@@ -142,10 +142,10 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     ticketArray = []
     errorTickets = []
     # assign project data
+    Project.reindex()
     projects = Project.get()
     for t in tickets
-      project = projects[t.url]
-      if project?
+      if projects[t.url]?
         urlIndex = projects[t.url].index
         ticketArray.push [t.id, t.text, urlIndex, t.project.id, t.show]
       else

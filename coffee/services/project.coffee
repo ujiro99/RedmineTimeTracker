@@ -251,14 +251,15 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
 
     ###
-     sanitize format of prject data.
+     reindex project.index.
     ###
-    sanitize: (prjObj) ->
-      # fix url index
+    reindex: () ->
+      Log.debug("Project.reindex")
       urlIndex = 0
-      for url, param of prjObj
-        param.index = urlIndex++
-      return prjObj
+      for url, project of @_projects
+        project.index = urlIndex++
+      @_setLocal()
+      Log.debug @_projects
 
 
   return new Project()
