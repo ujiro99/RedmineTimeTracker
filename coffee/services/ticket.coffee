@@ -100,7 +100,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
       for key, obj of projects when obj.index is t[TICKET_URL_INDEX]
         url = key
         break
-      if obj[t[TICKET_PRJ_ID]]
+      if url isnt PROJECT_NOT_FOUND and obj[t[TICKET_PRJ_ID]]
         projectName = obj[t[TICKET_PRJ_ID]].text
       else
         missing.push t[TICKET_URL_INDEX]
