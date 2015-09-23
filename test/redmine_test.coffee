@@ -115,7 +115,7 @@ describe 'redmine.coffee', ->
 
     it 'should load time entries', (done) ->
       $httpBackend
-        .expectGET(_auth.url + '/time_entries.json?limit=50')
+        .expectGET(_auth.url + '/time_entries.json?limit=100')
         .respond(TestData.time_entries)
       Redmine.get(_auth).loadTimeEntries()
         .success((data) -> expect(data.time_entries).to.exist; done())
