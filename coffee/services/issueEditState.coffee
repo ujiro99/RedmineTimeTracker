@@ -106,7 +106,7 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
      show error message.
     ###
     loadError: (data, status) =>
-      if status is BaseEditState.STATUS_CANCEL then return
+      if status is IssueEditState.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
 
 
