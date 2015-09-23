@@ -84,7 +84,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _errorLoadProject = (data, status) =>
     if status is STATUS_CANCEL then return
     Log.debug("_errorLoadProjects() start")
-    Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 2000
+    Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 3000
 
 
   ###
