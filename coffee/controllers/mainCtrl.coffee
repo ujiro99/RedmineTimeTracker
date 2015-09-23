@@ -198,9 +198,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _initializeIssues = () ->
     deferred = $q.defer()
     Log.debug "start Ticket.load()"
-    Ticket.load () ->
-      Log.debug "Ticket.load() success"
-      DataAdapter.toggleIsTicketShow(Ticket.get())
+    Ticket.load (tickets) ->
+      Log.groupCollapsed "Ticket.load() success"
+      Log.debug tickets
+      Log.groupEnd "Ticket.load() success"
+      DataAdapter.toggleIsTicketShow(tickets)
       for t in DataAdapter.tickets
         for account in Account.getAccounts() when account.url is t.url
           Redmine.get(account).getIssuesById t.id, _issueFound, _issueNotFound
@@ -217,12 +219,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       DataAdapter.toggleIsTicketShow(issue)
       return
     target = DataAdapter.tickets.find (n) -> n.equals(issue)
-    target.text        = issue.subject
-    target.assigned_to = issue.assigned_to
-    target.priority    = issue.priority
-    target.status      = issue.status
-    if issue.spent_hours?
-      target.total = Math.floor(issue.spent_hours * 100) / 100
+    for k, v of issue then target[k] = v
 
 
   ###

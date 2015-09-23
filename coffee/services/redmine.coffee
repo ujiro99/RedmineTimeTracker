@@ -203,6 +203,8 @@ class Redmine
     config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
+        @Log.debug("getIssuesById: success")
+        @Log.debug data
         if data?.issue?
           data.issue.text  = data.issue.subject
           data.issue.total = data.issue.spent_hours or 0
@@ -211,9 +213,10 @@ class Redmine
           data.issue       = @Ticket.new(data.issue)
         success?(data.issue, status, headers, config))
       .error((data, status, headers, config) =>
+        @Log.debug("getIssuesById: error")
+        @Log.debug data
         issue = @Ticket.new(url: @auth.url, id:  issueId)
         if status isnt Redmine.NOT_FOUND or status isnt Redmine.UNAUTHORIZED
-          @Log.debug data
           @Analytics.sendException("Error: getIssuesById")
         error?(issue, status))
 
