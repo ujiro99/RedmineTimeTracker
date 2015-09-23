@@ -185,9 +185,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _initializeProject = () ->
     deferred = $q.defer()
     Log.debug "start Project.load()"
-    Project.load().then (projects) ->
+    Project.load().then () ->
       Log.debug "Project.load() success"
-      Project.set Project.sanitize(projects)
       deferred.resolve()
     return deferred.promise
 

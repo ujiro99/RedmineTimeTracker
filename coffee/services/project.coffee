@@ -201,6 +201,7 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
       @_load Chrome.storage.local, (local) =>
         if local?
           Log.info 'project loaded from local'
+          @set(local)
           Log.groupCollapsed "Project.load()"
           Log.debug local
           Log.groupEnd "Project.load()"
@@ -208,6 +209,7 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
         else
           @_load Chrome.storage.sync, (sync) =>
             Log.info 'project loaded from sync'
+            @set(sync)
             deferred.resolve(sync)
       return deferred.promise
 
