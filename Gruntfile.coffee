@@ -218,7 +218,6 @@ module.exports = (grunt) ->
         additionalFiles: [
           'bower.json',
           'app/manifest.json'
-          'dist/manifest.json'
         ]
 
     # Compress files in dist to make Chromea Apps package
