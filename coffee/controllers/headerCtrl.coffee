@@ -16,12 +16,6 @@ timeTracker.controller 'headerCtrl', ($scope, Project, DataAdapter, Const, Optio
     $scope.isActive = false
 
   ###
-   Close application.
-  ###
-  $scope.closeWindow = () ->
-    window.close()
-
-  ###
    Toggle star on project.
   ###
   $scope.toggleStar = (project) ->
