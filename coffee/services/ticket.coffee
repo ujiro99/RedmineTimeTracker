@@ -227,7 +227,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
     ###
     set: (ticketslist, callback) ->
       Log.debug 'Ticket.set()'
-      if not ticketslist? then return
+      if not ticketslist? then callback(); return
 
       tickets.clear()
       for t in ticketslist
@@ -306,7 +306,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
           Log.table localTickets
           Log.groupEnd 'ticket loaded'
           @set localTickets, (res, msg) ->
-            if not missingUrlIndex.isEmpty()
+            if not missingUrlIndex?.isEmpty()
               msg = msg or {}
               msg = Object.merge(msg, {missing: missingUrlIndex})
             callback localTickets, msg
@@ -317,7 +317,7 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
             Log.table localTickets
             Log.groupEnd 'ticket loaded'
             @set syncTickets, (res, msg) ->
-              if not missingUrlIndex.isEmpty()
+              if not missingUrlIndex?.isEmpty()
                 msg = msg or {}
                 msg = Object.merge(msg, {missing: missingUrlIndex})
               callback syncTickets, msg

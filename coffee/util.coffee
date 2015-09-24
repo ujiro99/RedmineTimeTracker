@@ -54,6 +54,7 @@ if not ('xor' in Array.prototype)
     obj = {}
     for x in this then obj[x.hash()] = x
     for y in arr
+      continue if not y or not y.hash
       if obj[y.hash()]
         delete obj[y.hash()]
       else
