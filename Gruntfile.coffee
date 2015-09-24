@@ -218,6 +218,7 @@ module.exports = (grunt) ->
         additionalFiles: [
           'bower.json',
           'app/manifest.json'
+          'dist/manifest.json'
         ]
 
     # Compress files in dist to make Chromea Apps package
@@ -257,7 +258,17 @@ module.exports = (grunt) ->
     'coffee:production',
     'jade:production',
     'stylus:production',
-    'minify',
+    'minify'
+  ]
+
+  grunt.registerTask 'release-minor', [
+    'production',
     'release:minor',
+    'compress'
+  ]
+
+  grunt.registerTask 'release-patch', [
+    'production',
+    'release:patch',
     'compress'
   ]
