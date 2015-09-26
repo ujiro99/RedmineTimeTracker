@@ -397,6 +397,18 @@ input.project-search
     width: calc(100% - 1.6em)
     text-ellipsis()
 
+.loading
+  position: relative
+
+.loading:after
+  fa()
+  content: "\f110"
+  font-size: 1.4em
+  animation: spin 1.4s infinite linear
+  position: absolute
+  top: 0.2em
+  left: calc(50% - 0.45em)
+
 #header
   .account-list
     &>li
@@ -845,9 +857,11 @@ input.project-search
   .setting__options
     .btn-sm
       color: color_font
-      padding: 5px 7px
       margin: 0 0 0 5px
-      line-height: 1.2
+      padding: 3px 6px
+      &.loading
+        background-color: #eee !important
+        border-color: #adadad
 
   .setting__button
     margin-right: -6px

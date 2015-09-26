@@ -4,20 +4,16 @@ timeTracker.directive 'uzLoading', () ->
     restrict: 'A'
     link: (scope, element, attrs) ->
 
-      _button = Ladda.create(element[0])
+      CLASS_LOADING = 'loading'
+      CLASS_DISABLED = 'disabled'
 
       scope.$watch attrs.uzLoading, (loading) ->
         if loading
-          _button.start()
-          # element.addClass('loading')
-          # if not attrs.hasOwnProperty('ngDisabled')
-          #   element.addClass('disabled').attr('disabled', 'disabled')
-          # element.data('reset-text', element.html())
-          # element.html(element.data('loading-text'))
+          element.addClass(CLASS_LOADING)
+          if not attrs.hasOwnProperty('ngDisabled')
+            element.addClass(CLASS_DISABLED)
         else
-          _button.stop()
-          # element.removeClass('loading')
-          # if not attrs.hasOwnProperty('ngDisabled')
-          #   element.removeClass('disabled').removeAttr('disabled')
-          # element.html(element.data('reset-text'))
+          element.removeClass(CLASS_LOADING)
+          if not attrs.hasOwnProperty('ngDisabled')
+            element.removeClass(CLASS_DISABLED)
   }

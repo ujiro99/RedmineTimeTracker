@@ -3,16 +3,17 @@
   padding: initial
   outline: none !important
   box-shadow: none
+  transition: background-color .2s ease
   .active
     box-shadow: none
   &.loading
-    background-color: #ebebeb
-    border-color: #adadad
-
+    span
+      display: inline-block
+      opacity: 0
 
 .btn-default:focus
    background-color: transparent
 
 .btn-default:hover
-   background-color: #ebebeb
+   background-color: #eee
 

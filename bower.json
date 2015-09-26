@@ -21,7 +21,6 @@
     "angular": "~1.2.16",
     "angular-animate": "~1.2.16",
     "bootstrap": "~3.1.1",
-    "ladda": "~0.9.3",
     "angular-typeahead": "git://github.com/ujiro99/angular-typeahead.git#master",
     "angular-bootstrap": "0.10.0",
     "angular-route": "1.2.19"
@@ -43,16 +42,6 @@
     "bootstrap": {
       "js": "**/bootstrap.min.js",
       "css": "**/bootstrap.min.css"
-    },
-    "ladda": {
-      "js": [
-        "**/ladda.min.js",
-        "**/spin.min.js"
-      ],
-      "css": "**/ladda-themeless.min.css"
-    },
-    "spin.js": {
-      "js": "spin.min.js"
     }
   },
   "resolutions": {
