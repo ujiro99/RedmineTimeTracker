@@ -15,9 +15,9 @@ div#accounts(ng-controller='AccountCtrl')
                                   placeholder='search...',
                                   ng-model='searchField.text')
       i.fa.fa-search
-    button.btn(ng-click='state.isAdding = !state.isAdding',
-               ng-class="{rotate225: state.isAdding}",
-               ga-click='toggleForm')
+    button.btn.rotate__slow(ng-click='state.isAdding = !state.isAdding',
+                            ng-class="{rotate225: state.isAdding}",
+                            ga-click='toggleForm')
       span.icon-plus
 
   // add (default collapsed)
@@ -38,7 +38,7 @@ div#accounts(ng-controller='AccountCtrl')
 
       // Add Button
       div.save
-        button.btn.btn-sm.ladda-button(
+        button.btn.btn-sm.btn-color(
           ng-click='findAccount()',
           ga-click='findAccount',
           uz-loading='state.isSaving')

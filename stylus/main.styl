@@ -235,7 +235,6 @@ input.project-search
     flex: 1
   .btn
     color: color_icon
-    transition: color, transform .25s ease
     &:hover
       color: color_key
 
@@ -254,6 +253,12 @@ input.project-search
 @keyframes slide-out-right
   from {right: 0}
   to   {right: -100%}
+
+.rotate__fast
+  transition: transform .25s ease
+
+.rotate__slow
+  transition: transform .5s ease
 
 .rotate180
   transform: rotate(180deg)
@@ -786,10 +791,6 @@ input.project-search
     justify-content: center
     button
       padding: 0.25em 6.4em
-      color: snow
-      background-color: color_key_weak
-      &:hover
-        background-color: color_key
 
   .clear
     align-center()

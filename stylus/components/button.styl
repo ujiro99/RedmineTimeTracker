@@ -3,7 +3,6 @@
   padding: initial
   outline: none !important
   box-shadow: none
-  transition: background-color .2s ease
   .active
     box-shadow: none
   &.loading
@@ -11,9 +10,16 @@
       display: inline-block
       opacity: 0
 
-.btn-default:focus
-   background-color: transparent
+.btn-default
+  transition: background-color .2s ease
+  &:focus
+    background-color: transparent
+  &:hover
+    background-color: #eee
 
-.btn-default:hover
-   background-color: #eee
-
+.btn-color
+  transition: background-color .2s ease
+  color: snow
+  background-color: color_key_weak
+  &:hover
+    background-color: color_key

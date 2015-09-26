@@ -21,9 +21,9 @@ div#issue(ng-controller='IssueCtrl')
             ng-click="searchField.text = ''"
             placeholder='Issue...')
           i.fa.fa-search
-        button.btn(ng-click="toggleSearchForm()",
-                   ng-class="{rotate180: isOpen}",
-                   ga-click='openSearch')
+        button.btn.rotate__fast(ng-click="toggleSearchForm()",
+                                ng-class="{rotate180: isOpen}",
+                                ga-click='openSearch')
           i.fa.fa-angle-down
 
       // ------------------------------------
