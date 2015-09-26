@@ -102,9 +102,9 @@ describe 'redmine.coffee', ->
       $httpBackend
         .expectGET(_auth.url + '/queries.json?limit=25&page=0')
         .respond(TestData.queries)
-      Redmine.get(_auth).loadQueries(page: 0, limit: 25)
-        .success((data) -> expect(data.queries).to.exist; done())
-        .error(()-> expect(false).to.be.true; done())
+      Redmine.get(_auth).loadQueries(page: 0, limit: 25).then(
+        (data) -> expect(data.queries).to.exist; done()
+      , () -> expect(false).to.be.true; done())
       $httpBackend.flush()
 
 
@@ -117,8 +117,8 @@ describe 'redmine.coffee', ->
       $httpBackend
         .expectGET(_auth.url + '/time_entries.json?limit=100')
         .respond(TestData.time_entries)
-      Redmine.get(_auth).loadTimeEntries()
-        .success((data) -> expect(data.time_entries).to.exist; done())
-        .error(()-> expect(false).to.be.true; done())
+      Redmine.get(_auth).loadTimeEntries().then(
+        (data) -> expect(data.time_entries).to.exist; done()
+      , () -> expect(false).to.be.true; done())
       $httpBackend.flush()
 

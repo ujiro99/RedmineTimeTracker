@@ -79,11 +79,6 @@ class Redmine
 
     return result
 
-  @extends: (p) ->
-    p.success = (fn) -> p.then(fn); return p
-    p.error = (fn) -> p.then(null, fn); return p
-    return p
-
 
   ###
    bind log.
@@ -257,8 +252,7 @@ class Redmine
    laod time entry. uses promise.
   ###
   loadTimeEntries: (params) ->
-    deferred = @$q.defer()
-
+    r = @_bindDefer(null, null, "loadQueries")
     params = params or {}
     params.limit = params.limit or Redmine.LIMIT_MAX
     config =
@@ -269,10 +263,9 @@ class Redmine
     @$http(config)
       .success((args...) =>
         args[0].url = @auth.url
-        deferred.resolve(args[0]))
-      .error((args...) -> deferred.reject(args[0]))
-
-    return Redmine.extends(deferred.promise)
+        r.success(args[0]))
+      .error(r.error)
+    return r.promise
 
 
   ###
@@ -348,30 +341,30 @@ class Redmine
     @_findUser((data) =>
         data.account = @auth
         success(data)
-      , error or Redmine.NULLFUNC)
+      , error or @Const.NULLFUNC)
 
 
   ###
    Load time entry activities.
   ###
   loadActivities: (success, error) ->
+    r = @_bindDefer(success, error, "loadActivities")
     config =
       method: "GET"
       url: @auth.url + "/enumerations/time_entry_activities.json"
     config = @_setBasicConfig config, @auth
     @$http(config)
-      .success( (data, status, headers, config) =>
-        data.url = @auth.url
-        success?(data, status, headers, config))
-      .error(error or Redmine.NULLFUNC)
+      .success((args...) =>
+        args[0].url = @auth.url
+        r.success(args...))
+      .error(r.error)
 
 
   ###
    laod queries. uses promise.
   ###
   loadQueries: (params) ->
-    deferred = @$q.defer()
-
+    r = @_bindDefer(null, null, "loadQueries")
     params = params or {}
     params.limit = params.limit or Redmine.LIMIT_MAX
     config =
@@ -382,7 +375,6 @@ class Redmine
     @$http(config)
       .success((args...) =>
         args[0].url = @auth.url
-        deferred.resolve(args[0]))
-      .error((args...) -> deferred.reject(args[0]))
-
-    return Redmine.extends(deferred.promise)
+        r.success(args[0]))
+      .error((args...) -> r.error(args[0]))
+    return r.promise

@@ -107,8 +107,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       page: 1
       limit: 50
     Redmine.get(account).loadQueries(params)
-      .success(_updateQuery)
-      .error(_errorLoadQuery)
+      .then(_updateQuery, _errorLoadQuery)
 
 
   ###
