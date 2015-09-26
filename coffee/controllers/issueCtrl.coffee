@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueEditState, Const) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueEditState, Const, State) ->
 
   # http request canceled.
   STATUS_CANCEL = 0
@@ -17,6 +17,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   $scope.tooltipPlace = 'top'
   # is search field open.
   $scope.isOpen = false
+  # flag for loading icon.
+  $scope.isLoadingVisible = true
   # typeahead data.
   $scope.queryData = null
   # typeahead options
@@ -27,6 +29,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   $scope.tabState = {}
   # controll functions for issue list.
   $scope.editState = new IssueEditState($scope)
+  # global state.
+  $scope.state = State
 
   ###
    Initialize.
@@ -69,13 +73,14 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
     queryId   = DataAdapter.selectedQuery.id
     if queryId is QUERY_ALL_ID then queryId = undefined
     DataAdapter.selectedProject.queryId = queryId
-    DataAdapter.selectedProject.tickets.clear()
     Project.setParam(targetUrl, targetId, { 'queryId': queryId })
     loadIssues()
 
 
-  # load issues on P.1
+  # clear and load issues
   loadIssues = () ->
+    $scope.isLoadingVisible = true
+    DataAdapter.selectedProject.tickets.clear()
     $scope.editState.loadAllTicketOnProject()
 
 
@@ -113,8 +118,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   ###
   $scope.$watch 'editState.currentPage', ->
     Analytics.sendEvent 'user', 'clicked', 'pagination'
+    $scope.isLoadingVisible = false
     $scope.editState.loadAllTicketOnProject()
-
 
   ###
    Start Initialize.

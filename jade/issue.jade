@@ -81,7 +81,8 @@ div#issue(ng-controller='IssueCtrl')
       //            Issue List
       // ------------------------------------
       div.issue-list
-        ul.issue-list__content(ng-class="{'issue-list__content--empty':!data.selectedProject.tickets.length}")
+        ul.issue-list__content(ng-class="{'issue-list__content--empty':!data.selectedProject.tickets.length && !state.isLoadingIssue}",
+                               uz-loading="isLoadingVisible && state.isLoadingIssue")
           li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:editState.listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (editState.currentPage - 1) * options.itemsPerPage',
             ng-mousemove='editState.onMouseMove($event)')
             button.numbered-label(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')

@@ -100,6 +100,7 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
       # merge arrays and set.
       tickets = DataAdapter.selectedProject.tickets.union(data.issues)
       DataAdapter.selectedProject.tickets.set(tickets)
+      @$scope.isLoadingVisible = false
 
 
     ###

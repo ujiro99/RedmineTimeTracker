@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics, Log) ->
+timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics, Log, State) ->
 
   _redmines = {}
 
@@ -16,7 +16,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64, Analytics, Log)
+        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64, Analytics, Log, State)
       return _redmines[auth.url]
 
 
@@ -40,7 +40,7 @@ class Redmine
   @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
   @NULLFUNC: () ->
 
-  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64, @Analytics, @Log) ->
+  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64, @Analytics, @Log, @State) ->
     @url = auth.url
 
   _timeEntryData:
@@ -128,6 +128,7 @@ class Redmine
       params: params
       timeout: deferred.promise
     config = @_setBasicConfig config, @auth
+    @State.isLoadingIssue = true
     @$http(config)
       .success((data, status, headers, config) =>
         data.params = params
@@ -144,6 +145,9 @@ class Redmine
       .error((args...) =>
         deferred.reject(args...)
         error?(args...))
+      .finally(() =>
+        return if @getIssuesCanceler isnt deferred
+        @State.isLoadingIssue = false)
     return deferred
 
 
@@ -160,7 +164,7 @@ class Redmine
 
 
   ###
-   load All issues.
+   load issues from `start` to `end`.
   ###
   getIssuesRange: (params, start, end, success, error) ->
     params = params or {}
@@ -179,6 +183,8 @@ class Redmine
         data = dataAry.reduce((a, b) -> a.issues.add(b.issues);a)
         r.success(data)
     , (data) -> r.error(data))
+    .finally(() =>
+      @State.isLoadingIssue = false)
 
     return r.promise
 

@@ -270,7 +270,7 @@ input.project-search
   transform: rotate(360deg)
 
 .bottom-space
-  margin-bottom: 10px
+  margin-bottom: 5px
 
 .property-list
   border-bottom: solid 1px $color_border
@@ -412,7 +412,7 @@ input.project-search
   animation: spin 1.4s infinite linear
   position: absolute
   top: 0.2em
-  left: calc(50% - 0.45em)
+  left: calc(50% - 0.4em)
 
 #header
   .account-list
@@ -642,6 +642,14 @@ input.project-search
 
   .issue-list__content
     padding-left: 4px
+    margin: 0
+    &.loading:after
+      color: #999
+      font-size: 1.8em
+      margin: 5px 0
+      position: relative
+      top: 0
+      left: calc(50% - 0.4em - 2px)
 
   .issue-list__content--empty
     margin-bottom: 0px
