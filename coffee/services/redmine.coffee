@@ -1,4 +1,4 @@
-timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, Analytics, Log, State) ->
+timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, Log, State, Const) ->
 
   _redmines = {}
 
@@ -16,7 +16,7 @@ timeTracker.factory "Redmine", ($http, $rootScope, $q, Base64, Ticket, Project, 
     ###
     get: (auth) ->
       if not _redmines[auth.url]
-        _redmines[auth.url] = new Redmine(auth, $http, $q, $rootScope, Ticket, Project, Base64, Analytics, Log, State)
+        _redmines[auth.url] = new Redmine(auth, $http, $q, Ticket, Project, Base64, Analytics, Log, State, Const)
       return _redmines[auth.url]
 
 
@@ -37,10 +37,8 @@ class Redmine
   @CONTENT_TYPE: "application/json"
   @AJAX_TIME_OUT: 30 * 1000
   @LIMIT_MAX: 100
-  @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
-  @NULLFUNC: () ->
 
-  constructor: (@auth, @$http, @$q, @observer, @Ticket, @Project, @Base64, @Analytics, @Log, @State) ->
+  constructor: (@auth, @$http, @$q, @Ticket, @Project, @Base64, @Analytics, @Log, @State, @Const) ->
     @url = auth.url
 
   _timeEntryData:
@@ -131,7 +129,7 @@ class Redmine
         data.issues = data.issues or []
         data.issues = for issue in data.issues
           issue.text    = issue.subject
-          issue.show    = Redmine.SHOW.DEFAULT
+          issue.show    = @Const.SHOW.DEFAULT
           issue.url     = @auth.url
           issue.total   = issue.spent_hours or 0
           @Ticket.new(issue)
@@ -209,7 +207,7 @@ class Redmine
         if data?.issue?
           data.issue.text  = data.issue.subject
           data.issue.total = data.issue.spent_hours or 0
-          data.issue.show  = Redmine.SHOW.DEFAULT
+          data.issue.show  = @Const.SHOW.DEFAULT
           data.issue.url   = @auth.url
           data.issue       = @Ticket.new(data.issue)
         success?(data.issue, status, headers, config))
@@ -226,8 +224,8 @@ class Redmine
    submit time entry to redmine server.
   ###
   submitTime: (config, success, error) ->
-    success = success or Redmine.NULLFUNC
-    error = error or Redmine.NULLFUNC
+    success = success or @Const.NULLFUNC
+    error = error or @Const.NULLFUNC
     @_timeEntryData.time_entry.issue_id    = config.issueId
     @_timeEntryData.time_entry.hours       = config.hours
     @_timeEntryData.time_entry.comments    = config.comment
@@ -291,7 +289,7 @@ class Redmine
               url: @auth.url,
               id: prj.id,
               text: prj.name,
-              show: Redmine.SHOW.DEFAULT
+              show: @Const.SHOW.DEFAULT
             @Project.new(newPrj)
           @Log.groupCollapsed "redmine.loadProjects()"
           @Log.table data.projects
@@ -309,7 +307,7 @@ class Redmine
    Load user on url associated to auth.
   ###
   _getUser: (success, error) ->
-    error = error or Redmine.NULLFUNC
+    error = error or @Const.NULLFUNC
     config =
       method: "GET"
       url: @auth.url + "/users/current.json?include=memberships"
