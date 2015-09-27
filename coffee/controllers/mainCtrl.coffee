@@ -11,6 +11,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   QUERY_ALL_ID = 0
 
 
+  # list for toast Message.
   $rootScope.messages = []
 
   ###
@@ -49,6 +50,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         _loadProjects(a)
         _loadActivities(a)
         _loadQueries(a)
+        _loadStatuses(a)
+          .then(_loadIssues(a))
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.set(DataAdapter.tickets)
     Log.debug "finish initialize Event."
@@ -123,8 +126,48 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _errorLoadQuery = (data, status) =>
     if status is STATUS_CANCEL then return
-    Message.toast Resource.string("msgLoadQueryFail")
+    Message.toast Resource.string("msgLoadQueryFail").format(data.account.name), 2000
 
+
+  ###
+   load statuses for account.
+   @param account {AccountModel} - load from this account.
+  ###
+  _loadStatuses = (account) =>
+    Redmine.get(account).loadStatuses()
+      .then((data) ->
+        DataAdapter.setStatuses(data.url, data.issue_statuses)
+      , (data, status) ->
+        if status is STATUS_CANCEL then return
+        Message.toast(Resource.string("msgLoadStatusesFail").format(data.account.name), 2000))
+
+  ###
+   load issues for account.
+   @param account {AccountModel} - load from this account.
+  ###
+  _loadIssues = (account) -> () ->
+    for t in DataAdapter.tickets when account.url is t.url
+      Redmine.get(account).getIssuesById t.id, _upsateIssue(t), _issueNotFound(account)
+
+  ###
+   when issue found, update according to it.
+  ###
+  _upsateIssue = (target) -> (issue) ->
+    for k, v of issue then target[k] = v
+    # remove closed issues.
+    statuses = DataAdapter.getStatuses(target.url)
+    status = statuses.find (n) -> n.id is target.status.id
+    if status?.is_closed
+      DataAdapter.toggleIsTicketShow(target)
+      Message.toast(Resource.string("msgIssueClosed").format(target.text), 3000)
+
+  ###
+   when issue not found, remove issue.
+  ###
+  _issueNotFound = (account) -> (issue, status) ->
+    if status is NOT_FOUND or status is UNAUTHORIZED
+      DataAdapter.toggleIsTicketShow(issue)
+      Message.toast(Resource.string("msgIssueMissing").format(target.text, account.name), 3000)
 
   ###
    request a setup of redmine account to user.
@@ -201,32 +244,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Log.debug tickets
       Log.groupEnd "Ticket.load() success"
       DataAdapter.toggleIsTicketShow(tickets)
-      for t in DataAdapter.tickets
-        for account in Account.getAccounts() when account.url is t.url
-          Redmine.get(account).getIssuesById t.id, _issueFound, _issueNotFound
-          break
       deferred.resolve()
     return deferred.promise
-
-
-  ###
-   when issue found, update according to status.
-  ###
-  _issueFound = (issue) ->
-    if issue?.status.id is TICKET_CLOSED
-      DataAdapter.toggleIsTicketShow(issue)
-      return
-    target = DataAdapter.tickets.find (n) -> n.equals(issue)
-    for k, v of issue then target[k] = v
-
-
-  ###
-   when issue not found, remove issue.
-  ###
-  _issueNotFound = (issue, status) ->
-    if status is NOT_FOUND or status is UNAUTHORIZED
-      DataAdapter.toggleIsTicketShow(issue)
-      return
 
 
   ###
