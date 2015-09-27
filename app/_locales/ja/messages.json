@@ -32,19 +32,16 @@
     "message": "認証に失敗しました。。。"
   },
   "msgAccountRemoved": {
-    "message": "{0} は削除しました."
+    "message": "\"{0}\" は削除しました."
   },
   "msgLoadIssueFail": {
     "message": "チケットの読み込みに失敗しました。"
   },
-  "msgIssueTracking": {
-    "message": "{0} は現在トラッキング中です。"
-  },
   "msgAdded": {
-    "message": "{0} を追加"
+    "message": "\"{0}\" を追加"
   },
   "msgRemoved": {
-    "message": "{0} を削除"
+    "message": "\"{0}\" を削除"
   },
   "msgOptionSaved": {
     "message": "オプションを保存しました."
@@ -76,9 +73,6 @@
   "msgLoadProjectFail": {
     "message": "{0} の読み込みに失敗しました。"
   },
-  "msgSetQuery": {
-    "message": "{0} がプロジェクト {1} で使用されます."
-  },
   "msgLoadQueryFail": {
     "message": "{0} のカスタムクエリの読み込みに失敗しました。"
   },
@@ -86,13 +80,12 @@
     "message": "{0} のステータスの読み込みに失敗しました。"
   },
   "msgIssueClosed": {
-    "message": "{0} はクローズされました."
+    "message": "\"{0}\" はクローズされました."
   },
   "msgIssueMissing": {
-    "message": "{0} は {1} で見つかりませんした."
+    "message": "\"{0}\" は {1} で見つかりませんした."
   },
   "msgCommentTooLong": {
     "message": "コメント は255文字以内で入力してください。"
   }
 }
-

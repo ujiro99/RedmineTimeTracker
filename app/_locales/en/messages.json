@@ -32,19 +32,16 @@
     "message": "Failed authentication."
   },
   "msgAccountRemoved": {
-    "message": "{0} removed."
+    "message": "\"{0}\" removed."
   },
   "msgLoadIssueFail": {
     "message": "Failed to load issues."
   },
-  "msgIssueTracking": {
-    "message": "{0} is being tracked now."
-  },
   "msgAdded": {
-    "message": "{0} added."
+    "message": "\"{0}\" added."
   },
   "msgRemoved": {
-    "message": "{0} removed."
+    "message": "\"{0}\" removed."
   },
   "msgOptionSaved": {
     "message": "Option saved."
@@ -76,9 +73,6 @@
   "msgLoadProjectFail": {
     "message": "Failed to load {0}. "
   },
-  "msgSetQuery": {
-    "message": "{0} will be used in {1}."
-  },
   "msgLoadQueryFail": {
     "message": "Failed to load custom queries on {0}."
   },
@@ -86,10 +80,10 @@
     "message": "Failed to load statuses of issue on {0}."
   },
   "msgIssueClosed": {
-    "message": "{0} was closed."
+    "message": "\"{0}\" was closed."
   },
   "msgIssueMissing": {
-    "message": "{0} was not found on {1}."
+    "message": "\"{0}\" was not found on {1}."
   },
   "msgCommentTooLong": {
     "message": "Comment is too long (maximum is 255 characters)"
