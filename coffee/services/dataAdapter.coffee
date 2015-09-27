@@ -6,6 +6,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
   class DataModel
 
     constructor: () ->
+
       ###*
       # @property account
       # @type AccountModel
@@ -36,6 +37,12 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       ###
       @queries = []
 
+      ###*
+      # @property Statuses
+      # @type Array of StatusModel
+      ###
+      @statuses = []
+
 
   class DataAdapter extends EventDispatcher
 
@@ -53,6 +60,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # constructor
     ###
     constructor: () ->
+      @_bindDataModelGetter()
       Option.onChanged (e) =>
         if e.hasOwnProperty("isProjectStarEnable")
           @_updateStarredProjects()
@@ -298,6 +306,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       Log.debug("setQueries: #{url}")
 
     ###*
+    # set Statuses.
+    # @param {Array} status - array of StatusModel
+    ###
+    setStatuses: (url, statuses) ->
+      if not url? or not statuses? then return
+      @_data[url].statuses = statuses
+      Log.debug("setStatuses: #{url}")
+
+    ###*
     # sort tickets.
     #  order: account -> project -> ticket
     ###
@@ -342,6 +359,13 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       starredAccount = { name: Const.STARRED, url: Const.STARRED ,projects: starred }
       @_filteredData.add(starredAccount, 0)
 
+    ###*
+    # bind getter for DataModel's properties.
+    ###
+    _bindDataModelGetter: () =>
+      for prop, value of new DataModel
+        methodName = "get" + prop.camelize()
+        DataAdapter.prototype[methodName] = (url) -> return @_data[url][prop]
 
   return new DataAdapter
 
