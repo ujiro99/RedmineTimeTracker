@@ -192,4 +192,18 @@ timeTracker.value "TestData", ()->
       "limit":25
     }
 
+    statuses: [
+      {
+        id: 1
+        name: "New"
+        is_default: true
+        is_closed: false
+      }, {
+        id: 2
+        name: "Closed"
+        is_default: false
+        is_closed: true
+      }
+    ]
+
   }
