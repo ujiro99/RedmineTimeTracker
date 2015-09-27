@@ -53,7 +53,7 @@
     "message": "保存に失敗しました。"
   },
   "msgClearDataSucess": {
-    "message": "{0}を消去しました。"
+    "message": "{0} を消去しました。"
   },
   "msgClearDataFail": {
     "message": "消去に失敗しました。"
@@ -80,7 +80,16 @@
     "message": "{0} がプロジェクト {1} で使用されます."
   },
   "msgLoadQueryFail": {
-    "message": "カスタムクエリの読み込みに失敗しました。"
+    "message": "{0} のカスタムクエリの読み込みに失敗しました。"
+  },
+  "msgLoadStatusesFail": {
+    "message": "{0} のステータスの読み込みに失敗しました。"
+  },
+  "msgIssueClosed": {
+    "message": "{0} はクローズされました."
+  },
+  "msgIssueMissing": {
+    "message": "{0} は {1} で見つかりませんした."
   },
   "msgCommentTooLong": {
     "message": "コメント は255文字以内で入力してください。"
