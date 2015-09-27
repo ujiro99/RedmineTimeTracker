@@ -31,6 +31,15 @@
   "msgAuthFail": {
     "message": "Failed authentication."
   },
+  "msgNotFoundError": {
+    "message": "Can not find the page on server."
+  },
+  "msgAccessError": {
+    "message": "Can not access to server."
+  },
+  "msgUrlFormatError": {
+    "message": "Format of the URL is incorrect."
+  },
   "msgAccountRemoved": {
     "message": "\"{0}\" removed."
   },
@@ -65,7 +74,7 @@
     "message": "Time Entry saved."
   },
   "msgSubmitTimeFail": {
-    "message": "Save failed."
+    "message": "Save failed. "
   },
   "msgLoadProjectSuccess": {
     "message": "{0} loaded."

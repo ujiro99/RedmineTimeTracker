@@ -29,6 +29,14 @@ if not ('format' in String.prototype)
 
 
 ###
+ test this string is URL.
+###
+if not ('isUrl' in String.prototype)
+  String.prototype.isUrl = () ->
+    return /^(https?):\/\/((?:[a-z0-9.-]|%[0-9A-F]{2}){3,})(?::(\d+))?((?:\/(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})*)*)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:\/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:\/?@]|%[0-9A-F]{2})*))?$/i.test(this)
+
+
+###
  clear array.
 ###
 if not ('clear' in Array.prototype)
@@ -105,6 +113,8 @@ Function::property = (prop, desc) ->
   getUrl: (href) ->
     l = document.createElement('a')
     l.href = href
+    if l.protocol is "chrome-extension:"
+      l.href = "http://" + href
     return (l.protocol + "//" + l.host + l.pathname).replace(/\/$/, '')
 
   ###

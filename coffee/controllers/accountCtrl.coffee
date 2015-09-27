@@ -38,7 +38,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   ###
    add account.
   ###
-  addAccount = (msg) ->
+  addAccount = (msg, status) ->
     if msg?.user?.id?
       $scope.option.url = msg.account.url
       Account.addAccount msg.account, (result, account) ->
@@ -48,18 +48,26 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
           Message.toast Resource.string("msgAuthSuccess"), 3000
           Analytics.sendEvent 'internal', 'auth', 'success'
         else
-          failAuthentication null
+          failAuthentication(null, status)
     else
-      failAuthentication msg
+      failAuthentication(msg, status)
 
 
   ###
    fail to save
   ###
-  failAuthentication = (msg) ->
+  failAuthentication = (msg, status) ->
     State.isSaving = false
-    Message.toast Resource.string("msgAuthFail"), 3000
-    Analytics.sendEvent 'internal', 'auth', 'fail'
+    if status is Const.URL_FORMAT_ERROR
+      message = Resource.string("msgUrlFormatError")
+    else if status is Const.ACCESS_ERROR
+      message = Resource.string("msgAccessError") + Resource.string("status").format(status)
+    else if status is Const.NOT_FOUND
+      message = Resource.string("msgNotFoundError") + Resource.string("status").format(status)
+    else
+      message = Resource.string("msgAuthFail") + Resource.string("status").format(status)
+    Message.toast message, 3000
+    Analytics.sendEvent 'internal', 'authFail', status
 
 
   ###

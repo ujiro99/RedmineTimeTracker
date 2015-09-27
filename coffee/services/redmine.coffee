@@ -31,9 +31,6 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
 
 class Redmine
 
-  @OK = 200
-  @NOT_FOUND = 404
-  @UNAUTHORIZED = 401
   @CONTENT_TYPE: "application/json"
   @AJAX_TIME_OUT: 30 * 1000
   @LIMIT_MAX: 100
@@ -215,7 +212,7 @@ class Redmine
         @Log.debug("getIssuesById: error")
         @Log.debug data
         issue = @Ticket.new(url: @auth.url, id:  issueId)
-        if status isnt Redmine.NOT_FOUND or status isnt Redmine.UNAUTHORIZED
+        if status isnt @Const.NOT_FOUND or status isnt @Const.UNAUTHORIZED
           @Analytics.sendException("Error: getIssuesById")
         error?(issue, status))
 
@@ -237,13 +234,13 @@ class Redmine
     config = @_setBasicConfig config, @auth
     config.headers = "Content-Type": "application/xml"
     @$http(config)
-      .success((data) =>
+      .success((args...) =>
         @Analytics.sendEvent 'internal', 'submitTime', 'success', @_timeEntryData.time_entry.hours
-        success(data))
-      .error((data) =>
-        @Log.debug data
+        success(args...))
+      .error((args...) =>
+        @Log.debug args
         @Analytics.sendException("Error: submitTime")
-        error(data))
+        error(args...))
 
 
   ###
@@ -313,7 +310,7 @@ class Redmine
       url: @auth.url + "/users/current.json?include=memberships"
     config = @_setBasicConfig config, @auth
     @$http(config)
-      .success( (data, status, headers, config) =>
+      .success((data, status, headers, config) =>
         if not data.user or not data.user.id
           error(data, status, headers, config)
           return
@@ -325,10 +322,12 @@ class Redmine
   ###
    find user recursive.
   ###
-  _findUser: (success, error) ->
+  _findUser: (success, error, args...) ->
     @auth.url = @auth.url.substring(0, @auth.url.lastIndexOf('/'))
-    if not @auth.url.match(/^https?:\/\/.+/) then error(); return
-    @_getUser(success, () => @_findUser(success, error))
+    if not @auth.url.match(/^https?:\/\/.+/)
+      error(args...)
+      return
+    @_getUser(success, (msg...) => @_findUser(success, error, msg...))
 
 
   ###
@@ -336,6 +335,9 @@ class Redmine
   ###
   findUser: (success, error) ->
     @auth.url = @auth.url + '/'
+    if not @auth.url.isUrl()
+      error(null, @Const.URL_FORMAT_ERROR)
+      return
     @_findUser((data) =>
         data.account = @auth
         success(data)

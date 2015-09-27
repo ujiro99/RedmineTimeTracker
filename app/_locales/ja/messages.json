@@ -31,6 +31,15 @@
   "msgAuthFail": {
     "message": "認証に失敗しました。。。"
   },
+  "msgUrlFormatError": {
+    "message": "URLの形式が正しくありません。"
+  },
+  "msgNotFoundError": {
+    "message": "ページが見つかりませんでした。"
+  },
+  "msgAccessError": {
+    "message": "サーバへアクセス出来ませんでした。"
+  },
   "msgAccountRemoved": {
     "message": "\"{0}\" は削除しました."
   },

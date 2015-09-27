@@ -141,9 +141,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
         hours:      hours
         comment:    $scope.comment.text
         activityId: DataAdapter.selectedActivity.id
-      Log.debug conf
       url = DataAdapter.selectedTicket.url
-      Redmine.get(DataAdapter.selectedAccount).submitTime(conf, submitSuccess, submitError)
+      Redmine.get(DataAdapter.selectedAccount).submitTime(conf, submitSuccess, submitError(conf))
       Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
     else
       Message.toast Resource.string("msgShortTime")
@@ -152,18 +151,18 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
    show success message.
   ###
-  submitSuccess = (msg) ->
+  submitSuccess = (msg, status) ->
     if msg?.time_entry?.id?
       Message.toast Resource.string("msgSubmitTimeSuccess")
     else
-      submitError msg
+      submitError(msg, status)
 
 
   ###
    show failed message.
   ###
-  submitError = (msg) ->
-    Message.toast Resource.string("msgSubmitTimeFail")
+  submitError = (conf) -> (msg, status) ->
+    Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status").format(status))
     Log.warn conf
 
 
