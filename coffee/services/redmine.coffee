@@ -250,7 +250,7 @@ class Redmine
    laod time entry. uses promise.
   ###
   loadTimeEntries: (params) ->
-    r = @_bindDefer(null, null, "loadQueries")
+    r = @_bindDefer(null, null, "loadTimeEntries")
     params = params or {}
     params.limit = params.limit or Redmine.LIMIT_MAX
     config =
@@ -271,7 +271,7 @@ class Redmine
   ###
   loadProjects: (params) =>
     @Log.debug "loadProjects start"
-    deferred = @$q.defer()
+    r = @_bindDefer(null, null, "loadProjects")
 
     params = params or {}
     params.limit = params.limit or Redmine.LIMIT_MAX
@@ -294,13 +294,13 @@ class Redmine
           @Log.groupCollapsed "redmine.loadProjects()"
           @Log.table data.projects
           @Log.groupEnd "redmine.loadProjects()"
-        deferred.resolve(data, status))
+        r.success(data, status))
       .error((data, status, headers, config) =>
         if data is "" then data = {error: "Cann't connection.", stats: status}
         data.account = @auth
-        deferred.reject(data, status))
+        r.error(data, status))
 
-    return deferred.promise
+    return r.promise
 
 
   ###
@@ -356,6 +356,7 @@ class Redmine
         args[0].url = @auth.url
         r.success(args...))
       .error(r.error)
+    return r.promise
 
 
   ###
@@ -374,5 +375,21 @@ class Redmine
       .success((args...) =>
         args[0].url = @auth.url
         r.success(args[0]))
-      .error((args...) -> r.error(args[0]))
+      .error(r.error)
+    return r.promise
+
+  ###
+   laod status. uses promise.
+  ###
+  loadStatuses: () ->
+    r = @_bindDefer(null, null, "loadStatuses")
+    config =
+      method: "GET"
+      url: @auth.url + "/issue_statuses.json"
+    config = @_setBasicConfig config, @auth
+    @$http(config)
+      .success((args...) =>
+        args[0].url = @auth.url
+        r.success(args[0]))
+      .error(r.error)
     return r.promise
