@@ -1,4 +1,4 @@
-timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
+timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
   TICKET = "TICKET"
 
@@ -299,28 +299,33 @@ timeTracker.factory("Ticket", (Project, Analytics, Chrome, Log) ->
      load all tickets from chrome sync.
     ###
     load: (callback) ->
+      Log.debug "Ticket.load() start"
+      deferred = $q.defer()
       _loadLocal (localTickets, missingUrlIndex) =>
         if localTickets?
           Log.info 'ticket loaded from local'
-          Log.groupCollapsed 'ticket loaded'
+          Log.groupCollapsed 'Ticket.load() loaded'
           Log.table localTickets
-          Log.groupEnd 'ticket loaded'
+          Log.groupEnd 'Ticket.load() loaded'
           @set localTickets, (res, msg) ->
             if not missingUrlIndex?.isEmpty()
               msg = msg or {}
               msg = Object.merge(msg, {missing: missingUrlIndex})
-            callback localTickets, msg
+            deferred.resolve(localTickets, msg)
+            callback(localTickets, msg)
         else
           _loadSync (syncTickets, missingUrlIndex) =>
             Log.info 'ticket loaded from sync'
-            Log.groupCollapsed 'ticket loaded'
+            Log.groupCollapsed 'Ticket.load() loaded'
             Log.table localTickets
-            Log.groupEnd 'ticket loaded'
+            Log.groupEnd 'Ticket.load() loaded'
             @set syncTickets, (res, msg) ->
               if not missingUrlIndex?.isEmpty()
                 msg = msg or {}
                 msg = Object.merge(msg, {missing: missingUrlIndex})
-              callback syncTickets, msg
+              deferred.resolve(syncTickets, msg)
+              callback(syncTickets, msg)
+      return deferred.promise
 
 
     ###

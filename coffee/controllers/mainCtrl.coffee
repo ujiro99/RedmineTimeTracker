@@ -10,7 +10,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   # don't use query
   QUERY_ALL_ID = 0
 
-
   # list for toast Message.
   $rootScope.messages = []
 
@@ -21,41 +20,42 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     deferred = $q.defer()
     deferred.promise
       .then(_initializeEvents)
-      .then(_initializeData)
+      .then(_initializeDataFromChrome)
       .then(_setDataSyncAlarms)
     deferred.resolve()
-
 
   ###
    initialize GoogleAnalytics.
   ###
   _initializeGoogleAnalytics = () ->
-    Log.debug "start initialize GoogleAnalytics."
     Analytics.init {
       serviceName:   "RedmineTimeTracker"
       analyticsCode: "UA-32234486-7"
     }
-    Log.debug("GoogleAnalytics is " + $scope.options.reportUsage)
-    Analytics.setPermission $scope.options.reportUsage
+    Analytics.setPermission Option.getOptions().reportUsage
     Analytics.sendView("/app/")
-
+    Log.info("GoogleAnalytics enable: " + Option.getOptions().reportUsage)
 
   ###
    initialize events.
   ###
   _initializeEvents = () ->
     Log.debug "start initialize Event."
-    DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, (accounts) ->
-      for a in accounts
-        _loadProjects(a)
-        _loadActivities(a)
-        _loadQueries(a)
-        _loadStatuses(a)
-          .then(_loadIssues(a))
+    DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.set(DataAdapter.tickets)
     Log.debug "finish initialize Event."
 
+  ###
+   load projects from redmine.
+  ###
+  _loadRedmine = (accounts) ->
+    for a in accounts
+      _loadProjects(a)
+      _loadActivities(a)
+      _loadQueries(a)
+      _loadStatuses(a)
+        .then(_loadIssues(a))
 
   ###
    load projects from redmine.
@@ -63,7 +63,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _loadProjects = (a) ->
     Redmine.get(a).loadProjects(page: 1, limit: 50)
       .then(_successLoadProject, _errorLoadProject)
-
 
   ###
    load projects from redmine.
@@ -80,7 +79,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     else
       _errorLoadProject data
 
-
   ###
    show error message.
   ###
@@ -89,17 +87,16 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Log.debug("_errorLoadProjects() start")
     Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 3000
 
-
   ###
    load activities for account.
    @param account {AccountModel} - load from this account.
   ###
   _loadActivities = (account) ->
-    Redmine.get(account).loadActivities (data) ->
-      if not data?.time_entry_activities? then return
-      Log.info "Redmine.loadActivities success"
-      DataAdapter.setActivities(data.url, data.time_entry_activities)
-
+    Redmine.get(account).loadActivities()
+      .then((data) ->
+        if not data?.time_entry_activities? then return
+        Log.info "Redmine.loadActivities success"
+        DataAdapter.setActivities(data.url, data.time_entry_activities))
 
   ###
    load queries for account.
@@ -110,24 +107,12 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       page: 1
       limit: 50
     Redmine.get(account).loadQueries(params)
-      .then(_updateQuery, _errorLoadQuery)
-
-
-  ###
-   update query by redmine's data.
-  ###
-  _updateQuery = (data) =>
-    data.queries.add({id: QUERY_ALL_ID, name: 'All'}, 0)
-    DataAdapter.setQueries(data.url, data.queries)
-
-
-  ###
-   show error messaga.
-  ###
-  _errorLoadQuery = (data, status) =>
-    if status is STATUS_CANCEL then return
-    Message.toast Resource.string("msgLoadQueryFail").format(data.account.name), 2000
-
+      .then((data) ->
+        data.queries.add({id: QUERY_ALL_ID, name: 'All'}, 0)
+        DataAdapter.setQueries(data.url, data.queries)
+      , (data, status) =>
+        if status is STATUS_CANCEL then return
+        Message.toast Resource.string("msgLoadQueryFail").format(data.account.name), 2000)
 
   ###
    load statuses for account.
@@ -187,12 +172,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Message.toast(Resource.string("msgRequestAddAccount_1"), 5000)
     , 2500
 
-
   ###
    initialize Data from chrome storage.
   ###
-  _initializeData = () ->
-    deferred = $q.defer()
+  _initializeDataFromChrome = () ->
     Log.debug "start initialize data."
     Option.loadOptions()
       .then((options) -> $scope.options = options)
@@ -202,51 +185,26 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       .then(_initializeIssues)
       .then(() -> DataAdapter.addAccounts(Account.getAccounts()))
       .then(() -> Log.debug "finish initialize data.")
-      .then(() -> deferred.resolve())
-    return deferred.promise
-
 
   ###
    Initialize account from chrome storage.
   ###
   _initializeAccount = () ->
-    deferred = $q.defer()
-    Log.debug "start Account.load()"
     Account.load().then (accounts) ->
-      Log.debug "Account.load() success"
       if not accounts? or not accounts?[0]?
         _requestAddAccount()
-        deferred.reject()
-      deferred.resolve()
-    return deferred.promise
-
 
   ###
    Initialize project from chrome storage.
   ###
-  _initializeProject = () ->
-    deferred = $q.defer()
-    Log.debug "start Project.load()"
-    Project.load().then () ->
-      Log.debug "Project.load() success"
-      deferred.resolve()
-    return deferred.promise
-
+  _initializeProject = () -> Project.load()
 
   ###
    Initialize issues status.
   ###
   _initializeIssues = () ->
-    deferred = $q.defer()
-    Log.debug "start Ticket.load()"
     Ticket.load (tickets) ->
-      Log.groupCollapsed "Ticket.load() success"
-      Log.debug tickets
-      Log.groupEnd "Ticket.load() success"
       DataAdapter.toggleIsTicketShow(tickets)
-      deferred.resolve()
-    return deferred.promise
-
 
   ###
    set datasync event to chrome alarms.
@@ -261,7 +219,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Ticket.set(DataAdapter.tickets)
       Ticket.sync()
       Project.sync()
-
 
   ###
    Start Initialize.

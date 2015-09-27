@@ -111,6 +111,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
      @return {Array} AccountModel[]
     ###
     load: () ->
+      Log.debug "Account.load() start"
       deferred = $q.defer()
 
       Chrome.storage.sync.get ACCOUNTS, (item) ->

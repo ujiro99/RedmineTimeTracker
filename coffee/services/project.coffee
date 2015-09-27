@@ -197,6 +197,7 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
      load all projects from chrome sync.
     ###
     load: () =>
+      Log.debug "Project.load() start"
       deferred = $q.defer()
       @_load Chrome.storage.local, (local) =>
         if local?
