@@ -139,6 +139,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _upsateIssue = (target) -> (issue) ->
     for k, v of issue then target[k] = v
+    return if not Option.getOptions().removeClosedTicket
     # remove closed issues.
     statuses = DataAdapter.getStatuses(target.url)
     status = statuses.find (n) -> n.id is target.status.id

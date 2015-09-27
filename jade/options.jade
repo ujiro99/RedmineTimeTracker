@@ -20,9 +20,17 @@ div#options(ng-controller='OptionCtrl')
     div.setting__labels
       label.control-label Enable Project's Star
       div.setting__description
-        span Use star in Project Selection.
+        span Use star in Project Select list.
     div.setting__options
       input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.isProjectStarEnable")
+
+  div.setting__section.form-group
+    div.setting__labels
+      label.control-label Remove Closed Issues
+      div.setting__description
+        span Remove closed issues from select list automatically on startup.
+    div.setting__options
+      input.switch.setting__button(type="checkbox", name="removeClosedTicket", ng-model="options.removeClosedTicket")
 
   div.setting__section.form-group
     div.setting__labels
@@ -36,7 +44,7 @@ div#options(ng-controller='OptionCtrl')
     div.setting__labels
       label.control-label Clear Ticket & Project
       div.setting__description
-        span Remove all tickets and project from list.
+        span Remove all tickets and project from select list.
     div.setting__options
       button.btn.btn-default.btn-sm.loading(ng-click='clearTickets()',
                                             uz-loading='isSetting',
