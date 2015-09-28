@@ -253,7 +253,6 @@ module.exports = (grunt) ->
     'clean',
     'bower:install',
     'copy:dist',
-    'chromeManifest:dist',
     'coffee:production',
     'jade:production',
     'stylus:production',
@@ -263,11 +262,13 @@ module.exports = (grunt) ->
   grunt.registerTask 'release-minor', [
     'production',
     'release:minor',
+    'chromeManifest:dist',
     'compress'
   ]
 
   grunt.registerTask 'release-patch', [
     'production',
     'release:patch',
+    'chromeManifest:dist',
     'compress'
   ]
