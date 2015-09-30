@@ -154,6 +154,14 @@ class Redmine
 
 
   ###
+   load issues pararell.
+  ###
+  getIssuesPararell: (params, success, error) ->
+    o = @_bindDefer(success, error, "getIssuesPararell")
+    @_getIssues(params, o.success, o.error).promise
+
+
+  ###
    load issues from `start` to `end`.
   ###
   getIssuesRange: (params, start, end, success, error) ->

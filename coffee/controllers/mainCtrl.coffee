@@ -43,11 +43,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _loadRedmine = (accounts) ->
     for a in accounts
-      _loadProjects(a)
       _loadActivities(a)
       _loadQueries(a)
-      _loadStatuses(a)
+      $q.all([_loadProjects(a), _loadStatuses(a)])
         .then(_loadIssues(a))
+        .then(_loadIssueCount(a))
 
   ###
    load projects from redmine.
@@ -146,6 +146,18 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     if status is NOT_FOUND or status is UNAUTHORIZED
       DataAdapter.toggleIsTicketShow(issue)
       Message.toast(Resource.string("msgIssueMissing").format(target.text, account.name), 3000)
+
+  ###
+   count project's issues count.
+  ###
+  _loadIssueCount = (account) -> () ->
+    projects = DataAdapter.getProjects(account.url)
+    projects.map (p) ->
+      params = limit: 1, project_id: p.id, status_id: "open"
+      Redmine.get(account).getIssuesPararell(params)
+        .then((d) ->
+          p.ticketCount = d.total_count
+          Log.debug("project: " + p.text + "\tticketCount: " + p.ticketCount))
 
   ###
    request a setup of redmine account to user.

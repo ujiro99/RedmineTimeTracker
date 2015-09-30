@@ -188,6 +188,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
             if filtered.length > 0
               @_filteredData.push dataModel.account
               dataModel.account.projects = filtered
+        @_excludeNonTicketProject()
         @_updateStarredProjects()
         Log.timeEnd('projectQuery\t')
 
@@ -236,6 +237,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         a.projects = a.projects or []
         a.projects.add(projects)
       if not @selectedProject then @selectedProject = projects[0]
+      @_excludeNonTicketProject()
       @_updateStarredProjects()
 
     ###*
@@ -359,12 +361,21 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @_filteredData.add(starredAccount, 0)
 
     ###*
+    # exclude project which not has opend tickets.
+    ###
+    _excludeNonTicketProject: () ->
+      for account in @_filteredData
+        continue if not account.projects
+        account.projects.set(account.projects.filter (p) -> p.ticketCount > 0)
+
+    ###*
     # bind getter for DataModel's properties.
     ###
     _bindDataModelGetter: () =>
-      for prop, value of new DataModel
-        methodName = "get" + prop.camelize()
-        DataAdapter.prototype[methodName] = (url) -> return @_data[url][prop]
+      bind = (p) ->
+        methodName = "get" + p.camelize()
+        DataAdapter.prototype[methodName] = (url) -> return @_data[url][p]
+      for prop, value of new DataModel then bind(prop)
 
   return new DataAdapter
 
