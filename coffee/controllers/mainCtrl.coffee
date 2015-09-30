@@ -20,21 +20,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     deferred = $q.defer()
     deferred.promise
       .then(_initializeEvents)
+      .then(_initializeGoogleAnalytics)
       .then(_initializeDataFromChrome)
       .then(_setDataSyncAlarms)
     deferred.resolve()
-
-  ###
-   initialize GoogleAnalytics.
-  ###
-  _initializeGoogleAnalytics = () ->
-    Analytics.init {
-      serviceName:   "RedmineTimeTracker"
-      analyticsCode: "UA-32234486-7"
-    }
-    Analytics.setPermission Option.getOptions().reportUsage
-    Analytics.sendView("/app/")
-    Log.info("GoogleAnalytics enable: " + Option.getOptions().reportUsage)
 
   ###
    initialize events.
@@ -44,6 +33,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.set(DataAdapter.tickets)
+    Option.onChanged('reportUsage', (e) ->
+      Analytics.setPermission e
+      Log.info("GoogleAnalytics enable: " + Option.getOptions().reportUsage))
     Log.debug "finish initialize Event."
 
   ###
@@ -174,12 +166,21 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     , 2500
 
   ###
+   initialize GoogleAnalytics.
+  ###
+  _initializeGoogleAnalytics = () ->
+    Analytics.init {
+      serviceName:   "RedmineTimeTracker"
+      analyticsCode: "UA-32234486-7"
+    }
+    Analytics.sendView("/app/")
+
+  ###
    initialize Data from chrome storage.
   ###
   _initializeDataFromChrome = () ->
     Log.debug "start initialize data."
     Option.loadOptions()
-      .then(_initializeGoogleAnalytics)
       .then(_initializeAccount)
       .then(_initializeProject)
       .then(_initializeIssues)
