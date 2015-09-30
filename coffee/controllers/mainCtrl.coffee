@@ -179,7 +179,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _initializeDataFromChrome = () ->
     Log.debug "start initialize data."
     Option.loadOptions()
-      .then((options) -> $scope.options = options)
       .then(_initializeGoogleAnalytics)
       .then(_initializeAccount)
       .then(_initializeProject)

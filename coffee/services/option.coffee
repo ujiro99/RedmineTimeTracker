@@ -10,13 +10,13 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       itemsPerPage: 20
     @_options: @DEFAULT_OPTION
     @_events: []
+    @_eventsWithKey: {}
 
     ###
      constructor.
     ###
     constructor: () ->
-      for k, v of Option.DEFAULT_OPTION
-        @addOptionKey(k)
+      Object.observe(Option._options, _onChanged)
 
     ###
      get all option data.
@@ -25,23 +25,14 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       return Option._options
 
     ###
-     add a option's key name.
-     @param {String} key - option's key.
-    ###
-    addOptionKey: (key) ->
-      value = Option._options[key]
-      Object.defineProperty Option._options, key,
-        get: -> value
-        set: (n) ->
-          value = n
-          obj = {}
-          obj[key] = n
-          Option._events.map (e) -> e(obj)
-
-    ###
      add a event listner for change value.
     ###
-    onChanged: (f) -> Option._events.push f
+    onChanged: (key, f) ->
+      if Object.isString(key)
+        Option._eventsWithKey[key] = Option._eventsWithKey[key] or []
+        Option._eventsWithKey[key].push f
+      else
+        Option._events.push key # this is function
 
     ###
      load all option data.
@@ -95,6 +86,19 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
 
       return deferred.promise
 
+    ###*
+    # on changed lister.
+    # @param {Array} changes - parameter of changes.
+    # @param {String} changes[n].name: The name of the property which was changed.
+    # @param {Object} changes[n].object: The changed object after the change was made.
+    # @param {String} changes[n].type: A string indicating the type of change taking place. One of "add", "update", or "delete".
+    # @param {Object} changes[n].oldValue: Only for "update" and "delete" types. The value before the change.
+    ###
+    _onChanged = (changes) ->
+      changes.map (e) ->
+        Option._events.map (f) -> f(e)
+        Option._eventsWithKey[e.name]?.map (f) ->
+          f(e.object[e.name], e.oldValue[e.name])
 
   return new Option()
 

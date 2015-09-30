@@ -61,9 +61,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     constructor: () ->
       @_bindDataModelGetter()
-      Option.onChanged (e) =>
-        if e.hasOwnProperty("isProjectStarEnable")
-          @_updateStarredProjects()
+      Option.onChanged "isProjectStarEnable", (e) =>
+        @_updateStarredProjects()
 
     ###*
     # all data.

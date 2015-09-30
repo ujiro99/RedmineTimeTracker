@@ -22,9 +22,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   ###
    if option was changed, save it.
   ###
-  syncOptions = (newVal) ->
-    if newVal.reportUsage
-      Analytics.setPermission newVal.reportUsage
+  syncOptions = () ->
     $timeout.cancel(timeoutPromise)
     timeoutPromise = $timeout ->
       Option.syncOptions().then(sucessSyncOptions, failSyncOptions)
