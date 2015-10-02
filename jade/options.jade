@@ -26,6 +26,14 @@ div#options(ng-controller='OptionCtrl')
 
   div.setting__section.form-group
     div.setting__labels
+      label.control-label Hide Projects
+      div.setting__description
+        span Hide Projects which doesn't have opened tickets.
+    div.setting__options
+      input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.hideNonTicketProject")
+
+  div.setting__section.form-group
+    div.setting__labels
       label.control-label Remove Closed Issues
       div.setting__description
         span Remove closed issues from select list automatically on startup.

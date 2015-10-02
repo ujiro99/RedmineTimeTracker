@@ -52,9 +52,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     TICKETS_CHANGED:          "tickets_changed"
     SELECTED_ACCOUNT_CHANGED: "selected_account_changed"
     SELECTED_PROJECT_CHANGED: "selected_project_changed"
+    SELECTED_PROJECT_UPDATED: "selected_project_updated"
     SELECTED_TICKET_CHANGED:  "selected_ticket_changed"
     SELECTED_QUERY_CHANGED:   "selected_query_changed"
-    SELECTED_PROJECT_UPDATED: "selected_project_updated"
 
     ###*
     # constructor
@@ -174,21 +174,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       set: (query) ->
         Log.time('projectQuery\t')
         @_projectQuery = query
-        @_filteredData = []
-        if not query? or query.isBlank()
-          for url, dataModel of @_data
-            @_filteredData.push dataModel.account
-            dataModel.account.projects.set(dataModel.projects)
-        else
-          substrRegexs = query.split(' ').map (q) -> new RegExp(util.escapeRegExp(q), 'i')
-          for url, dataModel of @_data
-            filtered = dataModel.projects.filter (n) ->
-              text = n.id + " " + n.text
-              return substrRegexs.every (r) -> r.test(text)
-            if filtered.length > 0
-              @_filteredData.push dataModel.account
-              dataModel.account.projects = filtered
-        @_excludeNonTicketProject()
+        @_filterProjectsByQuery()
+        @_filterProjectsByIssueCount()
         @_updateStarredProjects()
         Log.timeEnd('projectQuery\t')
 
@@ -198,7 +185,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     addAccounts: (accounts) ->
       if not accounts? or accounts.length is 0 then return
-      Log.debug("addAccounts")
       for a in accounts
         @_data[a.url] = new DataModel()
         @_data[a.url].account = a
@@ -237,7 +223,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         a.projects = a.projects or []
         a.projects.add(projects)
       if not @selectedProject then @selectedProject = projects[0]
-      @_excludeNonTicketProject()
+      @_filterProjectsByIssueCount()
       @_updateStarredProjects()
 
     ###*
@@ -250,6 +236,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
       for a in @_filteredData when a.projects and a.url is projects[0].url
         a.projects.remove((n) -> return n.equals(p))
+      @_updateStarredProjects()
+
+    ###*
+    # filter project which has opend tickets.
+    ###
+    updateProjects: () ->
+      @_filterProjectsByQuery()
+      @_filterProjectsByIssueCount()
       @_updateStarredProjects()
 
     ###*
@@ -343,6 +337,37 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         if isBselected then return  1
 
     ###*
+    # filter projects by projectQuery.
+    ###
+    _filterProjectsByQuery: () ->
+      @_filteredData = []
+      if not @projectQuery? or @projectQuery.isBlank()
+        for url, dataModel of @_data
+          @_filteredData.push dataModel.account
+          dataModel.account.projects.set(dataModel.projects)
+      else
+        substrRegexs = @projectQuery.split(' ').map (q) -> new RegExp(util.escapeRegExp(q), 'i')
+        for url, dataModel of @_data
+          filtered = dataModel.projects.filter (n) ->
+            text = n.id + " " + n.text
+            return substrRegexs.every (r) -> r.test(text)
+          if filtered.length > 0
+            @_filteredData.push dataModel.account
+            dataModel.account.projects = filtered
+
+    ###*
+    # filter project which has opend tickets.
+    ###
+    _filterProjectsByIssueCount: () ->
+      return if not Option.getOptions().hideNonTicketProject
+      for a in @_filteredData
+        continue if not a.projects
+        a.projects.set(a.projects.filter (p) -> p.ticketCount > 0)
+      if not @selectedProject or not @selectedProject.ticketCount or @selectedProject.ticketCount is 0
+        for a in @_filteredData when a.projects and a.projects.length > 0
+          @selectedProject = a.projects[0]
+
+    ###*
     # filter and add starred projects.
     ###
     _updateStarredProjects: () =>
@@ -359,14 +384,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       # update
       starredAccount = { name: Const.STARRED, url: Const.STARRED ,projects: starred }
       @_filteredData.add(starredAccount, 0)
-
-    ###*
-    # exclude project which not has opend tickets.
-    ###
-    _excludeNonTicketProject: () ->
-      for account in @_filteredData
-        continue if not account.projects
-        account.projects.set(account.projects.filter (p) -> p.ticketCount > 0)
 
     ###*
     # bind getter for DataModel's properties.

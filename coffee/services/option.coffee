@@ -7,6 +7,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       reportUsage: true
       isProjectStarEnable: true
       removeClosedTicket: true
+      hideNonTicketProject: true
       itemsPerPage: 20
     @_options: @DEFAULT_OPTION
     @_events: []

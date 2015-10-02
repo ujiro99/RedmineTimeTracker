@@ -151,13 +151,15 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    count project's issues count.
   ###
   _loadIssueCount = (account) -> () ->
+    return if not Option.getOptions().hideNonTicketProject
     projects = DataAdapter.getProjects(account.url)
-    projects.map (p) ->
+    promises = projects.map (p) ->
       params = limit: 1, project_id: p.id, status_id: "open"
       Redmine.get(account).getIssuesPararell(params)
         .then((d) ->
           p.ticketCount = d.total_count
           Log.debug("project: " + p.text + "\tticketCount: " + p.ticketCount))
+    $q.all(promises).then(() -> DataAdapter.updateProjects())
 
   ###
    request a setup of redmine account to user.
