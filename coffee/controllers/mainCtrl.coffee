@@ -33,9 +33,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.set(DataAdapter.tickets)
-    Option.onChanged('reportUsage', (e) ->
-      Analytics.setPermission e
-      Log.info("GoogleAnalytics enable: " + Option.getOptions().reportUsage))
+    Option.onChanged('reportUsage', (e) -> Analytics.setPermission(e) )
+    Option.onChanged('hideNonTicketProject',  _toggleProjectHidden)
     Log.debug "finish initialize Event."
 
   ###
@@ -160,6 +159,16 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
           p.ticketCount = d.total_count
           Log.debug("project: " + p.text + "\tticketCount: " + p.ticketCount))
     $q.all(promises).then(() -> DataAdapter.updateProjects())
+
+  ###
+   count project's issues count on all accounts.
+  ###
+  _toggleProjectHidden = (enableHide) ->
+    if not enableHide
+      DataAdapter.updateProjects()
+    else
+      for a in Account.getAccounts()
+        _loadIssueCount(a)()
 
   ###
    request a setup of redmine account to user.
