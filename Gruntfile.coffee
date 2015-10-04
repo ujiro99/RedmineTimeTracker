@@ -224,8 +224,7 @@ module.exports = (grunt) ->
     compress:
       dist:
         options:
-          archive: "package/chrome-<%= config.manifest.version %>.zip"
-
+          archive: "package/chrome-<%= grunt.file.readJSON(config.dist + '/manifest.json').version %>.zip"
         files: [
           expand: true
           cwd: "dist/"
@@ -256,19 +255,18 @@ module.exports = (grunt) ->
     'coffee:production',
     'jade:production',
     'stylus:production',
+    'chromeManifest:dist',
     'minify'
   ]
 
   grunt.registerTask 'release-minor', [
     'production',
     'release:minor',
-    'chromeManifest:dist',
     'compress'
   ]
 
   grunt.registerTask 'release-patch', [
     'production',
     'release:patch',
-    'chromeManifest:dist',
     'compress'
   ]
