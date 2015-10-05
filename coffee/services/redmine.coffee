@@ -102,6 +102,7 @@ class Redmine
     if auth.apiKey? and auth.apiKey.length > 0
       @$http.defaults.headers.common["X-Redmine-API-Key"] = auth.apiKey
     else
+      delete @$http.defaults.headers.common["X-Redmine-API-Key"]
       @$http.defaults.headers.common['Authorization'] = 'Basic ' + @Base64.encode(auth.id + ':' + auth.pass)
     return config
 
