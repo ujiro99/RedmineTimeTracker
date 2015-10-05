@@ -255,18 +255,19 @@ module.exports = (grunt) ->
     'coffee:production',
     'jade:production',
     'stylus:production',
-    'chromeManifest:dist',
     'minify'
   ]
 
   grunt.registerTask 'release-minor', [
     'production',
     'release:minor',
+    'chromeManifest:dist',
     'compress'
   ]
 
   grunt.registerTask 'release-patch', [
     'production',
     'release:patch',
+    'chromeManifest:dist',
     'compress'
   ]
