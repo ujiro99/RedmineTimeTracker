@@ -96,12 +96,16 @@ class Redmine
   ###
    set basic configs for $http.
   ###
-  _setBasicConfig: (config, auth) ->
+  _setBasicConfig: (config, auth, post) ->
     config.headers = "Content-Type": Redmine.CONTENT_TYPE
     config.timeout = config.timeout or Redmine.AJAX_TIME_OUT
     if auth.apiKey? and auth.apiKey.length > 0
-      config.headers["X-Redmine-API-Key"] = auth.apiKey
+      if post
+        @$http.defaults.headers.common["X-Redmine-API-Key"] = auth.apiKey
+      else
+        config.headers["X-Redmine-API-Key"] = auth.apiKey
     else
+      delete @$http.defaults.headers.common["X-Redmine-API-Key"]
       @$http.defaults.headers.common['Authorization'] = 'Basic ' + @Base64.encode(auth.id + ':' + auth.pass)
     return config
 
@@ -239,7 +243,7 @@ class Redmine
       method: "POST"
       url: @auth.url + "/issues/#{@_timeEntryData.time_entry.issue_id}/time_entries.json"
       data: Redmine.JSONtoXML @_timeEntryData
-    config = @_setBasicConfig config, @auth
+    config = @_setBasicConfig config, @auth, true
     config.headers = "Content-Type": "application/xml"
     @$http(config)
       .success((args...) =>
