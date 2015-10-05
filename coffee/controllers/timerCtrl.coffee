@@ -131,21 +131,28 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    send time entry.
   ###
   postEntry = (minutes) ->
-    if minutes >= ONE_MINUTE
-      hours = minutes / 60
-      hours = Math.floor(hours * 100) / 100
-      total = DataAdapter.selectedTicket.total + hours
-      DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
-      conf =
-        issueId:    DataAdapter.selectedTicket.id
-        hours:      hours
-        comment:    $scope.comment.text
-        activityId: DataAdapter.selectedActivity.id
-      url = DataAdapter.selectedTicket.url
-      Redmine.get(DataAdapter.selectedAccount).submitTime(conf, submitSuccess, submitError(conf))
-      Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
-    else
-      Message.toast Resource.string("msgShortTime")
+    if not DataAdapter.selectedTicket
+      Message.toast Resource.string("msgSelectTicket"), 2000
+      return
+    if not DataAdapter.selectedActivity
+      Message.toast Resource.string("msgSelectActivity"), 2000
+      return
+    if minutes < ONE_MINUTE
+      Message.toast Resource.string("msgShortTime"), 2000
+      return
+    hours = minutes / 60
+    hours = Math.floor(hours * 100) / 100
+    total = DataAdapter.selectedTicket.total + hours
+    DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
+    conf =
+      issueId:    DataAdapter.selectedTicket.id
+      hours:      hours
+      comment:    $scope.comment.text
+      activityId: DataAdapter.selectedActivity.id
+    url = DataAdapter.selectedTicket.url
+    account = DataAdapter.getAccount(url)
+    Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
+    Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
 
 
   ###
@@ -162,7 +169,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    show failed message.
   ###
   submitError = (conf) -> (msg, status) ->
-    Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status").format(status))
+    Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status").format(status), 3000)
     Log.warn conf
 
 

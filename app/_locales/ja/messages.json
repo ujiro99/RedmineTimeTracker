@@ -70,6 +70,12 @@
   "msgShortTime": {
     "message": "1分以上の計測が必要です。"
   },
+  "msgSelectActivity": {
+    "message": "\"活動\"を選択してください。"
+  },
+  "msgSelectTicket": {
+    "message": "\"チケット\"を選択してください。"
+  },
   "msgSubmitTimeSuccess": {
     "message": "作業時間を保存しました。"
   },

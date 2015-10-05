@@ -70,6 +70,12 @@
   "msgShortTime": {
     "message": "More than one minute is required."
   },
+  "msgSelectActivity": {
+    "message": "Please choose an Activity."
+  },
+  "msgSelectTicket": {
+    "message": "Please choose a ticket."
+  },
   "msgSubmitTimeSuccess": {
     "message": "Time Entry saved."
   },
