@@ -2,7 +2,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
 
   ID_PASS = 'id_pass'
 
-  $scope.accounts = DataAdapter.accounts
+  $scope.data = DataAdapter
   $scope.option = { apiKey:'', id:'', pass:'', url:'' }
   $scope.authWay = ID_PASS
   $scope.searchField = text: ''

@@ -47,7 +47,7 @@ div#accounts(ng-controller='AccountCtrl')
 
   // list
   ul.account-list
-    li(ng-repeat='account in accounts | filter:accountFilter | orderBy:"url"',
+    li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
        ng-click='openRemoveAccount(account.url)',
        ga-click='openRemoveAccount')
       .number
