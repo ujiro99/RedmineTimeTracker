@@ -5,23 +5,29 @@ describe 'ticket.coffee', ->
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   Ticket = null
-  Project = null
   Chrome = null
   TestData = null
-
+  $rootScope = null
 
   beforeEach () ->
     angular.mock.module('timeTracker')
     # initialize object
-    inject (_Ticket_, _Project_, _Chrome_, _TestData_) ->
+    inject (_Ticket_, _Chrome_, _TestData_, _$rootScope_) ->
       Ticket = _Ticket_
-      Project = _Project_
       Chrome = _Chrome_
       TestData = _TestData_()
+      $rootScope = _$rootScope_
 
 
   it 'shoud have working Ticket service', () ->
     expect(Ticket.add).not.to.equal null
+
+
+  _setUpProject = ->
+    Chrome.storage.local.get = (arg, callback) ->
+      setTimeout () ->
+        callback PROJECT: TestData.prjObj
+        $rootScope.$apply()
 
 
   ###
@@ -35,7 +41,7 @@ describe 'ticket.coffee', ->
 
     it 'should have 1 ticket', () ->
       expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
+      _setUpProject()
       Ticket.set(TestData.ticketList)
       expect(Ticket.get()).to.not.be.empty
 
@@ -44,7 +50,7 @@ describe 'ticket.coffee', ->
 
     it '1 project, 3 ticket.', () ->
       expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
+      _setUpProject()
       Ticket.set(TestData.ticketList)
       tickets = Ticket.get()
       expect(tickets[0].id).to.equal(0) # SHOW.DEFAULT
@@ -53,7 +59,7 @@ describe 'ticket.coffee', ->
 
     it 'clear old list.', () ->
       expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
+      _setUpProject()
       Ticket.set(TestData.ticketList)
       Ticket.set(TestData.ticketList2)
       tickets = Ticket.get()
@@ -63,7 +69,7 @@ describe 'ticket.coffee', ->
 
     it 'error: 1 project not found.', () ->
       expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
+      _setUpProject()
       tickets = [
         {
           id: 0,
@@ -94,7 +100,7 @@ describe 'ticket.coffee', ->
 
     it 'error: 2 project not found.', () ->
       expect(Ticket.get()).to.be.empty
-      Project.set(TestData.prjObj)
+      _setUpProject()
       tickets = [
         {
           id: 0,
@@ -134,7 +140,7 @@ describe 'ticket.coffee', ->
   describe 'setParam(url, id, param)', ->
 
     it 'SHOW.SHOW to SHOW.NOT', () ->
-      Project.set(TestData.prjObj)
+      _setUpProject()
       Ticket.add(
         id: 0
         text: "ticket0"
@@ -146,7 +152,7 @@ describe 'ticket.coffee', ->
       )
 
     it 'SHOW.NOT to SHOW.SHOW', () ->
-      Project.set(TestData.prjObj)
+      _setUpProject()
       Ticket.add(
         id: 0
         text: "ticket0"
@@ -161,29 +167,31 @@ describe 'ticket.coffee', ->
   describe 'load(callback)', ->
 
     _setupChrome = () ->
-      sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
+      Chrome.storage.local.set = (arg, callback) ->
         callback true
-      sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
-        callback TICKET: TestData.ticketOnChrome
-        return true
+      Chrome.storage.local.get = (arg, callback) ->
+        setTimeout () ->
+          if arg is "TICKET"
+            callback TICKET: TestData.ticketOnChrome
+          else if arg is "PROJECT"
+            callback PROJECT: TestData.prjObj
+          $rootScope.$apply()
 
-    it 'callback called by chrome.', () ->
-      Project.set(TestData.prjObj)
+    it 'callback called by chrome.', (done) ->
       expect(Ticket.get()).to.be.empty
       # put test data.
       _setupChrome()
       # exec
-      callback = sinon.spy()
-      Ticket.load callback
-      expect(callback.called).is.true
+      Ticket.load (tickets) ->
+        expect(true).is.true
+        done()
 
-    it 'load data.', () ->
-      Project.set(TestData.prjObj)
+    it 'load data.', (done) ->
       expect(Ticket.get()).to.be.empty
       # put test data.
       _setupChrome()
       # exec
-      callback = sinon.spy (loaded, msg) ->
+      callback = (loaded, msg) ->
         expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
         expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
         expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
@@ -191,27 +199,30 @@ describe 'ticket.coffee', ->
         expect(loaded[2].id).to.equal(TestData.ticketList2[2].id)
         expect(loaded[2].url).to.equal(TestData.ticketList2[2].url)
         expect(msg).to.be.empty
+        done()
       Ticket.load callback
-      expect(callback.called).is.true
 
-    it 'error: project not found.', () ->
-      Project.set(TestData.prjObj)
+    it 'error: project not found.', (done) ->
       expect(Ticket.get()).to.be.empty
       # put test data.
-      sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
+      Chrome.storage.local.set = (arg, callback) ->
         callback true
-      sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
-        callback TICKET: TestData.ticketOnChrome.add [[ 0, "ticket4", 3, 0, SHOW.SHOW]]
-        return true
+      Chrome.storage.local.get = (arg, callback) ->
+        setTimeout () ->
+          if arg is "TICKET"
+            callback TICKET: TestData.ticketOnChrome.add [[ 0, "ticket4", 3, 0, SHOW.SHOW]]
+          else if arg is "PROJECT"
+            callback PROJECT: TestData.prjObj
+          $rootScope.$apply()
       # exec
-      callback = sinon.spy (loaded, msg) ->
+      callback = (loaded, msg) ->
         expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
         expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
         expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
         expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
         expect(msg.missing[0]).to.equal(3)
+        done()
       Ticket.load callback
-      expect(callback.called).is.true
 
     it 'compatibility (version <= 0.5.7): index start changed.', () ->
       expect(Ticket.get()).to.be.empty

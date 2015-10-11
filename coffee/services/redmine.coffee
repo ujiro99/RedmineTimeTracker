@@ -298,7 +298,7 @@ class Redmine
               id: prj.id,
               text: prj.name,
               show: @Const.SHOW.DEFAULT
-            @Project.new(newPrj)
+            @Project.create(newPrj)
           @Log.groupCollapsed "redmine.loadProjects()"
           @Log.table data.projects
           @Log.groupEnd "redmine.loadProjects()"

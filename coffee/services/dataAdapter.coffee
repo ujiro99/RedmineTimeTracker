@@ -49,6 +49,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # event
     ACCOUNT_ADDED:            "account_added"
     ACCOUNT_REMOVED:          "account_removed"
+    PROJECTS_CHANGED:         "projects_changed"
     TICKETS_CHANGED:          "tickets_changed"
     SELECTED_ACCOUNT_CHANGED: "selected_account_changed"
     SELECTED_PROJECT_CHANGED: "selected_project_changed"
@@ -216,27 +217,33 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     addProjects: (projects) ->
       if not projects? or projects.length is 0 then return
-      @removeProjects(projects)
-      @_data[projects[0].url].projects.add(projects)
-      @_data[projects[0].url].account.projectsCount = @_data[projects[0].url].projects.length
-      for a in @_filteredData when a.url is projects[0].url
-        a.projects = a.projects or []
-        a.projects.add(projects)
+      if not @_data[projects[0].url] then return
+      @removeProjects(projects, false)
+      projects.map (p) =>
+        @_data[p.url].projects.add(p)
+        for a in @_filteredData when a.url is p.url
+          a.projects or a.projects = []
+          a.projects.add(p)
+      for url, dataModel of @_data
+        dataModel.account.projectsCount = dataModel.projects.length
       if not @selectedProject then @selectedProject = projects[0]
       @_filterProjectsByIssueCount()
       @_updateStarredProjects()
+      @fireEvent(@PROJECTS_CHANGED, @, projects)
 
     ###*
     # remove project from account.
     # @param {Array} projects - array of ProjectModel
+    # @param {Bool} eventEnable - is event enable
     ###
-    removeProjects: (projects) ->
+    removeProjects: (projects, eventEnable) ->
       if not projects? or projects.length is 0 then return
-      for p in projects
-        @_data[projects[0].url].projects.remove((n) -> return n.equals(p))
+      for p in projects when @_data[p.url] and @_data[p.url].projects
+        @_data[p.url].projects.remove((n) -> return n.equals(p))
       for a in @_filteredData when a.projects and a.url is projects[0].url
         a.projects.remove((n) -> return n.equals(p))
       @_updateStarredProjects()
+      eventEnable and @fireEvent(@PROJECTS_CHANGED, @, projects)
 
     ###*
     # filter project which has opend tickets.
@@ -338,6 +345,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not @projectQuery? or @projectQuery.isBlank()
         for url, dataModel of @_data
           @_filteredData.push dataModel.account
+          dataModel.account.projects of dataModel.account.projects = []
           dataModel.account.projects.set(dataModel.projects)
       else
         substrRegexs = @projectQuery.split(' ').map (q) -> new RegExp(util.escapeRegExp(q), 'i')
@@ -360,6 +368,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not @selectedProject or not @selectedProject.ticketCount or @selectedProject.ticketCount is 0
         for a in @_filteredData when a.projects and a.projects.length > 0
           @selectedProject = a.projects[0]
+          break
 
     ###*
     # filter and add starred projects.
@@ -385,7 +394,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     _bindDataModelGetter: () =>
       bind = (p) ->
         methodName = "get" + p.camelize()
-        DataAdapter.prototype[methodName] = (url) -> return @_data[url][p]
+        DataAdapter.prototype[methodName] = (url) ->
+          if url
+            return @_data[url][p]
+          else
+            concated = []
+            for url, dataModel of @_data
+              concated = concated.concat(dataModel[p])
+            return concated
       for prop, value of new DataModel then bind(prop)
 
   return new DataAdapter

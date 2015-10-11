@@ -19,9 +19,13 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
      @param queryId {Number} Used query ID
      @param tickets {Array} Array of TicketModel.
     ###
-    constructor: (@url, @urlIndex, @id, @text, @show, @queryId, tickets) ->
+    constructor: (@url, urlIndex, id, @text, show, queryId, tickets) ->
+      @id = id - 0
+      isNaN(urlIndex) or @urlIndex = urlIndex - 0
+      isNaN(show) or @show = show - 0
+      isNaN(queryId) or @queryId = queryId - 0
+      @tickets = tickets or []
       Const.ISSUE_PROPS.map (p) => @[p] = []
-      @tickets  = tickets or []
       Array.observe(@tickets, @updateProperties)
       @updateProperties([{object: @tickets}]) if tickets and tickets.length > 0
 
@@ -63,9 +67,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
     ## class variables
     @PROJECT = "PROJECT"
-    @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
-
-    ## instance variables
 
     ###
      project object. same as on chrome object.
@@ -78,189 +79,131 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
                show: DEFAULT: 0, NOT: 1, SHOW: 2
          }
     ###
-    _projects: {}
-
 
     ###
      load from any area.
     ###
     _load: (storage, callback) ->
       if not storage? then callback? null; return
-      storage.get Project.PROJECT, (projects) ->
+      storage.get Project.PROJECT, (data) =>
         if Chrome.runtime.lastError? then callback? null; return
-        if not projects[Project.PROJECT]? then callback? null; return
-        if Object.keys(projects[Project.PROJECT]).length is 0 then callback? null; return
-        callback? projects[Project.PROJECT]
+        if not data[Project.PROJECT]? then callback? null; return
+        if Object.keys(data[Project.PROJECT]).length is 0 then callback?([]); return
+        callback?(@_toProjectModels(data[Project.PROJECT]))
 
 
     ###
      save all project to any area.
     ###
-    _set: (projects, storage, callback) ->
-      storage.set PROJECT: projects, () ->
+    _sync: (projects, storage, callback) ->
+      deferred = $q.defer()
+      data = @_toChromeObjects(projects)
+      storage.set PROJECT: data, () ->
         if Chrome.runtime.lastError?
           callback? false
+          deferred.reject(false)
         else
           callback? true
+          deferred.resolve(true)
+      return deferred.promise
 
 
     ###
-     save all project to local.
+     convert projects to format of chrome. all projects are unique.
+     @param {Array} projects - array of ProjectModel
+     @return {Object} project object on chrome format.
     ###
-    _setLocal: (callback) ->
-      @_set @_projects, Chrome.storage.local, callback
-
-
-    ###
-     get projects project.
-    ###
-    get: () ->
-      return @_projects
-
-
-    ###
-     set projects.
-     @param newProjects {Object} HashMap of ProjectModel. Key is Account URL.
-    ###
-    set: (newProjects) ->
-      if not newProjects? then return
-      Log.groupCollapsed "Project.set()"
-      Log.debug newProjects
-      Log.groupEnd "Project.set()"
-
-      # clear old data
-      for url, params of @_projects then delete @_projects[url]
-
-      # set new project
-      for url, params of newProjects
-        @_projects[url] = params
-      @_setLocal()
+    _toChromeObjects: (projects) ->
+      return {} if not projects
+      result = {}
+      projects.map (prj) ->
+        # initialize if not exists
+        result[prj.url] = result[prj.url] or {}
+        target = result[prj.url][prj.id] = result[prj.url][prj.id] or {}
+        # set params
+        if result[prj.url].index >= 0
+          prj.urlIndex = result[prj.url].index
+        else
+          prj.urlIndex = Object.keys(result).length - 1
+        result[prj.url].index = prj.urlIndex
+        target.show    = if prj.show? then prj.show else target.show
+        target.queryId = if prj.queryId? then prj.queryId else target.queryId
+      return result
 
 
     ###
-     set parameter to project.
-     doesnt't chagne references.
+     convert projects to ProjectModel.
+     @param {Object} project object on chrome format.
+     @return {Array} projects - array of ProjectModel
     ###
-    setParam: (url, id, params) ->
-      if not url? or not id? then return
-      if not @_projects[url] or not @_projects[url][id] then return
-      target = @_projects[url][id]
-      for k, v of params then target[k] = v
-      @_setLocal()
-
-
-    ###
-     add a project.
-     - all projects are unique.
-     - doesnt't chagne references.
-    ###
-    add: (prj) ->
-      # initialize if not exists
-      @_projects[prj.url] = @_projects[prj.url] or {}
-      target = @_projects[prj.url][prj.id] = @_projects[prj.url][prj.id] or {}
-      # set params
-      if @_projects[prj.url].index >= 0
-        prj.urlIndex = @_projects[prj.url].index
-      else
-        prj.urlIndex = Object.keys(@_projects).length - 1
-      @_projects[prj.url].index = prj.urlIndex
-      target.text    = prj.text or target.text
-      target.show    = if prj.show? then prj.show else target.show
-      target.queryId = if prj.queryId? then prj.queryId else target.queryId
-      @_setLocal()
-
-
-    ###
-     remove a project, and update urlIndex.
-    ###
-    remove: (url, id) ->
-      delete @_projects[url][id]
-      if Object.keys(@_projects[url]).length is 1
-        delete @_projects[url]
-        # update urlIndex
-        i = 0
-        for redmineUrl, params of @_projects
-          @_projects[redmineUrl].index = i++
-      @_setLocal()
-
-
-    ###
-     remove projects on url, and update urlIndex.
-    ###
-    removeUrl: (url) ->
-      for k, v of @_projects[url]
-        continue if k is 'index'
-        @remove url, k
+    _toProjectModels: (projects) ->
+      result = []
+      for url, obj of projects
+        for k, v of obj
+          continue if k is "index"
+          result.push new ProjectModel(url,
+                                       obj.index - 0,
+                                       k - 0,
+                                       v.text,
+                                       v.show - 0,
+                                       v.queryId - 0)
+       return result
 
 
     ###
      load all projects from chrome sync.
     ###
-    load: () =>
+    load: () ->
       Log.debug "Project.load() start"
       deferred = $q.defer()
       @_load Chrome.storage.local, (local) =>
         if local?
-          Log.info 'project loaded from local'
-          @set(local)
+          Log.info 'project loaded from local.'
           Log.groupCollapsed "Project.load()"
           Log.debug local
           Log.groupEnd "Project.load()"
           deferred.resolve(local)
         else
           @_load Chrome.storage.sync, (sync) =>
-            Log.info 'project loaded from sync'
-            @set(sync)
-            deferred.resolve(sync)
+            if sync?
+              Log.info 'project loaded from sync.'
+              deferred.resolve(sync)
+            else
+              Log.info 'project is nothing.'
+              deferred.reject(null)
       return deferred.promise
 
 
     ###
      sync all projects to chrome sync.
     ###
-    sync: (callback) ->
-      @_set @_projects, Chrome.storage.sync, callback
-      count = 0
-      for k, v of @_projects
-        count += Object.keys(v).length - 1
-      Analytics.sendEvent 'internal', 'project', 'set', count
+    sync: (projects) ->
+      @_sync(projects, Chrome.storage.sync)
+        .then(() ->
+          Log.info 'project synced.'
+          Analytics.sendEvent 'chrome', 'project', 'sync', projects.length
+        , () ->
+          Log.info 'project sync failed.'
+          Analytics.sendEvent 'chrome', 'project', 'syncFailed')
+
+
+    ###
+     save all project to local.
+    ###
+    syncLocal: (projects) ->
+      @_sync(projects, Chrome.storage.local)
 
 
     ###
      create new Model instance.
     ###
-    new: (params) ->
+    create: (params) ->
       new ProjectModel(params.url,
                        params.urlIndex,
                        params.id,
                        params.text,
                        params.show,
                        params.queryId)
-
-
-    ###
-     clear project data on storage and local.
-    ###
-    clear: (callback) ->
-      for url, params of @_projects then delete @_projects[url]
-      Chrome.storage.local.set PROJECT: []
-      Chrome.storage.sync.set PROJECT: [], () ->
-      if Chrome.runtime.lastError?
-        callback? false
-      else
-        callback? true
-
-
-    ###
-     reindex project.index.
-    ###
-    reindex: () ->
-      Log.debug("Project.reindex")
-      urlIndex = 0
-      for url, project of @_projects
-        project.index = urlIndex++
-      @_setLocal()
-      Log.debug @_projects
 
 
   return new Project()

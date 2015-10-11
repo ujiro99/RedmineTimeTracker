@@ -71,6 +71,7 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
 
       storedCount = DataAdapter.selectedProject.tickets.length
       remainCount = data.total_count - storedCount
+      DataAdapter.selectedProject.ticketCount = data.total_count
 
       # remaining tickets was already stored.
       return if remainCount is 0

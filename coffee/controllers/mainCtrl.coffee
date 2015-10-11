@@ -19,9 +19,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   init = () ->
     deferred = $q.defer()
     deferred.promise
-      .then(_initializeEvents)
       .then(_initializeGoogleAnalytics)
       .then(_initializeDataFromChrome)
+      .then(_initializeDataFromRedmine)
+      .then(_initializeEvents)
       .then(_setDataSyncAlarms)
     deferred.resolve()
 
@@ -31,6 +32,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _initializeEvents = () ->
     Log.debug "start initialize Event."
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
+    DataAdapter.addEventListener DataAdapter.PROJECTS_CHANGED, () ->
+      Project.syncLocal(DataAdapter.getProjects())
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.set(DataAdapter.tickets)
     Option.onChanged('reportUsage', (e) -> Analytics.setPermission(e) )
@@ -60,11 +63,12 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _successLoadProject = (data, status) =>
     if data.projects?
-      projects = Project.get()
+      projects = DataAdapter.getProjects(data.url)
       data.projects.map (p) ->
-        if projects[p.url] and projects[p.url][p.id]
-          p.show = projects[p.url][p.id].show
-        Project.add(p)
+        saved = projects.find (n) -> n.equals p
+        return if not saved
+        p.show = saved.show
+        p.queryId = saved.queryId
       DataAdapter.addProjects(data.projects)
       Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name), 2000
     else
@@ -207,7 +211,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       .then(_initializeAccount)
       .then(_initializeProject)
       .then(_initializeIssues)
-      .then(() -> DataAdapter.addAccounts(Account.getAccounts()))
       .then(() -> Log.debug "finish initialize data.")
 
   ###
@@ -215,13 +218,17 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _initializeAccount = () ->
     Account.load().then (accounts) ->
-      if not accounts? or not accounts?[0]?
+      if accounts
+        DataAdapter.addAccounts(accounts)
+      else if not accounts[0]?
         _requestAddAccount()
 
   ###
    Initialize project from chrome storage.
   ###
-  _initializeProject = () -> Project.load()
+  _initializeProject = () ->
+    Project.load().then (projects) ->
+      DataAdapter.addProjects(projects)
 
   ###
    Initialize issues status.
@@ -229,6 +236,14 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _initializeIssues = () ->
     Ticket.load (tickets) ->
       DataAdapter.toggleIsTicketShow(tickets)
+
+  ###
+   initialize Data from Redmine.
+  ###
+  _initializeDataFromRedmine = () ->
+    accounts = DataAdapter.getAccount()
+    _loadRedmine(accounts)
+
 
   ###
    set datasync event to chrome alarms.
@@ -242,7 +257,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       return if not alarm.name is DATA_SYNC
       Ticket.set(DataAdapter.tickets)
       Ticket.sync()
-      Project.sync()
+      Project.sync(DataAdapter.getProjects())
 
   ###
    Start Initialize.

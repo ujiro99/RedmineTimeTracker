@@ -73,22 +73,23 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
         Log.error 'runtime error'
         callback? null; return
 
-      projects = Project.get()
-      if Chrome.runtime.lastError?
-        Log.error 'runtime error'
-        callback? null; return
+      Project.load().then (projects) ->
+        if Chrome.runtime.lastError?
+          Log.error 'runtime error'
+          callback? null; return
 
-      if not tickets[TICKET]?
-        Log.info 'project or ticket does not exists'
-        callback? null; return
+        if not tickets[TICKET]?
+          Log.info 'project or ticket does not exists'
+          callback? null; return
 
-      synced = _syncWithProject tickets[TICKET], projects
-      callback? synced.tickets, synced.missing
+        synced = _syncWithProject tickets[TICKET], projects
+        callback? synced.tickets, synced.missing
 
 
   ###
    syncronize tickets and projects using urlIndex.
-   chrome format.
+   @param {Array} tickets - tickets of chrome format.
+   @param {Array} projects - ProjectModel.
   ###
   _syncWithProject = (tickets, projects) ->
     tmp = []
@@ -97,15 +98,15 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
     for t in tickets
       # search url
       url = PROJECT_NOT_FOUND
-      for key, obj of projects when obj.index is t[TICKET_URL_INDEX]
-        url = key
+      for projectModel in projects when projectModel.urlIndex is t[TICKET_URL_INDEX]
+        url = projectModel.url
         break
-      if url isnt PROJECT_NOT_FOUND and obj[t[TICKET_PRJ_ID]]
-        projectName = obj[t[TICKET_PRJ_ID]].text
+      if url isnt PROJECT_NOT_FOUND
+        projectName = projectModel.text
       else
         missing.push t[TICKET_URL_INDEX]
         projectName = PROJECT_NOT_FOUND_NAME
-        Log.error("ticket can not sync with project.")
+        Log.error("This ticket cannot synced to project.")
         Log.error(t)
       tmp.push new TicketModel(
         t[TICKET_ID],
@@ -142,30 +143,29 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
     ticketArray = []
     errorTickets = []
     # assign project data
-    Project.reindex()
-    projects = Project.get()
-    for t in tickets
-      if projects[t.url]?
-        urlIndex = projects[t.url].index
-        ticketArray.push [t.id, t.text, urlIndex, t.project.id, t.show]
-      else
-        ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
-        errorTickets.push id: t.id, url: t.url
-    # save to strage
-    Log.debug "to chrome"
-    Log.table ticketArray
-    Log.groupEnd "ticket.set: " + storage.QUOTA_BYTES
-    storage.set TICKET: ticketArray, () ->
-      if Chrome.runtime.lastError?
-        callback? false, {message: "Chrome.runtime error."}
-      else if not errorTickets.isEmpty()
-        callback? false, {
-          message: "Project not found."
-          param: errorTickets
-        }
-        Analytics.sendException("Error: Project not found on ticket._set().")
-      else
-        callback? true
+    Project.load().then (projects) ->
+      for t in tickets
+        prj = projects.find (p) -> p.url is t.url
+        if prj?
+          ticketArray.push [t.id, t.text, prj.urlIndex, t.project.id, t.show]
+        else
+          ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
+          errorTickets.push id: t.id, url: t.url
+      # save to strage
+      Log.debug "to chrome"
+      Log.table ticketArray
+      Log.groupEnd "ticket.set: " + storage.QUOTA_BYTES
+      storage.set TICKET: ticketArray, () ->
+        if Chrome.runtime.lastError?
+          callback? false, {message: "Chrome.runtime error."}
+        else if not errorTickets.isEmpty()
+          callback? false, {
+            message: "Project not found."
+            param: errorTickets
+          }
+          Analytics.sendException("Error: Project not found on ticket._set().")
+        else
+          callback? true
 
 
   ###
