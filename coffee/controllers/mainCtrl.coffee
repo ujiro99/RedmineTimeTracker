@@ -69,6 +69,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         return if not saved
         p.show = saved.show
         p.queryId = saved.queryId
+        # On chrome, project doesn't have text. Update it here.
+        if p.equals DataAdapter.selectedProject
+          DataAdapter.selectedProject.text = p.text
       DataAdapter.addProjects(data.projects)
       Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name), 2000
     else
