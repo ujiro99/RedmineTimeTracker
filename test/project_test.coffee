@@ -133,12 +133,16 @@ describe 'project.coffee', ->
         queryId: 1
       }]
       Chrome.storage.sync.set = (arg, callback) ->
-        obj = arg.PROJECT
-        expect(obj[prj[0].url].index).to.be.equal(prj[0].urlIndex)
-        expect(obj[prj[0].url][prj[0].id].show).to.be.equal(prj[0].show)
-        expect(obj[prj[0].url][prj[0].id].queryId).to.be.equal(prj[0].queryId)
+        setTimeout ->
+          obj = arg.PROJECT
+          expect(obj[prj[0].url].index).to.be.equal(prj[0].urlIndex)
+          expect(obj[prj[0].url][prj[0].id].show).to.be.equal(prj[0].show)
+          expect(obj[prj[0].url][prj[0].id].queryId).to.be.equal(prj[0].queryId)
+          callback()
+          $rootScope.$apply()
+      Project.sync(prj).then (result) ->
+        expect(result).to.be.true
         done()
-      Project.sync(prj)
 
     it '3 projects.', (done) ->
       Chrome.storage.sync.set = (arg, callback) ->

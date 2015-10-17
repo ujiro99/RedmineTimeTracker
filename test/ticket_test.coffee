@@ -2,6 +2,11 @@ expect = chai.expect
 
 describe 'ticket.coffee', ->
 
+  TICKET_ID        = 0
+  TICKET_TEXT      = 1
+  TICKET_URL_INDEX = 2
+  TICKET_PRJ_ID    = 3
+  TICKET_SHOW      = 4
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   Ticket = null
@@ -20,56 +25,67 @@ describe 'ticket.coffee', ->
 
 
   it 'shoud have working Ticket service', () ->
-    expect(Ticket.add).not.to.equal null
+    expect(Ticket.load).not.to.equal null
 
 
-  _setUpProject = ->
-    Chrome.storage.local.get = (arg, callback) ->
-      setTimeout () ->
-        callback PROJECT: TestData.prjObj
-        $rootScope.$apply()
+  describe 'sync(ticketList)', ->
+
+    _setUpChrome = ->
+      Chrome.storage.local.get = (arg, callback) ->
+        setTimeout () ->
+          callback PROJECT: TestData.prjObj
+          $rootScope.$apply()
 
 
-  ###
-   test for get()
-  ###
-  describe 'get()', ->
+    it 'sould sync 1 project, 3 ticket.', (done) ->
+      _setUpChrome()
 
-    it 'be empty', () ->
-      tickets = Ticket.get()
-      expect(tickets).to.be.empty
+      Chrome.storage.sync.set = (arg, callback) ->
+        obj = arg.TICKET
+        expect(obj[0][TICKET_SHOW]).to.equal(SHOW.DEFAULT)
+        expect(obj[1][TICKET_SHOW]).to.equal(SHOW.NOT)
+        expect(obj[2][TICKET_SHOW]).to.equal(SHOW.SHOW)
+        done()
 
-    it 'should have 1 ticket', () ->
-      expect(Ticket.get()).to.be.empty
-      _setUpProject()
-      Ticket.set(TestData.ticketList)
-      expect(Ticket.get()).to.not.be.empty
+      #exec
+      Ticket.sync(TestData.ticketList)
 
 
-  describe 'set(ticketList)', ->
+    it 'shuld return error message of Chrome.', (done) ->
+      _setUpChrome()
+      Chrome.storage.sync.set = (arg, callback) ->
+        Chrome.runtime.lastError = true
+        callback()
+      #exec
+      Ticket.sync(TestData.ticketList)
+        .then((msg)->
+          expect(true).to.be.false #failed.
+        , (msg)->
+          expect(msg.message).to.be.exists
+          done()
+        )
 
-    it '1 project, 3 ticket.', () ->
-      expect(Ticket.get()).to.be.empty
-      _setUpProject()
-      Ticket.set(TestData.ticketList)
-      tickets = Ticket.get()
-      expect(tickets[0].id).to.equal(0) # SHOW.DEFAULT
-      expect(tickets[1].id).to.equal(1) # SHOW.NOT
-      expect(tickets[2].id).to.equal(2) # SHOW.SHOW
 
-    it 'clear old list.', () ->
-      expect(Ticket.get()).to.be.empty
-      _setUpProject()
-      Ticket.set(TestData.ticketList)
-      Ticket.set(TestData.ticketList2)
-      tickets = Ticket.get()
-      expect(tickets[0].url).to.equal("http://redmine.com")
-      expect(tickets[1].url).to.equal("http://redmine.com2")
-      expect(tickets[2].url).to.equal("http://redmine.com3")
+    it 'should clear old list.', (done) ->
+      _setUpChrome()
 
-    it 'error: 1 project not found.', () ->
-      expect(Ticket.get()).to.be.empty
-      _setUpProject()
+      # sync old data.
+      Chrome.storage.sync.set = (arg, callback) -> callback()
+      Ticket.sync(TestData.ticketList).then ->
+
+        Chrome.storage.sync.set = (arg, callback) ->
+          obj = arg.TICKET
+          expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
+          expect(obj[1][TICKET_URL_INDEX]).to.equal(1)
+          expect(obj[2][TICKET_URL_INDEX]).to.equal(2)
+          done()
+
+        # sync new data.
+        Ticket.sync(TestData.ticketList2)
+
+
+    it 'should return a missing ticket if 1 project not found.', (done) ->
+      _setUpChrome()
       tickets = [
         {
           id: 0,
@@ -89,18 +105,23 @@ describe 'ticket.coffee', ->
           show: SHOW.NOT
         }
       ]
-      Ticket.set(tickets, (res, msg) ->
-        tickets = Ticket.get()
-        expect(tickets[0].url).to.equal("http://redmine.com")
-        expect(tickets[1].url).to.not.equal("http://redmine.com4")
-        expect(res).to.be.false
-        expect(msg.message).to.not.be.empty
-        expect(msg.param).to.have.length(1)
-      )
 
-    it 'error: 2 project not found.', () ->
-      expect(Ticket.get()).to.be.empty
-      _setUpProject()
+      Chrome.storage.sync.set = (arg, callback) ->
+        setTimeout ->
+          obj = arg.TICKET
+          expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
+          expect(obj[1][TICKET_URL_INDEX]).to.not.equal(3)
+          callback()
+          $rootScope.$apply()
+
+      Ticket.sync(tickets).then((msg) ->
+        expect(msg.message).to.not.be.empty
+        expect(msg.missing).to.have.length(1)
+        done())
+
+
+    it 'should retrun missing tickets if 2 projects not found.', (done) ->
+      _setUpChrome()
       tickets = [
         {
           id: 0,
@@ -128,47 +149,24 @@ describe 'ticket.coffee', ->
           show: SHOW.NOT
         }
       ]
-      Ticket.set(tickets, (res, msg) ->
-        tickets = Ticket.get()
-        expect(tickets[0].url).to.equal("http://redmine.com")
-        expect(tickets[1].url).to.not.equal("http://redmine.com4")
-        expect(res).to.be.false
+      Chrome.storage.sync.set = (arg, callback) ->
+        setTimeout ->
+          obj = arg.TICKET
+          expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
+          expect(obj[1][TICKET_URL_INDEX]).to.not.equal(3)
+          expect(obj[2][TICKET_URL_INDEX]).to.equal(-1)
+          callback()
+          $rootScope.$apply()
+
+      Ticket.sync(tickets).then((msg) ->
         expect(msg.message).to.not.be.empty
-        expect(msg.param).to.have.length(2)
-      )
-
-  describe 'setParam(url, id, param)', ->
-
-    it 'SHOW.SHOW to SHOW.NOT', () ->
-      _setUpProject()
-      Ticket.add(
-        id: 0
-        text: "ticket0"
-        url: "http://redmine.com"
-        project:
-          id: 0
-          text: "prj1_0"
-        show: SHOW.SHOW
-      )
-
-    it 'SHOW.NOT to SHOW.SHOW', () ->
-      _setUpProject()
-      Ticket.add(
-        id: 0
-        text: "ticket0"
-        url: "http://redmine.com"
-        project:
-          id: 0
-          text: "prj1_0"
-        show: SHOW.NOT
-      )
+        expect(msg.missing).to.have.length(2)
+        done())
 
 
-  describe 'load(callback)', ->
+  describe 'load()', ->
 
-    _setupChrome = () ->
-      Chrome.storage.local.set = (arg, callback) ->
-        callback true
+    _setUpChrome = () ->
       Chrome.storage.local.get = (arg, callback) ->
         setTimeout () ->
           if arg is "TICKET"
@@ -177,36 +175,39 @@ describe 'ticket.coffee', ->
             callback PROJECT: TestData.prjObj
           $rootScope.$apply()
 
-    it 'callback called by chrome.', (done) ->
-      expect(Ticket.get()).to.be.empty
-      # put test data.
-      _setupChrome()
-      # exec
-      Ticket.load (tickets) ->
-        expect(true).is.true
+
+    it 'should return 3 tickets', (done) ->
+      _setUpChrome()
+      Ticket.load().then (tickets) ->
+        expect(tickets).to.have.length(3)
+        expect(tickets[0].text).to.be.equals("ticket0")
+        expect(tickets[1].show).to.be.equals(SHOW.NOT)
+        expect(tickets[2].url).to.be.equals("http://redmine.com3")
         done()
 
-    it 'load data.', (done) ->
-      expect(Ticket.get()).to.be.empty
-      # put test data.
-      _setupChrome()
+
+    it 'should be empty.', (done) ->
+      # setup chrome
+      getData = (arg, callback) ->
+        setTimeout () ->
+          if arg is "TICKET"
+            callback TICKET: null
+          else if arg is "PROJECT"
+            callback PROJECT: TestData.prjObj
+          else
+            callback null
+          $rootScope.$apply()
+      Chrome.storage.local.get = getData
+      Chrome.storage.sync.get = getData
+
       # exec
-      callback = (loaded, msg) ->
-        expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
-        expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
-        expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
-        expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
-        expect(loaded[2].id).to.equal(TestData.ticketList2[2].id)
-        expect(loaded[2].url).to.equal(TestData.ticketList2[2].url)
-        expect(msg).to.be.empty
+      Ticket.load().then (tickets) ->
+        expect(tickets).to.be.empty
         done()
-      Ticket.load callback
+
 
     it 'error: project not found.', (done) ->
-      expect(Ticket.get()).to.be.empty
       # put test data.
-      Chrome.storage.local.set = (arg, callback) ->
-        callback true
       Chrome.storage.local.get = (arg, callback) ->
         setTimeout () ->
           if arg is "TICKET"
@@ -215,33 +216,32 @@ describe 'ticket.coffee', ->
             callback PROJECT: TestData.prjObj
           $rootScope.$apply()
       # exec
-      callback = (loaded, msg) ->
+      Ticket.load().then (loaded, msg) ->
         expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
         expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
         expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
         expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
-        expect(msg.missing[0]).to.equal(3)
+        expect(loaded.missing[0]).to.equal(3)
         done()
-      Ticket.load callback
 
-    it 'compatibility (version <= 0.5.7): index start changed.', () ->
-      expect(Ticket.get()).to.be.empty
+
+    it 'compatibility (version <= 0.5.7): index start changed.', (done) ->
       # put test data.
-      sinon.stub Chrome.storage.local, 'set', (arg1, callback) ->
-        callback true
-      sinon.stub Chrome.storage.local, 'get', (arg1, callback) ->
-        if arg1 is "PROJECT"
-          callback PROJECT: TestData.prjOldFormat
-          return true
-        else
-          callback TICKET: TestData.ticketOnChromeOld
-          return true
+      Chrome.storage.local.get = (arg1, callback) ->
+        setTimeout () ->
+          if arg1 is "PROJECT"
+            callback PROJECT: TestData.prjOldFormat
+          else
+            callback TICKET: TestData.ticketOnChromeOld
+          $rootScope.$apply()
       # exec
-      Ticket.load (loaded) ->
+      Ticket.load().then (loaded) ->
         expect(loaded[0].id).to.equal(TestData.ticketList2[0].id)
         expect(loaded[0].url).to.equal(TestData.ticketList2[0].url)
         expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
         expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
         expect(loaded[2].id).to.equal(TestData.ticketList2[2].id)
         expect(loaded[2].url).to.equal(TestData.ticketList2[2].url)
+        expect(loaded.missing).to.have.length(0)
+        done()
 

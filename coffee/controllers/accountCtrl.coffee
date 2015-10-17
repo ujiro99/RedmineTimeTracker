@@ -110,6 +110,5 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
     Account.removeAccount url, () ->
       Redmine.remove({url: url})
       DataAdapter.removeAccounts([{url:url}])
-      Ticket.removeUrl url
       Message.toast Resource.string("msgAccountRemoved").format(url)
 

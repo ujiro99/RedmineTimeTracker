@@ -35,7 +35,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     DataAdapter.addEventListener DataAdapter.PROJECTS_CHANGED, () ->
       Project.syncLocal(DataAdapter.getProjects())
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
-      Ticket.set(DataAdapter.tickets)
+      Ticket.syncLocal(DataAdapter.tickets)
     Option.onChanged('reportUsage', (e) -> Analytics.setPermission(e) )
     Option.onChanged('hideNonTicketProject',  _toggleProjectHidden)
     Log.debug "finish initialize Event."
@@ -237,7 +237,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    Initialize issues status.
   ###
   _initializeIssues = () ->
-    Ticket.load (tickets) ->
+    Ticket.load().then (tickets) ->
       DataAdapter.toggleIsTicketShow(tickets)
 
   ###
@@ -258,8 +258,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Chrome.alarms.create(DATA_SYNC, alarmInfo)
     Chrome.alarms.onAlarm.addListener (alarm) ->
       return if not alarm.name is DATA_SYNC
-      Ticket.set(DataAdapter.tickets)
-      Ticket.sync()
+      Ticket.sync(DataAdapter.tickets)
       Project.sync(DataAdapter.getProjects())
 
   ###

@@ -10,10 +10,37 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
   PROJECT_NOT_FOUND = -1
   PROJECT_NOT_FOUND_NAME = "not found"
-
-  SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
-
   NOT_CONFIGED = { id: -1, name: "Not Assigned"}
+
+
+  ###
+   Ticket data model.
+  ###
+  class TicketModel
+
+    ###
+     constructor.
+    ###
+    constructor: (@id,
+                  @text,
+                  @url,
+                  @project,
+                  @show,
+                  @priority,
+                  @assignedTo,
+                  @status,
+                  @tracker,
+                  @total) ->
+
+    ###
+     compare ticket.
+     true: same / false: defferent
+    ###
+    equals: (y) ->
+      return @url is y.url and @id is y.id
+
+    hash: () -> return @url + @id
+
 
   #
   # - in this app,
@@ -32,34 +59,6 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
   #
   #     ticket = [ id, text, project_url_index, project_id, show ]
   #
-
-
-  ###
-   ticket using this app
-  ###
-  tickets = []
-
-
-  ###
-   compare ticket.
-   true: same / false: defferent
-  ###
-  _equals = (x, y) ->
-    return x.url is y.url and x.id is y.id
-
-
-  ###
-   load tickets from local storage.
-  ###
-  _loadLocal = (callback) ->
-    _load(Chrome.storage.local, callback)
-
-
-  ###
-   load tickets from sync storage.
-  ###
-  _loadSync = (callback) ->
-    _load(Chrome.storage.sync, callback)
 
 
   ###
@@ -119,29 +118,15 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
 
   ###
-   save all tickets to local.
-  ###
-  _setLocal = (callback) ->
-    _set Chrome.storage.local, callback
-
-
-  ###
-   save all tickets to chrome sync.
-  ###
-  _setSync = (callback) ->
-    _set Chrome.storage.sync, callback
-    Analytics.sendEvent 'internal', 'ticket', 'set', tickets.length
-
-
-  ###
    save all tickets to any area.
   ###
-  _set = (storage, callback) ->
-    Log.groupCollapsed "ticket.set: " + storage.QUOTA_BYTES
-    Log.table tickets
-    if not storage? then callback? null; return
+  _sync = (tickets, storage) ->
+    if not storage? then return
+
+    deferred = $q.defer()
     ticketArray = []
     errorTickets = []
+
     # assign project data
     Project.load().then (projects) ->
       for t in tickets
@@ -150,31 +135,28 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
           ticketArray.push [t.id, t.text, prj.urlIndex, t.project.id, t.show]
         else
           ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
-          errorTickets.push id: t.id, url: t.url
-      # save to strage
+          errorTickets.push id: t.id, text: t.text, url: t.url, projectId: t.project.id, show: t.show
+
+      Log.groupCollapsed "Ticket.sync: " + storage.QUOTA_BYTES
+      Log.table tickets
       Log.debug "to chrome"
       Log.table ticketArray
-      Log.groupEnd "ticket.set: " + storage.QUOTA_BYTES
+      Log.groupEnd "Ticket.sync: " + storage.QUOTA_BYTES
+
+      # save to strage
       storage.set TICKET: ticketArray, () ->
         if Chrome.runtime.lastError?
-          callback? false, {message: "Chrome.runtime error."}
+          deferred.reject({message: "Chrome.runtime error."})
         else if not errorTickets.isEmpty()
-          callback? false, {
-            message: "Project not found."
-            param: errorTickets
-          }
-          Analytics.sendException("Error: Project not found on ticket._set().")
+          Analytics.sendException("Error: Project not found on Ticket.sync().")
+          deferred.resolve({
+            message: "Some projects not found."
+            missing: errorTickets
+          })
         else
-          callback? true
+          deferred.resolve()
 
-
-  ###
-   add ticket to all and selectable.
-  ###
-  _add = (ticket) ->
-    if not ticket? then return
-    found = tickets.some (ele) -> _equals ele, ticket
-    tickets.push ticket if not found
+    return deferred.promise
 
 
   ###
@@ -184,161 +166,61 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
     if not params.assigned_to then params.assigned_to = NOT_CONFIGED
 
 
-  ###
-   Ticket data model.
-  ###
-  class TicketModel
-
-    ###
-     constructor.
-    ###
-    constructor: (@id,
-                  @text,
-                  @url,
-                  @project,
-                  @show,
-                  @priority,
-                  @assignedTo,
-                  @status,
-                  @tracker,
-                  @total) ->
-
-    ###
-     compare ticket.
-     true: same / false: defferent
-    ###
-    equals: (y) ->
-      return @url is y.url and @id is y.id
-
-    hash: () -> return @url + @id
-
-
   return {
-
-    ###
-     get all tickets.
-    ###
-    get: () ->
-      return tickets
-
-
-    ###
-     set tickets.
-    ###
-    set: (ticketslist, callback) ->
-      Log.debug 'Ticket.set()'
-      if not ticketslist? then callback(); return
-
-      tickets.clear()
-      for t in ticketslist
-        tickets.push t
-
-      _setLocal(callback)
-
-
-    ###
-     add ticket.
-     if ticket can be shown, it's added to selectable.
-     if ticket can be shown and there is no selected ticket, it be selected.
-    ###
-    add: (ticket) ->
-      Log.debug 'Ticket.add()'
-      _add(ticket)
-      _setLocal()
-
-
-    ###
-     add ticket array.
-    ###
-    addArray: (arr) ->
-      Log.debug 'Ticket.addArray()'
-      if not arr? then return
-      for t in arr then _add t
-      _setLocal()
-
-
-    ###
-     remove ticket when exists.
-    ###
-    remove: (ticket) ->
-      Log.debug 'Ticket.remove()'
-      if not ticket? then return
-      for t, i in tickets when _equals(t, ticket)
-        tickets.splice(i, 1)
-        break
-      _setLocal()
-
-
-    ###
-     remove ticket associated to url.
-    ###
-    removeUrl: (url) ->
-      Log.debug 'Ticket.removeUrl()'
-      if not url? then return
-      newTickets = (t for t in tickets when t.url isnt url)
-      tickets.clear()
-      @addArray newTickets
-      _setLocal()
-
-
-    ###
-     set any parameter to ticket.
-     if ticket can be shown, it be added to selectable.
-     if ticket cannot be shown, it be deleted from selectable.
-    ###
-    setParam: (url, id, param) ->
-      Log.debug 'Ticket.setParam()'
-      if not url? or not id? or not param? then return
-      # update parameter
-      target = tickets.find (t) -> _equals(t, {url: url, id: id})
-      for k, v of param then target[k] = v
-      _setLocal()
 
 
     ###
      load all tickets from chrome sync.
     ###
-    load: (callback) ->
+    load: () ->
       Log.debug "Ticket.load() start"
       deferred = $q.defer()
-      _loadLocal (localTickets, missingUrlIndex) =>
+      _load Chrome.storage.local, (localTickets, missingUrlIndex) =>
         if localTickets?
           Log.info 'ticket loaded from local'
           Log.groupCollapsed 'Ticket.load() loaded'
           Log.table localTickets
           Log.groupEnd 'Ticket.load() loaded'
-          @set localTickets, (res, msg) ->
-            if not missingUrlIndex?.isEmpty()
-              msg = msg or {}
-              msg = Object.merge(msg, {missing: missingUrlIndex})
-            deferred.resolve(localTickets, msg)
-            callback(localTickets, msg)
+          localTickets.missing = missingUrlIndex
+          deferred.resolve(localTickets)
         else
-          _loadSync (syncTickets, missingUrlIndex) =>
+          _load Chrome.storage.sync, (syncTickets, missingUrlIndex) =>
+            syncTickets or syncTickets = []
             Log.info 'ticket loaded from sync'
             Log.groupCollapsed 'Ticket.load() loaded'
             Log.table localTickets
             Log.groupEnd 'Ticket.load() loaded'
-            @set syncTickets, (res, msg) ->
-              if not missingUrlIndex?.isEmpty()
-                msg = msg or {}
-                msg = Object.merge(msg, {missing: missingUrlIndex})
-              deferred.resolve(syncTickets, msg)
-              callback(syncTickets, msg)
+            syncTickets.missing = missingUrlIndex
+            deferred.resolve(syncTickets)
       return deferred.promise
 
 
     ###
      sync all tickets to chrome sync.
     ###
-    sync: (callback) ->
-      _setSync callback
+    sync: (tickets) ->
+      _sync(tickets, Chrome.storage.sync)
+        .then((res) ->
+          Log.info 'ticket synced.'
+          Analytics.sendEvent 'chrome', 'ticket', 'sync', tickets.length
+          return res
+        , (res) ->
+          Log.info 'ticket sync failed.'
+          Analytics.sendEvent 'chrome', 'ticket', 'syncFailed'
+          $q.reject(res))
+
+
+    ###
+     save all tickets to local.
+    ###
+    syncLocal: (tickets) ->
+      _sync tickets, Chrome.storage.local
 
 
     ###
      create new TicketModel instance.
     ###
-    new: (params) ->
+    create: (params) ->
       _sanitize(params)
       return new TicketModel(params.id,
                              params.text,
@@ -357,7 +239,6 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
     ###
     clear: (callback) ->
       Log.debug 'Ticket.clear()'
-      tickets.clear()
       Chrome.storage.local.set TICKET: []
       Chrome.storage.sync.set TICKET: [], () ->
         if Chrome.runtime.lastError?

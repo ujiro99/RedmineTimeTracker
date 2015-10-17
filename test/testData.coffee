@@ -167,6 +167,13 @@ timeTracker.value "TestData", ()->
       [ 0,  "ticket3",      2,         0,     SHOW.SHOW    ]
     ]
 
+    ticketOnChromeOld: [
+      # id | text      | url_index | prj_id |    show
+      [ 0,  "ticket0",      2,         0,     SHOW.DEFAULT ],
+      [ 0,  "ticket2",      3,         0,     SHOW.NOT     ],
+      [ 0,  "ticket3",      4,         0,     SHOW.SHOW    ]
+    ]
+
     queries: {
       "queries": [{"id":0, "name":"aaa", "is_public":true}, {"id":2, "name":"bbb"}]
       "total_count":2

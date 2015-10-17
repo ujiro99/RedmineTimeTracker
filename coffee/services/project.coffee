@@ -179,12 +179,14 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
     ###
     sync: (projects) ->
       @_sync(projects, Chrome.storage.sync)
-        .then(() ->
+        .then((res) ->
           Log.info 'project synced.'
           Analytics.sendEvent 'chrome', 'project', 'sync', projects.length
-        , () ->
+          return res
+        , (res) ->
           Log.info 'project sync failed.'
-          Analytics.sendEvent 'chrome', 'project', 'syncFailed')
+          Analytics.sendEvent 'chrome', 'project', 'syncFailed'
+          return res)
 
 
     ###

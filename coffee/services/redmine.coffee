@@ -130,7 +130,7 @@ class Redmine
           issue.show    = @Const.SHOW.DEFAULT
           issue.url     = @auth.url
           issue.total   = issue.spent_hours or 0
-          @Ticket.new(issue)
+          @Ticket.create(issue)
         deferred.resolve(data)
         success?(data))
       .error((args...) =>
@@ -215,12 +215,12 @@ class Redmine
           data.issue.total = data.issue.spent_hours or 0
           data.issue.show  = @Const.SHOW.DEFAULT
           data.issue.url   = @auth.url
-          data.issue       = @Ticket.new(data.issue)
+          data.issue       = @Ticket.create(data.issue)
         success?(data.issue, status, headers, config))
       .error((data, status, headers, config) =>
         @Log.debug("getIssuesById: error")
         @Log.debug data
-        issue = @Ticket.new(url: @auth.url, id:  issueId)
+        issue = @Ticket.create(url: @auth.url, id:  issueId)
         if status isnt @Const.NOT_FOUND or status isnt @Const.UNAUTHORIZED
           @Analytics.sendException("Error: getIssuesById")
         error?(issue, status))
