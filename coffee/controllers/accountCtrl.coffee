@@ -8,6 +8,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   $scope.searchField = text: ''
   $scope.state = State
   $scope.R = Resource
+  $scope.isVisible = true
 
 
   ###
@@ -111,4 +112,3 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
       Redmine.remove({url: url})
       DataAdapter.removeAccounts([{url:url}])
       Message.toast Resource.string("msgAccountRemoved").format(url)
-
