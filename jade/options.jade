@@ -1,67 +1,69 @@
 div#options(ng-controller='OptionCtrl')
 
+  
   header
-    div.caption
-      div.title
-        div.icon
-          span.icon-settings
-        span Options
+    a(href="#", ng-click="isVisible = !isVisible")
+      div.caption
+        div.title
+          div.icon
+            span.icon-settings
+          span Options
+
+  div(ng-show="isVisible")
+    div.setting__section.form-group
+      div.setting__labels
+        label.control-label Number of issues per Page.
+        div.setting__description
+          span max: 50
+      div.setting__options
+        input.form-control.input-sm.setting__input(type="number", name="itemsPerPage", max="50", min="1", ng-model="options.itemsPerPage")
+
+    div.setting__section.form-group
+      div.setting__labels
+        label.control-label Enable Project's Star
+        div.setting__description
+          span Use star in Project Select list.
+      div.setting__options
+        input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.isProjectStarEnable")
+
+    div.setting__section.form-group
+      div.setting__labels
+        label.control-label Hide Projects
+        div.setting__description
+          span Hide Projects which doesn't have opened tickets.
+      div.setting__options
+        input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.hideNonTicketProject")
+
+    div.setting__section.form-group
+      div.setting__labels
+        label.control-label Remove Closed Issues
+        div.setting__description
+          span Remove closed issues from select list automatically on startup.
+      div.setting__options
+        input.switch.setting__button(type="checkbox", name="removeClosedTicket", ng-model="options.removeClosedTicket")
+
+    div.setting__section.form-group
+      div.setting__labels
+        label.control-label Reports Usage
+        div.setting__description
+          span Automatically send anonymous usage statistics and crash reports. This function uses cookie.
+      div.setting__options
+        input.switch.setting__button(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
+
+    div.setting__section.form-group
+      div.setting__labels
+        label.control-label Clear Ticket & Project
+        div.setting__description
+          span Remove all tickets and project from select list.
+      div.setting__options
+        button.btn.btn-default.btn-sm.loading(ng-click='clearTickets()',
+                                              uz-loading='isSetting',
+                                              ga-click='clearTickets')
+          span Clear
 
 
-  div.setting__section.form-group
-    div.setting__labels
-      label.control-label Number of issues per Page.
-      div.setting__description
-        span max: 50
-    div.setting__options
-      input.form-control.input-sm.setting__input(type="number", name="itemsPerPage", max="50", min="1", ng-model="options.itemsPerPage")
-
-  div.setting__section.form-group
-    div.setting__labels
-      label.control-label Enable Project's Star
-      div.setting__description
-        span Use star in Project Select list.
-    div.setting__options
-      input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.isProjectStarEnable")
-
-  div.setting__section.form-group
-    div.setting__labels
-      label.control-label Hide Projects
-      div.setting__description
-        span Hide Projects which doesn't have opened tickets.
-    div.setting__options
-      input.switch.setting__button(type="checkbox", name="isProjectStarEnable", ng-model="options.hideNonTicketProject")
-
-  div.setting__section.form-group
-    div.setting__labels
-      label.control-label Remove Closed Issues
-      div.setting__description
-        span Remove closed issues from select list automatically on startup.
-    div.setting__options
-      input.switch.setting__button(type="checkbox", name="removeClosedTicket", ng-model="options.removeClosedTicket")
-
-  div.setting__section.form-group
-    div.setting__labels
-      label.control-label Reports Usage
-      div.setting__description
-        span Automatically send anonymous usage statistics and crash reports. This function uses cookie.
-    div.setting__options
-      input.switch.setting__button(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
-
-  div.setting__section.form-group
-    div.setting__labels
-      label.control-label Clear Ticket & Project
-      div.setting__description
-        span Remove all tickets and project from select list.
-    div.setting__options
-      button.btn.btn-default.btn-sm.loading(ng-click='clearTickets()',
-                                            uz-loading='isSetting',
-                                            ga-click='clearTickets')
-        span Clear
-
-
-  div.clear(ng-show='state.debug')
-    button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
-      i.fa.fa-exclamation-triangle
-      span Clear All
+    div.clear(ng-show='state.debug')
+      button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
+        i.fa.fa-exclamation-triangle
+        span Clear All
  

@@ -1,63 +1,64 @@
 div#accounts(ng-controller='AccountCtrl')
 
   header
-    div.caption
-      div.title
-        div.icon
-          span.icon-users
-        span Accounts
+    a(href="#", ng-click="isVisible = !isVisible")
+      div.caption
+        div.title
+          div.icon
+            span.icon-users
+          span Accounts
 
   // search
-  .input-and-btn
-    div.form-group.searchform-icon.input
-      label.sr-only Search
-      input.form-control.input-sm(type='search',
-                                  placeholder='search...',
-                                  ng-model='searchField.text')
-      i.fa.fa-search
-    button.btn.rotate__slow(ng-click='state.isAdding = !state.isAdding',
-                            ng-class="{rotate225: state.isAdding}",
-                            ga-click='toggleForm')
-      span.icon-plus
+  div(ng-show="isVisible")
+    .input-and-btn
+      div.form-group.searchform-icon.input
+        label.sr-only Search
+        input.form-control.input-sm(type='search',
+                                    placeholder='search...',
+                                    ng-model='searchField.text')
+        i.fa.fa-search
+      button.btn.rotate__slow(ng-click='state.isAdding = !state.isAdding',
+                              ng-class="{rotate225: state.isAdding}",
+                              ga-click='toggleForm')
+        span.icon-plus
 
-  // add (default collapsed)
-  div.well-container.collapse(collapse='!state.isAdding')
-    form.well(name='account')
+    // add (default collapsed)
+    div.well-container.collapse(collapse='!state.isAdding')
+      form.well(name='account')
 
-      // Auth way
-      div.btn-group.selectAuth
-        button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
-        button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
+        // Auth way
+        div.btn-group.selectAuth
+          button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
+          button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
-      // Auth
-      div.auth(ng-switch on="authWay")
-        section.animate-switch(ng-switch-when="id_pass")
-          div(ng-include="'template/basic_auth.html'")
-        section.animate-switch(ng-switch-when="api_key")
-          div(ng-include="'template/api_key.html'")
+        // Auth
+        div.auth(ng-switch on="authWay")
+          section.animate-switch(ng-switch-when="id_pass")
+            div(ng-include="'template/basic_auth.html'")
+          section.animate-switch(ng-switch-when="api_key")
+            div(ng-include="'template/api_key.html'")
 
-      // Add Button
-      div.save
-        button.btn.btn-sm.btn-color(
-          ng-click='findAccount()',
-          ga-click='findAccount',
-          uz-loading='state.isSaving')
-          span Add
+        // Add Button
+        div.save
+          button.btn.btn-sm.btn-color(
+            ng-click='findAccount()',
+            ga-click='findAccount',
+            uz-loading='state.isSaving')
+            span Add
 
 
-  // list
-  ul.account-list
-    li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
-       ng-click='openRemoveAccount(account.url)',
-       ga-click='openRemoveAccount')
-      .number
-      .list-item
-        .list-item__label
-          span {{account.name}}
-        .list-item__description
-          span.list-item__id(ng-show="account.id") {{account.id}}
-          span.list-item__project {{account.projectsCount}}
-          span.list-item__url {{account.url}}
-      button.btn(type='button')
-        span.icon-minus
-
+    // list
+    ul.account-list
+      li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
+         ng-click='openRemoveAccount(account.url)',
+         ga-click='openRemoveAccount')
+        .number
+        .list-item
+          .list-item__label
+            span {{account.name}}
+          .list-item__description
+            span.list-item__id(ng-show="account.id") {{account.id}}
+            span.list-item__project {{account.projectsCount}}
+            span.list-item__url {{account.url}}
+        button.btn(type='button')
+          span.icon-minus

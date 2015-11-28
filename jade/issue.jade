@@ -1,13 +1,14 @@
 div#issue(ng-controller='IssueCtrl')
 
   header
-    div.caption
-      div.title
-        div.icon
-          span.icon-speech
-        span Issues
+    a(href="#", ng-click="isVisible = !isVisible")
+      div.caption
+        div.title
+          div.icon
+            span.icon-speech
+          span Issues
 
-  div
+  div(ng-show="isVisible")
 
     section
 
@@ -104,4 +105,3 @@ div#issue(ng-controller='IssueCtrl')
                                        page='editState.currentPage',
                                        items-per-page='options.itemsPerPage',
                                        container='.issue-list__content')
-
