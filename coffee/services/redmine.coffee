@@ -282,7 +282,7 @@ class Redmine
     r = @_bindDefer(null, null, "loadProjects")
 
     params = params or {}
-    params.limit = params.limit or Redmine.LIMIT_MAX
+    params.limit = params.limit or @auth.numProjects or Redmine.LIMIT_MAX
     config =
       method: "GET"
       url: @auth.url + "/projects.json"
