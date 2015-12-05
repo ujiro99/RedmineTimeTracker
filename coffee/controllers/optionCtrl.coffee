@@ -6,7 +6,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   $scope.options = {}
   $scope.state = State
   $scope.isSetting = false
-  $scope.isVisible = true
+  $scope.isCollapse = false
 
   # promise object for cancel syncOptions
   timeoutPromise = null

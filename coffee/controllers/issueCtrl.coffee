@@ -31,8 +31,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   $scope.editState = new IssueEditState($scope)
   # global state.
   $scope.state = State
-  # issue section visible
-  $scope.isVisible = true
+  # issue section collapse
+  $scope.isCollapse = false
 
   ###
    Initialize.

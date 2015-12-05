@@ -37,6 +37,8 @@ input.input-sm
     header
       a, a:hover
         text-decoration: none
+    .caption__icon
+      margin-left: 14px
 
   header
     height: 5em
@@ -44,30 +46,34 @@ input.input-sm
       align-center()
       height 100%
       color: color_key
-      .fa
-        padding: 0 4px
-        font-size: 1.4em
-        opacity: 0
-        visibility: hidden
-        transition: opacity 0.2s ease
-      &:hover > .fa
-        visibility: visible
-        opacity: 1
-    .title
-      align-center()
+    .caption__title
+      margin: 0
       font-size: 1.05em
       flex: 1
-    .subtitle
+      align-center()
+    .caption__subtitle
       font-size: .95em
       margin: 0.1em -1em 0 0.7em
-    .icon
-      display: table
+    .caption__icon
       font-size: 1.4em
-      margin: 0 8px 0 0
-      span
-        display: table-cell
-        text-align: center
-        vertical-align: middle
+      margin-right: 0.4em
+    .caption__icon--slide
+      padding: 0 4px
+      font-size: 1.4em
+      opacity: 0
+      visibility: hidden
+      transition: opacity 0.2s ease
+    .caption__icon--collapse
+      font-size: 1.4em
+      position: relative
+      left: 18px
+      opacity: 0
+      visibility: hidden
+      transition: 0.2s ease
+    .caption:hover .caption__icon--slide
+    .caption:hover .caption__icon--collapse
+      visibility: visible
+      opacity: 1
 
   #issue header .caption .title .icon
     margin: 3px 8px 0 0

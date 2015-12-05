@@ -1,13 +1,12 @@
 header
   div.caption(ng-click="changeMode()", ga-click='changeMode')
-    i.fa.fa-angle-left
-    div.title
-      div.icon
-        span.icon-note
+    i.fa.fa-angle-left.caption__icon--slide
+    p.caption__title
+      i.icon-note.caption__icon
       span Time Tracking
-      p.subtitle
-        span ~ manual ~
-    i.fa.fa-angle-right
+      span.caption__subtitle
+        ~ manual ~
+    i.fa.fa-angle-right.caption__icon--slide
 
 form(action='#', method='POST', name='time_entry')
 

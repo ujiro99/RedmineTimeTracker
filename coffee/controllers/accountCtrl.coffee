@@ -8,7 +8,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   $scope.searchField = text: ''
   $scope.state = State
   $scope.R = Resource
-  $scope.isVisible = true
+  $scope.isCollapse = false
 
 
   ###

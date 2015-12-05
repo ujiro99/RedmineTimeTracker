@@ -1,14 +1,15 @@
 div#issue(ng-controller='IssueCtrl')
 
   header
-    a(href="#", ng-click="isVisible = !isVisible")
+    a(href="#", ng-click="isCollapse = !isCollapse")
       div.caption
-        div.title
-          div.icon
-            span.icon-speech
+        p.caption__title
+          i.icon-speech.caption__icon
           span Issues
+          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: isCollapse}")
 
-  div(ng-show="isVisible")
+
+  div.collapse(collapse="isCollapse")
 
     section
 

@@ -1,15 +1,14 @@
 div#options(ng-controller='OptionCtrl')
 
-  
   header
-    a(href="#", ng-click="isVisible = !isVisible")
+    a(href="#", ng-click="isCollapse = !isCollapse")
       div.caption
-        div.title
-          div.icon
-            span.icon-settings
+        p.caption__title
+          span.icon-settings.caption__icon
           span Options
+          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: isCollapse}")
 
-  div(ng-show="isVisible")
+  div.collapse(collapse="isCollapse")
     div.setting__section.form-group
       div.setting__labels
         label.control-label Number of issues per Page.
@@ -66,4 +65,3 @@ div#options(ng-controller='OptionCtrl')
       button.btn.btn-default.btn-sm(ng-click='clearOptions()', ga-click='clear')
         i.fa.fa-exclamation-triangle
         span Clear All
- 
