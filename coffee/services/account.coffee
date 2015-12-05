@@ -17,8 +17,9 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
      @param id {String} User id.
      @param pass {String} User password.
      @param name {String} Redmine's name for identify by user.
+     @param numProjects {Number} Number of projects to fetch.
     ###
-    constructor: (@url, @apiKey, @id, @pass, @name) ->
+    constructor: (@url, @apiKey, @id, @pass, @name, @numProjects) ->
       if not @name or @name.isBlank()
         @name = @url
 
@@ -32,6 +33,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         obj.id
         obj.pass
         obj.name
+        obj.numProjects
       )
 
     ###
@@ -84,6 +86,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         @_decrypt @id
         @_decrypt @pass
         @name
+        @numProjects
       )
 
     ###
@@ -96,6 +99,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         @_Json.stringify CryptoJS.AES.encrypt(@id, PHRASE)
         @_Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
         @name
+        @numProjects
       )
 
 
