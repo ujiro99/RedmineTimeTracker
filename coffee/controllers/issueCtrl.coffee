@@ -15,8 +15,8 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   $scope.searchField = text: '', onlyContained: false
   # where does tooltip show.
   $scope.tooltipPlace = 'top'
-  # is search field open.
-  $scope.isOpen = false
+  # is search field collapse.
+  $scope.isCollapseParameters = true
   # flag for loading icon.
   $scope.isLoadingVisible = true
   # typeahead data.
@@ -89,7 +89,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
    Open or collapse search form. And initialize tab state.
   ###
   $scope.toggleSearchForm = () ->
-    $scope.isOpen = !$scope.isOpen
+    $scope.isCollapseParameters = !$scope.isCollapseParameters
     for prop in Const.ISSUE_PROPS
       $scope.tabState[prop] = false
 
