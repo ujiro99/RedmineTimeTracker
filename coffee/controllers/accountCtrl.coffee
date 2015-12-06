@@ -28,11 +28,13 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
         url:    $scope.option.url
         id:     $scope.option.id
         pass:   $scope.option.pass
+        numProjects: $scope.option.numProjects
     else
       option =
         name:   $scope.option.name
         url:    $scope.option.url
         apiKey: $scope.option.apiKey
+        numProjects: $scope.option.numProjects
     Redmine.get(option).findUser(addAccount, failAuthentication)
 
 

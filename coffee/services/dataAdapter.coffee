@@ -238,10 +238,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     removeProjects: (projects, eventEnable) ->
       if not projects? or projects.length is 0 then return
+      a = @_filteredData.find (a) -> a.url is projects[0].url
       for p in projects when @_data[p.url] and @_data[p.url].projects
-        @_data[p.url].projects.remove((n) -> return n.equals(p))
-      for a in @_filteredData when a.projects and a.url is projects[0].url
-        a.projects.remove((n) -> return n.equals(p))
+        @_data[p.url].projects.remove((n) -> n.equals(p))
+        a.projects and a.projects.remove((n) -> n.equals(p))
       @_updateStarredProjects()
       eventEnable and @fireEvent(@PROJECTS_CHANGED, @, projects)
 

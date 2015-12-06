@@ -63,7 +63,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _successLoadProject = (data, status) =>
     if data.projects?
-      projects = DataAdapter.getProjects(data.url)
+      projects = DataAdapter.getProjects(data.account.url)
       data.projects.map (p) ->
         saved = projects.find (n) -> n.equals p
         return if not saved
