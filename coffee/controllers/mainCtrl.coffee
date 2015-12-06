@@ -55,7 +55,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    load projects from redmine.
   ###
   _loadProjects = (a) ->
-    Redmine.get(a).loadProjects(page: 1)
+    Redmine.get(a).loadProjectsRange({}, 0, a.numProjects)
       .then(_successLoadProject, _errorLoadProject)
 
   ###

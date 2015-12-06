@@ -177,13 +177,12 @@ class Redmine
       @_getIssues(params).promise
 
     r = @_bindDefer(success, error, "getIssuesRange")
-    @$q.all(promises).then(
-      (dataAry) ->
+    @$q.all(promises)
+      .then((dataAry) ->
         data = dataAry.reduce((a, b) -> a.issues.add(b.issues);a)
         r.success(data)
-    , (data) -> r.error(data))
-    .finally(() =>
-      @State.isLoadingIssue = false)
+      , (data) -> r.error(data))
+      .finally(() => @State.isLoadingIssue = false)
 
     return r.promise
 
@@ -282,7 +281,7 @@ class Redmine
     r = @_bindDefer(null, null, "loadProjects")
 
     params = params or {}
-    params.limit = params.limit or @auth.numProjects or Redmine.LIMIT_MAX
+    params.limit = params.limit or Redmine.LIMIT_MAX
     config =
       method: "GET"
       url: @auth.url + "/projects.json"
@@ -309,6 +308,27 @@ class Redmine
         r.error(data, status))
 
     return r.promise
+
+
+  ###
+   load projects from `start` to `end`.
+  ###
+  loadProjectsRange: (params, start, end) =>
+    params = params or {}
+    end = end or Redmine.LIMIT_MAX
+    params.limit = Redmine.LIMIT_MAX
+    pages = Math.ceil((end - start) / Redmine.LIMIT_MAX)
+    promises = [1..pages].map (n) =>
+      params = Object.clone(params)
+      params.offset = start + (n - 1) * Redmine.LIMIT_MAX
+      if params.offset + Redmine.LIMIT_MAX > end
+        params.limit = end - params.offset + 1
+      return @loadProjects(params)
+
+    @$q.all(promises)
+      .then(
+        (d) -> d.reduce((a, b) -> a.projects.add(b.projects); a)
+      , (d) -> return d)
 
 
   ###

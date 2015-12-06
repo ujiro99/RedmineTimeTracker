@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Const) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Const, Log) ->
 
   ID_PASS = 'id_pass'
 
@@ -111,6 +111,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   ###
   removeAccount = (url) ->
     Account.removeAccount url, () ->
+      Log.debug("account removed : " + url)
       Redmine.remove({url: url})
       DataAdapter.removeAccounts([{url:url}])
       Message.toast Resource.string("msgAccountRemoved").format(url)
