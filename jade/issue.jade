@@ -1,15 +1,15 @@
 div#issue(ng-controller='IssueCtrl')
 
   header
-    a(href="#", ng-click="isCollapse = !isCollapse")
+    a(href="#", ng-click="options.isCollapseIssues = !options.isCollapseIssues")
       div.caption
         p.caption__title
           i.icon-speech.caption__icon
           span Issues
-          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: isCollapse}")
+          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: options.isCollapseIssues}")
 
 
-  div.collapse(collapse="isCollapse")
+  div.collapse(collapse="options.isCollapseIssues")
 
     // ------------------------------------
     //         Search by Keyword

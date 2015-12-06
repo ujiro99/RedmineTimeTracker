@@ -6,14 +6,14 @@
   .setting-labels
     label.control-label User ID
   .setting-options
-    input.form-control.input-sm(type='text', ng-model='option.id', placeholder='ex) admin')
+    input.form-control.input-sm(type='text', ng-model='authParams.id', placeholder='ex) admin')
 
  // pass
 .settings-section.form-group
   .setting-labels
     label.control-label Password
   .setting-options
-    input.form-control.input-sm(type='password', ng-model='option.pass', placeholder='ex) passw0rd')
+    input.form-control.input-sm(type='password', ng-model='authParams.pass', placeholder='ex) passw0rd')
 
 // Name
 .settings-section.form-group(ng-include="'template/name.html'")

@@ -9,6 +9,9 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       removeClosedTicket: true
       hideNonTicketProject: true
       itemsPerPage: 20
+      isCollapseIssues: false         # issue section collapse
+      isCollapseAccounts: false       # accounts section collapse
+      isCollapseOptions: false        # options section collapse
     @_options: @DEFAULT_OPTION
     @_events: []
     @_eventsWithKey: {}
@@ -56,7 +59,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
     ###
      sync all option data.
     ###
-    syncOptions: () ->
+    syncOptions: (change) ->
       deferred = $q.defer()
 
       saveData = {}
@@ -67,7 +70,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
         else
           Log.info "option synced."
           Log.debug saveData
-          deferred.resolve(true)
+          deferred.resolve(change)
 
       return deferred.promise
 

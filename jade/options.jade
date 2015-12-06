@@ -1,14 +1,14 @@
 div#options.bottom-space-m(ng-controller='OptionCtrl')
 
   header
-    a(href="#", ng-click="isCollapse = !isCollapse")
+    a(href="#", ng-click="options.isCollapseOptions = !options.isCollapseOptions")
       div.caption
         p.caption__title
           span.icon-settings.caption__icon
           span Options
-          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: isCollapse}")
+          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: options.isCollapseOptions}")
 
-  div.collapse(collapse="isCollapse")
+  div.collapse(collapse="options.isCollapseOptions")
     div.setting__section.form-group.top-space-l
       div.setting__labels
         label.control-label Number of issues per Page.

@@ -1,14 +1,14 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Const, Log) ->
+timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Option, Const, Log) ->
 
   ID_PASS = 'id_pass'
 
   $scope.data = DataAdapter
-  $scope.option = { apiKey:'', id:'', pass:'', url:'', numProjects:50 }
+  $scope.authParams = { apiKey:'', id:'', pass:'', url:'', numProjects:50 }
+  $scope.options = Option.getOptions()
   $scope.authWay = ID_PASS
   $scope.searchField = text: ''
   $scope.state = State
   $scope.R = Resource
-  $scope.isCollapse = false
 
 
   ###
@@ -16,26 +16,26 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   ###
   $scope.findAccount = () ->
     State.isSaving = true
-    if not $scope.option.url? or $scope.option.url.length is 0
+    if not $scope.authParams.url? or $scope.authParams.url.length is 0
       Message.toast Resource.string("msgRequestInputURL")
       State.isSaving = false
       return
-    $scope.option.url = util.getUrl $scope.option.url
-    Redmine.remove({url: $scope.option.url})
+    $scope.authParams.url = util.getUrl $scope.authParams.url
+    Redmine.remove({url: $scope.authParams.url})
     if $scope.authWay is ID_PASS
-      option =
-        name:   $scope.option.name
-        url:    $scope.option.url
-        id:     $scope.option.id
-        pass:   $scope.option.pass
-        numProjects: $scope.option.numProjects
+      authParams =
+        name:   $scope.authParams.name
+        url:    $scope.authParams.url
+        id:     $scope.authParams.id
+        pass:   $scope.authParams.pass
+        numProjects: $scope.authParams.numProjects
     else
-      option =
-        name:   $scope.option.name
-        url:    $scope.option.url
-        apiKey: $scope.option.apiKey
-        numProjects: $scope.option.numProjects
-    Redmine.get(option).findUser(addAccount, failAuthentication)
+      authParams =
+        name:   $scope.authParams.name
+        url:    $scope.authParams.url
+        apiKey: $scope.authParams.apiKey
+        numProjects: $scope.authParams.numProjects
+    Redmine.get(authParams).findUser(addAccount, failAuthentication)
 
 
   ###
@@ -43,7 +43,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
   ###
   addAccount = (msg, status) ->
     if msg?.user?.id?
-      $scope.option.url = msg.account.url
+      $scope.authParams.url = msg.account.url
       Account.addAccount msg.account, (result, account) ->
         if result
           State.isSaving = State.isAdding = false

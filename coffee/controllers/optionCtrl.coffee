@@ -6,7 +6,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   $scope.options = {}
   $scope.state = State
   $scope.isSetting = false
-  $scope.isCollapse = false
 
   # promise object for cancel syncOptions
   timeoutPromise = null
@@ -23,17 +22,18 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   ###
    if option was changed, save it.
   ###
-  syncOptions = () ->
+  syncOptions = (e) ->
     $timeout.cancel(timeoutPromise)
     timeoutPromise = $timeout ->
-      Option.syncOptions().then(sucessSyncOptions, failSyncOptions)
+      Option.syncOptions(e).then(sucessSyncOptions, failSyncOptions)
     , DELAY_TIME
 
 
   ###
    show saved message.
   ###
-  sucessSyncOptions = () ->
+  sucessSyncOptions = (change) ->
+    if change.name.startsWith("isCollapse") then return
     Message.toast Resource.string("msgOptionSaved")
 
 

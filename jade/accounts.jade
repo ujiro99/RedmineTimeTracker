@@ -1,15 +1,15 @@
 div#accounts(ng-controller='AccountCtrl')
 
   header
-    a(href="#", ng-click="isCollapse = !isCollapse")
+    a(href="#", ng-click="options.isCollapseAccounts = !options.isCollapseAccounts")
       div.caption
         p.caption__title
           span.icon-users.caption__icon
           span Accounts
-          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: isCollapse}")
+          i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: options.isCollapseAccounts}")
 
   // search
-  div.collapse(collapse="isCollapse")
+  div.collapse(collapse="options.isCollapseAccounts")
     div.input-and-btn.top-space-l
       div.form-group.searchform-icon.input
         label.sr-only Search
