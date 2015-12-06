@@ -10,7 +10,7 @@ div#accounts(ng-controller='AccountCtrl')
 
   // search
   div.collapse(collapse="isCollapse")
-    .input-and-btn
+    div.input-and-btn.top-space-l
       div.form-group.searchform-icon.input
         label.sr-only Search
         input.form-control.input-sm(type='search',
@@ -48,7 +48,7 @@ div#accounts(ng-controller='AccountCtrl')
 
 
     // list
-    ul.account-list
+    ul.account-list.bottom-space-l
       li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
          ng-click='openRemoveAccount(account.url)',
          ga-click='openRemoveAccount')

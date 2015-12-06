@@ -26,12 +26,17 @@ input.input-sm
 .wrap
   height: 100%
   overflow-y: scroll
+  display: flex
+  flex-direction: column
 
   .invalid
   .invalid:hover
   .invalid:focus
     border-color: #e9322d
     box-shadow: 0 0 6px #f8b9b7
+
+  #issue header .caption .title .icon
+    margin: 3px 8px 0 0
 
   #options, #accounts, #issue
     header
@@ -41,7 +46,6 @@ input.input-sm
       margin-left: 14px
 
   header
-    height: 5em
     .caption
       align-center()
       height 100%
@@ -75,16 +79,14 @@ input.input-sm
       visibility: visible
       opacity: 1
 
-  #issue header .caption .title .icon
-    margin: 3px 8px 0 0
 
-
-.frame
+.content
   margin-top: height_header px
   overflow: hidden
+  flex-shrink: 0
 
   & > section
-    padding: 0 10px 25px 10px
+    padding: 10px
 
 .searchform
   margin-bottom: 5px
@@ -280,8 +282,23 @@ input.project-search
 .rotate360
   transform: rotate(360deg)
 
-.bottom-space
-  margin-bottom: 5px
+.top-space-l
+  padding-top: 25px
+
+.top-space-m
+  padding-top: 10px
+
+.top-space-s
+  padding-top: 5px
+
+.bottom-space-l
+  padding-bottom: 25px
+
+.bottom-space-m
+  padding-bottom: 10px
+
+.bottom-space-s
+  padding-bottom: 5px
 
 .property-list
   border-bottom: solid 1px $color_border
@@ -433,6 +450,10 @@ input.project-search
 #timer
 
   width_button = 34
+
+  header
+    height: 5em
+    margin-top: -10px
 
   .caption
     cursor: pointer
@@ -918,3 +939,8 @@ input.project-search
     p
       margin: 0
       font-size: 0.8em
+
+.footer
+  display: flex
+  flex-grow: 1
+  flex-direction: column-reverse

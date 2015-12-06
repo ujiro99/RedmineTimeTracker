@@ -1,4 +1,4 @@
-div#options(ng-controller='OptionCtrl')
+div#options.bottom-space-m(ng-controller='OptionCtrl')
 
   header
     a(href="#", ng-click="isCollapse = !isCollapse")
@@ -9,7 +9,7 @@ div#options(ng-controller='OptionCtrl')
           i.fa.fa-angle-up.caption__icon--collapse(ng-class="{rotate180: isCollapse}")
 
   div.collapse(collapse="isCollapse")
-    div.setting__section.form-group
+    div.setting__section.form-group.top-space-l
       div.setting__labels
         label.control-label Number of issues per Page.
         div.setting__description
@@ -49,7 +49,7 @@ div#options(ng-controller='OptionCtrl')
       div.setting__options
         input.switch.setting__button(type="checkbox", name="reportUsage", ng-model="options.reportUsage")
 
-    div.setting__section.form-group
+    div.setting__section.form-group.bottom-space-l
       div.setting__labels
         label.control-label Clear Ticket & Project
         div.setting__description

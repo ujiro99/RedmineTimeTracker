@@ -20,13 +20,13 @@ html(ng-app='timeTracker', ng-csp="")
   body(ng-controller='MainCtrl')
 
     div.wrap
-      section(ng-include="'header.html'")
-      .frame
+      section.header(ng-include="'header.html'")
+      .content
         section(ng-include="'timer.html'")
         section(ng-include="'issue.html'")
         section(ng-include="'accounts.html'")
         section(ng-include="'options.html'")
-      section(ng-include="'about.html'")
+      section.footer(ng-include="'about.html'")
       section(ng-include="'message.html'")
 
     .src
