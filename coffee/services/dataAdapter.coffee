@@ -181,11 +181,21 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         Log.timeEnd('projectQuery\t')
 
     ###*
+    # check account is exists.
+    # @param {AccountModel} account
+    ###
+    isAccountExists: (account) ->
+      if not account? then return false
+      return !!@_data[account.url] and !!@_data[account.url].account
+
+    ###*
     # add accounts
     # @param {Array} accounts - array of AccountModel.
     ###
     addAccounts: (accounts) ->
-      if not accounts? or accounts.length is 0 then return
+      if not accounts? then return
+      accounts = [accounts] if not Array.isArray(accounts)
+      if not accounts[0].isValid() then return
       for a in accounts
         @_data[a.url] = new DataModel()
         @_data[a.url].account = a
@@ -194,19 +204,35 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @fireEvent(@ACCOUNT_ADDED, @, accounts)
 
     ###*
+    # update accounts
+    # @param {Array} accounts - array of AccountModel.
+    ###
+    updateAccounts: (accounts) ->
+      if not accounts? then return
+      accounts = [accounts] if not Array.isArray(accounts)
+      if not accounts[0].isValid() then return
+      for a in accounts
+        @_data[a.url]?.account.update(a)
+        b = @_filteredData.find (b) -> a.url is b.url
+        b and b.update(a)
+      @_updateStarredProjects()
+
+    ###*
     # remove accounts
     # @param {Array} accounts - array of AccountModel.
     ###
     removeAccounts: (accounts) ->
-      if not accounts? or accounts.length is 0 then return
+      if not accounts? then return
+      accounts = [accounts] if not Array.isArray(accounts)
       for a in accounts
         delete @_data[a.url]
         @_filteredData.remove((n) -> return n.url is a.url)
         @tickets.remove((n) -> return n.url is a.url)
         @_updateStarredProjects()
-        if @selectedProject?.url is a.url
-          @selectedProject = @_filteredData[0].projects[0]
-        if @selectedTicket?.url is a.url
+        if @selectedProject and @selectedProject.url is a.url
+          account = @_filteredData.find (n) -> n.projects.length > 0
+          @selectedProject = account.projects[0] if account
+        if @selectedTicket and @selectedTicket.url is a.url
           @selectedTicket = @tickets[0]
       @fireEvent(@ACCOUNT_REMOVED, @, accounts)
 

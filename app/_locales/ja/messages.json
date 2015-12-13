@@ -31,6 +31,9 @@
   "msgAuthFail": {
     "message": "認証に失敗しました。。。"
   },
+  "msgUpdateSuccess": {
+    "message": "アカウント情報を更新しました。"
+  },
   "msgUrlFormatError": {
     "message": "URLの形式が正しくありません。"
   },

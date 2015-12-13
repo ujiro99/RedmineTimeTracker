@@ -18,8 +18,9 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
      @param pass {String} User password.
      @param name {String} Redmine's name for identify by user.
      @param numProjects {Number} Number of projects to fetch.
+     @param @projectList {Array} Project id which will be fetched.
     ###
-    constructor: (@url, @apiKey, @id, @pass, @name, @numProjects) ->
+    constructor: (@url, @apiKey, @id, @pass, @name, @numProjects, @projectList) ->
       if not @name or @name.isBlank()
         @name = @url
 
@@ -34,7 +35,30 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         obj.pass
         obj.name
         obj.numProjects
+        obj.projectList
       )
+
+    ###
+     is valid prameters.
+    ###
+    isValid: () ->
+      return false if not @url?
+      if @apiKey?
+        return true
+      else
+        return @id? and @pass?
+
+    ###
+     update prameters.
+    ###
+    update: (newModel) ->
+      @url         = newModel.url
+      @apiKey      = newModel.apiKey
+      @id          = newModel.id
+      @pass        = newModel.pass
+      @name        = newModel.name
+      @numProjects = newModel.numProjects
+      @projectList = newModel.projectList
 
     ###
      JSON formatter for cipherParams.
@@ -87,6 +111,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         @_decrypt @pass
         @name
         @numProjects
+        @projectList
       )
 
     ###
@@ -100,6 +125,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         @_Json.stringify CryptoJS.AES.encrypt(@pass, PHRASE)
         @name
         @numProjects
+        @projectList
       )
 
 
@@ -109,6 +135,15 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
   _accounts = []
 
   return {
+
+    ###
+     create new AccountModel instance.
+     @param {Object} param - account parameters.
+     @return {AccountModel} created instance.
+    ###
+    create: (param) ->
+      return AccountModel.fromObject(param)
+
 
     ###
      load all account data from chrome sync.
@@ -144,7 +179,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
 
 
     ###
-     add a account data using chrome sync
+     add a account data using chrome sync. url is unique.
     ###
     addAccount: (account, callback) ->
       account = AccountModel.fromObject(account)

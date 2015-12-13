@@ -1,3 +1,9 @@
+@keyframes to-color_key
+  from
+    background-color: color_key_weak
+  to
+    background-color: color_key
+
 .btn
   background-color: transparent
   padding: initial
@@ -18,8 +24,8 @@
     background-color: #eee
 
 .btn-color
-  transition: background-color .2s ease
   color: snow
   background-color: color_key_weak
   &:hover
+    animation: to-color_key .2s ease
     background-color: color_key

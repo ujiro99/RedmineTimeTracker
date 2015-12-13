@@ -4,7 +4,9 @@ describe 'DataAdapter.coffee', ->
 
   DataAdapter = null
   TestData = null
+  Account = null
   Project = null
+  Ticket = null
   Option = null
 
   _props = [
@@ -20,21 +22,23 @@ describe 'DataAdapter.coffee', ->
 
   beforeEach () ->
     angular.mock.module('timeTracker')
-    inject (_DataAdapter_, _TestData_, _Project_, _Option_) ->
+    inject (_DataAdapter_, _TestData_, _Account_, _Project_, _Ticket_, _Option_) ->
       DataAdapter = _DataAdapter_
       TestData = _TestData_()
+      Account = _Account_
       Project = _Project_
+      Ticket = _Ticket_
       Option = _Option_
 
-    auth = [{
+    auth = [Account.create({
       url:  'http://redmine.com'
       id:   'RedmineTimeTracker'
       pass: 'RedmineTimeTracker'
-    }, {
+    }), Account.create({
       url:  'http://redmine.com2'
       id:   'RedmineTimeTracker'
       pass: 'RedmineTimeTracker'
-    }]
+    })]
     DataAdapter.addAccounts(auth)
 
 
@@ -190,3 +194,140 @@ describe 'DataAdapter.coffee', ->
       DataAdapter.addProjects(expectPrjs)
       expect(DataAdapter.getProjects()).to.have.length(0)
 
+
+  describe "addAccounts(accounts)", () ->
+
+    it "should store 2 accounts.", () ->
+      expect(DataAdapter.getAccount()).to.have.length(2)
+
+    it "add same url account, then should update a account.", () ->
+      auth = Account.create({
+        url:  'http://redmine.com'
+        id:   'RedmineTimeTracker2'
+        pass: 'RedmineTimeTracker2'
+      })
+      DataAdapter.addAccounts(auth)
+      expect(DataAdapter.getAccount()).to.have.length(2)
+      expect(DataAdapter.getAccount(auth.url).id).to.equal(auth.id)
+
+    it "add null object, then should not change state.", () ->
+      before = DataAdapter.getAccount()
+      auth = null
+      DataAdapter.addAccounts(auth)
+      after = DataAdapter.getAccount()
+      expect(after).to.deep.equal(before)
+
+    it "add empty object, then should not change state.", () ->
+      before = DataAdapter.getAccount()
+      auth = Account.create {}
+      DataAdapter.addAccounts(auth)
+      after = DataAdapter.getAccount()
+      expect(after).to.deep.equal(before)
+
+    it "should store 3 accounts.", () ->
+      auth = [Account.create({
+        url:  'http://redmine.com3'
+        id:   'RedmineTimeTracker'
+        pass: 'RedmineTimeTracker'
+      })]
+      DataAdapter.addAccounts(auth)
+      expect(DataAdapter.getAccount()).to.have.length(3)
+
+
+  describe "updateAccounts(accounts)", () ->
+
+    it "should update a account.", () ->
+      auth = Account.create({
+        url:  'http://redmine.com'
+        id:   'RedmineTimeTracker2'
+        pass: 'RedmineTimeTracker2'
+      })
+      DataAdapter.updateAccounts(auth)
+      expect(DataAdapter.getAccount()).to.have.length(2)
+      expect(DataAdapter.getAccount(auth.url).id).to.equal(auth.id)
+
+    it "should not change state, if url not exists.", () ->
+      before = DataAdapter.getAccount()
+      auth = Account.create({
+        url:  'http://redmine.com3'
+        id:   'RedmineTimeTracker2'
+        pass: 'RedmineTimeTracker2'
+      })
+      DataAdapter.updateAccounts(auth)
+      after = DataAdapter.getAccount()
+      expect(after).to.deep.equal(before)
+
+    it "should not change state, if param is null.", () ->
+      before = DataAdapter.getAccount()
+      auth = null
+      DataAdapter.updateAccounts(auth)
+      after = DataAdapter.getAccount()
+      expect(after).to.deep.equal(before)
+
+    it "should not change state, if param is empty.", () ->
+      before = DataAdapter.getAccount()
+      auth = Account.create({})
+      DataAdapter.updateAccounts(auth)
+      after = DataAdapter.getAccount()
+      expect(after).to.deep.equal(before)
+
+
+  describe "removeAccounts(accounts)", () ->
+
+    it "should remove a account.", () ->
+      auth = DataAdapter.getAccount()
+      DataAdapter.removeAccounts(auth[0])
+      expect(DataAdapter.getAccount()).to.have.length(1)
+      expect(DataAdapter.getAccount()[0].url).to.equals(auth[1].url)
+
+    it "should remove a account and update selected ticket/project.", () ->
+      auth = DataAdapter.getAccount()
+
+      # add project
+      projects1 = TestData.prj1.map (p) -> Project.create(p)
+      projects2 = TestData.prj2.map (p) -> Project.create(p)
+      projects1[0].ticketCount = 1
+      projects2[0].ticketCount = 1
+      DataAdapter.addProjects(projects1)
+      DataAdapter.addProjects(projects2)
+
+      # add ticket
+      tickets = TestData.ticketList2.map (n) -> Ticket.create(n)
+      DataAdapter.toggleIsTicketShow tickets
+
+      # exec
+      DataAdapter.removeAccounts(auth[0])
+
+      # check
+      expect(DataAdapter.selectedProject.url).to.equals(auth[1].url)
+      expect(DataAdapter.selectedTicket.url).to.equals(TestData.ticketList2[1].url)
+
+    it "should remove two account.", () ->
+      auth = DataAdapter.getAccount()
+      DataAdapter.removeAccounts(auth)
+      expect(DataAdapter.getAccount()).to.have.length(0)
+
+
+  describe "isAccountExists(account)", () ->
+
+    it "should be true.", () ->
+      auth = DataAdapter.getAccount()
+      res = DataAdapter.isAccountExists(auth[0])
+      expect(res).to.be.true
+
+    it "should be false.", () ->
+      auth = Account.create({
+        url:  'http://redmine.com3'
+      })
+      res = DataAdapter.isAccountExists(auth)
+      expect(res).to.be.false
+
+    it "should be false if param is null.", () ->
+      auth = null
+      res = DataAdapter.isAccountExists(auth)
+      expect(res).to.be.false
+
+    it "should be false if param is empty.", () ->
+      auth = Account.create({})
+      res = DataAdapter.isAccountExists(auth)
+      expect(res).to.be.false

@@ -1,12 +1,16 @@
-timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Option, Const, Log) ->
+timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Option, Const, Log) ->
 
   ID_PASS = 'id_pass'
+  API_KEY = 'api_key'
+  DEFAULT_PARAM = { apiKey:'', id:'', pass:'', url:'', numProjects:50 }
+  COLLAPSE_ANIMATION_DURATION = 100
 
   $scope.data = DataAdapter
-  $scope.authParams = { apiKey:'', id:'', pass:'', url:'', numProjects:50 }
+  $scope.authParams = DEFAULT_PARAM
   $scope.options = Option.getOptions()
   $scope.authWay = ID_PASS
   $scope.searchField = text: ''
+  $scope.isCollapseSetting = true
   $scope.state = State
   $scope.R = Resource
 
@@ -24,32 +28,38 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
     Redmine.remove({url: $scope.authParams.url})
     if $scope.authWay is ID_PASS
       authParams =
-        name:   $scope.authParams.name
         url:    $scope.authParams.url
         id:     $scope.authParams.id
         pass:   $scope.authParams.pass
-        numProjects: $scope.authParams.numProjects
     else
       authParams =
-        name:   $scope.authParams.name
         url:    $scope.authParams.url
         apiKey: $scope.authParams.apiKey
-        numProjects: $scope.authParams.numProjects
-    Redmine.get(authParams).findUser(addAccount, failAuthentication)
+    Redmine.get(authParams).findUser(saveAccount, failAuthentication)
 
 
   ###
    add account.
   ###
-  addAccount = (msg, status) ->
+  saveAccount = (msg, status) ->
     if msg?.user?.id?
       $scope.authParams.url = msg.account.url
-      Account.addAccount msg.account, (result, account) ->
+      params = $scope.authParams
+      if msg.account.apiKey
+        delete params.id
+        delete params.pass
+      Account.addAccount params, (result, account) ->
         if result
-          State.isSaving = State.isAdding = false
-          DataAdapter.addAccounts([account])
-          Message.toast Resource.string("msgAuthSuccess"), 3000
-          Analytics.sendEvent 'internal', 'auth', 'success'
+          State.isSaving = State.isAdding = State.isSetting = false
+          $scope.isCollapseSetting = true
+          if DataAdapter.isAccountExists(account)
+            DataAdapter.updateAccounts(account)
+            Message.toast Resource.string("msgUpdateSuccess"), 3000
+            Analytics.sendEvent 'internal', 'authUpdate', 'success'
+          else
+            DataAdapter.addAccounts(account)
+            Message.toast Resource.string("msgAuthSuccess"), 3000
+            Analytics.sendEvent 'internal', 'authAdd', 'success'
         else
           failAuthentication(null, status)
     else
@@ -83,6 +93,37 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
 
 
   ###
+   open Account Setting area for modify setting.
+  ###
+  $scope.openAccountSetting = (url) ->
+    $scope.state.isSetting = true
+    $scope.state.isAdding = false
+    $scope.isCollapseSetting = false
+    $scope.authParams = DataAdapter.getAccount(url)
+    if $scope.authParams.apiKey
+      $scope.authWay = API_KEY
+    else
+      $scope.authWay = ID_PASS
+
+
+  ###
+   toggle Account Setting area.
+  ###
+  $scope.toggleAccountSetting = () ->
+    if $scope.isCollapseSetting # to be open
+      $scope.authParams = DEFAULT_PARAM
+      $scope.state.isAdding = true
+      $scope.state.isSetting = false
+    else # to be close
+      $timeout () ->
+        $scope.authParams = DEFAULT_PARAM
+        $scope.state.isAdding = false
+        $scope.state.isSetting = false
+      , COLLAPSE_ANIMATION_DURATION
+    $scope.isCollapseSetting = !$scope.isCollapseSetting
+
+
+  ###
    open dialog for remove account.
   ###
   $scope.openRemoveAccount = (url) ->
@@ -113,5 +154,5 @@ timeTracker.controller 'AccountCtrl', ($scope, $modal, Redmine, Account, Project
     Account.removeAccount url, () ->
       Log.debug("account removed : " + url)
       Redmine.remove({url: url})
-      DataAdapter.removeAccounts([{url:url}])
+      DataAdapter.removeAccounts({url: url})
       Message.toast Resource.string("msgAccountRemoved").format(url)

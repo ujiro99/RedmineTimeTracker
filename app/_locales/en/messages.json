@@ -31,6 +31,9 @@
   "msgAuthFail": {
     "message": "Failed authentication."
   },
+  "msgUpdateSuccess": {
+    "message": "Account Infomation updated."
+  },
   "msgNotFoundError": {
     "message": "Can not find the page on server."
   },

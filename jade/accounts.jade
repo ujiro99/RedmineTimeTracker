@@ -17,13 +17,13 @@ div#accounts(ng-controller='AccountCtrl')
                                     placeholder='search...',
                                     ng-model='searchField.text')
         i.fa.fa-search
-      button.btn.rotate__slow(ng-click='state.isAdding = !state.isAdding',
-                              ng-class="{rotate225: state.isAdding}",
+      button.btn.rotate__slow(ng-click='toggleAccountSetting()',
+                              ng-class="{rotate225: !isCollapseSetting}",
                               ga-click='toggleForm')
         span.icon-plus
 
     // add (default collapsed)
-    div.well-container.collapse(collapse='!state.isAdding')
+    div.well-container.collapse(collapse='isCollapseSetting')
       form.well(name='account')
 
         // Auth way
@@ -32,26 +32,43 @@ div#accounts(ng-controller='AccountCtrl')
           button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
         // Auth
-        div.auth(ng-switch on="authWay")
+        div.account-setting(ng-switch on="authWay")
           section.animate-switch(ng-switch-when="id_pass")
             div(ng-include="'template/basic_auth.html'")
           section.animate-switch(ng-switch-when="api_key")
             div(ng-include="'template/api_key.html'")
 
-        // Add Button
-        div.save
-          button.btn.btn-sm.btn-color(
+        // Buttons
+        div.account-setting__buttons
+          // Add Button
+          button.btn.btn-sm.btn-color.account-setting__buttons--add(
             ng-click='findAccount()',
             ga-click='findAccount',
-            uz-loading='state.isSaving')
+            uz-loading='state.isSaving',
+            ng-show="state.isAdding")
             span Add
+
+          // Save Button
+          button.btn.btn-sm.btn-color.account-setting__buttons--save(
+            ng-click='findAccount()',
+            ga-click='findAccount',
+            uz-loading='state.isSaving',
+            ng-show="state.isSetting")
+            span Save
+
+          // Remove Button
+          button.btn.btn-sm.btn-color.account-setting__buttons--remove(
+            ng-click='openRemoveAccount(authParams.url)',
+            ga-click='openRemoveAccount',
+            ng-show="state.isSetting")
+            span Remove
 
 
     // list
     ul.account-list.bottom-space-l
       li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
-         ng-click='openRemoveAccount(account.url)',
-         ga-click='openRemoveAccount')
+         ng-click='openAccountSetting(account.url)',
+         ga-click='openAccountSetting')
         .number
         .list-item
           .list-item__label
@@ -60,5 +77,5 @@ div#accounts(ng-controller='AccountCtrl')
             span.list-item__id(ng-show="account.id") {{account.id}}
             span.list-item__project {{account.projectsCount}}
             span.list-item__url {{account.url}}
-        button.btn(type='button')
-          span.icon-minus
+        button.btn.list-item__button--hover(type='button')
+          i.icon-wrench

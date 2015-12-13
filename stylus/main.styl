@@ -771,7 +771,7 @@ input.project-search
       line-height: height_input px
       font-size: 16px
 
-  .auth
+  .account-setting
     position: relative
     height: 18em
     .animate-switch
@@ -828,12 +828,20 @@ input.project-search
         background-color: color_key
         color: snow
 
-  .save
-    position: relative
+  .account-setting__buttons
     display: flex
     justify-content: center
-    button
-      padding: 0.25em 6.4em
+
+    .account-setting__buttons--add
+      padding: 0.25em 0
+      flex 1
+      margin 0 1.5em
+
+    .account-setting__buttons--save
+    .account-setting__buttons--remove
+      padding: 0.25em 0
+      flex 1
+      margin 0 0.25em
 
   .clear
     align-center()
@@ -870,7 +878,10 @@ input.project-search
           padding-left: 5px
         span
         .btn
+          width: auto
           color: color_key
+          visibility: visible
+          opacity: 1
         .icon-minus
           background-image: -webkit-gradient(linear, left center, right center, from(color_key), to(color_key));
         .number:before
@@ -878,8 +889,12 @@ input.project-search
 
       .btn
         border: none
-        padding: 0 3px
+        padding-left: 2px
         color: #aaa
+        opacity: 0
+        visibility: hidden
+        transition: opacity .2s ease
+        width: 0
 
 #options
 
