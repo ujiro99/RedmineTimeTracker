@@ -73,7 +73,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         if p.equals DataAdapter.selectedProject
           DataAdapter.selectedProject.text = p.text
       DataAdapter.addProjects(data.projects)
-      Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name), 2000
+      Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name), 3000
     else
       _errorLoadProject data
 
@@ -82,7 +82,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _errorLoadProject = (data, status) =>
     if status is STATUS_CANCEL then return
-    Log.debug("_errorLoadProjects() start")
     Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 3000
 
   ###
@@ -94,7 +93,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       .then((data) ->
         if not data?.time_entry_activities? then return
         Log.info "Redmine.loadActivities success"
-        DataAdapter.setActivities(data.url, data.time_entry_activities))
+        DataAdapter.setActivities(data.account.url, data.time_entry_activities))
 
   ###
    load queries for account.
@@ -107,10 +106,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Redmine.get(account).loadQueries(params)
       .then((data) ->
         data.queries.add({id: QUERY_ALL_ID, name: 'All'}, 0)
-        DataAdapter.setQueries(data.url, data.queries)
+        DataAdapter.setQueries(data.account.url, data.queries)
       , (data, status) =>
         if status is STATUS_CANCEL then return
-        Message.toast Resource.string("msgLoadQueryFail").format(data.account.name), 2000)
+        Message.toast Resource.string("msgLoadQueryFail").format(data.account.name), 3000)
 
   ###
    load statuses for account.
@@ -119,10 +118,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _loadStatuses = (account) =>
     Redmine.get(account).loadStatuses()
       .then((data) ->
-        DataAdapter.setStatuses(data.url, data.issue_statuses)
+        DataAdapter.setStatuses(data.account.url, data.issue_statuses)
       , (data, status) ->
         if status is STATUS_CANCEL then return
-        Message.toast(Resource.string("msgLoadStatusesFail").format(data.account.name), 2000))
+        Message.toast(Resource.string("msgLoadStatusesFail").format(data.account.name), 3000))
 
   ###
    load issues for account.

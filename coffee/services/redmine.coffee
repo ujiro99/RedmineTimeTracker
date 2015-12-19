@@ -82,11 +82,16 @@ class Redmine
     deferred = @$q.defer()
     onSuccess = (args...) =>
       @Analytics.sendEvent 'internal', mothodName, 'total_count', args[0].total_count
+      args[0].account = @auth
       deferred.resolve(args...)
       success?(args...)
 
     onError = (args...) =>
       @Analytics.sendException("Error: " + mothodName)
+      @Log.warn mothodName + " failed: " + @auth.name
+      if not args[0] or args[0] is ""
+        args[0] = { error: "failed.", stats: status }
+      args[0].account = @auth
       deferred.reject(args...)
       error?(args...)
 
@@ -289,7 +294,6 @@ class Redmine
     config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>
-        data.account = @auth
         if data?.projects?
           data.projects = for prj in data.projects
             newPrj =
@@ -304,7 +308,6 @@ class Redmine
         r.success(data, status))
       .error((data, status, headers, config) =>
         if data is "" then data = {error: "Cann't connection.", stats: status}
-        data.account = @auth
         r.error(data, status))
 
     return r.promise
@@ -385,9 +388,7 @@ class Redmine
       url: @auth.url + "/enumerations/time_entry_activities.json"
     config = @_setBasicConfig config, @auth
     @$http(config)
-      .success((args...) =>
-        args[0].url = @auth.url
-        r.success(args...))
+      .success(r.success)
       .error(r.error)
     return r.promise
 
@@ -405,9 +406,7 @@ class Redmine
       params: params
     config = @_setBasicConfig config, @auth
     @$http(config)
-      .success((args...) =>
-        args[0].url = @auth.url
-        r.success(args[0]))
+      .success(r.success)
       .error(r.error)
     return r.promise
 
@@ -421,8 +420,6 @@ class Redmine
       url: @auth.url + "/issue_statuses.json"
     config = @_setBasicConfig config, @auth
     @$http(config)
-      .success((args...) =>
-        args[0].url = @auth.url
-        r.success(args[0]))
+      .success(r.success)
       .error(r.error)
     return r.promise

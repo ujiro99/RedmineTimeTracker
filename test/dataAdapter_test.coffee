@@ -79,7 +79,7 @@ describe 'DataAdapter.coffee', ->
         expect(s).to.deep.equal(expectPrjs[index])
 
   ###
-   test for loadTimeEntries(params)
+   test for excludeNonTicketProject(params)
   ###
   describe 'excludeNonTicketProject()', ->
 
