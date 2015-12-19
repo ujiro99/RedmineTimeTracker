@@ -13,6 +13,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   # list for toast Message.
   $rootScope.messages = []
 
+  State.title = Resource.string("extName")
+  $scope.state = State
+
   ###
    Initialize.
   ###

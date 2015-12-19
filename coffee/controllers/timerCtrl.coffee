@@ -104,6 +104,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
         return
       State.isTracking = false
       $scope.$broadcast 'timer-stop'
+      State.title = Resource.string("extName")
     else
       State.isTracking = true
       $scope.$broadcast 'timer-start'
@@ -126,6 +127,29 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     trackedTime = time
     if not State.isTracking
       postEntry(time.days * 60 * 24 + time.hours * 60 + time.minutes)
+
+  ###
+   on timer ticked, update title.
+  ###
+  $scope.$on 'timer-tick', (e, data) ->
+    return if not State.isTracking
+    State.title = formatTime(data.millis)
+
+  ###
+   calculate and format time.
+  ###
+  formatTime = (millis) ->
+    time = {}
+    time.s = Math.floor((millis / 1000) % 60)
+    time.m = Math.floor(((millis / (60000)) % 60))
+    time.h = Math.floor(((millis / (3600000)) % 24))
+
+    for key, num of time
+      num = '' + parseInt(num, 10)
+      num = '0' + num while num.length < 2
+      time[key] = num
+
+    return "#{time.h}:#{time.m}:#{time.s}"
 
   ###
    send time entry.

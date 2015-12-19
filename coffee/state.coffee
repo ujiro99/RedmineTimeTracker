@@ -4,6 +4,7 @@ timeTracker.provider("State", (LogProvider) ->
     debug:          false
     log:            true
     logLevel:       LogProvider.Level.ALL
+    title:          ""
     isTracking:     false
     isAdding:       false
     isSaving:       false

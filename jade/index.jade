@@ -1,9 +1,9 @@
 !!! 5
-html(ng-app='timeTracker', ng-csp="")
+html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
 
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
-    title Redmine Time Tracker
+    title {{state.title}}
     // bower
     link(rel='stylesheet', href='/components/angular/css/angular-csp.css')
     link(rel='stylesheet', href='/components/bootstrap/css/bootstrap.min.css')
@@ -16,8 +16,7 @@ html(ng-app='timeTracker', ng-csp="")
       link(rel='stylesheet', href='/css/mplus-2c-font.css')
       link(rel='stylesheet', href='/css/main.css')
 
-
-  body(ng-controller='MainCtrl')
+  body
 
     div.wrap
       section.header(ng-include="'header.html'")
