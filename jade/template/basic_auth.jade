@@ -5,9 +5,11 @@
     i.fa.fa-asterisk(ng-show='account.id.$error.required')
     input.form-control.input-sm(
       type='text',
-      name='id'
+      name='id',
       ng-model='authParams.id',
-      placeholder='ex) admin'
+      placeholder='ex) admin',
+      ng-disabled="state.isSaving",
+      ng-class="{isSaving: state.isSaving}",
       required)
 
  // pass
@@ -17,9 +19,11 @@
     i.fa.fa-asterisk(ng-show='account.password.$error.required')
     input.form-control.input-sm(
       type='password',
-      name='password'
+      name='password',
       ng-model='authParams.pass',
-      placeholder='ex) passw0rd'
+      placeholder='ex) passw0rd',
+      ng-disabled="state.isSaving",
+      ng-class="{isSaving: state.isSaving}",
       required)
 
 include other_account_settings

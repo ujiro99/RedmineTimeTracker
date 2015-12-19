@@ -50,13 +50,14 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
         delete params.pass
       Account.addAccount params, (result, account) ->
         if result
-          State.isSaving = State.isAdding = State.isSetting = false
-          $scope.isCollapseSetting = true
+          State.isSaving = false
           if DataAdapter.isAccountExists(account)
             DataAdapter.updateAccounts(account)
             Message.toast Resource.string("msgUpdateSuccess"), 3000
             Analytics.sendEvent 'internal', 'authUpdate', 'success'
           else
+            State.isAdding = false
+            $scope.isCollapseSetting = true
             DataAdapter.addAccounts(account)
             Message.toast Resource.string("msgAuthSuccess"), 3000
             Analytics.sendEvent 'internal', 'authAdd', 'success'
@@ -96,6 +97,9 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
    open Account Setting area for modify setting.
   ###
   $scope.openAccountSetting = (url) ->
+    # not change state if now saving.
+    return if $scope.state.isSaving
+
     $scope.state.isSetting = true
     $scope.state.isAdding = false
     $scope.isCollapseSetting = false
@@ -110,6 +114,9 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
    toggle Account Setting area.
   ###
   $scope.toggleAccountSetting = () ->
+    # not change state if now saving.
+    return if $scope.state.isSaving
+
     if $scope.isCollapseSetting # to be open
       $scope.authParams = DEFAULT_PARAM
       $scope.state.isAdding = true

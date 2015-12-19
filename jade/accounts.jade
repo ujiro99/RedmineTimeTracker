@@ -18,7 +18,8 @@ div#accounts(ng-controller='AccountCtrl')
                                     ng-model='searchField.text')
         i.fa.fa-search
       button.btn.rotate__slow(ng-click='toggleAccountSetting()',
-                              ng-class="{rotate225: !isCollapseSetting}",
+                              ng-class="{rotate225: !isCollapseSetting, isSaving: state.isSaving}",
+                              ng-disabled="state.isSaving",
                               ga-click='toggleForm')
         span.icon-plus
 
@@ -28,8 +29,18 @@ div#accounts(ng-controller='AccountCtrl')
 
         // Auth way
         div.btn-group.selectAuth
-          button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
-          button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
+          button.btn.btn-xs.selectAuth__button(
+            type='radio',
+            ng-model='authWay',
+            btn-radio="'id_pass'",
+            ng-disabled="state.isSaving",
+            ng-class="{isSaving: state.isSaving}") ID/Pass
+          button.btn.btn-xs.selectAuth__button(
+            type='radio',
+            ng-model='authWay',
+            btn-radio="'api_key'",
+            ng-disabled="state.isSaving",
+            ng-class="{isSaving: state.isSaving}") API key
 
         // Host
         div.property-list.property-list__first
@@ -42,6 +53,8 @@ div#accounts(ng-controller='AccountCtrl')
               ng-model='authParams.url',
               ng-class='{invalid:!account.url.$valid}',
               placeholder='ex) https://redmine.org',
+              ng-disabled="state.isSaving",
+              ng-class="{isSaving: state.isSaving}"
               required)
 
         // Auth
@@ -73,7 +86,9 @@ div#accounts(ng-controller='AccountCtrl')
           button.btn.btn-sm.btn-color.account-setting__buttons--remove(
             ng-click='openRemoveAccount(authParams.url)',
             ga-click='openRemoveAccount',
-            ng-show="state.isSetting")
+            ng-show="state.isSetting",
+            ng-disabled="state.isSaving",
+            ng-class="{isSaving: state.isSaving}")
             span Remove
 
 
@@ -81,6 +96,8 @@ div#accounts(ng-controller='AccountCtrl')
     ul.account-list.bottom-space-l
       li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
          ng-click='openAccountSetting(account.url)',
+         ng-disabled="state.isSaving",
+         ng-class="{isSaving: state.isSaving}",
          ga-click='openAccountSetting')
         .number
         .list-item
@@ -90,5 +107,6 @@ div#accounts(ng-controller='AccountCtrl')
             span.list-item__id(ng-show="account.id") {{account.id}}
             span.list-item__project {{account.projectsCount}}
             span.list-item__url {{account.url}}
-        button.btn.list-item__button--hover(type='button')
-          i.icon-wrench
+        button.btn.list-item__button--hover(
+          type='button')
+            i.icon-wrench

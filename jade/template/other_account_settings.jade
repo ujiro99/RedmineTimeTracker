@@ -5,6 +5,8 @@
     input.form-control.input-sm(type='text',
       name='name',
       placeholder="ex) foo's server",
+      ng-disabled="state.isSaving",
+      ng-class="{isSaving: state.isSaving}",
       ng-model='authParams.name')
 
 // Number of projects
@@ -15,4 +17,6 @@
       name='numProjects',
       placeholder="Number of projects to fetch",
       min="0",
+      ng-disabled="state.isSaving",
+      ng-class="{isSaving: state.isSaving}",
       ng-model='authParams.numProjects')

@@ -5,9 +5,11 @@
     i.fa.fa-asterisk(ng-show='account.apiKey.$error.required')
     input.form-control.input-sm(
       type='text',
-      name='apiKey'
+      name='apiKey',
       ng-model='authParams.apiKey',
-      placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5'
+      placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5',
+      ng-disabled="state.isSaving",
+      ng-class="{isSaving: state.isSaving}",
       required)
 
 include other_account_settings
