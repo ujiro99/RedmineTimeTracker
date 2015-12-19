@@ -31,10 +31,12 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
         url:    $scope.authParams.url
         id:     $scope.authParams.id
         pass:   $scope.authParams.pass
+        name:   $scope.authParams.name
     else
       authParams =
         url:    $scope.authParams.url
         apiKey: $scope.authParams.apiKey
+        name:   $scope.authParams.name
     Redmine.get(authParams).findUser(saveAccount, failAuthentication)
 
 
