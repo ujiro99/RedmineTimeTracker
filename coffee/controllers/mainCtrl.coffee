@@ -33,7 +33,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    initialize events.
   ###
   _initializeEvents = () ->
-    Log.debug "start initialize Event."
+    Log.debug "[4] initializeEvents start"
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
     DataAdapter.addEventListener DataAdapter.PROJECTS_CHANGED, () ->
       Project.syncLocal(DataAdapter.getProjects())
@@ -41,7 +41,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Ticket.syncLocal(DataAdapter.tickets)
     Option.onChanged('reportUsage', (e) -> Analytics.setPermission(e) )
     Option.onChanged('hideNonTicketProject',  _toggleProjectHidden)
-    Log.debug "finish initialize Event."
+    Log.debug "[4] initializeEvents success"
 
   ###
    load projects from redmine.
@@ -201,22 +201,27 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    initialize GoogleAnalytics.
   ###
   _initializeGoogleAnalytics = () ->
+    Log.debug "[1] initializeGoogleAnalytics start"
     Analytics.init {
       serviceName:   "RedmineTimeTracker"
       analyticsCode: "UA-32234486-7"
     }
     Analytics.sendView("/app/")
+    Log.debug "[1] initializeGoogleAnalytics success"
 
   ###
    initialize Data from chrome storage.
   ###
   _initializeDataFromChrome = () ->
-    Log.debug "start initialize data."
+    Log.debug "[2] initializeDataFromChrome start"
     Option.loadOptions()
       .then(_initializeAccount)
       .then(_initializeProject)
       .then(_initializeIssues)
-      .then(() -> Log.debug "finish initialize data.")
+      .then(() ->
+        Log.debug "[2] initializeDataFromChrome success."
+      , () ->
+        Log.warn "[2] initializeDataFromChrome failed")
 
   ###
    Initialize account from chrome storage.
@@ -232,23 +237,24 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    Initialize project from chrome storage.
   ###
   _initializeProject = () ->
-    Project.load().then (projects) ->
-      DataAdapter.addProjects(projects)
+    Project.load()
+      .then((projects) -> DataAdapter.addProjects(projects))
 
   ###
    Initialize issues status.
   ###
   _initializeIssues = () ->
-    Ticket.load().then (tickets) ->
-      DataAdapter.toggleIsTicketShow(tickets)
+    Ticket.load()
+      .then((tickets) -> DataAdapter.toggleIsTicketShow(tickets))
 
   ###
    initialize Data from Redmine.
   ###
   _initializeDataFromRedmine = () ->
+    Log.debug "[3] initializeDataFromRedmine start "
     accounts = DataAdapter.getAccount()
-    _loadRedmine(accounts)
-
+    $q.all(_loadRedmine(accounts))
+      .finally(-> Log.debug "[3] initializeDataFromRedmine success")
 
   ###
    set datasync event to chrome alarms.
