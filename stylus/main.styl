@@ -29,12 +29,6 @@ input.input-sm
   display: flex
   flex-direction: column
 
-  .invalid
-  .invalid:hover
-  .invalid:focus
-    border-color: #e9322d
-    box-shadow: 0 0 6px #f8b9b7
-
   #issue header .caption .title .icon
     margin: 3px 8px 0 0
 
@@ -102,8 +96,6 @@ input.input-sm
   margin-right -5px
   padding-right 5px
   position: relative
-  input
-    padding-right: 22px
   i
     opacity: .5
     position: absolute
@@ -302,7 +294,7 @@ input.project-search
 
 .property-list
   border-bottom: solid 1px $color_border
-  padding: 2px 9px 2px 10px
+  padding: 0px 9px 0px 10px
   height: $height_property_list
   transition: background .2s ease
   &:hover
@@ -316,16 +308,46 @@ input.project-search
     display: flex
     align-items: center
     justify-content: space-between
-    cursor: pointer
+    height: 100%
     margin: 0
+
+  input:not([type=checkbox])
+    box-shadow: none
+    background: transparent
+    text-align: right
+    flex: 1
+    &:hover, &:focus
+      box-shadow: none
+
+  input[type=number]::-webkit-inner-spin-button
+    -webkit-appearance: none
+
+  input::-webkit-input-placeholder
+    color: #aaa
 
   input.switch
     position: relative
     left: 6px
 
-.property-list .input-sm
-  font-size: $font_size_selected
-  color: $color_font_selected
+  .input-sm
+    font-size: $font_size_selected
+    color: $color_font_selected
+
+  .input-sm[type=select]
+    padding-right: 22px
+
+  .input-sm:not([type=select])
+    padding: 0 0 0 10px
+
+  .fa.fa-asterisk
+    font-size: 1em
+    width: 0
+    color: color_key
+    opacity: 0.8
+    margin-left: 0.2em
+
+.well > .property-list:first-child
+  border-top: solid 1px $color_border
 
 .property-list
 .property-list__selected
@@ -749,20 +771,9 @@ input.project-search
       height: 0px
       opacity: 0
 
-  .well
-    padding: 15px 0 10px 0
-
-  .well > div:nth-child(1)
-    border-top: solid 1px $color_border
-
 #accounts
 
   label-width = 70
-
-  .form-group
-    margin-bottom: 10px
-    display: flex
-    align-items: center
 
   .input-and-btn
     .btn
@@ -773,7 +784,7 @@ input.project-search
 
   .account-setting
     position: relative
-    height: 18em
+    height: 13em
     .animate-switch
       &.ng-enter
       &.ng-leave
@@ -787,26 +798,21 @@ input.project-search
         &.ng-leave-active
           opacity: 0
 
-  .setting-labels
-    width: label-width px
-    color: #888
-    label
-      font-weight: normal
+  .account-setting__buttons
+    padding: 0 2em
+    display: flex
+    justify-content: center
 
-  .setting-options
-    height: height_input + 8 px
-    flex: 1
+    .account-setting__buttons--add
+      padding: 0.25em 0
+      flex 1
+      margin 0 2.5em
 
-  .url
-    span
-      display: table
-      position: relative
-      left: 100%
-      top: -22px
-      margin-left: -18px
-      font-size: 1.2em
-      color: color_key
-      background-color: #fff
+    .account-setting__buttons--save
+    .account-setting__buttons--remove
+      padding: 0.25em 0
+      flex 1
+      margin 0 0.25em
 
   .selectAuth
     margin: 0px auto 15px auto
@@ -827,21 +833,6 @@ input.project-search
       &:hover
         background-color: color_key
         color: snow
-
-  .account-setting__buttons
-    display: flex
-    justify-content: center
-
-    .account-setting__buttons--add
-      padding: 0.25em 0
-      flex 1
-      margin 0 1.5em
-
-    .account-setting__buttons--save
-    .account-setting__buttons--remove
-      padding: 0.25em 0
-      flex 1
-      margin 0 0.25em
 
   .clear
     align-center()
@@ -897,9 +888,6 @@ input.project-search
         width: 0
 
 #options
-
-  input[type=number]::-webkit-inner-spin-button
-    -webkit-appearance: none
 
   .setting__section
     display: flex

@@ -1,0 +1,18 @@
+// Name
+.property-list
+  label.control-label
+    span Name
+    input.form-control.input-sm(type='text',
+      name='name',
+      placeholder="ex) foo's server",
+      ng-model='authParams.name')
+
+// Number of projects
+.property-list
+  label.control-label
+    span Number of projects
+    input.form-control.input-sm(type='number',
+      name='numProjects',
+      placeholder="Number of projects to fetch",
+      min="0",
+      ng-model='authParams.numProjects')

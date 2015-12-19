@@ -1,15 +1,13 @@
-// Host
-.settings-section.form-group.url(ng-include="'template/url.html'")
-
 // Api key
-.settings-section.form-group
-  .setting-labels
-    label.control-label API key
-  .setting-options
-    input.form-control.input-sm(type='text', ng-model='authParams.apiKey', placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5')
+.property-list
+  label.control-label
+    span API key
+    i.fa.fa-asterisk(ng-show='account.apiKey.$error.required')
+    input.form-control.input-sm(
+      type='text',
+      name='apiKey'
+      ng-model='authParams.apiKey',
+      placeholder='ex) d8a87e90bb6c59aa786c29be18143cdd993f33c5'
+      required)
 
-// Name
-.settings-section.form-group(ng-include="'template/name.html'")
-
-// Number fo projects
-.settings-section.form-group(ng-include="'template/num_projects.html'")
+include other_account_settings

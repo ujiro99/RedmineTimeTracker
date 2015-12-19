@@ -31,6 +31,19 @@ div#accounts(ng-controller='AccountCtrl')
           button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'id_pass'") ID/Pass
           button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
+        // Host
+        div.property-list
+          label.control-label
+            span Server URL
+            i.fa.fa-asterisk(ng-show='account.url.$error.required')
+            input.form-control.input-sm(
+              type='text',
+              name='url',
+              ng-model='authParams.url',
+              ng-class='{invalid:!account.url.$valid}',
+              placeholder='ex) https://redmine.org',
+              required)
+
         // Auth
         div.account-setting(ng-switch on="authWay")
           section.animate-switch(ng-switch-when="id_pass")

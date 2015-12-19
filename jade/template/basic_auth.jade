@@ -1,22 +1,25 @@
-// Host
-.settings-section.form-group.url(ng-include="'template/url.html'")
-
 // id
-.settings-section.form-group
-  .setting-labels
-    label.control-label User ID
-  .setting-options
-    input.form-control.input-sm(type='text', ng-model='authParams.id', placeholder='ex) admin')
+.property-list
+  label.control-label
+    span User ID
+    i.fa.fa-asterisk(ng-show='account.id.$error.required')
+    input.form-control.input-sm(
+      type='text',
+      name='id'
+      ng-model='authParams.id',
+      placeholder='ex) admin'
+      required)
 
  // pass
-.settings-section.form-group
-  .setting-labels
-    label.control-label Password
-  .setting-options
-    input.form-control.input-sm(type='password', ng-model='authParams.pass', placeholder='ex) passw0rd')
+.property-list
+  label.control-label
+    span Password
+    i.fa.fa-asterisk(ng-show='account.password.$error.required')
+    input.form-control.input-sm(
+      type='password',
+      name='password'
+      ng-model='authParams.pass',
+      placeholder='ex) passw0rd'
+      required)
 
-// Name
-.settings-section.form-group(ng-include="'template/name.html'")
-
-// Number of projects
-.settings-section.form-group(ng-include="'template/num_projects.html'")
+include other_account_settings

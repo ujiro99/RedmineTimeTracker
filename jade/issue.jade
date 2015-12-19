@@ -35,7 +35,8 @@ div#issue(ng-controller='IssueCtrl')
         // Query
         div.searchform-with-icon.searchform-icon.property-list
           span Custom queries
-          input.sfTypeahead.form-control.input-sm(type="text"
+          input.sfTypeahead.form-control.input-sm(
+            type="select"
             options="inputOptions"
             datasets="queryData"
             ng-model="data.selectedQuery"
