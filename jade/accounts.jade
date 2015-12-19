@@ -32,7 +32,7 @@ div#accounts(ng-controller='AccountCtrl')
           button.btn.btn-xs.selectAuth__button(type='radio', ng-model='authWay', btn-radio="'api_key'") API key
 
         // Host
-        div.property-list
+        div.property-list.property-list__first
           label.control-label
             span Server URL
             i.fa.fa-asterisk(ng-show='account.url.$error.required')
