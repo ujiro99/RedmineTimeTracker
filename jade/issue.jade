@@ -46,7 +46,7 @@ div#issue(ng-controller='IssueCtrl')
 
         // Other Parameters
         tabset.property-list__tab(vertical="true")
-          tab(heading="{{prop}}",
+          tab(heading="{{prop.camelize()}}",
               id="id_{{prop}}",
               ng-repeat="prop in Const.ISSUE_PROPS",
               uz-hover="tabState[prop] = hover",
