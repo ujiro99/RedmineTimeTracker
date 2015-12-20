@@ -327,7 +327,8 @@ class Redmine
       return @loadProjects(params)
 
     @$q.all(promises)
-      .then((d) -> return d.reduce((a, b) -> a.projects.add(b.projects); a)
+      .then((d) ->
+        return d.reduce((a, b) -> a.projects.add(b.projects); a)
       , (d) -> return d)
 
 
@@ -339,7 +340,7 @@ class Redmine
     r = @_bindDefer(null, null, "loadProjectById")
     config =
       method: "GET"
-      url: @auth.url + "/projects/#{issueId}.json"
+      url: @auth.url + "/projects/#{id}.json"
     config = @_setBasicConfig config, @auth
     @$http(config)
       .success((data, status, headers, config) =>

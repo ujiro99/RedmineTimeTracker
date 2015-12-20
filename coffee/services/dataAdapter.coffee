@@ -422,7 +422,11 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         methodName = "get" + p.camelize()
         DataAdapter.prototype[methodName] = (url) ->
           if url
-            return @_data[url][p]
+            res = @_data[url][p]
+            if Object.isArray(res)
+              return [].concat(res) # return copy
+            else
+              return res
           else
             concated = []
             for url, dataModel of @_data

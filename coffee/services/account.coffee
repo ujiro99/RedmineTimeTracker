@@ -20,9 +20,13 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
      @param numProjects {Number} Number of projects to fetch.
      @param projectList {Array} Project id which will be fetched.
     ###
-    constructor: (@url, @apiKey, @id, @pass, @name, @numProjects, @projectList) ->
+    constructor: (@url, @apiKey, @id, @pass, @name, @numProjects, projectList) ->
       if not @name or @name.isBlank()
         @name = @url
+      if Object.isString(projectList)
+        @projectList = @parseProjectList(projectList)
+      else
+        @projectList = projectList
 
     ###
      set parameters from Object.
@@ -127,6 +131,28 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         @numProjects
         @projectList
       )
+
+    ###
+     parse projectList string to array.
+    ###
+    parseProjectList: (str) ->
+      return null if not str
+      array = []
+      reRange = /(\d+)-(\d+)/
+      reNegative = /-\d+/
+      reNum = /\d+/
+      tmp = str.split(',')
+      res = tmp.map (n) ->
+        found = n.match(reRange)
+        if found and found.length is 3
+          return [found[1]-0, found[2]-0]
+        found = n.match(reNegative)
+        if found
+          return null
+        found = n.match(reNum)
+        if found and found.length is 1
+          return found[0]-0
+      return res.compact()
 
 
   ###

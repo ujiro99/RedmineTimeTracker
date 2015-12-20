@@ -60,9 +60,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _loadProjects = (a) ->
     redmine = Redmine.get(a)
     promises = []
-    promises.push(redmine.loadProjectsRange({}, 0, a.numProjects))
+    a.numProjects > 0 and promises.push(redmine.loadProjectsRange({}, 0, a.numProjects))
     if a.projectList
-      promises.push a.projectList.map (id) ->
+      promises.add a.projectList.map (id) ->
         if Object.isNumber(id)
           return redmine.loadProjectById(id)
         if Object.isArray(id)
@@ -76,6 +76,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _successLoadProject = (data) =>
     loaded = _mergeResult(data)
     if loaded
+      # update user specified settings using saved data on chrome.
       projects = DataAdapter.getProjects(loaded.account.url)
       loaded.projects.map (p) ->
         saved = projects.find (n) -> n.equals p
@@ -85,6 +86,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         # On chrome, project doesn't have text. Update it here.
         if p.equals DataAdapter.selectedProject
           DataAdapter.selectedProject.text = p.text
+      # delete saved data.
+      DataAdapter.removeProjects(projects)
+      # update new data.
       DataAdapter.addProjects(loaded.projects)
       Message.toast Resource.string("msgLoadProjectSuccess").format(loaded.account.name), 3000
     else

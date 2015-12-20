@@ -20,3 +20,15 @@
       ng-disabled="state.isSaving",
       ng-class="{isSaving: state.isSaving}",
       ng-model='authParams.numProjects')
+
+// project id which will be fetched.
+.property-list
+  label.control-label
+    span White list of Project ID
+    input.form-control.input-sm(type='text',
+      name='projectList',
+      placeholder="ex) 1, 3-5, 10",
+      min="0",
+      ng-disabled="state.isSaving",
+      ng-class="{isSaving: state.isSaving}",
+      ng-model='authParams.projectList')

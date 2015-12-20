@@ -168,6 +168,12 @@ describe 'DataAdapter.coffee', ->
       DataAdapter.addProjects(expectPrjs1)
       expect(DataAdapter.getProjects()).to.have.length(3)
 
+    it "should add 3 projects if input duplicated data.", () ->
+      expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+      DataAdapter.addProjects(expectPrjs1)
+      DataAdapter.addProjects(expectPrjs1)
+      expect(DataAdapter.getProjects()).to.have.length(3)
+
     it "should add 3 projects twice.", () ->
       expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
       expectPrjs2 = TestData.prj2.map (p) -> Project.create(p)
@@ -193,6 +199,27 @@ describe 'DataAdapter.coffee', ->
       expectPrjs = TestData.prj3.map (p) -> Project.create(p)
       DataAdapter.addProjects(expectPrjs)
       expect(DataAdapter.getProjects()).to.have.length(0)
+
+  ###
+   test for removeProjects
+  ###
+  describe "removeProjects(projects)", () ->
+
+    it "should remove 3 projects.", () ->
+      expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+      DataAdapter.addProjects(expectPrjs1)
+      projects = DataAdapter.getProjects()
+      DataAdapter.removeProjects(projects)
+      projects = DataAdapter.getProjects()
+      expect(projects).to.have.length(0)
+
+    it "should remove 10 projects.", () ->
+      expectPrjs1 = TestData.prj10.map (p) -> Project.create(p)
+      DataAdapter.addProjects(expectPrjs1)
+      projects = DataAdapter.getProjects(expectPrjs1[0].url)
+      DataAdapter.removeProjects(projects)
+      projects = DataAdapter.getProjects()
+      expect(projects).to.have.length(0)
 
 
   describe "addAccounts(accounts)", () ->
