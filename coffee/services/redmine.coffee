@@ -327,9 +327,35 @@ class Redmine
       return @loadProjects(params)
 
     @$q.all(promises)
-      .then(
-        (d) -> d.reduce((a, b) -> a.projects.add(b.projects); a)
+      .then((d) -> return d.reduce((a, b) -> a.projects.add(b.projects); a)
       , (d) -> return d)
+
+
+  ###
+   load projects using id.
+  ###
+  loadProjectById: (id) ->
+    @Log.debug "loadProjectById start"
+    r = @_bindDefer(null, null, "loadProjectById")
+    config =
+      method: "GET"
+      url: @auth.url + "/projects/#{issueId}.json"
+    config = @_setBasicConfig config, @auth
+    @$http(config)
+      .success((data, status, headers, config) =>
+        if data?.project?
+          newPrj =
+            url:  @auth.url,
+            id:   data.project.id,
+            text: data.project.name,
+            show: @Const.SHOW.DEFAULT
+          data.project = @Project.create(newPrj)
+          @Log.groupCollapsed "redmine.loadProjectById()"
+          @Log.table data.project
+          @Log.groupEnd "redmine.loadProjectById()"
+        r.success(data, status))
+      .error(r.error)
+    return r.promise
 
 
   ###

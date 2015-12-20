@@ -58,16 +58,26 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    load projects from redmine.
   ###
   _loadProjects = (a) ->
-    Redmine.get(a).loadProjectsRange({}, 0, a.numProjects)
+    redmine = Redmine.get(a)
+    promises = []
+    promises.push(redmine.loadProjectsRange({}, 0, a.numProjects))
+    if a.projectList
+      promises.push a.projectList.map (id) ->
+        if Object.isNumber(id)
+          return redmine.loadProjectById(id)
+        if Object.isArray(id)
+          return redmine.loadProjectsRange({}, id[0], id[1])
+    $q.all(promises)
       .then(_successLoadProject, _errorLoadProject)
 
   ###
    load projects from redmine.
   ###
-  _successLoadProject = (data, status) =>
-    if data.projects?
-      projects = DataAdapter.getProjects(data.account.url)
-      data.projects.map (p) ->
+  _successLoadProject = (data) =>
+    loaded = _mergeResult(data)
+    if loaded
+      projects = DataAdapter.getProjects(loaded.account.url)
+      loaded.projects.map (p) ->
         saved = projects.find (n) -> n.equals p
         return if not saved
         p.show = saved.show
@@ -75,16 +85,31 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         # On chrome, project doesn't have text. Update it here.
         if p.equals DataAdapter.selectedProject
           DataAdapter.selectedProject.text = p.text
-      DataAdapter.addProjects(data.projects)
-      Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name), 3000
+      DataAdapter.addProjects(loaded.projects)
+      Message.toast Resource.string("msgLoadProjectSuccess").format(loaded.account.name), 3000
     else
       _errorLoadProject data
 
   ###
+   merge projects.
+  ###
+  _mergeResult = (data) ->
+    return null if not data[0]
+    if data[0].project
+      data[0].projects = [data[0].project]
+
+    data.reduce (a, b) ->
+      if b.projects
+        a.projects.push b.projects
+      else if b.project
+        a.projects.push b.project
+      return a
+
+  ###
    show error message.
   ###
-  _errorLoadProject = (data, status) =>
-    if status is STATUS_CANCEL then return
+  _errorLoadProject = (data) =>
+    if data.status is STATUS_CANCEL then return
     Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 3000
 
   ###
