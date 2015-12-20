@@ -74,7 +74,7 @@
     "message": "1分以上の計測が必要です。"
   },
   "msgSelectActivity": {
-    "message": "\"活動\"を選択してください。"
+    "message": "\"Activity\"を選択してください。"
   },
   "msgSelectTicket": {
     "message": "\"チケット\"を選択してください。"

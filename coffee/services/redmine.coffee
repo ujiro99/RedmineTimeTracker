@@ -87,8 +87,8 @@ class Redmine
       success?(args...)
 
     onError = (args...) =>
-      @Analytics.sendException("Error: " + mothodName)
-      @Log.warn mothodName + " failed: " + @auth.name
+      @Analytics.sendException("Error: " + mothodName + "\tstatus: " + args[1])
+      @Log.warn(mothodName + " failed:\taccount: " + @auth.name + "\tstatus: " + args[1])
       if not args[0] or args[0] is ""
         args[0] = { error: "failed.", stats: status }
       args[0].account = @auth
@@ -254,7 +254,7 @@ class Redmine
       .error((args...) =>
         @Log.info("Time Entry Post Failed.\t account:#{@auth.name}\tid:#{@_timeEntryData.time_entry.issue_id}\thours:#{@_timeEntryData.time_entry.hours}")
         @Log.debug args
-        @Analytics.sendException("Error: submitTime")
+        @Analytics.sendException("Error: submitTime\tstatus: " + args[1])
         error(args...))
 
 
@@ -306,9 +306,7 @@ class Redmine
           @Log.table data.projects
           @Log.groupEnd "redmine.loadProjects()"
         r.success(data, status))
-      .error((data, status, headers, config) =>
-        if data is "" then data = {error: "Cann't connection.", stats: status}
-        r.error(data, status))
+      .error(r.error)
 
     return r.promise
 

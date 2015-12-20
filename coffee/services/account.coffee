@@ -18,7 +18,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
      @param pass {String} User password.
      @param name {String} Redmine's name for identify by user.
      @param numProjects {Number} Number of projects to fetch.
-     @param @projectList {Array} Project id which will be fetched.
+     @param projectList {Array} Project id which will be fetched.
     ###
     constructor: (@url, @apiKey, @id, @pass, @name, @numProjects, @projectList) ->
       if not @name or @name.isBlank()

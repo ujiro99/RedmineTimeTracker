@@ -4,6 +4,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   COMMENT_MAX = 255
   SWITCHING_TIME = 300
 
+  CHECK =
+    OK: 0
+    CANCEL: 1
+    NG: -1
+
   $scope.state = State
   $scope.data = DataAdapter
   $scope.comment =
@@ -13,13 +18,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.mode = "auto"
   $scope.time = { min: 0 }
 
-  trackedTime = {}
-
-
   # typeahead options
   $scope.inputOptions =
     highlight: true
     minLength: 0
+
+  trackedTime = {}
 
 
   ###
@@ -97,13 +101,14 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
-    if not DataAdapter.selectedTicket then return
+    return if preCheck() isnt CHECK.OK
     if State.isTracking
-      if $scope.comment.remain < 0
-        Message.toast Resource.string("msgCommentTooLong")
-        return
-      State.isTracking = false
-      $scope.$broadcast 'timer-stop'
+      checkResult = checkEntry()
+      if checkResult is CHECK.CANCEL
+        cancelSubmit()
+      else if checkResult is CHECK.OK
+        State.isTracking = false
+        $scope.$broadcast 'timer-stop'
       State.title = Resource.string("extName")
     else
       State.isTracking = true
@@ -114,9 +119,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    on clicked manual post button, send time entry.
   ###
   $scope.clickManual = () ->
-    if $scope.comment.remain < 0
-      Message.toast Resource.string("msgCommentTooLong")
-      return
+    checkResult = checkEntry()
+    return if checkResult isnt CHECK.OK
     postEntry($scope.time.min)
 
 
@@ -127,6 +131,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     trackedTime = time
     if not State.isTracking
       postEntry(time.days * 60 * 24 + time.hours * 60 + time.minutes)
+    else
+      Log.debug("timer-stopped: submit canceled.")
+
 
   ###
    on timer ticked, update title.
@@ -134,6 +141,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.$on 'timer-tick', (e, data) ->
     return if not State.isTracking
     State.title = formatTime(data.millis)
+    $scope.time.min = Math.floor(((data.millis / (60000)) % 60))
+
 
   ###
    calculate and format time.
@@ -151,19 +160,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
 
     return "#{time.h}:#{time.m}:#{time.s}"
 
+
   ###
    send time entry.
   ###
   postEntry = (minutes) ->
-    if not DataAdapter.selectedTicket
-      Message.toast Resource.string("msgSelectTicket"), 2000
-      return
-    if not DataAdapter.selectedActivity
-      Message.toast Resource.string("msgSelectActivity"), 2000
-      return
-    if minutes < ONE_MINUTE
-      Message.toast Resource.string("msgShortTime"), 2000
-      return
     hours = minutes / 60
     hours = Math.floor(hours * 100) / 100
     total = DataAdapter.selectedTicket.total + hours
@@ -177,6 +178,41 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     account = DataAdapter.getAccount(url)
     Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
     Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
+
+
+  ###
+   check time entry before starting track.
+  ###
+  preCheck = (minute) ->
+    if not DataAdapter.selectedTicket
+      Message.toast Resource.string("msgSelectTicket"), 2000
+      return CHECK.NG
+    if not DataAdapter.selectedActivity
+      Message.toast Resource.string("msgSelectActivity"), 2000
+      return CHECK.NG
+    return CHECK.OK
+
+
+  ###
+   check time entry.
+  ###
+  checkEntry = (minute) ->
+    return if preCheck() isnt CHECK.OK
+    if $scope.comment.remain < 0
+      Message.toast Resource.string("msgCommentTooLong"), 2000
+      return CHECK.NG
+    if $scope.time.min < ONE_MINUTE
+      Message.toast Resource.string("msgShortTime"), 2000
+      return CHECK.CANCEL
+    return CHECK.OK
+
+
+  ###
+   cancel submit time entry
+  ###
+  cancelSubmit = () ->
+    $scope.$broadcast 'timer-stop'
+    State.isTracking = false
 
 
   ###
