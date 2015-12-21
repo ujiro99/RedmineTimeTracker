@@ -60,7 +60,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _loadProjects = (a) ->
     redmine = Redmine.get(a)
     promises = []
-    a.numProjects > 0 and promises.push(redmine.loadProjectsRange({}, 0, a.numProjects))
+    if a.numProjects is 0
+    else if not a.numProjects
+      promises.push(redmine.loadProjectsRange({}, 0))
+    else
+      promises.push(redmine.loadProjectsRange({}, 0, a.numProjects))
     if a.projectList
       promises.add a.projectList.map (id) ->
         if Object.isNumber(id)
@@ -104,7 +108,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
 
     data.reduce (a, b) ->
       if b.projects
-        a.projects.push b.projects
+        a.projects.add b.projects
       else if b.project
         a.projects.push b.project
       return a
