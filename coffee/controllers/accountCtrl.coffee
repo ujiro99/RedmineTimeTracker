@@ -10,7 +10,6 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
   $scope.options = Option.getOptions()
   $scope.authWay = ID_PASS
   $scope.searchField = text: ''
-  $scope.isCollapseSetting = true
   $scope.state = State
   $scope.R = Resource
 
@@ -59,7 +58,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
             Analytics.sendEvent 'internal', 'authUpdate', 'success'
           else
             State.isAdding = false
-            $scope.isCollapseSetting = true
+            $scope.state.isCollapseSetting = true
             DataAdapter.addAccounts(account)
             Message.toast Resource.string("msgAuthSuccess"), 3000
             Analytics.sendEvent 'internal', 'authAdd', 'success'
@@ -104,8 +103,10 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
 
     $scope.state.isSetting = true
     $scope.state.isAdding = false
-    $scope.isCollapseSetting = false
-    $scope.authParams = DataAdapter.getAccount(url)
+    $scope.state.isCollapseSetting = false
+
+    # use copy data to avoid changing original one.
+    $scope.authParams = angular.copy(DataAdapter.getAccount(url))
     if $scope.authParams.apiKey
       $scope.authWay = API_KEY
     else
@@ -119,7 +120,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
     # not change state if now saving.
     return if $scope.state.isSaving
 
-    if $scope.isCollapseSetting # to be open
+    if $scope.state.isCollapseSetting # to be open
       $scope.authParams = DEFAULT_PARAM
       $scope.state.isAdding = true
       $scope.state.isSetting = false
@@ -129,7 +130,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
         $scope.state.isAdding = false
         $scope.state.isSetting = false
       , COLLAPSE_ANIMATION_DURATION
-    $scope.isCollapseSetting = !$scope.isCollapseSetting
+    $scope.state.isCollapseSetting = !$scope.state.isCollapseSetting
 
 
   ###

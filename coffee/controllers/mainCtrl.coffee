@@ -54,71 +54,75 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         .then(_loadIssues(a))
         .then(_loadIssueCount(a))
 
+
   ###
    load projects from redmine.
   ###
   _loadProjects = (a) ->
     redmine = Redmine.get(a)
     promises = []
-    if a.numProjects is 0
-    else if not a.numProjects
-      promises.push(redmine.loadProjectsRange({}, 0))
-    else
+    # fetch projects according to numProjects.
+    if a.numProjects isnt 0
       promises.push(redmine.loadProjectsRange({}, 0, a.numProjects))
+    # fetch projects according to projectList.
     if a.projectList
-      promises.add a.projectList.map (id) ->
-        if Object.isNumber(id)
-          return redmine.loadProjectById(id)
-        if Object.isArray(id)
-          return redmine.loadProjectsRange({}, id[0], id[1])
-    $q.all(promises)
-      .then(_successLoadProject, _errorLoadProject)
+      promises.add a.projectList.map (id) -> redmine.loadProjectById(id)
+    # if nothing to fetch...
+    if promises.length is 0
+      Message.toast Resource.string("msgCannotFetchProject").format(a.name), 5000
+      Log.warn "loadProjects: account.numProjects: #{a.numProjects}\taccount.projectList: #{a.projectList}"
+      return
+    promises = promises.map (p) -> p.then(_successLoadProject, _errorLoadProject)
+    $q.all(promises).then(_updateProjects)
+
 
   ###
-   load projects from redmine.
+   show success message.
   ###
   _successLoadProject = (data) =>
-    loaded = _mergeResult(data)
-    if loaded
-      # update user specified settings using saved data on chrome.
-      projects = DataAdapter.getProjects(loaded.account.url)
-      loaded.projects.map (p) ->
-        saved = projects.find (n) -> n.equals p
-        return if not saved
-        p.show = saved.show
-        p.queryId = saved.queryId
-        # On chrome, project doesn't have text. Update it here.
-        if p.equals DataAdapter.selectedProject
-          DataAdapter.selectedProject.text = p.text
-      # delete saved data.
-      DataAdapter.removeProjects(projects)
-      # update new data.
-      DataAdapter.addProjects(loaded.projects)
-      Message.toast Resource.string("msgLoadProjectSuccess").format(loaded.account.name), 3000
-    else
+    if not data.project and not data.projects and data.projects.length is 0
       _errorLoadProject data
+      return null
+    data.projects = data.projects or [data.project]
+    Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name, data.projects.length), 3000
+    return data.projects
 
-  ###
-   merge projects.
-  ###
-  _mergeResult = (data) ->
-    return null if not data[0]
-    if data[0].project
-      data[0].projects = [data[0].project]
-
-    data.reduce (a, b) ->
-      if b.projects
-        a.projects.add b.projects
-      else if b.project
-        a.projects.push b.project
-      return a
 
   ###
    show error message.
   ###
   _errorLoadProject = (data) =>
     if data.status is STATUS_CANCEL then return
-    Message.toast Resource.string("msgLoadProjectFail").format(data.account.name), 3000
+    if data.targetId
+      message = Resource.string("msgLoadProjectFailId").format(data.account.name, data.targetId) + Resource.string("status").format(data.status)
+    else
+      message = Resource.string("msgLoadProjectFaild").format(data.account.name, data.account.numProjects or '') + Resource.string("status").format(data.status)
+    Message.toast message, 5000
+    return null
+
+
+  ###
+   update projects and remove projects which was not fetched.
+   @param projectsList {Array} - array of fetched projects.
+  ###
+  _updateProjects = (projectsList) =>
+    projects = projectsList.compact().flatten().unique("id")
+
+    # update settings specified by user, using saved data on chrome.
+    saved = DataAdapter.getProjects(projects[0].url)
+    projects.map (p) ->
+      s = saved.find (n) -> n.equals p
+      return if not s
+      p.show = s.show
+      p.queryId = s.queryId
+      # On chrome, project doesn't have text. Update it here.
+      if p.equals DataAdapter.selectedProject
+        DataAdapter.selectedProject.text = p.text
+
+    # update
+    DataAdapter.removeProjects(saved)
+    DataAdapter.addProjects(projects)
+
 
   ###
    load activities for account.
@@ -165,7 +169,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _loadIssues = (account) -> () ->
     for t in DataAdapter.tickets when account.url is t.url
-      Redmine.get(account).getIssuesById t.id, _upsateIssue(t), _issueNotFound(account)
+      Redmine.get(account).getIssuesById t.id, _upsateIssue(t), _issueNotFound(t)
 
   ###
    when issue found, update according to it.
@@ -183,7 +187,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
    when issue not found, remove issue.
   ###
-  _issueNotFound = (account) -> (issue, status) ->
+  _issueNotFound = (target) -> (issue, status) ->
     if status is NOT_FOUND or status is UNAUTHORIZED
       DataAdapter.toggleIsTicketShow(issue)
       Message.toast(Resource.string("msgIssueMissing").format(target.text, account.name), 3000)
@@ -218,6 +222,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _requestAddAccount = () ->
     $timeout () ->
       State.isAdding = true
+      State.isCollapseSetting = false
     , 500
     $timeout () ->
       $location.hash('accounts')
@@ -263,7 +268,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Account.load().then (accounts) ->
       if accounts
         DataAdapter.addAccounts(accounts)
-      else if not accounts[0]?
+      else if not accounts?
         _requestAddAccount()
 
   ###

@@ -85,11 +85,17 @@
   "msgSubmitTimeFail": {
     "message": "保存に失敗しました。"
   },
+  "msgCannotFetchProject": {
+    "message": "取得するプロジェクトが {0} に設定されていません。アカウント設定を見なおしてください。"
+  },
   "msgLoadProjectSuccess": {
-    "message": "{0} を読み込みました。"
+    "message": "{0} のProject {1}件を読み込みました。"
   },
   "msgLoadProjectFail": {
-    "message": "{0} の読み込みに失敗しました。"
+    "message": "{0} のProject {1}件の読込に失敗しました。"
+  },
+  "msgLoadProjectFailId": {
+    "message": "{0} のProject(ID: {1})の読込に失敗しました。"
   },
   "msgLoadQueryFail": {
     "message": "{0} のカスタムクエリの読み込みに失敗しました。"

@@ -89,9 +89,9 @@ class Redmine
     onError = (args...) =>
       @Analytics.sendException("Error: " + mothodName + "\tstatus: " + args[1])
       @Log.warn(mothodName + " failed:\taccount: " + @auth.name + "\tstatus: " + args[1])
-      if not args[0] or args[0] is ""
-        args[0] = { error: "failed.", stats: status }
-      args[0].account = @auth
+      if not args[0] or args[0].isBlank?()
+        args[0] = { error: true }
+      args[0] = Object.merge(args[0], {account: @auth, status: args[1]})
       deferred.reject(args...)
       error?(args...)
 
@@ -222,7 +222,7 @@ class Redmine
           data.issue       = @Ticket.create(data.issue)
         success?(data.issue, status, headers, config))
       .error((data, status, headers, config) =>
-        @Log.debug("getIssuesById: error")
+        @Log.debug("getIssuesById: error on #{issueId}")
         @Log.debug data
         issue = @Ticket.create(url: @auth.url, id:  issueId)
         if status isnt @Const.NOT_FOUND or status isnt @Const.UNAUTHORIZED
@@ -355,7 +355,9 @@ class Redmine
           @Log.table data.project
           @Log.groupEnd "redmine.loadProjectById()"
         r.success(data, status))
-      .error(r.error)
+      .error((data, status, headers, config) =>
+        data = targetId: id if data.isBlank()
+        r.error(data, status))
     return r.promise
 
 

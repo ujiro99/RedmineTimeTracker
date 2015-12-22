@@ -85,11 +85,17 @@
   "msgSubmitTimeFail": {
     "message": "Save failed. "
   },
+  "msgCannotFetchProject": {
+    "message": "Projects to get has not been set on {0}. Please check the account settings."
+  },
   "msgLoadProjectSuccess": {
-    "message": "{0} loaded."
+    "message": "Loaded {1} Projects on {0}."
   },
   "msgLoadProjectFail": {
-    "message": "Failed to load {0}. "
+    "message": "Failed to load {1} Projects on {0}."
+  },
+  "msgLoadProjectFailId": {
+    "message": "Failed to load Project(ID: {1}) on {0}."
   },
   "msgLoadQueryFail": {
     "message": "Failed to load custom queries on {0}."
