@@ -86,7 +86,7 @@
     "message": "保存に失敗しました。"
   },
   "msgCannotFetchProject": {
-    "message": "取得するプロジェクトが {0} に設定されていません。アカウント設定を見なおしてください。"
+    "message": "取得するプロジェクトが {0} に設定されていません。アカウント設定を見直してください。"
   },
   "msgLoadProjectSuccess": {
     "message": "{0} のProject {1}件を読み込みました。"

@@ -178,7 +178,7 @@ class Redmine
       params = Object.clone(params)
       params.offset = start + (n - 1) * Redmine.LIMIT_MAX
       if params.offset + Redmine.LIMIT_MAX > end
-        params.limit = end - params.offset + 1
+        params.limit = end - params.offset
       @_getIssues(params).promise
 
     r = @_bindDefer(success, error, "getIssuesRange")
@@ -323,7 +323,7 @@ class Redmine
       params = Object.clone(params)
       params.offset = start + (n - 1) * Redmine.LIMIT_MAX
       if params.offset + Redmine.LIMIT_MAX > end
-        params.limit = end - params.offset + 1
+        params.limit = end - params.offset
       return @loadProjects(params)
 
     @$q.all(promises)
