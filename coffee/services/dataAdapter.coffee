@@ -48,6 +48,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     # event
     ACCOUNT_ADDED:            "account_added"
+    ACCOUNT_UPDATED:          "account_updated"
     ACCOUNT_REMOVED:          "account_removed"
     PROJECTS_CHANGED:         "projects_changed"
     TICKETS_CHANGED:          "tickets_changed"
@@ -216,6 +217,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         b = @_filteredData.find (b) -> a.url is b.url
         b and b.update(a)
       @_updateStarredProjects()
+      @fireEvent(@ACCOUNT_UPDATED, @, accounts)
 
     ###*
     # remove accounts

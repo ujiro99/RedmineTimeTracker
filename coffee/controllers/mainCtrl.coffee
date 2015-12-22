@@ -35,6 +35,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _initializeEvents = () ->
     Log.debug "[4] initializeEvents start"
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
+    DataAdapter.addEventListener DataAdapter.ACCOUNT_UPDATED, _loadRedmine
     DataAdapter.addEventListener DataAdapter.PROJECTS_CHANGED, () ->
       Project.syncLocal(DataAdapter.getProjects())
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
@@ -43,8 +44,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Option.onChanged('hideNonTicketProject',  _toggleProjectHidden)
     Log.debug "[4] initializeEvents success"
 
+
   ###
-   load projects from redmine.
+   load some data from redmine.
   ###
   _loadRedmine = (accounts) ->
     for a in accounts
