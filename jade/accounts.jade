@@ -28,14 +28,14 @@ div#accounts(ng-controller='AccountCtrl')
       form.well(name='account')
 
         // Auth way
-        div.btn-group.selectAuth
-          button.btn.btn-xs.selectAuth__button(
+        div.btn-group.select-mode
+          button.btn.btn-xs.select-mode__button(
             type='radio',
             ng-model='authWay',
             btn-radio="'id_pass'",
             ng-disabled="state.isSaving",
             ng-class="{isSaving: state.isSaving}") ID/Pass
-          button.btn.btn-xs.selectAuth__button(
+          button.btn.btn-xs.select-mode__button(
             type='radio',
             ng-model='authWay',
             btn-radio="'api_key'",
