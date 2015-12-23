@@ -20,20 +20,20 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
 
     div.wrap
       section.header
-        include header
+        include _header
       div.content
         section
-          include timer
+          include _timer
         section
-          include issue
+          include _issue
         section
-          include accounts
+          include _accounts
         section
-          include options
+          include _options
       section.footer
-        include about
+        include _about
       section
-        include message
+        include _message
 
     .src
       // bower
