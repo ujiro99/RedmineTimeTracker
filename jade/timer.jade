@@ -2,6 +2,6 @@ div#timer(ng-controller='TimerCtrl')
 
   div.animate-switch-container(ng-switch on="mode")
     section.animate-switch(ng-switch-when="auto")
-      div(ng-include="'auto.html'")
+      include auto
     section.animate-switch(ng-switch-when="manual")
-      div(ng-include="'manual.html'")
+      include manual

@@ -60,9 +60,9 @@ div#accounts(ng-controller='AccountCtrl')
         // Auth
         div.account-setting(ng-switch on="authWay")
           section.animate-switch(ng-switch-when="id_pass")
-            div(ng-include="'template/basic_auth.html'")
+            include template/basic_auth
           section.animate-switch(ng-switch-when="api_key")
-            div(ng-include="'template/api_key.html'")
+            include template/api_key
 
         // Buttons
         div.account-setting__buttons

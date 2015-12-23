@@ -19,14 +19,21 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
   body
 
     div.wrap
-      section.header(ng-include="'header.html'")
-      .content
-        section(ng-include="'timer.html'")
-        section(ng-include="'issue.html'")
-        section(ng-include="'accounts.html'")
-        section(ng-include="'options.html'")
-      section.footer(ng-include="'about.html'")
-      section(ng-include="'message.html'")
+      section.header
+        include header
+      div.content
+        section
+          include timer
+        section
+          include issue
+        section
+          include accounts
+        section
+          include options
+      section.footer
+        include about
+      section
+        include message
 
     .src
       // bower
