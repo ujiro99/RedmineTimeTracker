@@ -196,7 +196,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     addAccounts: (accounts) ->
       if not accounts? then return
       accounts = [accounts] if not Array.isArray(accounts)
-      if not accounts[0].isValid() then return
+      if accounts.isEmpty() or not accounts[0].isValid() then return
       for a in accounts
         @_data[a.url] = new DataModel()
         @_data[a.url].account = a

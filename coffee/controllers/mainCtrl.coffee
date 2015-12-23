@@ -268,9 +268,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _initializeAccount = () ->
     Account.load().then (accounts) ->
-      if accounts
+      if accounts and not accounts.isEmpty()
         DataAdapter.addAccounts(accounts)
-      else if not accounts?
+      else
         _requestAddAccount()
 
   ###

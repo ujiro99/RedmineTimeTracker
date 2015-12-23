@@ -251,6 +251,12 @@ describe 'DataAdapter.coffee', ->
       after = DataAdapter.getAccount()
       expect(after).to.deep.equal(before)
 
+    it "add empty array, then should not change state.", () ->
+      before = DataAdapter.getAccount()
+      DataAdapter.addAccounts([])
+      after = DataAdapter.getAccount()
+      expect(after).to.deep.equal(before)
+
     it "should store 3 accounts.", () ->
       auth = [Account.create({
         url:  'http://redmine.com3'
