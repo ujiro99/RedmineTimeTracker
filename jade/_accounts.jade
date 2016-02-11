@@ -94,7 +94,7 @@ div#accounts(ng-controller='AccountCtrl')
 
     // list
     ul.account-list.bottom-space-l
-      li(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
+      li.list(ng-repeat='account in data.accounts | filter:accountFilter | orderBy:"url"',
          ng-click='openAccountSetting(account.url)',
          ng-disabled="state.isSaving",
          ng-class="{isSaving: state.isSaving}",
