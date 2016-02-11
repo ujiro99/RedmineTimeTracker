@@ -44,7 +44,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Option.onChanged('hideNonTicketProject',  _toggleProjectHidden)
     Log.debug "[4] initializeEvents success"
 
-
   ###
    load some data from redmine.
   ###
@@ -55,7 +54,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       $q.all([_loadProjects(a), _loadStatuses(a)])
         .then(_loadIssues(a))
         .then(_loadIssueCount(a))
-
 
   ###
    load projects from redmine.
@@ -77,18 +75,16 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     promises = promises.map (p) -> p.then(_successLoadProject, _errorLoadProject)
     $q.all(promises).then(_updateProjects)
 
-
   ###
    show success message.
   ###
   _successLoadProject = (data) =>
-    if not data.project and not data.projects and data.projects.length is 0
+    if not data.project and (not data.projects or data.projects.length is 0)
       _errorLoadProject data
       return null
     data.projects = data.projects or [data.project]
     Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name, data.projects.length), 3000
     return data.projects
-
 
   ###
    show error message.
@@ -102,13 +98,13 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Message.toast message, 5000
     return null
 
-
   ###
    update projects and remove projects which was not fetched.
    @param projectsList {Array} - array of fetched projects.
   ###
   _updateProjects = (projectsList) =>
     projects = projectsList.compact().flatten().unique("id")
+    return if projects.length is 0
 
     # update settings specified by user, using saved data on chrome.
     saved = DataAdapter.getProjects(projects[0].url)
@@ -124,7 +120,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     # update
     DataAdapter.removeProjects(saved)
     DataAdapter.addProjects(projects)
-
 
   ###
    load activities for account.
