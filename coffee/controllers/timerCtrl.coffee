@@ -2,7 +2,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
-  SWITCHING_TIME = 300
+  SWITCHING_TIME = 250
 
   CHECK =
     OK: 0
@@ -15,22 +15,25 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     text: ""
     MaxLength: COMMENT_MAX
     remain: COMMENT_MAX
-  $scope.mode = "auto"
   $scope.time = { min: 0 }
+  $scope.countDownSec = 25 * 60 # sec
 
   # typeahead options
   $scope.inputOptions =
     highlight: true
     minLength: 0
 
-  trackedTime = {}
-
+  auto = pomodoro = manual = null
 
   ###
    Initialize.
   ###
   init = () ->
     initializeSearchform()
+    auto = new Auto()
+    pomodoro = new Pomodoro()
+    manual = new Manual()
+    $scope.mode = auto
 
   ###*
    @param matches {Array}  Array of issues which matched.
@@ -67,25 +70,14 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
                               <span class='list-item__description list-item__id'>#{n.id}</span>
                             </div></div>"
 
-
   ###
    change post mode.
    if tracking, restore tracked time.
   ###
-  $scope.changeMode = () ->
+  $scope.changeMode = (direction) ->
     restoreSelected()
-    if $scope.mode is "auto"
-      if State.isTracking
-        $scope.$broadcast 'timer-stop'
-      $scope.mode = "manual"
-    else
-      $scope.mode = "auto"
-      if State.isTracking
-        # wait for complete switching
-        $timeout () ->
-          $scope.$broadcast 'timer-start', new Date() - trackedTime.millis
-        , SWITCHING_TIME
-
+    $scope.mode.onNextMode(direction)
+    $scope.mode.onChanged()
 
   ###
    Workaround for restore selected state on switching view.
@@ -99,53 +91,26 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       DataAdapter.selectedActivity = tmpActivity
     , SWITCHING_TIME / 2
 
-
   ###
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
-    return if preCheck() isnt CHECK.OK
-    if State.isTracking
-      checkResult = checkEntry()
-      if checkResult is CHECK.CANCEL
-        cancelSubmit()
-      else if checkResult is CHECK.OK
-        State.isTracking = false
-        $scope.$broadcast 'timer-stop'
-      State.title = Resource.string("extName")
-    else
-      State.isTracking = true
-      $scope.$broadcast 'timer-start'
-
-
-  ###
-   on clicked manual post button, send time entry.
-  ###
-  $scope.clickManual = () ->
-    checkResult = checkEntry()
-    return if checkResult isnt CHECK.OK
-    postEntry($scope.time.min)
-
+    $scope.mode.onSubmit()
 
   ###
    on timer stopped, send time entry.
   ###
   $scope.$on 'timer-stopped', (e, time) ->
-    trackedTime = time
-    if not State.isTracking
-      postEntry(time.days * 60 * 24 + time.hours * 60 + time.minutes)
-    else
-      Log.debug("timer-stopped: submit canceled.")
-
+    $scope.mode.onTimerStopped(time)
 
   ###
    on timer ticked, update title.
   ###
-  $scope.$on 'timer-tick', (e, data) ->
-    return if not State.isTracking
-    State.title = formatTime(data.millis)
-    $scope.time.min = Math.floor(((data.millis / (60000)) % 60))
-
+  $scope.$on 'timer-tick', (e, time) ->
+    if (not State.isAutoTracking) and (not State.isPomodoring)
+      return
+    State.title = formatTime(time.millis)
+    $scope.time.min = Math.floor(time.millis / (60000))
 
   ###
    calculate and format time.
@@ -163,13 +128,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
 
     return "#{time.h}:#{time.m}:#{time.s}"
 
-
   ###
    send time entry.
   ###
   postEntry = (minutes) ->
     hours = minutes / 60
-    hours = Math.floor(hours * 100) / 100
+    hours = Math.floor(hours * 100) / 100 # 0.00
     total = DataAdapter.selectedTicket.total + hours
     DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
     conf =
@@ -182,11 +146,10 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
     Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, hours)
 
-
   ###
    check time entry before starting track.
   ###
-  preCheck = (minute) ->
+  preCheck = () ->
     if not DataAdapter.selectedTicket
       Message.toast Resource.string("msgSelectTicket"), 2000
       return CHECK.NG
@@ -195,28 +158,18 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       return CHECK.NG
     return CHECK.OK
 
-
   ###
    check time entry.
   ###
-  checkEntry = (minute) ->
+  checkEntry = (min) ->
     return if preCheck() isnt CHECK.OK
     if $scope.comment.remain < 0
       Message.toast Resource.string("msgCommentTooLong"), 2000
       return CHECK.NG
-    if $scope.time.min < ONE_MINUTE
+    if min < ONE_MINUTE
       Message.toast Resource.string("msgShortTime"), 2000
       return CHECK.CANCEL
     return CHECK.OK
-
-
-  ###
-   cancel submit time entry
-  ###
-  cancelSubmit = () ->
-    $scope.$broadcast 'timer-stop'
-    State.isTracking = false
-
 
   ###
    show success message.
@@ -227,7 +180,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     else
       submitError(msg, status)
 
-
   ###
    show failed message.
   ###
@@ -236,7 +188,112 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     Log.warn conf
 
 
+  class Auto
+
+    name: "auto"
+    trackedTime: {}
+
+    onChanged: () =>
+      if State.isAutoTracking
+        $timeout () => # wait for complete switching
+          $scope.$broadcast 'timer-start', new Date() - @trackedTime.millis
+        , SWITCHING_TIME
+
+    onNextMode: (direction) =>
+      if State.isAutoTracking
+        $scope.$broadcast 'timer-stop'
+      if direction > 0
+        $scope.mode = manual
+      else
+        $scope.mode = pomodoro
+
+    onSubmit: () =>
+      return if preCheck() isnt CHECK.OK
+      if State.isAutoTracking
+        State.isAutoTracking = false
+        State.title = Resource.string("extName")
+        checkResult = checkEntry($scope.time.min)
+        if checkResult is CHECK.CANCEL
+          $scope.$broadcast 'timer-clear'
+        else if checkResult is CHECK.OK
+          $scope.$broadcast 'timer-stop'
+      else
+        State.isAutoTracking = true
+        $scope.$broadcast 'timer-start'
+
+    onTimerStopped: (time) =>
+      if State.isAutoTracking # store temporary
+        @trackedTime = time
+      else
+        postEntry(time.days * 60 * 24 + time.hours * 60 + time.minutes)
+
+
+  class Pomodoro
+
+    name: "pomodoro"
+    trackedTime: {}
+
+    onChanged: () =>
+      if State.isPomodoring
+        $timeout () => # wait for complete switching
+          $scope.countDownSec = @trackedTime.millis / 1000
+          $scope.$broadcast 'timer-start'
+        , SWITCHING_TIME
+
+    onNextMode: (direction) =>
+      if State.isPomodoring
+        $scope.$broadcast 'timer-stop'
+      if direction > 0
+        $scope.mode = auto
+      else
+        $scope.mode = manual
+
+    onSubmit: () =>
+      return if preCheck() isnt CHECK.OK
+      if State.isPomodoring
+        State.isPomodoring = false
+        State.title = Resource.string("extName")
+        checkResult = checkEntry(($scope.countDownSec / 60) - ($scope.time.min + 1))
+        if checkResult is CHECK.CANCEL
+          $scope.$broadcast 'timer-clear'
+        else if checkResult is CHECK.OK
+          $scope.$broadcast 'timer-stop'
+      else
+        State.isPomodoring = true
+        $scope.countDownSec = 25 * 60 # sec
+        $scope.$broadcast 'timer-start'
+
+    onTimerStopped: (time) =>
+      if State.isPomodoring # store temporary
+        @trackedTime = time
+      else
+        postEntry(Math.round(($scope.countDownSec / 60) - Math.round(time.millis / 1000 / 60)))
+
+
+  class Manual
+
+    name: "manual"
+    trackedTime: {}
+
+    onChanged: () =>
+      # nothing to do
+
+    onNextMode: (direction) =>
+      if direction > 0
+        $scope.mode = pomodoro
+      else
+        $scope.mode = auto
+
+    onSubmit: () =>
+      checkResult = checkEntry($scope.time.min)
+      return if checkResult isnt CHECK.OK
+      postEntry($scope.time.min)
+
+    onTimerStopped: (time) =>
+      # nothing to do
+
   ###
    Start Initialize.
   ###
   init()
+

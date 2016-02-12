@@ -1,0 +1,10 @@
+<svg class="defs">
+    <symbol id="tomato" viewBox="0 0 32 32">
+        <g id="layer1" transform="translate(0,-1020.3622)">
+            <path d="m 28.500045,1036.3622 a 13,11.5 0 0 1 -13,11.5 13,11.5 0 0 1 -13.0000002,-11.5 13,11.5 0 0 1 13.0000002,-11.5 13,11.5 0 0 1 13,11.5 z" id="path4801" style="opacity:1;fill:none;fill-opacity:1;stroke:#f7505a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"/>
+            <path d="m 12.114163,1033.9305 3.027097,-2.3817 3.057006,2.1037 -1.994939,-2.8145 3.718804,-1.5952 -4.260038,0.6423 -0.758659,-3.0896 -0.637909,3.2114 -4.187681,-0.3143 3.865788,1.3426 z" id="path19013" style="fill:none;fill-opacity:1;stroke:#f7505a;stroke-width:1.00000036;stroke-linecap:round;stroke-linejoin:round"/>
+            <path d="m 25.998206,1037.3705 c -0.725829,2.7784 -2.152887,4.3599 -4.492304,5.989" id="path19015" style="fill:none;fill-rule:evenodd;stroke:#f7505a;stroke-width:0.99999994px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"/>
+            <path d="m 19.500042,1044.3637 a 0.49999997,0.49999997 0 0 0 0.5,0.5 0.49999997,0.49999997 0 0 0 0.5,-0.5 0.49999997,0.49999997 0 0 0 -0.5,-0.5 0.49999997,0.49999997 0 0 0 -0.5,0.5 z" id="circle19017" style="opacity:1;fill:#f7505a;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"/>
+        </g>
+    </symbol>
+</svg>

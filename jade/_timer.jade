@@ -1,7 +1,12 @@
 div#timer(ng-controller='TimerCtrl')
 
-  div.animate-switch-container(ng-switch on="mode")
+  div.animate-switch-container(ng-switch,
+                               on="mode.name",
+                               uz-carousel,
+                               container='#timer .animate-switch-container')
     section.animate-switch(ng-switch-when="auto")
       include _auto
     section.animate-switch(ng-switch-when="manual")
       include _manual
+    section.animate-switch(ng-switch-when="pomodoro")
+      include _pomodoro

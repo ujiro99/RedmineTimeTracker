@@ -5,6 +5,9 @@
 .wrap
   @import 'components/*'
 
+.defs // for svg
+  display: none
+
 html, body
   height: 100%
   font-weight: 400
@@ -42,39 +45,40 @@ input[type=number]::-webkit-inner-spin-button
     .caption__icon
       margin-left: 14px
 
-  header
-    .caption
-      align-center()
-      height 100%
-      color: color_key
-    .caption__title
-      margin: 0
-      font-size: 1.05em
-      flex: 1
-      align-center()
-    .caption__subtitle
-      font-size: .95em
-      margin: 0.1em -1em 0 0.7em
-    .caption__icon
-      font-size: 1.4em
-      margin-right: 0.4em
-    .caption__icon--slide
-      padding: 0 4px
-      font-size: 1.4em
-      opacity: 0
-      visibility: hidden
-      transition: opacity 0.2s ease
-    .caption__icon--collapse
-      font-size: 1.4em
-      position: relative
-      left: 18px
-      opacity: 0
-      visibility: hidden
-      transition: 0.2s ease
-    .caption:hover .caption__icon--slide
-    .caption:hover .caption__icon--collapse
-      visibility: visible
-      opacity: 1
+  .caption
+    align-center()
+    height 100%
+    color: color_key
+  .caption__title
+    margin: 0
+    font-size: 1.05em
+    flex: 1
+    align-center()
+  .caption__subtitle
+    font-size: .95em
+    margin: 0.1em -1em 0 0.7em
+  .caption__icon
+    font-size: 1.4em
+    margin-right: 0.4em
+  .caption__icon--tomato
+    width: 23px
+    height: 23px
+    margin-right: 0.3em
+  .caption__icon--slide
+    padding: 0 4px
+    font-size: 1.4em
+    opacity: 0
+    transition: opacity 0.2s ease
+  .caption__icon--collapse
+    font-size: 1.4em
+    position: relative
+    left: 18px
+    opacity: 0
+    visibility: hidden
+    transition: 0.2s ease
+  .caption:hover .caption__icon--collapse
+    visibility: visible
+    opacity: 1
 
 
 .content
@@ -481,6 +485,26 @@ input.project-search
 
   .caption
     cursor: pointer
+    position: relative
+
+  .caption__title
+    width: 100%
+    position: absolute
+    top: 36%
+    left: 0
+    z-index: -1
+
+  .caption__icon--slide
+    flex-grow: 1
+    height: 100%
+    display: flex
+    align-items: center
+  .caption__icon--slide:hover
+    opacity: 1
+  .caption__icon--left
+    justify-content: flex-start
+  .caption__icon--right
+    justify-content: flex-end
 
   .select
     position: relative
@@ -603,6 +627,7 @@ input.project-search
   container_height = 190px
   .animate-switch-container
     height: container_height
+    transition-duration: .3s
 
     &:before
       content: ""
@@ -623,11 +648,20 @@ input.project-search
       float: right
       z-index: 1
 
-  .animate-switch.ng-enter
-    animation: slide-in-left .32s ease-out
+  .animate-switch.ng-animate
+    transition-duration: .25s
 
-  .animate-switch.ng-leave
-    animation: slide-out-left .32s ease-out
+  .carousel-to-right
+    .ng-enter
+      animation: slide-in-right  .25s ease-out
+    .ng-leave
+      animation: slide-out-right .25s ease-out
+
+  .carousel-to-left
+    .ng-enter
+      animation: slide-in-left  .25s ease-out
+    .ng-leave
+      animation: slide-out-left .25s ease-out
 
   .select-issues
     .tt-dropdown-menu

@@ -2,8 +2,9 @@ header
   div.caption
     i.fa.fa-angle-left.caption__icon--slide.caption__icon--left(ng-click="changeMode(-1)", ga-click='changeMode')
     p.caption__title
-      i.icon-clock.caption__icon
-      span Time Tracking
+      svg.caption__icon--tomato
+        use(xlink:href="#tomato")
+      span Pomodoro
     i.fa.fa-angle-right.caption__icon--slide.caption__icon--right(ng-click="changeMode(1)", ga-click='changeMode')
 
 form(action='#', method='POST', name='time_entry')
@@ -11,7 +12,7 @@ form(action='#', method='POST', name='time_entry')
   // time track
   div.select
     div.inputWidhButton
-      div.select-issues.searchform-icon(ng-hide='state.isAutoTracking')
+      div.select-issues.searchform-icon(ng-hide='state.isPomodoring')
         input.sfTypeahead.form-control.input-sm(type="text"
           options="inputOptions"
           datasets="ticketData"
@@ -20,13 +21,14 @@ form(action='#', method='POST', name='time_entry')
           placeholder='Select issue...')
         i.fa.fa-angle-down
 
-      div.progress.progress-striped.active(ng-show="state.isAutoTracking")
+      div.progress.progress-striped.active(ng-show="state.isPomodoring")
         div.progress-bar(role="progressbar")
           span {{data.selectedTicket.id}} {{data.selectedTicket.text}}
-          timer(autostart='false', interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
+          timer(autostart="false", interval="1000", countdown="countDownSec")
+            {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
     button.btn(type='button', ng-click='clickSubmitButton()', ga-click='postAuto')
-      i.fa(ng-class="{'fa-play': !state.isAutoTracking, 'fa-stop': state.isAutoTracking}")
+      i.fa(ng-class="{'fa-play': !state.isPomodoring, 'fa-stop': state.isPomodoring}")
 
 
   // activity & total
