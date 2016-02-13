@@ -3,17 +3,13 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ONE_MINUTE = 1
   COMMENT_MAX = 255
   SWITCHING_TIME = 250
-
-  CHECK =
-    OK: 0
-    CANCEL: 1
-    NG: -1
+  CHECK = OK: 0, CANCEL: 1, NG: -1
 
   $scope.state = State
   $scope.data = DataAdapter
   $scope.comment =
     text: ""
-    MaxLength: COMMENT_MAX
+    maxLength: COMMENT_MAX
     remain: COMMENT_MAX
   $scope.time = { min: 0 }
   $scope.countDownSec = 25 * 60 # sec

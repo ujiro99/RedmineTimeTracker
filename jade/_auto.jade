@@ -53,6 +53,6 @@ form(action='#', method='POST', name='time_entry')
                           rows='2',
                           placeholder='comments...',
                           ng-model='comment.text',
-                          ng-change='comment.remain = comment.MaxLength - comment.text.length')
+                          ng-change='comment.remain = comment.maxLength - comment.text.length')
     div
       span.label.label-danger(ng-show="comment.remain < 0") {{comment.remain}}
