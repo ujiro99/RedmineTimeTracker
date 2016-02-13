@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Log) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Option, Log) ->
 
   ONE_MINUTE = 1
   COMMENT_MAX = 255
@@ -12,7 +12,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     maxLength: COMMENT_MAX
     remain: COMMENT_MAX
   $scope.time = { min: 0 }
-  $scope.countDownSec = 25 * 60 # sec
+  $scope.countDownSec = Option.getOptions().pomodoroTime * 60 # sec
 
   # typeahead options
   $scope.inputOptions =
@@ -233,7 +233,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       if State.isPomodoring
         $timeout () => # wait for complete switching
           $scope.countDownSec = @trackedTime.millis / 1000
-          $scope.$broadcast 'timer-start'
+          $scope.$broadcast 'timer-start', $scope.countDownSec
         , SWITCHING_TIME
 
     onNextMode: (direction) =>
@@ -256,8 +256,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
           $scope.$broadcast 'timer-stop'
       else
         State.isPomodoring = true
-        $scope.countDownSec = 25 * 60 # sec
-        $scope.$broadcast 'timer-start'
+        $scope.countDownSec = Option.getOptions().pomodoroTime * 60 # sec
+        $scope.$broadcast 'timer-start', $scope.countDownSec
 
     onTimerStopped: (time) =>
       if State.isPomodoring # store temporary

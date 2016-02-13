@@ -9,6 +9,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       removeClosedTicket: true
       hideNonTicketProject: true
       itemsPerPage: 20
+      pomodoroTime: 25                # minutes
       isCollapseIssues: false         # issue section collapse
       isCollapseAccounts: false       # accounts section collapse
       isCollapseOptions: false        # options section collapse
