@@ -59,7 +59,7 @@
     "message": "Czyszczenie nie powiodło się."
   },
   "msgSubmitTimeEntry": {
-    "message": "Zgłoszono {0}: {1} h"
+    "message": "Zgłoszono {0}: {1}"
   },
   "msgShortTime": {
     "message": "Wymagana jest więcej niż jedna minuta"

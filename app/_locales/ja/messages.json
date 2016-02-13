@@ -68,7 +68,7 @@
     "message": "消去に失敗しました。"
   },
   "msgSubmitTimeEntry": {
-    "message": "保存中 {0}: {1} hr"
+    "message": "保存中 {0}: {1}"
   },
   "msgShortTime": {
     "message": "1分以上の計測が必要です。"

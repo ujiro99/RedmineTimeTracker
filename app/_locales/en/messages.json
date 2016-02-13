@@ -68,7 +68,7 @@
     "message": "Clear failed."
   },
   "msgSubmitTimeEntry": {
-    "message": "Submitting {0}: {1} hr"
+    "message": "Submitting {0}: {1}"
   },
   "msgShortTime": {
     "message": "More than one minute is required."
