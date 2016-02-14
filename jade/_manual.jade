@@ -39,11 +39,8 @@ form(action='#', method='POST', name='time_entry')
 
     div.time
       label.sr-only input time
-      input.form-control.input-sm(type='number',
-                                  min="1"
-                                  ng-model='time.min')
-      span min
-
+      input.form-control.input-sm(ng-model='picker.manualTime',
+                                  ui-timepicker='timePickerOptions')
 
   // comment
   div.comment

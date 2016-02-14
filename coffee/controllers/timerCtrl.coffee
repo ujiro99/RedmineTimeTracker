@@ -4,6 +4,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   COMMENT_MAX = 255
   SWITCHING_TIME = 250
   CHECK = OK: 0, CANCEL: 1, NG: -1
+  BASE_TIME = new Date("1970/01/01 00:00:00")
+  H24 = 1440
 
   $scope.state = State
   $scope.data = DataAdapter
@@ -11,14 +13,23 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     text: ""
     maxLength: COMMENT_MAX
     remain: COMMENT_MAX
+  # ticked time
   $scope.time = { min: 0 }
+  # time for time-picker
+  $scope.picker = { manualTime: BASE_TIME}
+  # Count down time for Pomodoro mod
   $scope.countDownSec = Option.getOptions().pomodoroTime * 60 # sec
-
   # typeahead options
   $scope.inputOptions =
     highlight: true
     minLength: 0
-
+  # jquery-timepicker options
+  $scope.timePickerOptions =
+    step: 15,
+    minTime: '00:' + 15
+    timeFormat: 'H:i',
+    show2400: true
+  # mode state objects
   auto = pomodoro = manual = null
 
   ###
@@ -297,9 +308,15 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
         $scope.mode = auto
 
     onSubmit: () =>
-      checkResult = checkEntry($scope.time.min)
+      diffMillis = $scope.picker.manualTime - BASE_TIME
+      min = (diffMillis / 1000 / 60)
+      if (min >= H24) and (min % H24 is 0) # max 24 hrs
+        min = H24
+      else
+        min = min % H24
+      checkResult = checkEntry(min)
       return if checkResult isnt CHECK.OK
-      postEntry($scope.time.min)
+      postEntry(min)
 
     onTimerStopped: (time) =>
       # nothing to do

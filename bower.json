@@ -23,7 +23,8 @@
     "angular-typeahead": "git://github.com/ujiro99/angular-typeahead.git#master",
     "angular-timer": "git@github.com:ujiro99/angular-timer.git#master",
     "angular-bootstrap": "0.10.0",
-    "angular-route": "1.2.19"
+    "angular-route": "1.2.19",
+    "angular-jquery-timepicker": "2d0a3ade8f909b3590fc2ab3d205ae4ca8733b48"
   },
   "exportsOverride": {
     "jquery": {
@@ -45,6 +46,13 @@
     "bootstrap": {
       "js": "**/bootstrap.min.js",
       "css": "**/bootstrap.min.css"
+    },
+    "angular-jquery-timepicker": {
+      "js": "**/timepickerdirective.min.js"
+    },
+    "jquery-timepicker-jt": {
+      "js": "**/jquery.timepicker.min.js",
+      "css": "**/jquery.timepicker.css"
     }
   },
   "resolutions": {
