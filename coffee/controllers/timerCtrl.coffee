@@ -7,6 +7,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   BASE_TIME = new Date("1970/01/01 00:00:00")
   H24 = 1440
 
+  options = Option.getOptions()
+
   $scope.state = State
   $scope.data = DataAdapter
   $scope.comment =
@@ -18,17 +20,13 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   # time for time-picker
   $scope.picker = { manualTime: BASE_TIME}
   # Count down time for Pomodoro mod
-  $scope.countDownSec = Option.getOptions().pomodoroTime * 60 # sec
+  $scope.countDownSec = options.pomodoroTime * 60 # sec
   # typeahead options
   $scope.inputOptions =
     highlight: true
     minLength: 0
   # jquery-timepicker options
-  $scope.timePickerOptions =
-    step: 15,
-    minTime: '00:' + 15
-    timeFormat: 'H:i',
-    show2400: true
+  $scope.timePickerOptions = null
   # mode state objects
   auto = pomodoro = manual = null
 
@@ -37,6 +35,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
   init = () ->
     initializeSearchform()
+    initializePicker()
     auto = new Auto()
     pomodoro = new Pomodoro()
     manual = new Manual()
@@ -76,6 +75,21 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
                               <span class='list-item__name'>#{n.name}</span>
                               <span class='list-item__description list-item__id'>#{n.id}</span>
                             </div></div>"
+
+  ###
+   Initialize time picker options.
+  ###
+  initializePicker = () ->
+    step = options.stepTime
+    if step is 60
+      minTime = '01:00'
+    else
+      minTime = '00:' + step
+    $scope.timePickerOptions =
+      step: step,
+      minTime: minTime
+      timeFormat: 'H:i',
+      show2400: true
 
   ###
    change post mode.
@@ -281,7 +295,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
           $scope.$broadcast 'timer-stop'
       else
         State.isPomodoring = true
-        $scope.countDownSec = Option.getOptions().pomodoroTime * 60 # sec
+        $scope.countDownSec = options.pomodoroTime * 60 # sec
         $scope.$broadcast 'timer-start', $scope.countDownSec
 
     onTimerStopped: (time) =>
@@ -299,7 +313,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     trackedTime: {}
 
     onChanged: () =>
-      # nothing to do
+      initializePicker()
 
     onNextMode: (direction) =>
       if direction > 0
