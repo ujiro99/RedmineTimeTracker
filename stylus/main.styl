@@ -12,11 +12,11 @@ html, body
   height: 100%
   font-weight: 400
   font-size: 0.88em
-  color: color_font
+  color: $color_font
   font-family: mplus-2c-regular
 
 input.input-sm
-  height height_input px
+  height $height_input
 
 input[type=number]::-webkit-inner-spin-button
   -webkit-appearance: none
@@ -48,7 +48,7 @@ input[type=number]::-webkit-inner-spin-button
   .caption
     align-center()
     height 100%
-    color: color_key
+    color: $color_key
   .caption__title
     margin: 0
     font-size: 1.05em
@@ -82,7 +82,7 @@ input[type=number]::-webkit-inner-spin-button
 
 
 .content
-  margin-top: height_header px
+  margin-top: $height_header
   overflow: hidden
   flex-grow: 1
   flex-shrink: 0
@@ -131,7 +131,7 @@ input[type=number]::-webkit-inner-spin-button
 .header-bar
   position: fixed
   width: 100%
-  height: height_header px
+  height: $height_header
   background: #fff
   transition: box-shadow .2s ease
   card(1)
@@ -156,7 +156,7 @@ input[type=number]::-webkit-inner-spin-button
   width: 100%
   border: none
   padding: 0
-  height: height_header px
+  height: $height_header
   background-color: #fff
   position: absolute
   outline: none
@@ -206,7 +206,7 @@ input.project-search
 
 .numbered, .starred
   &>.numbered-label
-    line-height: height_input px
+    line-height: $height_input
     margin: -12px 0 0 0.5em
     padding-left: 0.2em
     border-bottom: solid 1px #ccc
@@ -231,13 +231,13 @@ input.project-search
     & span:nth-child(1)
       transition: margin-left .2s ease
     &:hover
-      background-color: color_key_weak
+      background-color: $color_key_weak
       & span
         color: #fff
       & span:nth-child(1)
         margin-left: 0.5em
       .star__enable
-        color: color_key
+        color: $color_key
     .numbered-label
       width: 100%
       height: 24px
@@ -247,9 +247,9 @@ input.project-search
   .input
     flex: 1
   .btn
-    color: color_icon
+    color: $color_icon
     &:hover
-      color: color_key
+      color: $color_key
 
 @keyframes slide-in-left
   from {left: 100%}
@@ -350,7 +350,7 @@ input.project-search
   .fa.fa-asterisk
     font-size: 1em
     width: 0
-    color: color_key
+    color: $color_key
     opacity: 0.8
     margin-left: 0.2em
 
@@ -384,7 +384,7 @@ input.project-search
     position: relative
     z-index: $z-index-tab-list-li
   a
-    color: color_font
+    color: $color_font
     cursor: default
     text-decoration: none
     transition: background .2s ease
@@ -439,7 +439,7 @@ input.project-search
   width: 100%
   height: 100%
   text-align: right
-  color: color_font
+  color: $color_font
   margin: 0
   padding: 5px 0
   position: relative
@@ -509,18 +509,18 @@ input.project-search
 
   .select
     position: relative
-    height: height_input px
-    background-color: color_key
-    border-radius: field_border_radius !important
+    height: $height_input
+    background-color: $color_key
+    border-radius: $field_border_radius !important
 
   .inputWidhButton
     padding-right width_button px
 
     input
       border-right: solid 1px #f5f5f5
-      border-radius: field_border_radius 0 0 field_border_radius !important
+      border-radius: $field_border_radius 0 0 $field_border_radius !important
       box-shadow: none
-      background-color: color_key
+      background-color: $color_key
       color: #fff
 
     input::-webkit-input-placeholder
@@ -548,7 +548,7 @@ input.project-search
     width: width_button px
     color: #f5f5f5
     &:hover
-      background-color: color_key_down
+      background-color: $color_key_down
       color: #ffffff
 
     img
@@ -557,19 +557,19 @@ input.project-search
 
   .progress
     margin-bottom 0px
-    height: height_input px
+    height: $height_input
     border-right: solid 1px #f5f5f5
     border-radius: 2px 0 0 2px
 
   .progress-bar
     width: 100%
-    background-color: color_key
+    background-color: $color_key
     box-shadow: none
     color: #fafafa
     display: flex
 
     span
-      line-height: height_input px
+      line-height: $height_input
 
     & > span
       text-ellipsis()
@@ -582,7 +582,7 @@ input.project-search
   .form-inline
     display: flex
     margin: 10px 0 0 0
-    height: height_input px
+    height: $height_input
 
   .select-activity
     flex: 5
@@ -601,7 +601,7 @@ input.project-search
       text-align: right
       padding-right: 22px
     span
-      line-height: height_input px
+      line-height: $height_input
       color: #aaa
       position: relative
 
@@ -615,7 +615,7 @@ input.project-search
 
     textarea
       margin 6px 0 0 0px
-      border-radius: field_border_radius !important
+      border-radius: $field_border_radius !important
 
     div
       height: 0
@@ -690,9 +690,9 @@ input.project-search
 
   .tt-cursor
     .select-issues__project
-      color: color_font
+      color: $color_font
     .numbered-label
-      background-color: color_key_weak
+      background-color: $color_key_weak
     .numbered-label__number
       margin-left: 1em
       color: #fff
@@ -726,14 +726,14 @@ input.project-search
     .numbered-label:hover
       span
       .btn
-        color: color_key
+        color: $color_key
         .icon-minus
-          background-image: -webkit-gradient(linear, left center, right center, from(color_key), to(color_key));
+          background-image: -webkit-gradient(linear, left center, right center, from($color_key), to($color_key));
       &>span:nth-child(1)
         margin-left: 0.5em
 
       .tooltip-inner span
-        color: color_font
+        color: $color_font
 
   .issue-list__content
     padding-left: 0px
@@ -756,7 +756,7 @@ input.project-search
 
   .issue-list__item
     list-style-type: none
-    height: height_issue_list_item
+    height: $height_issue_list_item
     position: relative
     display: flex
 
@@ -765,10 +765,10 @@ input.project-search
       color: #aaa
 
     .btn.external-link:hover
-      color: color_key
+      color: $color_key
 
     &.active
-      background-color: color_key
+      background-color: $color_key
       border-radius: 10px
       transition: background-color ease 0.2s
 
@@ -798,12 +798,12 @@ input.project-search
       height: 0px
       opacity: 0
     to
-      height: height_issue_list_item
+      height: $height_issue_list_item
       opacity: 1
 
   @keyframes fade-out
     from
-      height: height_issue_list_item
+      height: $height_issue_list_item
       opacity: 1
     to
       height: 0px
@@ -821,8 +821,8 @@ input.project-search
   .input-and-btn
     .btn
       margin: 0 0 0 7px
-      height: height_input px
-      line-height: height_input px
+      height: $height_input
+      line-height: $height_input
       font-size: 16px
 
   .account-setting
@@ -846,13 +846,13 @@ input.project-search
     justify-content: center
 
     .account-setting__buttons--add
-      height: height_input - 4 px
+      height: $height_input - 4
       width 12em
       margin 0 2.5em
 
     .account-setting__buttons--save
     .account-setting__buttons--remove
-      height: height_input - 4 px
+      height: $height_input - 4
       width 7em
       margin 0 0.25em
 
@@ -862,19 +862,19 @@ input.project-search
 
   .select-mode__button
     width: 10em
-    height: height_input - 4 px
-    border-color: color_key_weak
-    color: color_key_weak
+    height: $height_input - 4
+    border-color: $color_key_weak
+    color: $color_key_weak
     transition: all .2s ease
     &:hover
-      border-color: color_key
-      color: color_key
+      border-color: $color_key
+      color: $color_key
 
     &.active
-      background-color: color_key_weak
+      background-color: $color_key_weak
       color: snow
       &:hover
-        background-color: color_key
+        background-color: $color_key
         color: snow
 
   .clear
@@ -882,7 +882,7 @@ input.project-search
     padding: 15px 0
     button
       padding: 2px 15px
-      color: color_key
+      color: $color_key
       i
         padding-right 6px
         font-size: 1.3em
@@ -914,13 +914,13 @@ input.project-search
         span
         .btn
           width: auto
-          color: color_key
+          color: $color_key
           visibility: visible
           opacity: 1
         .icon-minus
-          background-image: -webkit-gradient(linear, left center, right center, from(color_key), to(color_key));
+          background-image: -webkit-gradient(linear, left center, right center, from($color_key), to($color_key));
         .number:before
-          color: color_key
+          color: $color_key
 
       .btn
         border: none
@@ -946,7 +946,7 @@ input.project-search
 
   .setting__options
     .btn-sm
-      color: color_font
+      color: $color_font
       margin: 0 0 0 5px
       padding: 3px 6px
       &.loading
