@@ -319,8 +319,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     setActivities: (url, activities) ->
       if not url? or not activities? then return
       @_data[url].activities = activities
-      if @selectedAccount and @selectedAccount.url is url
+      if @selectedTicket and @selectedTicket.url is url
         @_activities.set activities
+        @_selectedActivity = activities[0]
       Log.debug("setActivities: #{url}")
 
     ###*
