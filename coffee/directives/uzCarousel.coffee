@@ -80,6 +80,6 @@ timeTracker.directive 'uzCarousel', ($window, $timeout) ->
           $timeout.cancel(prePromise)
           animateExit(preDirection)
         xCenter = e.view.outerWidth / 2
-        preDirection = e.screenX - xCenter
+        preDirection = e.clientX - xCenter
         prePromise = animateEnter(preDirection)
   }
