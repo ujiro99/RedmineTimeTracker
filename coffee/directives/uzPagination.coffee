@@ -55,7 +55,7 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
         matchs = sec.exec(t)
         if matchs then return (matchs[1] - 0) * 1000
 
-      ###*
+        ###*
       # animate container, and fix pagination bar's size.
       ###
       animate = (newPage, oldPage) ->

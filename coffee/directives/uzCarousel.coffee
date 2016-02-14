@@ -72,7 +72,6 @@ timeTracker.directive 'uzCarousel', ($window, $timeout) ->
       container = angular.element(attrs.container)
       container.addClass(CLASS_NAME)
       duration = getTransitionDuration(container)
-      console.log(duration)
 
       # start animation on click.
       element.on 'click', (e) ->
