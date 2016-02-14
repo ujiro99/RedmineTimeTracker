@@ -274,9 +274,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
         $scope.$broadcast 'timer-start', $scope.countDownSec
 
     onTimerStopped: (time) =>
-      if State.isPomodoring # store temporary
+      if State.isPomodoring and (time.millis > 0) # store temporary
         @trackedTime = time
       else
+        State.isPomodoring = false
+        State.title = Resource.string("extName")
         postEntry(Math.round(($scope.countDownSec / 60) - Math.round(time.millis / 1000 / 60)))
 
 
