@@ -22,6 +22,7 @@
     "angular-animate": "~1.2.16",
     "bootstrap": "~3.1.1",
     "angular-typeahead": "git://github.com/ujiro99/angular-typeahead.git#master",
+    "angular-timer": "git@github.com:ujiro99/angular-timer.git#master",
     "angular-bootstrap": "0.10.0",
     "angular-route": "1.2.19"
   },
@@ -38,6 +39,9 @@
     },
     "angular-animate": {
       "js": "**/angular-animate.min.js"
+    },
+    "angular-timer": {
+      "js": "**/angular-timer.min.js"
     },
     "bootstrap": {
       "js": "**/bootstrap.min.js",
