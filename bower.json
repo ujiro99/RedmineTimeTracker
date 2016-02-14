@@ -51,8 +51,7 @@
       "js": "**/timepickerdirective.min.js"
     },
     "jquery-timepicker-jt": {
-      "js": "**/jquery.timepicker.min.js",
-      "css": "**/jquery.timepicker.css"
+      "js": "**/jquery.timepicker.min.js"
     }
   },
   "resolutions": {

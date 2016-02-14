@@ -135,7 +135,7 @@ input[type=number]::-webkit-inner-spin-button
   background: #fff
   transition: box-shadow .2s ease
   card(1)
-  z-index: 100000
+  z-index: $z-index-header-bar
   &:hover
     card(2)
 
@@ -160,7 +160,7 @@ input[type=number]::-webkit-inner-spin-button
   background-color: #fff
   position: absolute
   outline: none
-  z-index: 1
+  z-index: $z-index-project-title
   .fa
     font-size: 1.3em
     color #ccc
@@ -176,7 +176,7 @@ input.project-search
   position: absolute
   transition: left .3s ease
   left: 40%
-  z-index: 102
+  z-index: $z-index-project-search
   opacity: 0
   visibility: hidden
 
@@ -369,7 +369,7 @@ input.project-search
 .tab-list
   padding: 0
   margin: 0
-  z-index: 1
+  z-index: $z-index-tab-list
   &>li
     padding-left: 10px
     line-height: $height_property_list - 1
@@ -382,7 +382,7 @@ input.project-search
     display: inline-block
     background-color: $color_back_hover
     position: relative
-    z-index: 2
+    z-index: $z-index-tab-list-li
   a
     color: color_font
     cursor: default
@@ -405,7 +405,7 @@ input.project-search
   left: 0
   &.active .property-list__selection
     left: 0
-    z-index: 1
+    z-index: $z-index-tab-pane-active
     height: auto
     min-height: $height_property_list * 4
 
@@ -414,7 +414,7 @@ input.project-search
   top: 0
   right: 0
   left: $width_tab
-  z-index: 1
+  z-index: $z-index-property-list
   ul
     height: $height_property_list
     border-bottom: solid 1px $color_border
@@ -493,7 +493,7 @@ input.project-search
     position: absolute
     top: 36%
     left: 0
-    z-index: -1
+    z-index: $z-index-caption__title
 
   .caption__icon--slide
     flex-grow: 1
@@ -639,7 +639,7 @@ input.project-search
       position: relative
       left: -10px
       float: left
-      z-index: 1
+      z-index: $z-index-side
     &:after
       content: ""
       background-color: #fff
@@ -648,7 +648,7 @@ input.project-search
       position: relative
       right: -10px
       float: right
-      z-index: 1
+      z-index: $z-index-side
 
   .animate-switch.ng-animate
     transition-duration: .25s
