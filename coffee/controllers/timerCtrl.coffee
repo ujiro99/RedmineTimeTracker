@@ -116,7 +116,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
-    $scope.mode.onSubmit()
+    $scope.mode.onSubmitClick()
 
   ###
    on timer stopped, send time entry.
@@ -212,7 +212,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       else
         $scope.mode = pomodoro
 
-    onSubmit: () =>
+    onSubmitClick: () =>
       return if preCheck() isnt CHECK.OK
       if State.isAutoTracking
         State.isAutoTracking = false
@@ -253,7 +253,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       else
         $scope.mode = manual
 
-    onSubmit: () =>
+    onSubmitClick: () =>
       return if preCheck() isnt CHECK.OK
       if State.isPomodoring
         State.isPomodoring = false
@@ -291,7 +291,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       else
         $scope.mode = auto
 
-    onSubmit: () =>
+    onSubmitClick: () =>
       diffMillis = $scope.picker.manualTime - BASE_TIME
       min = (diffMillis / 1000 / 60)
       if (min >= H24) and (min % H24 is 0) # max 24 hrs
