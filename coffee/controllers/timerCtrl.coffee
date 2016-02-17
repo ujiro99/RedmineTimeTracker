@@ -1,16 +1,23 @@
 timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Option, Log) ->
 
-  ONE_MINUTE = 1
+  # comment charactor max
   COMMENT_MAX = 255
+  # mode switching animation time [ms]
   SWITCHING_TIME = 250
+  # check result
   CHECK = OK: 0, CANCEL: 1, NG: -1
+  # time picker's base time
   BASE_TIME = new Date("1970/01/01 00:00:00")
+  # represents 24 hours in minutes
   H24 = 1440
+  # represents 1 minutes
+  ONE_MINUTE = 1
 
-  options = Option.getOptions()
-
+  # Application state
   $scope.state = State
+  # Application data
   $scope.data = DataAdapter
+  # comment objects
   $scope.comment =
     text: ""
     maxLength: COMMENT_MAX
@@ -19,8 +26,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.time = { min: 0 }
   # time for time-picker
   $scope.picker = { manualTime: BASE_TIME}
-  # Count down time for Pomodoro mod
-  $scope.countDownSec = options.pomodoroTime * 60 # sec
+  # Count down time for Pomodoro mode
+  $scope.countDownSec = 25 * 60 # sec
   # typeahead options
   $scope.inputOptions =
     highlight: true
@@ -29,6 +36,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.timePickerOptions = null
   # mode state objects
   auto = pomodoro = manual = null
+  # Application options
+  options = Option.getOptions()
+
 
   ###
    Initialize.
@@ -41,6 +51,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     manual = new Manual()
     $scope.mode = auto
 
+
   ###*
    @param matches {Array}  Array of issues which matched.
   ###
@@ -50,6 +61,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       if not obj[m.url] then obj[m.url] = {}
       m.groupTop = not obj[m.url][m.project.id]
       obj[m.url][m.project.id] = true
+
 
   ###
    Initialize search form.
@@ -76,6 +88,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
                               <span class='list-item__description list-item__id'>#{n.id}</span>
                             </div></div>"
 
+
   ###
    Initialize time picker options.
   ###
@@ -91,6 +104,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       timeFormat: 'H:i',
       show2400: true
 
+
   ###
    change post mode.
    if tracking, restore tracked time.
@@ -99,6 +113,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     restoreSelected()
     $scope.mode.onNextMode(direction)
     $scope.mode.onChanged()
+
 
   ###
    Workaround for restore selected state on switching view.
@@ -112,17 +127,20 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       DataAdapter.selectedActivity = tmpActivity
     , SWITCHING_TIME / 2
 
+
   ###
    Start or End Time tracking
   ###
   $scope.clickSubmitButton = () ->
     $scope.mode.onSubmitClick()
 
+
   ###
    on timer stopped, send time entry.
   ###
   $scope.$on 'timer-stopped', (e, time) ->
     $scope.mode.onTimerStopped(time)
+
 
   ###
    on timer ticked, update title.
@@ -151,6 +169,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
     Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, util.formatMinutes(minutes))
 
+
   ###
    check time entry before starting track.
   ###
@@ -162,6 +181,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       Message.toast Resource.string("msgSelectActivity"), 2000
       return CHECK.NG
     return CHECK.OK
+
 
   ###
    check time entry.
@@ -176,6 +196,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       return CHECK.CANCEL
     return CHECK.OK
 
+
   ###
    show success message.
   ###
@@ -184,6 +205,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       Message.toast Resource.string("msgSubmitTimeSuccess")
     else
       submitError(msg, status)
+
 
   ###
    show failed message.
@@ -304,6 +326,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
 
     onTimerStopped: (time) =>
       # nothing to do
+
 
   ###
    Start Initialize.
