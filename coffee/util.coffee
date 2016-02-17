@@ -186,4 +186,41 @@ Function::property = (prop, desc) ->
       groupBy(matches)
       cb(matches, queries)
 
+
+  ###*
+   Format time to `hh:mm:ss`.
+   @param millis {Number} millisecond
+   @return {String} formatted string.
+  ###
+  formatMillis: (millis) ->
+    time = {}
+    time.s = Math.floor((millis / 1000) % 60)
+    time.m = Math.floor((millis / (60000)) % 60)
+    time.h = Math.floor(millis / (3600000))
+
+    for key, num of time
+      num = '' + parseInt(num, 10)
+      num = '0' + num while num.length < 2
+      time[key] = num
+
+    return "#{time.h}:#{time.m}:#{time.s}"
+
+
+  ###*
+   Format time to `hh:mm`.
+   @param minutes {Number} minutes
+   @return {String} formatted string.
+  ###
+  formatMinutes: (minutes) ->
+    time = {}
+    time.m = Math.floor(minutes % 60)
+    time.h = Math.floor(minutes / 60)
+
+    for key, num of time
+      num = '' + parseInt(num, 10)
+      num = '0' + num while num.length < 2
+      time[key] = num
+
+    return "#{time.h}:#{time.m}"
+
 }

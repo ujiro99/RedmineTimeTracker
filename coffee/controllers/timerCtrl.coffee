@@ -130,39 +130,9 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.$on 'timer-tick', (e, time) ->
     if (not State.isAutoTracking) and (not State.isPomodoring)
       return
-    State.title = formatMillis(time.millis)
+    State.title = util.formatMillis(time.millis)
     $scope.time.min = Math.floor(time.millis / (60000))
 
-  ###
-   calculate and format time.
-  ###
-  formatMillis = (millis) ->
-    time = {}
-    time.s = Math.floor((millis / 1000) % 60)
-    time.m = Math.floor((millis / (60000)) % 60)
-    time.h = Math.floor(millis / (3600000))
-
-    for key, num of time
-      num = '' + parseInt(num, 10)
-      num = '0' + num while num.length < 2
-      time[key] = num
-
-    return "#{time.h}:#{time.m}:#{time.s}"
-
-  ###
-   calculate and format time.
-  ###
-  formatMinutes = (minutes) ->
-    time = {}
-    time.m = Math.floor(minutes % 60)
-    time.h = Math.floor(minutes / 60)
-
-    for key, num of time
-      num = '' + parseInt(num, 10)
-      num = '0' + num while num.length < 2
-      time[key] = num
-
-    return "#{time.h}:#{time.m}"
 
   ###
    send time entry.
@@ -179,7 +149,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     url = DataAdapter.selectedTicket.url
     account = DataAdapter.getAccount(url)
     Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
-    Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, formatMinutes(minutes))
+    Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, util.formatMinutes(minutes))
 
   ###
    check time entry before starting track.
