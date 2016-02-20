@@ -1,9 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueEditState, Const, State) ->
-
-  # http request canceled.
-  STATUS_CANCEL = 0
-  # don't use query
-  QUERY_ALL_ID = 0
+timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueLoader, Const, State) ->
 
   # data
   $scope.data = DataAdapter
@@ -12,7 +7,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   # options. using in pagination.
   $scope.options = Option.getOptions()
   # search parameters.
-  $scope.searchField = text: '', onlyContained: false
+  $scope.searchParam = text: '', onlyContained: false
+  # issue list's current page
+  $scope.pageParam = currentPage: 1
   # where does tooltip show.
   $scope.tooltipPlace = 'top'
   # is search field collapse.
@@ -22,35 +19,31 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   # typeahead data.
   $scope.queryData = null
   # typeahead options
-  $scope.inputOptions =
-    highlight: true
-    minLength: 0
+  $scope.inputOptions = highlight: true, minLength: 0
   # property filter's tab state.
   $scope.tabState = {}
-  # controll functions for issue list.
-  $scope.editState = new IssueEditState($scope)
+  # provide functions for issue loading.
+  $scope.loader = new IssueLoader($scope)
   # global state.
   $scope.state = State
 
-  ###
+
+  ###*
    Initialize.
   ###
   init = () ->
     initializeSearchform()
-
     # on change selected Project, load issues and queries.
     DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_CHANGED, () ->
-      loadIssues()
-
+      $scope.loader.loadIssues()
    # on change selected Query, set query to project, and load issues.
     DataAdapter.addEventListener DataAdapter.SELECTED_QUERY_CHANGED, () ->
-      setQueryAndloadIssues()
-
+      $scope.loader.setQueryAndloadIssues()
     DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_UPDATED, () ->
       $scope.$apply()
 
 
-  ###
+  ###*
    Initialize.
   ###
   initializeSearchform = () ->
@@ -62,27 +55,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
         suggestion: (n) -> "<div class='list-item'><span class='list-item__name'>#{n.name}</span><span class='list-item__description list-item__id'>#{n.id}</span></div>"
 
 
-  ###
-   on change selected Query, set query to project, and udpate issues.
-  ###
-  setQueryAndloadIssues = () ->
-    if not DataAdapter.selectedProject then return
-    if not DataAdapter.selectedQuery then return
-    targetId  = DataAdapter.selectedProject.id
-    targetUrl = DataAdapter.selectedProject.url
-    queryId   = DataAdapter.selectedQuery.id
-    if queryId is QUERY_ALL_ID then queryId = undefined
-    DataAdapter.selectedProject.queryId = queryId
-    loadIssues()
-
-
-  # clear and load issues
-  loadIssues = () ->
-    $scope.isLoadingVisible = true
-    DataAdapter.selectedProject.tickets.clear()
-    $scope.editState.loadAllTicketOnProject()
-
-
   ###*
    Open or collapse search form. And initialize tab state.
   ###
@@ -91,12 +63,14 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
     for prop in Const.ISSUE_PROPS
       $scope.tabState[prop] = false
 
+
   ###*
    toggle tab's hover class.
   ###
   $scope.toggleTabClass = (prop) ->
     $('#id_' + prop).toggleClass('hover')
     return false
+
 
   ###*
    on checkBox == All is clicked, change all property state.
@@ -112,13 +86,53 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
 
     $event.stopPropagation()
 
+
   ###*
-   on change state.currentPage, start loading.
+   on change currentPage, start loading.
   ###
-  $scope.$watch 'editState.currentPage', ->
+  $scope.$watch 'pageParam.currentPage', ->
     Analytics.sendEvent 'user', 'clicked', 'pagination'
     $scope.isLoadingVisible = false
-    $scope.editState.loadAllTicketOnProject()
+    $scope.loader.loadAllTicketOnProject()
+
+
+  ###
+   check item was contained in selectableTickets.
+  ###
+  $scope.isContained = (item) ->
+    return DataAdapter.tickets.some (e) -> item.equals e
+
+
+  ###
+   on user selected item.
+  ###
+  $scope.onClickItem = (item) ->
+    if not $scope.isContained(item)
+      Message.toast Resource.string("msgAdded").format(item.text)
+    else
+      Message.toast Resource.string("msgRemoved").format(item.text)
+    DataAdapter.toggleIsTicketShow item
+
+
+  ###
+   open link on other window.
+  ###
+  $scope.openLink = (url) ->
+    a = document.createElement('a')
+    a.href = url
+    a.target='_blank'
+    a.click()
+
+
+  ###
+   calculate tooltip position.
+  ###
+  $scope.onMouseMove = (e) ->
+    if e.clientY > $window.innerHeight / 2
+      $scope.tooltipPlace = 'top'
+    else
+      $scope.tooltipPlace = 'bottom'
+
 
   ###
    Start Initialize.

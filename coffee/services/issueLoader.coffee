@@ -1,52 +1,43 @@
-timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Message, Resource, Const, Log) ->
+timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Resource, Const) ->
 
   ###
    controller for issue edit mode.
   ###
-  class IssueEditState
+  class IssueLoader
 
+    # http request canceled.
+    @STATUS_CANCEL : 0
+    # don't use query
+    @QUERY_ALL_ID = 0
+
+
+    ###
+     Constructor
+    ###
     constructor: (@$scope) ->
 
-    @STATUS_CANCEL : 0
-    @SHOW: { DEFAULT: 0, NOT: 1, SHOW: 2 }
-    currentPage: 1
 
     ###
-     check item was contained in selectableTickets.
+     clear and load issues
     ###
-    isContained: (item) ->
-      return DataAdapter.tickets.some (e) -> item.equals e
-
-
-    ###
-     on user selected item.
-    ###
-    onClickItem: (item) ->
-      if not @isContained(item)
-        Message.toast Resource.string("msgAdded").format(item.text)
-      else
-        Message.toast Resource.string("msgRemoved").format(item.text)
-      DataAdapter.toggleIsTicketShow item
+    loadIssues: () ->
+      @$scope.isLoadingVisible = true
+      DataAdapter.selectedProject.tickets.clear()
+      @loadAllTicketOnProject()
 
 
     ###
-     open link on other window.
+     on change selected Query, set query to project, and udpate issues.
     ###
-    openLink: (url) ->
-      a = document.createElement('a')
-      a.href = url
-      a.target='_blank'
-      a.click()
-
-
-    ###
-     calculate tooltip position.
-    ###
-    onMouseMove: (e) =>
-      if e.clientY > $window.innerHeight / 2
-        @$scope.tooltipPlace = 'top'
-      else
-        @$scope.tooltipPlace = 'bottom'
+    setQueryAndloadIssues: () ->
+      if not DataAdapter.selectedProject then return
+      if not DataAdapter.selectedQuery then return
+      targetId  = DataAdapter.selectedProject.id
+      targetUrl = DataAdapter.selectedProject.url
+      queryId   = DataAdapter.selectedQuery.id
+      if queryId is IssueLoader.QUERY_ALL_ID then queryId = undefined
+      DataAdapter.selectedProject.queryId = queryId
+      @loadIssues()
 
 
     ###
@@ -108,16 +99,16 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
      show error message.
     ###
     loadError: (data, status) =>
-      if status is IssueEditState.STATUS_CANCEL then return
+      if status is IssueLoader.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
 
 
     ###
-     filter issues by searchField.text and properties.
+     filter issues by searchParam.text and properties.
     ###
     listFilter: (item) =>
 
-      if @$scope.searchField.onlyContained
+      if @$scope.searchParam.onlyContained
         return if not @isContained(item)
 
       match = Const.ISSUE_PROPS.all (p) ->
@@ -127,9 +118,9 @@ timeTracker.factory "IssueEditState", ($window, Redmine, DataAdapter, State, Mes
           return item[p].id is (n.id|0)
       return false if not match
 
-      if @$scope.searchField.text.isBlank() then return true
-      return (item.id + "").contains(@$scope.searchField.text) or
-             item.text.toLowerCase().contains(@$scope.searchField.text.toLowerCase())
+      if @$scope.searchParam.text.isBlank() then return true
+      return (item.id + "").contains(@$scope.searchParam.text) or
+             item.text.toLowerCase().contains(@$scope.searchParam.text.toLowerCase())
 
 
-  return IssueEditState
+  return IssueLoader

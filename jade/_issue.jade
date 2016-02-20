@@ -17,8 +17,8 @@ div#issue(ng-controller='IssueCtrl')
     div.input-and-btn.bottom-space-s.top-space-l
       div.searchform.searchform-icon.input
         input.form-control.input-sm(type="text"
-          ng-model="searchField.text"
-          ng-click="searchField.text = ''"
+          ng-model="searchParam.text"
+          ng-click="searchParam.text = ''"
           placeholder='Issue...')
         i.fa.fa-search
       button.btn.rotate__fast(ng-click="toggleSearchForm()",
@@ -75,7 +75,7 @@ div#issue(ng-controller='IssueCtrl')
         div.property-list
           label.curor-pointer
             span Added in list
-            input.switch(type="checkbox", ng-model="searchField.onlyContained")
+            input.switch(type="checkbox", ng-model="searchParam.onlyContained")
 
 
     // ------------------------------------
@@ -84,24 +84,24 @@ div#issue(ng-controller='IssueCtrl')
     div.issue-list
       ul.issue-list__content(ng-class="{'issue-list__content--empty':!data.selectedProject.tickets.length && !state.isLoadingIssue}",
                              uz-loading="isLoadingVisible && state.isLoadingIssue")
-        li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:editState.listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (editState.currentPage - 1) * options.itemsPerPage',
-          ng-mousemove='editState.onMouseMove($event)')
-          button.numbered-label(type='button', ng-click="editState.onClickItem(item)", ga-click='issueItem')
+        li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:loader.listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (pageParam.currentPage - 1) * options.itemsPerPage',
+          ng-mousemove='onMouseMove($event)')
+          button.numbered-label(type='button', ng-click="onClickItem(item)", ga-click='issueItem')
             span.numbered-label__number {{item.id}}
             span.numbered-label__label(tooltip-html-unsafe="<h6>{{item.text}}</h6><p><span>priority: {{item.priority.name}}</span><br><span>assigned: {{item.assignedTo.name}}</span></p>",
                          tooltip-animation="false",
                          tooltip-popup-delay='700',
                          tooltip-placement='{{tooltipPlace}}') {{item.text}}
-            div.btn(ng-hide='editState.isContained(item)')
+            div.btn(ng-hide='isContained(item)')
               span.icon-plus
-            div.btn(ng-show='editState.isContained(item)')
+            div.btn(ng-show='isContained(item)')
               span.icon-minus
-            button.btn.external-link(type='button', ng-click="editState.openLink(item.url + '/issues/' + item.id)", ga-click='issueLink')
+            button.btn.external-link(type='button', ng-click="openLink(item.url + '/issues/' + item.id)", ga-click='issueLink')
               span.icon-question
 
     // page
     div.page.bottom-space-l
       uz-pagination.pagination-small(total-items='filtered.length',
-                                     page='editState.currentPage',
+                                     page='pageParam.currentPage',
                                      items-per-page='options.itemsPerPage',
                                      container='.issue-list__content')

@@ -3,7 +3,7 @@ timeTracker.provider("State", (LogProvider) ->
   state =
     debug:             false
     log:               true
-    logLevel:          LogProvider.Level.INFO
+    logLevel:          LogProvider.Level.ALL
     title:             ""
     isAutoTracking:    false
     isPomodoring:      false
