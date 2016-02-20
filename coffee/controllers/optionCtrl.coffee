@@ -3,8 +3,11 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   # delay time for syncOptions [ms]
   DELAY_TIME = 500
 
-  $scope.options = {}
+  # Global options.
+  $scope.options = Option.getOptions()
+  # Global states
   $scope.state = State
+  # true if option modifying
   $scope.isSetting = false
 
   # promise object for cancel syncOptions
@@ -15,7 +18,6 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
    restore option, and start watching options.
   ###
   initialize = () ->
-    $scope.options = Option.getOptions()
     Option.onChanged syncOptions
 
 

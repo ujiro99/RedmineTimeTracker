@@ -2,14 +2,14 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
 
   ID_PASS = 'id_pass'
   API_KEY = 'api_key'
-  DEFAULT_PARAM = { apiKey:'', id:'', pass:'', url:'', numProjects:50 }
+  DEFAULT_PARAM = { apiKey: '', id: '', pass: '', url: '', numProjects: 50 }
   COLLAPSE_ANIMATION_DURATION = 100
 
   $scope.data = DataAdapter
   $scope.authParams = DEFAULT_PARAM
   $scope.options = Option.getOptions()
   $scope.authWay = ID_PASS
-  $scope.searchField = text: ''
+  $scope.searchField = { text: '' }
   $scope.state = State
   $scope.R = Resource
 

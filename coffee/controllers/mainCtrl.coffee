@@ -1,19 +1,23 @@
 timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Chrome, Resource, Option, Log, Analytics) ->
 
+  # chrome alarm identifier key
   DATA_SYNC = "DATA_SYNC"
+  # represents 5 minuts
   MINUTE_5 = 5
-  TICKET_CLOSED = 5
+  # http status.
   NOT_FOUND = 404
+  # http status.
   UNAUTHORIZED = 401
   # http request canceled.
   STATUS_CANCEL = 0
   # don't use query
   QUERY_ALL_ID = 0
 
-  # list for toast Message.
+  # List for toast Message.
   $rootScope.messages = []
-
+  # Window title
   State.title = Resource.string("extName")
+  # Global state
   $scope.state = State
 
   ###

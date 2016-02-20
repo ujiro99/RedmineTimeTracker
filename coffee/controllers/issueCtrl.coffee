@@ -7,9 +7,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   # options. using in pagination.
   $scope.options = Option.getOptions()
   # search parameters.
-  $scope.searchParam = text: '', onlyContained: false
+  $scope.searchParam = { text: '', onlyContained: false }
   # issue list's current page
-  $scope.pageParam = currentPage: 1
+  $scope.pageParam = { currentPage: 1 }
   # where does tooltip show.
   $scope.tooltipPlace = 'top'
   # is search field collapse.

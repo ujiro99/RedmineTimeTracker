@@ -18,14 +18,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   # Application data
   $scope.data = DataAdapter
   # comment objects
-  $scope.comment =
-    text: ""
-    maxLength: COMMENT_MAX
-    remain: COMMENT_MAX
+  $scope.comment = { text: "", maxLength: COMMENT_MAX, remain: COMMENT_MAX }
   # ticked time
   $scope.time = { min: 0 }
   # time for time-picker
-  $scope.picker = { manualTime: BASE_TIME}
+  $scope.picker = { manualTime: BASE_TIME }
   # Count down time for Pomodoro mode
   $scope.countDownSec = 25 * 60 # sec
   # typeahead options
