@@ -29,9 +29,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   # Count down time for Pomodoro mode
   $scope.countDownSec = 25 * 60 # sec
   # typeahead options
-  $scope.inputOptions =
-    highlight: true
-    minLength: 0
+  $scope.typeaheadOptions = { highlight: true, minLength: 0 }
   # jquery-timepicker options
   $scope.timePickerOptions = null
   # mode state objects

@@ -37,7 +37,7 @@ div#issue(ng-controller='IssueCtrl')
           span Custom queries
           input.sfTypeahead.form-control.input-sm(
             type="select"
-            options="inputOptions"
+            options="typeaheadOptions"
             datasets="queryData"
             ng-model="data.selectedQuery"
             ng-click="data.selectedQuery = null"

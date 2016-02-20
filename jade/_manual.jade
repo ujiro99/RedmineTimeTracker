@@ -13,7 +13,7 @@ form(action='#', method='POST', name='time_entry')
     div.inputWidhButton
       div.select-issues.searchform-icon
         input.sfTypeahead.form-control.input-sm(type="text"
-          options="inputOptions"
+          options="typeaheadOptions"
           datasets="ticketData"
           ng-model="data.selectedTicket"
           ng-click="data.selectedTicket = null"
@@ -28,7 +28,7 @@ form(action='#', method='POST', name='time_entry')
 
     div.select-activity.searchform-icon
       input.sfTypeahead.form-control.input-sm(type="text"
-        options="inputOptions"
+        options="typeaheadOptions"
         datasets="activityData"
         ng-model="data.selectedActivity"
         ng-click="data.selectedActivity = null"

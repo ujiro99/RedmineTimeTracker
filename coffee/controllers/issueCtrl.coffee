@@ -19,7 +19,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   # typeahead data.
   $scope.queryData = null
   # typeahead options
-  $scope.inputOptions = highlight: true, minLength: 0
+  $scope.typeaheadOptions = { highlight: true, minLength: 0 }
   # property filter's tab state.
   $scope.tabState = {}
   # provide functions for issue loading.
