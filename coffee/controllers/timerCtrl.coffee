@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Option, Log) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Option, Log, PluginManager) ->
 
   # comment charactor max
   COMMENT_MAX = 255
@@ -151,6 +151,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    send time entry.
   ###
   postEntry = (minutes) ->
+    PluginManager.notify(PluginManager.events.SEND_TIME_ENTRY, minutes)
     hours = Math.floor(minutes / 60 * 100) / 100 # 0.00
     total = DataAdapter.selectedTicket.total + hours
     DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
@@ -196,6 +197,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    show success message.
   ###
   submitSuccess = (msg, status) ->
+    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status)
     if msg?.time_entry?.id?
       Message.toast Resource.string("msgSubmitTimeSuccess")
     else
@@ -206,6 +208,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    show failed message.
   ###
   submitError = (conf) -> (msg, status) ->
+    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status)
     Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status").format(status), 3000)
     Log.warn conf
 
