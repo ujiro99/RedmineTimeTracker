@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueLoader, Const, State) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueLoader, Const, State, Message, Resource) ->
 
   # data
   $scope.data = DataAdapter

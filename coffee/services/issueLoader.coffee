@@ -109,7 +109,7 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
     listFilter: (item) =>
 
       if @$scope.searchParam.onlyContained
-        return if not @isContained(item)
+        return if not @$scope.isContained(item)
 
       match = Const.ISSUE_PROPS.all (p) ->
         DataAdapter.selectedProject[p].some (n) ->
