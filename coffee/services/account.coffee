@@ -222,7 +222,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
           _accounts.push account
           callback true, account
           $rootScope.$broadcast 'accountAdded', account
-          Analytics.sendEvent 'internal', 'account', 'add', _accounts.length
+          Analytics.sendEvent 'account', 'count', 'onAdd', _accounts.length
 
 
     ###
@@ -244,7 +244,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
             break
           callback true
           $rootScope.$broadcast 'accountRemoved', url
-          Analytics.sendEvent 'internal', 'account', 'remove', _accounts.length
+          Analytics.sendEvent 'account', 'count', 'onRemove', _accounts.length
 
 
     ###

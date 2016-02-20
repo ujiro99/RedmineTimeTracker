@@ -27,7 +27,7 @@ form(action='#', method='POST', name='time_entry')
           timer(autostart="false", interval="1000", countdown="countDownSec")
             {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
-    button.btn(type='button', ng-click='clickSubmitButton()', ga-click='postAuto')
+    button.btn(type='button', ng-click='clickSubmitButton()', ga-click='postPomodoro')
       i.fa(ng-class="{'fa-play': !state.isPomodoring, 'fa-stop': state.isPomodoring}")
 
 

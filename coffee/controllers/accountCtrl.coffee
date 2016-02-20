@@ -55,13 +55,13 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
           if DataAdapter.isAccountExists(account)
             DataAdapter.updateAccounts(account)
             Message.toast Resource.string("msgUpdateSuccess"), 3000
-            Analytics.sendEvent 'internal', 'authUpdate', 'success'
+            Analytics.sendEvent 'auth', 'update', 'success', 1
           else
             State.isAddingAccount = false
             State.isCollapseSetting = true
             DataAdapter.addAccounts(account)
             Message.toast Resource.string("msgAuthSuccess"), 3000
-            Analytics.sendEvent 'internal', 'authAdd', 'success'
+            Analytics.sendEvent 'auth', 'add', 'success', 1
         else
           failAuthentication(null, status)
     else
@@ -82,7 +82,9 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
     else
       message = Resource.string("msgAuthFail") + Resource.string("status").format(status)
     Message.toast message, 3000
-    Analytics.sendEvent 'internal', 'authFail', status
+    mode = if State.isAddingAccount then 'update' else 'add'
+    Analytics.sendEvent 'auth', mode, 'failed', 1
+    Analytics.sendEvent 'auth', 'failStatus', $scope.authWay, status
 
 
   ###

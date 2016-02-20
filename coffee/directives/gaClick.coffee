@@ -3,5 +3,5 @@ timeTracker.directive 'gaClick', (Analytics) ->
     restrict: 'A'
     link: (scope, element, attrs) ->
       element.on 'click', () ->
-        Analytics.sendEvent 'user', 'clicked', attrs.gaClick
+        Analytics.sendEvent 'user', 'clicked', attrs.gaClick, 1
   }

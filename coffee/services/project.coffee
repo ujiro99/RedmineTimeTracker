@@ -163,14 +163,17 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
           Log.debug local
           Log.groupEnd "Project.load()"
           deferred.resolve(local)
+          Analytics.sendEvent 'project', 'count', 'onLoadLocal', local.length
         else
           @_load Chrome.storage.sync, (sync) =>
             if sync?
               Log.info 'project loaded from sync.'
               deferred.resolve(sync)
+              Analytics.sendEvent 'project', 'count', 'onLoadSync', sync.length
             else
               Log.info 'project is nothing.'
               deferred.reject(null)
+              Analytics.sendEvent 'project', 'count', 'onLoadSync', 0
       return deferred.promise
 
 
@@ -181,11 +184,11 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
       @_sync(projects, Chrome.storage.sync)
         .then((res) ->
           Log.info 'project synced.'
-          Analytics.sendEvent 'chrome', 'project', 'sync', projects.length
+          Analytics.sendEvent 'project', 'sync', 'success', 1
           return res
         , (res) ->
           Log.info 'project sync failed.'
-          Analytics.sendEvent 'chrome', 'project', 'syncFailed'
+          Analytics.sendEvent 'project', 'sync', 'failed', 1
           return res)
 
 

@@ -183,6 +183,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
           Log.groupEnd 'Ticket.load() loaded'
           localTickets.missing = missingUrlIndex
           deferred.resolve(localTickets)
+          Analytics.sendEvent 'ticket', 'count', 'onLoadLocal', localTickets.length
         else
           _load Chrome.storage.sync, (syncTickets, missingUrlIndex) =>
             syncTickets or syncTickets = []
@@ -192,6 +193,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
             Log.groupEnd 'Ticket.load() loaded'
             syncTickets.missing = missingUrlIndex
             deferred.resolve(syncTickets)
+            Analytics.sendEvent 'ticket', 'count', 'onLoadSync', syncTickets.length
       return deferred.promise
 
 
@@ -202,11 +204,11 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
       _sync(tickets, Chrome.storage.sync)
         .then((res) ->
           Log.info 'ticket synced.'
-          Analytics.sendEvent 'chrome', 'ticket', 'sync', tickets.length
+          Analytics.sendEvent 'ticket', 'sync', 'success', 1
           return res
         , (res) ->
           Log.info 'ticket sync failed.'
-          Analytics.sendEvent 'chrome', 'ticket', 'syncFailed'
+          Analytics.sendEvent 'ticket', 'sync', 'failed', 1
           $q.reject(res))
 
 

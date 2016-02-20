@@ -91,7 +91,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
    on change currentPage, start loading.
   ###
   $scope.$watch 'pageParam.currentPage', ->
-    Analytics.sendEvent 'user', 'clicked', 'pagination'
     $scope.isLoadingVisible = false
     $scope.loader.loadAllTicketOnProject()
 

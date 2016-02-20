@@ -247,11 +247,12 @@ class Redmine
     @$http(config)
       .success((args...) =>
         @Log.info("Time Entry Posted.\t account:#{@auth.name}\tid:#{@_timeEntryData.time_entry.issue_id}\thours:#{@_timeEntryData.time_entry.hours}")
-        @Analytics.sendEvent 'internal', 'submitTime', 'success', @_timeEntryData.time_entry.hours
+        @Analytics.sendEvent 'timeEntry', 'post', 'success', 1
         success(args...))
       .error((args...) =>
         @Log.info("Time Entry Post Failed.\t account:#{@auth.name}\tid:#{@_timeEntryData.time_entry.issue_id}\thours:#{@_timeEntryData.time_entry.hours}")
         @Log.debug args
+        @Analytics.sendEvent 'timeEntry', 'post', 'failed', 1
         @Analytics.sendException("Error: submitTime\tstatus: " + args[1])
         error(args...))
 
