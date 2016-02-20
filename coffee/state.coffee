@@ -7,7 +7,7 @@ timeTracker.provider("State", (LogProvider) ->
     title:             ""
     isAutoTracking:    false
     isPomodoring:      false
-    isAdding:          false
+    isAddingAccount:   false
     isSaving:          false
     isLoadingIssue:    false
     isCollapseSetting: true

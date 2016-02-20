@@ -57,7 +57,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
             Message.toast Resource.string("msgUpdateSuccess"), 3000
             Analytics.sendEvent 'internal', 'authUpdate', 'success'
           else
-            State.isAdding = false
+            State.isAddingAccount = false
             State.isCollapseSetting = true
             DataAdapter.addAccounts(account)
             Message.toast Resource.string("msgAuthSuccess"), 3000
@@ -102,7 +102,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
     return if State.isSaving
 
     State.isSetting = true
-    State.isAdding = false
+    State.isAddingAccount = false
     State.isCollapseSetting = false
 
     # use copy data to avoid changing original one.
@@ -122,12 +122,12 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
 
     if State.isCollapseSetting # to be open
       $scope.authParams = DEFAULT_PARAM
-      State.isAdding = true
+      State.isAddingAccount = true
       $scope.state.isSetting = false
     else # to be close
       $timeout () ->
         $scope.authParams = DEFAULT_PARAM
-        State.isAdding = false
+        State.isAddingAccount = false
         State.isSetting = false
       , COLLAPSE_ANIMATION_DURATION
     State.isCollapseSetting = !State.isCollapseSetting

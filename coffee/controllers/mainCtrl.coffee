@@ -222,7 +222,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _requestAddAccount = () ->
     $timeout () ->
-      State.isAdding = true
+      State.isAddingAccount = true
       State.isCollapseSetting = false
     , 500
     $timeout () ->
