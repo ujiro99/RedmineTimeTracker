@@ -81,13 +81,11 @@ class Redmine
   _bindDefer: (success, error, mothodName) ->
     deferred = @$q.defer()
     onSuccess = (args...) =>
-      @Analytics.sendEvent 'internal', mothodName, 'total_count', args[0].total_count
       args[0].account = @auth
       deferred.resolve(args...)
       success?(args...)
 
     onError = (args...) =>
-      @Analytics.sendException("Error: " + mothodName + "\tstatus: " + args[1])
       @Log.warn(mothodName + " failed:\taccount: " + @auth.name + "\tstatus: " + args[1])
       if not args[0] or args[0].isBlank?()
         args[0] = { error: true }
