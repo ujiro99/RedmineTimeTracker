@@ -1,4 +1,4 @@
-timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account, DataAdapter, Option, Analytics, State, Resource) ->
+timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account, DataAdapter, Option, Analytics, State, Resource, Log, PluginManager) ->
 
   # delay time for syncOptions [ms]
   DELAY_TIME = 500
@@ -19,6 +19,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   ###
   initialize = () ->
     Option.onChanged syncOptions
+    loadSavedPlugins()
 
 
   ###
@@ -44,6 +45,17 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   ###
   failSyncOptions = () ->
     Message.toast Resource.string("msgOptionSaveFailed")
+
+
+  ###
+   Load plugins from saved in the Option.
+  ###
+  loadSavedPlugins = () ->
+    pluginUrls = $scope.options.plugins
+    Log.debug("loadSavedPlugins")
+    for url in pluginUrls
+      Log.debug(url)
+      PluginManager.loadPluginUrl(url)
 
 
   ###
