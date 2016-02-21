@@ -16,7 +16,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       isCollapseOptions: false        # options section collapse
       isCollapsePlugins: false        # plugins section collapse
       plugins: [                      # only app internal path are allowed by CSP.
-        "/scripts/plugins/showNotification.js"
+        "/scripts/plugins/notification.js"
       ]
     @_options: @DEFAULT_OPTION
     @_events: []

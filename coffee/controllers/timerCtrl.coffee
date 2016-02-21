@@ -151,14 +151,15 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    send time entry.
   ###
   postEntry = (minutes) ->
-    PluginManager.notify(PluginManager.events.SEND_TIME_ENTRY, minutes)
     hours = Math.floor(minutes / 60 * 100) / 100 # 0.00
-    total = DataAdapter.selectedTicket.total + hours
+    postParam = { hours: hours , comment: $scope.comment.text }
+    PluginManager.notify(PluginManager.events.SEND_TIME_ENTRY, postParam, DataAdapter.selectedTicket, $scope.mode.name)
+    total = DataAdapter.selectedTicket.total + postParam.hours
     DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
     conf =
       issueId:    DataAdapter.selectedTicket.id
-      hours:      hours
-      comment:    $scope.comment.text
+      hours:      postParam.hours
+      comment:    postParam.comment
       activityId: DataAdapter.selectedActivity.id
     url = DataAdapter.selectedTicket.url
     account = DataAdapter.getAccount(url)
@@ -197,8 +198,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    show success message.
   ###
   submitSuccess = (msg, status) ->
-    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status)
     if msg?.time_entry?.id?
+      PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY,  msg.time_entry, DataAdapter.selectedTicket, $scope.mode.name)
       Message.toast Resource.string("msgSubmitTimeSuccess")
     else
       submitError(msg, status)
@@ -208,7 +209,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    show failed message.
   ###
   submitError = (conf) -> (msg, status) ->
-    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status)
+    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status, DataAdapter.selectedTicket, $scope.mode.name)
     Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status").format(status), 3000)
     Log.warn conf
 

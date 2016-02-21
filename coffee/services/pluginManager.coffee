@@ -78,8 +78,8 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log) 
       document.getElementsByTagName("head")[0].appendChild(script)
 
 
-    notify: (event, args) =>
-      @fireEvent(event, null, event, args)
+    notify: (event, args...) =>
+      @fireEvent(event, null, event, args...)
 
 
     exec: (event, params...) =>
