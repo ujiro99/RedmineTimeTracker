@@ -199,7 +199,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
   submitSuccess = (msg, status) ->
     if msg?.time_entry?.id?
-      PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY,  msg.time_entry, DataAdapter.selectedTicket, $scope.mode.name)
+      PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY,  msg.time_entry, status, DataAdapter.selectedTicket, $scope.mode.name)
       Message.toast Resource.string("msgSubmitTimeSuccess")
     else
       submitError(msg, status)

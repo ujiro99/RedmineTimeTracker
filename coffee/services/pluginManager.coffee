@@ -9,15 +9,19 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log) 
     LOAD_FAILED:    "load_failed"
     EXEC_FAILED:    "exec_failed"
 
+
     # Interface for plugin which access to this app.
-    RTT: {}
+    RTT: null
+
 
     # If events fired, plugin's event handler will be called.
     _events: [
       "sendTimeEntry"
       "sendedTimeEntry"
     ]
+    # Event name for accessed by other module.
     events: { ### generate automatically ### }
+
 
     # Registered plugins
     _plugins: {}
@@ -33,14 +37,21 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log) 
       @bindEvents()
 
 
+    ###*
+     Initialize RTT grobal/internal object.
+    ###
     initRTT: () =>
       pluginInterface = {
-        addPlugin:    @addPlugin
-        removePlugin: @removePlugin
+        registerPlugin:   @registerPlugin
+        unregisterPlugin: @unregisterPlugin
       }
-      $window.RTT = pluginInterface
+      $window.RTT = pluginInterface #grobal
+      @RTT = {} #internal
 
 
+    ###*
+     Bind events and generate eventName.
+    ###
     bindEvents: () =>
       @_events.map (event) =>
         @addEventListener event, @exec
@@ -48,20 +59,41 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log) 
         @events[key] = event
 
 
-    addPlugin: (name, pluginObj) =>
+    ###*
+     Register new plugins. This method will be called by plugin first.
+     @param name      {String} Plugin name, must be unique.
+     @param pluginObj {Object} Plugin object that has event handlers.
+    ###
+    registerPlugin: (name, pluginObj) =>
       @_plugins[name] = pluginObj
       @fireEvent(@UPDATED_PLUGIN)
 
 
-    removePlugin: (name) =>
+    ###*
+     Unregister plugins. This method will be called by plugin.
+     @param name {String} Plugin name.
+    ###
+    unregisterPlugin: (name) =>
       delete @_plugins[name]
       @fireEvent(@UPDATED_PLUGIN)
 
 
+    ###*
+     List up registered plugins.
+     @return plugins       {Object} Hashmap of plugins.
+     @return plugins.key   {String} Plugin name.
+     @return plugins.value {Object} Plugin object.
+    ###
     listPlugins: () =>
       return @_plugins
 
 
+    ###*
+     Load plugin from url.
+     Currently, only in app file is allowed by Chrome app CSP.
+     @param url {String}   Url of plugin's source code.
+     @param cb  {Function} Load completed callback.
+    ###
     loadPluginUrl: (url, cb) =>
       script = document.createElement('script')
       script.setAttribute('src', url)
@@ -78,18 +110,29 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log) 
       document.getElementsByTagName("head")[0].appendChild(script)
 
 
+    ###*
+     Notify event to plugins.
+     @param event {String} Event name.
+     @param args  {Any}    Arguments which passed into plugin's event handler.
+    ###
     notify: (event, args...) =>
       @fireEvent(event, null, event, args...)
 
 
-    exec: (event, params...) =>
+    ###*
+     Execute plugin's event handlers.
+     Handler method which prefixed "on" to eventName is called.
+     @param event {String} Event name.
+     @param args  {Any}    Arguments which passed into plugin's event handler.
+    ###
+    exec: (event, args...) =>
       handlerName = 'on' + event.camelize()
       @Log.debug("start " + handlerName)
       for name, plugin of @_plugins
         try
           @Log.info("  exec " + name)
           handler = plugin[handlerName] or ()->
-          handler.apply(plugin, [@RTT, params...])
+          handler.apply(plugin, [@RTT, args...])
         catch error
           @Log.error(error)
           @fireEvent(@EXEC_FAILED, null, name)

@@ -7,10 +7,14 @@ class Notification
    Notifications default options.
   ###
   DEFAULT_OPTION:
-    type:        "basic"
-    iconUrl:     "/images/icon_128.png"
+    type:        "list"
+    iconUrl:     "/images/icon_notification.png"
     title:       "Tracking finished"
     isClickable: true
+
+  # HTTP status on send success.
+  STATUS_OK: 200
+  STATUS_CREATED: 201
 
 
   ###
@@ -18,23 +22,37 @@ class Notification
   ###
   constructor: () ->
     chrome.notifications.onClicked.addListener (notificationId) =>
-      @_showWindow()
       chrome.notifications.clear(notificationId)
+      @_showWindow()
 
 
   ###
    On time entry was sended, show desktop notification.
    @param RTT       {Object} Interface to communicate with app.
    @param timeEntry {Object} Sended time entry.
+   @param status    {Number} Send result.
    @param ticket    {Object} Tracked ticket.
    @param mode      {String} Tracking mode.
   ###
-  onSendedTimeEntry: (RTT, timeEntry, ticket, mode) =>
+  onSendedTimeEntry: (RTT, timeEntry, status, ticket, mode) =>
     return if mode isnt "pomodoro"
-    options = {}
-    options.message = mode + " finished."
-    options.contextMessage = ticket.text + ": " + util.formatMinutes(timeEntry.hours * 60)
-    options = Object.merge(@DEFAULT_OPTION, options)
+    options = Object.merge(@DEFAULT_OPTION, {})
+    options.message = "Pomodoro finished." # will be ignored by chrome
+
+    if (status is @STATUS_OK) or (status is @STATUS_CREATED)
+      options.items = [
+        { title: "Ticket",   message: ticket.text }
+        { title: "Hours",    message: util.formatMinutes(timeEntry.hours * 60) }
+        { title: "Activity", message: timeEntry.activity.name }
+      ]
+    else
+      options.title = "Sending failed..."
+      options.items = [
+        { title: "Ticket",      message: ticket.text }
+        { title: "Hours",       message: util.formatMinutes(timeEntry.hours * 60) }
+        { title: "HTTP STATUS", message: status }
+      ]
+
     chrome.notifications.create(null, options)
 
 
@@ -46,5 +64,5 @@ class Notification
     currentWindow.show()
 
 
-# register plugin
-RTT.addPlugin("Notification", new Notification())
+# Register this plugin.
+RTT.registerPlugin("Notification", new Notification())
