@@ -1,11 +1,15 @@
-timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log, Const) ->
+timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log) ->
 
   ###
    Management plugins.
   ###
   class PluginManager extends EventDispatcher
 
-    # Interface for plugin access to application.
+    UPDATED_PLUGIN: "update_plugin"
+    LOAD_FAILED:    "load_failed"
+    EXEC_FAILED:    "exec_failed"
+
+    # Interface for plugin which access to this app.
     RTT: {}
 
     # If events fired, plugin's event handler will be called.
@@ -24,7 +28,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log, 
      @class PluginManager
      @constructor
     ###
-    constructor: (@window, @Analytics, @Log, @Const) ->
+    constructor: (@window, @Analytics, @Log) ->
       @initRTT()
       @bindEvents()
 
@@ -37,19 +41,41 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log, 
       $window.RTT = pluginInterface
 
 
-    addPlugin: (name, plugin) =>
-      @_plugins[name] = plugin
-
-
-    removePlugin: (name) =>
-      delete @_plugins[name]
-
-
     bindEvents: () =>
       @_events.map (event) =>
         @addEventListener event, @exec
         key = event.underscore().toUpperCase()
         @events[key] = event
+
+
+    addPlugin: (name, pluginObj) =>
+      @_plugins[name] = pluginObj
+      @fireEvent(@UPDATED_PLUGIN)
+
+
+    removePlugin: (name) =>
+      delete @_plugins[name]
+      @fireEvent(@UPDATED_PLUGIN)
+
+
+    listPlugins: () =>
+      return @_plugins
+
+
+    loadPluginUrl: (url, cb) =>
+      script = document.createElement('script')
+      script.setAttribute('src', url)
+      script.setAttribute('type', 'text/javascript')
+      loaded = false
+      loadedCallback = () ->
+        return if loaded
+        loaded = true
+        script.onload = null
+        script.onreadystatechange = null
+        cb and cb(url)
+      script.onload = loadedCallback
+      script.onreadystatechange = loadedCallback
+      document.getElementsByTagName("head")[0].appendChild(script)
 
 
     notify: (event, args) =>
@@ -59,25 +85,17 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Log, 
     exec: (event, params...) =>
       handlerName = 'on' + event.camelize()
       @Log.debug("start " + handlerName)
-      for name, plugin of @plugins
+      for name, plugin of @_plugins
         try
-          @Log.debug("  exec " + name)
-          handler = plugin[handlerName] or @Const.NULLFUNC
-          args = [@RTT, params...]
-          handler.apply(plugin, arg)
+          @Log.info("  exec " + name)
+          handler = plugin[handlerName] or ()->
+          handler.apply(plugin, [@RTT, params...])
         catch error
-          throw new PluginError(name, error)
+          @Log.error(error)
+          @fireEvent(@EXEC_FAILED, null, name)
         finally
-          @Log.debug("  execed " + name)
+          @Log.info("  execed " + name)
       @Log.debug("finish " + handlerName)
-
-
-  class PluginError extends Error
-
-    constructor: (@plugin, @message) ->
-
-    toString: () =>
-      return "PluginError: " + @plugin + "\treason: " + @message
 
 
   return new PluginManager($window, Analytics, Log)

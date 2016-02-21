@@ -21,7 +21,7 @@ div#header(ng-controller="headerCtrl")
         placeholder="Project...")
 
       div.project-content(ng-class="{active: isActive}")
-        ul.account-list
+        ol.numbered-list
           li(ng-repeat='account in data.accounts',
              ng-class="{numbered: account.url!=='Starred', starred: account.url==='Starred'}")
             div.numbered-label

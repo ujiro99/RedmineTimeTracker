@@ -200,9 +200,50 @@ input.project-search
 .project-content.active
   top: 2.5em
 
-.account-list
+.numbered-list
   margin: 0
   padding-left: 0
+
+.numbered-list--clickable
+  padding-left: 4px
+  .number
+    transition: padding-left ease .2s
+
+  & > li
+    counter-increment: account
+    margin-bottom: 0.5em
+    cursor: pointer
+    align-items: center
+
+    &.isSaving
+      cursor: wait
+
+    & > .number:before
+      content: counter(account)
+      padding-right: 10px
+      color: #aaa
+
+    &:hover
+      .number
+        padding-left: 5px
+      span
+      .btn
+        width: auto
+        color: $color_key
+        visibility: visible
+        opacity: 1
+      .icon-minus
+        background-image: -webkit-gradient(linear, left center, right center, from($color_key), to($color_key));
+      .number:before
+        color: $color_key
+
+    .btn
+      border: none
+      color: #aaa
+      opacity: 0
+      visibility: hidden
+      transition: opacity .2s ease
+      width: 0
 
 .numbered, .starred
   &>.numbered-label
@@ -250,6 +291,12 @@ input.project-search
     color: $color_icon
     &:hover
       color: $color_key
+
+.input-and-btn__plus-btn
+  margin: 0 0 0 7px
+  height: $height_input
+  line-height: $height_input
+  font-size: 16px
 
 @keyframes slide-in-left
   from {left: 100%}
@@ -818,13 +865,6 @@ input.project-search
     cursor: wait
     pointer-events: auto
 
-  .input-and-btn
-    .btn
-      margin: 0 0 0 7px
-      height: $height_input
-      line-height: $height_input
-      font-size: 16px
-
   .account-setting
     position: relative
     height: 16em
@@ -889,52 +929,14 @@ input.project-search
       i, span
         vertical-align: middle
 
-  .account-list
-    padding-left: 4px
-    .number
-      transition: padding-left ease .2s
-
-    & > li
-      counter-increment: account
-      margin-bottom: 0.5em
-      cursor: pointer
-      align-items: center
-
-      &.isSaving
-        cursor: wait
-
-      & > .number:before
-        content: counter(account)
-        padding-right: 10px
-        color: #aaa
-
-      &:hover
-        .number
-          padding-left: 5px
-        span
-        .btn
-          width: auto
-          color: $color_key
-          visibility: visible
-          opacity: 1
-        .icon-minus
-          background-image: -webkit-gradient(linear, left center, right center, from($color_key), to($color_key));
-        .number:before
-          color: $color_key
-
-      .btn
-        border: none
-        color: #aaa
-        opacity: 0
-        visibility: hidden
-        transition: opacity .2s ease
-        width: 0
-
 #options
 
   .setting__section
     display: flex
     align-items: center
+
+  .setting__section--block
+    display: block
 
   .setting__labels
     flex: 1
