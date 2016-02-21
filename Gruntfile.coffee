@@ -86,6 +86,7 @@ module.exports = (grunt) ->
             'coffee/config.coffee',
             'coffee/**/*.coffee',
             '!coffee/chromereload.coffee'
+            '!coffee/plugins/*'
           ]
         ]
       develop:
@@ -160,8 +161,11 @@ module.exports = (grunt) ->
 
     uglify:
       production:
-        src: '<%= config.dist %>/scripts/script.js'
-        dest: '<%= config.dist %>/scripts/script.js'
+        files: [
+          '<%= config.dist %>/scripts/script.js': '<%= config.dist %>/scripts/script.js'
+          '<%= config.dist %>/scripts/eventPage.js': '<%= config.dist %>/scripts/eventPage.js'
+          '<%= config.dist %>/scripts/plugins/notification.js': '<%= config.dist %>/scripts/plugins/notification.js'
+        ]
 
     cssmin:
       minify:
@@ -176,7 +180,10 @@ module.exports = (grunt) ->
         options:
           buildnumber: false
           background:
-            target: 'scripts/eventPage.js'
+            target: [
+              'scripts/lib/google-analytics-bundle.js'
+              'scripts/eventPage.js'
+            ]
             exclude: [
               'scripts/chromereload.js'
             ]
@@ -206,6 +213,7 @@ module.exports = (grunt) ->
             "fonts/*.*"
             "images/*.png"
             "scripts/lib/*.js"
+            "scripts/plugins/*.js"
             "scripts/eventPage.js"
             "views/template/**/*.html"
           ]
