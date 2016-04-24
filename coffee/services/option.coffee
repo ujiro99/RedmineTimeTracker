@@ -19,6 +19,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
         "/scripts/plugins/notification.js"
       ]
     @_options: @DEFAULT_OPTION
+    @_optionProxy: null
     @_events: []
     @_eventsWithKey: {}
 
@@ -26,13 +27,13 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
      constructor.
     ###
     constructor: () ->
-      Object.observe(Option._options, _onChanged)
+      Option._optionProxy = new Proxy(Option._options, @_onChanged)
 
     ###
      get all option data.
     ###
     getOptions: () ->
-      return Option._options
+      return Option._optionProxy
 
     ###
      add a event listner for change value.
@@ -65,7 +66,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
     ###
      sync all option data.
     ###
-    syncOptions: (change) ->
+    syncOptions: (propName) ->
       deferred = $q.defer()
 
       saveData = {}
@@ -76,7 +77,7 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
         else
           Log.info "option synced."
           Log.debug saveData
-          deferred.resolve(change)
+          deferred.resolve(propName)
 
       return deferred.promise
 
@@ -97,18 +98,18 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       return deferred.promise
 
     ###*
-    # on changed lister.
-    # @param {Array} changes - parameter of changes.
-    # @param {String} changes[n].name: The name of the property which was changed.
-    # @param {Object} changes[n].object: The changed object after the change was made.
-    # @param {String} changes[n].type: A string indicating the type of change taking place. One of "add", "update", or "delete".
-    # @param {Object} changes[n].oldValue: Only for "update" and "delete" types. The value before the change.
+    # on option changed lister.
     ###
-    _onChanged = (changes) ->
-      changes.map (e) ->
-        Option._events.map (f) -> f(e)
-        Option._eventsWithKey[e.name]?.map (f) ->
-          f(e.object[e.name], e.oldValue[e.name])
+    _onChanged: {
+      # @param {Object} options: Target object.
+      # @param {String} propName: Property name which will be change.
+      # @param {Object} value: New value.
+      set: (options, propName, value) ->
+        Option._events.map (f) -> f(propName, value, options[propName])
+        Option._eventsWithKey[propName]?.map (f) -> f(value, options[propName])
+        options[propName] = value
+        return true
+    }
 
   return new Option()
 

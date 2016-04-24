@@ -24,35 +24,59 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
       isNaN(urlIndex) or @urlIndex = urlIndex - 0
       isNaN(show) or @show = show - 0
       isNaN(queryId) or @queryId = queryId - 0
-      @tickets = tickets or []
       Const.ISSUE_PROPS.map (p) => @[p] = []
-      Array.observe(@tickets, @updateProperties)
-      @updateProperties([{object: @tickets}]) if tickets and tickets.length > 0
+      @_tickets = []
+      @tickets = new Proxy(@_tickets, @updateProperties(@))
 
     ###
      update property related to project.
-     @param changes {Object} what was changed.
-                             ex) [{type: 'splice', object: <arr>, index: 1, removed: ['B', 'c', 'd'], addedCount: 3}]
+     @param projectModel {ProjectModel} target project.
     ###
-    updateProperties: (changes) =>
-      Log.time("updateProperties #{@text}\t")
+    updateProperties: (projectModel) ->
+
+      # Initialize property map.
       tmp = {}
-      # create each property's id/name object.
-      Const.ISSUE_PROPS.map (p) => tmp[p] = {}
-      changes.map (c) => c.object.map (t) => Const.ISSUE_PROPS.map (p) =>
-        t[p] and tmp[p][t[p].id] = t[p].name
-      Const.ISSUE_PROPS.map (p) =>
-        # create id/name pair array.
-        tmpArray = Object.toKeyValuePair(tmp[p], {key: "id", value: "name"})
-        tmpArray.add({id: "", name: "All"}, 0)
-        tmpArray.map (t) -> t.checked = true
-        # restore old checked status
-        @[p].map (oldOption) ->
-          newOption = tmpArray.find (n) -> n.id is oldOption.id
-          newOption.checked = oldOption.checked if newOption
-        @[p].set(tmpArray)
-      Log.timeEnd("updateProperties #{@text}\t")
-      @fireEvent(@UPDATED, @)
+      Const.ISSUE_PROPS.map (prop) -> tmp[prop] = {}
+
+      return {
+
+        ###*
+         Properties map on this project.
+         @type {Object}
+        ###
+        _props: tmp
+
+        ###*
+         Called on ticket changes.
+         @param tickets {Array} Target object.
+         @param index {String} Property name.
+         @param ticket {TicketModel} New ticket.
+        ###
+        set: (tickets, index, ticket) ->
+          Log.time("updateProperties #{projectModel.text}\t")
+          if tickets.isEmpty()
+            for prop, val of @_props
+              for p, v of val then delete val[p]
+          # create each property's id/name object. Id must be unique.
+          Const.ISSUE_PROPS.map (prop) =>
+            ticket[prop] and @_props[prop][ticket[prop].id] = ticket[prop].name
+          Const.ISSUE_PROPS.map (prop) =>
+            # create id/name pair array.
+            tmpArray = Object.toKeyValuePair(@_props[prop], {key: "id", value: "name"})
+            tmpArray.add({id: "", name: "All"}, 0)
+            tmpArray.map (t) -> t.checked = true
+            # restore old checked status
+            projectModel[prop].map (oldOption) ->
+              newOption = tmpArray.find (n) -> n.id is oldOption.id
+              newOption.checked = oldOption.checked if newOption
+            projectModel[prop].set(tmpArray)
+          # set changed ticket
+          tickets[index] = ticket
+          Log.timeEnd("updateProperties #{projectModel.text}\t")
+          # Log.info(projectModel)
+          projectModel.fireEvent(projectModel.UPDATED, projectModel)
+          return true
+      }
 
     ###
      compare project.

@@ -36,11 +36,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
     # on change selected Project, load issues and queries.
     DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_CHANGED, () ->
       $scope.loader.loadIssues()
-   # on change selected Query, set query to project, and load issues.
+    # on change selected Query, set query to project, and load issues.
     DataAdapter.addEventListener DataAdapter.SELECTED_QUERY_CHANGED, () ->
       $scope.loader.setQueryAndloadIssues()
-    DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_UPDATED, () ->
-      $scope.$apply()
 
 
   ###*

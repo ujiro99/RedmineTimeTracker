@@ -34,18 +34,21 @@ describe 'option.coffee', ->
   describe 'onChanged', ->
 
     it 'calls changed callback.', (done) ->
-      Option.onChanged (e) ->
-        expect(e.object.reportUsage).to.equals(false)
+      Option.onChanged (propName, newVal, oldVal) ->
+        expect(propName).to.equals("reportUsage")
+        expect(newVal).to.equals(false)
         done()
       expect(Option.getOptions().reportUsage).to.equals(true)
       Option.getOptions().reportUsage = false
 
     it 'calls changed 2 callbacas.', (done) ->
-      Option.onChanged (e) ->
-        expect(e.object.reportUsage).to.equals(false)
-      Option.onChanged (e) ->
-        expect(e.object.isProjectStarEnable).to.equals(true)
-        done()
+      Option.onChanged (propName, newVal, oldVal) ->
+        if propName is "reportUsage"
+          expect(newVal).to.equals(false)
+      Option.onChanged (propName, newVal, oldVal) ->
+        if propName is "isProjectStarEnable"
+          expect(newVal).to.equals(true)
+          done()
       o = Option.getOptions()
       o.reportUsage = false
       o.isProjectStarEnable = true
@@ -71,11 +74,4 @@ describe 'option.coffee', ->
     it 'null check.', () ->
       Option.getOptions().reportUsage = false
       expect(Option.getOptions().reportUsage).to.equals(false)
-
-  ###
-   loadOptions: () ->
-   syncOptions: () ->
-   clearAllOptions: (callback) ->
-  ###
-
 

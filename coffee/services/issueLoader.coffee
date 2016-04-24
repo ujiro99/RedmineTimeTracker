@@ -1,7 +1,7 @@
 timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Resource, Const) ->
 
   ###
-   controller for issue edit mode.
+   service for loading issues from redmine.
   ###
   class IssueLoader
 

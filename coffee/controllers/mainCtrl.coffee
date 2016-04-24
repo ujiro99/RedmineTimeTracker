@@ -44,7 +44,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Project.syncLocal(DataAdapter.getProjects())
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
       Ticket.syncLocal(DataAdapter.tickets)
-    Option.onChanged('reportUsage', (e) -> Analytics.setPermission(e) )
+    Option.onChanged('reportUsage', (val) -> Analytics.setPermission(val))
     Option.onChanged('hideNonTicketProject',  _toggleProjectHidden)
     Log.debug "[4] initializeEvents success"
 
