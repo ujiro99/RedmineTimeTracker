@@ -1,0 +1,25 @@
+{
+  "name": "__MSG_extName__",
+  "version": "0.7.13",
+  "manifest_version": 2,
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
+  "icons": {
+    "128": "images/icon_128.png"
+  },
+  "app": {
+    "background": {
+      "scripts": [
+        "./scripts/lib/google-analytics-bundle.js",
+        "./scripts/eventPage.js"
+      ]
+    }
+  },
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "storage",
+    "alarms",
+    "notifications"
+  ]
+}

@@ -180,10 +180,7 @@ module.exports = (grunt) ->
         options:
           buildnumber: false
           background:
-            target: [
-              'scripts/lib/google-analytics-bundle.js'
-              'scripts/eventPage.js'
-            ]
+            target: 'scripts/eventPage.js'
             exclude: [
               'scripts/chromereload.js'
             ]
@@ -195,7 +192,10 @@ module.exports = (grunt) ->
       dist:
         files: [
           dot: true
-          src: ["<%= config.dist %>/*"]
+          src: [
+            "<%= config.dist %>/*",
+            "!<%= config.dist %>/manifest.json"
+          ]
         ]
 
     # Copies remaining files to places other tasks can use
@@ -226,6 +226,7 @@ module.exports = (grunt) ->
         additionalFiles: [
           'bower.json',
           'app/manifest.json'
+          'dist/manifest.json'
         ]
 
     # Compress files in dist to make Chromea Apps package
@@ -269,13 +270,11 @@ module.exports = (grunt) ->
   grunt.registerTask 'release-minor', [
     'production',
     'release:minor',
-    'chromeManifest:dist',
     'compress'
   ]
 
   grunt.registerTask 'release-patch', [
     'production',
     'release:patch',
-    'chromeManifest:dist',
     'compress'
   ]
