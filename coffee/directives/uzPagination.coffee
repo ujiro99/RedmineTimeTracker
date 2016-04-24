@@ -66,8 +66,8 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
         container.addClass(CLASS_NAME_ON_ANIMATE)
         container.addClass(direction)
         $timeout () ->
-          container.removeClass(CLASS_NAME_ON_ANIMATE)
           container.removeClass(direction)
+          container.removeClass(CLASS_NAME_ON_ANIMATE)
         , duration
         fixSize()
 
