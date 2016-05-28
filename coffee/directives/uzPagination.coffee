@@ -12,7 +12,7 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
                           "first-text='&laquo;'" +
                           "last-text='&raquo;'></pagination>"
     scope:
-      page:         '='
+      currentPage:  '='
       totalItems:   '='
       itemsPerPage: '='
 
@@ -26,20 +26,21 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
       CLASS_NAME_ON_ANIMATE = "paging-active"
       # on paging to left.
       CLASS_NAME_PAGING_TO_LEFT = "paging-left"
-      # on paging to rignt.
+      # on paging to right.
       CLASS_NAME_PAGING_TO_RIGHT = "paging-right"
+      # element enter.
+      CLASS_ENTER = ".ng-enter"
 
       # Limit number for pagination size.
       scope.maxSize = 1
-
       # width of all arrows
       arrowWidth = null
-
       # paging content's container
       container = null
-
       # container's animation duration [msec]
       duration = 0
+      # how many times starting animate.
+      animateCount = 0
 
       ###*
       # get element's duration.
@@ -55,7 +56,7 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
         matchs = sec.exec(t)
         if matchs then return (matchs[1] - 0) * 1000
 
-        ###*
+      ###*
       # animate container, and fix pagination bar's size.
       ###
       animate = (newPage, oldPage) ->
@@ -63,13 +64,28 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
           direction = CLASS_NAME_PAGING_TO_LEFT
         else
           direction = CLASS_NAME_PAGING_TO_RIGHT
+        animateCount++
         container.addClass(CLASS_NAME_ON_ANIMATE)
         container.addClass(direction)
-        $timeout () ->
-          container.removeClass(direction)
-          container.removeClass(CLASS_NAME_ON_ANIMATE)
-        , duration
+        clearAnimate(direction, duration)
+        scope.currentPage = newPage
         fixSize()
+
+      ###*
+      # Clear animate if animation finished.
+      ###
+      clearAnimate = (direction, delay) ->
+        $timeout () ->
+          animateCount--
+          if animateCount isnt 0 then return
+          if container.find(CLASS_ENTER).length is 0
+            container.removeClass(direction)
+            container.removeClass(CLASS_NAME_ON_ANIMATE)
+          else
+            # animation is working yet, retry.
+            animateCount++
+            clearAnimate(direction, 100)
+        , delay
 
       ###*
       # calculate pagination bar's size, and fix it.
@@ -88,6 +104,7 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
       container = angular.element(attrs.container)
       container.addClass(CLASS_NAME)
       duration = getTransitionDuration(container)
+      scope.page = scope.currentPage
 
       # resize pagination bar and fire animation.
       scope.$watch 'page', animate
