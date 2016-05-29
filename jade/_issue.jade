@@ -101,7 +101,7 @@ div#issue(ng-controller='IssueCtrl')
 
     // page
     div.page.bottom-space-l
-      uz-pagination.pagination-small(total-items='filtered.length',
-                                     current-page='pageParam.currentPage',
-                                     items-per-page='options.itemsPerPage',
-                                     container='.issue-list__content')
+      uz-pagination(total-items='filtered.length',
+                    current-page='pageParam.currentPage',
+                    items-per-page='options.itemsPerPage',
+                    container='.issue-list__content')

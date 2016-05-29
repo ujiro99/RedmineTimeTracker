@@ -28,6 +28,8 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
       CLASS_NAME_PAGING_TO_LEFT = "paging-left"
       # on paging to right.
       CLASS_NAME_PAGING_TO_RIGHT = "paging-right"
+      # If pagination is omitted, stretch width.
+      CLASS_NAME_STRETCH = "pagination--stretch"
       # element enter.
       CLASS_ENTER = ".ng-enter"
 
@@ -99,6 +101,11 @@ timeTracker.directive 'uzPagination', ($window, $timeout) ->
         buttonWidth = Math.max.apply({}, wlist)
         scope.maxSize = Math.floor((element.outerWidth() - arrowWidth) / buttonWidth)
         scope.maxSize = 1 if scope.maxSize < 1
+        pagination = angular.element(element.find('.pagination')[0])
+        if scope.maxSize < scope.totalItems / scope.itemsPerPage
+          pagination.addClass(CLASS_NAME_STRETCH)
+        else
+          pagination.removeClass(CLASS_NAME_STRETCH)
 
       # initialize variables
       container = angular.element(attrs.container)

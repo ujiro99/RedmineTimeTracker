@@ -1,12 +1,11 @@
 uz-pagination
   display: flex
-  justify-content: center
 
 .pagination
-  margin: 10px 10px
-  width: auto
+  margin: 10px 0px
+  width: 100%
   display: flex
-  justify-content: space-between
+  justify-content: center
   &>li:nth-child(1)>a
   &>li:nth-last-child(1)>a
     padding: 2px 6px
@@ -26,3 +25,13 @@ uz-pagination
   &>.disabled>a
     color: #ccc
     cursor: not-allowed
+
+.pagination--stretch>li
+  display: flex
+  flex-grow: 1
+  justify-content: center
+  &:nth-child(1)
+  &:nth-child(2)
+  &:nth-last-child(1)
+  &:nth-last-child(2)
+    flex-grow: inherit
