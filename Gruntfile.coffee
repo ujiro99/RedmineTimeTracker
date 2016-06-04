@@ -212,6 +212,7 @@ module.exports = (grunt) ->
             "components/**/*.*"
             "fonts/*.*"
             "images/*.png"
+            "!images/icon_128_gray.png"
             "scripts/lib/*.js"
             "scripts/plugins/*.js"
             "scripts/eventPage.js"

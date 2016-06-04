@@ -5,7 +5,7 @@
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "icons": {
-    "128": "images/icon_128.png"
+    "128": "images/icon_128_gray.png"
   },
   "app": {
     "background": {
