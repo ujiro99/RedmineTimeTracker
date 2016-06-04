@@ -274,7 +274,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       eventEnable and @fireEvent(@PROJECTS_CHANGED, @, projects)
 
     ###*
-    # filter project which has opend tickets.
+    # filter project which has opened tickets.
     ###
     updateProjects: () ->
       @_filterProjectsByQuery()
@@ -282,12 +282,11 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @_updateStarredProjects()
 
     ###*
-    # toggle ticket's show/unshow status.
+    # toggle ticket's show/hide status.
     # @param {Array} tickets - array of TicketModel
     ###
     toggleIsTicketShow: (tickets) ->
       tickets = [tickets] if not Array.isArray(tickets)
-      obj = {}
       @_tickets.set @_tickets.xor(tickets)
       @_sortTickets(@_tickets)
       if not @selectedTicket or not @_tickets.some((n) => n.equals(@selectedTicket))

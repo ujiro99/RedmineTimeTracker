@@ -211,11 +211,11 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    count project's issues count on all accounts.
   ###
   _toggleProjectHidden = (enableHide) ->
-    if not enableHide
-      DataAdapter.updateProjects()
-    else
+    if enableHide
       for a in Account.getAccounts()
         _loadIssueCount(a)()
+    else
+      DataAdapter.updateProjects()
 
   ###
    request a setup of redmine account to user.
