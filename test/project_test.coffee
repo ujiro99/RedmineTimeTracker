@@ -32,7 +32,7 @@ describe 'project.coffee', ->
   it 'shoud have working Project service', (done) ->
     Chrome.storage.local.get = (arg1, callback) ->
       setTimeout () ->
-        callback(PROJECT: [])
+        callback(PROJECT: {})
         # Propagate promise resolution to 'then' functions using $apply().
         $rootScope.$apply()
     Project.load()
@@ -86,7 +86,7 @@ describe 'project.coffee', ->
         expect(projects[2].equals(prj3[0])).to.be.true
         done()
 
-    it 'if data not exists, call error callback.', (done) ->
+    it 'initialize result to empty array, if data does not exists.', (done) ->
       # put test data.
       Chrome.storage.local.get = (arg1, callback) ->
         setTimeout () ->
@@ -97,11 +97,32 @@ describe 'project.coffee', ->
           callback PROJECT: null
           $rootScope.$apply()
       # exec test.
+      Project.load().then (projects) ->
+        expect(projects).to.be.empty
+        done()
+      , (projects) ->
+        expect(true).to.be.false # fail!
+        done()
+
+    it 'calls error callback, if data does not exists.', (done) ->
+      # put test data.
+      Chrome.storage.local.get = (arg1, callback) ->
+        setTimeout () ->
+          callback PROJECT: null
+          Chrome.runtime.lastError = true
+          $rootScope.$apply()
+      Chrome.storage.sync.get = (arg1, callback) ->
+        setTimeout () ->
+          callback PROJECT: null
+          $rootScope.$apply()
+      # exec test.
       Project.load()
         .then (projects) ->
           expect(true).to.be.false # fail!
-        , (prjects) ->
-          expect(prjects).to.be.null
+          done()
+        , (projects) ->
+          expect(projects).to.be.null
+          Chrome.runtime.lastError = null
           done()
 
     it 'compatibility (version <= 0.5.7): index start changed.', (done) ->

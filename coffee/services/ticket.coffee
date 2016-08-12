@@ -62,30 +62,6 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
 
   ###
-   load tickets from any area.
-  ###
-  _load = (storage, callback) ->
-    if not storage? then callback? null; return
-
-    storage.get TICKET, (tickets) ->
-      if Chrome.runtime.lastError?
-        Log.error 'runtime error'
-        callback? null; return
-
-      Project.load().then (projects) ->
-        if Chrome.runtime.lastError?
-          Log.error 'runtime error'
-          callback? null; return
-
-        if not tickets[TICKET]?
-          Log.info 'project or ticket does not exists'
-          callback? null; return
-
-        synced = _syncWithProject tickets[TICKET], projects
-        callback? synced.tickets, synced.missing
-
-
-  ###
    syncronize tickets and projects using urlIndex.
    @param {Array} tickets - tickets of chrome format.
    @param {Array} projects - ProjectModel.
@@ -155,6 +131,8 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
           })
         else
           deferred.resolve()
+    , () ->
+      deferred.reject({message: "Couldn't sync with project."})
 
     return deferred.promise
 
@@ -168,33 +146,27 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
   return {
 
-
     ###
      load all tickets from chrome sync.
     ###
     load: () ->
       Log.debug "Ticket.load() start"
-      deferred = $q.defer()
-      _load Chrome.storage.local, (localTickets, missingUrlIndex) =>
-        if localTickets?
-          Log.info 'ticket loaded from local'
-          Log.groupCollapsed 'Ticket.load() loaded'
-          Log.table localTickets
-          Log.groupEnd 'Ticket.load() loaded'
-          localTickets.missing = missingUrlIndex
-          deferred.resolve(localTickets)
-          Analytics.sendEvent 'ticket', 'count', 'onLoadLocal', localTickets.length
-        else
-          _load Chrome.storage.sync, (syncTickets, missingUrlIndex) =>
-            syncTickets or syncTickets = []
-            Log.info 'ticket loaded from sync'
-            Log.groupCollapsed 'Ticket.load() loaded'
-            Log.table localTickets
-            Log.groupEnd 'Ticket.load() loaded'
-            syncTickets.missing = missingUrlIndex
-            deferred.resolve(syncTickets)
-            Analytics.sendEvent 'ticket', 'count', 'onLoadSync', syncTickets.length
-      return deferred.promise
+      return Chrome.load(TICKET)
+      .then((tickets) =>
+        if not tickets
+          Log.info 'Ticket does not exists, initialized.'
+          tickets = []
+        Project.load().then (projects) ->
+          if not tickets or not projects
+            Log.info 'Project does not exists.'
+          synced = _syncWithProject tickets, projects
+          Analytics.sendEvent 'ticket', 'count', 'onLoad', tickets.length
+          Log.debug "Ticket.load() success"
+          return synced
+      , () ->
+        Analytics.sendEvent 'ticket', 'count', 'onLoad', 0
+        Log.debug "Ticket.load() failed"
+        return $q.reject(null))
 
 
     ###

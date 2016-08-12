@@ -105,29 +105,15 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
     ###
 
     ###
-     load from any area.
-    ###
-    _load: (storage, callback) ->
-      if not storage? then callback? null; return
-      storage.get Project.PROJECT, (data) =>
-        if Chrome.runtime.lastError? then callback? null; return
-        if not data[Project.PROJECT]? then callback? null; return
-        if Object.keys(data[Project.PROJECT]).length is 0 then callback?([]); return
-        callback?(@_toProjectModels(data[Project.PROJECT]))
-
-
-    ###
      save all project to any area.
     ###
-    _sync: (projects, storage, callback) ->
+    _sync: (projects, storage) ->
       deferred = $q.defer()
       data = @_toChromeObjects(projects)
       storage.set PROJECT: data, () ->
         if Chrome.runtime.lastError?
-          callback? false
           deferred.reject(false)
         else
-          callback? true
           deferred.resolve(true)
       return deferred.promise
 
@@ -171,34 +157,26 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
                                        v.text,
                                        v.show - 0,
                                        v.queryId - 0)
-       return result
+      return result
 
 
-    ###
+    ###*
      load all projects from chrome sync.
     ###
     load: () ->
       Log.debug "Project.load() start"
-      deferred = $q.defer()
-      @_load Chrome.storage.local, (local) =>
-        if local?
-          Log.info 'project loaded from local.'
-          Log.groupCollapsed "Project.load()"
-          Log.debug local
-          Log.groupEnd "Project.load()"
-          deferred.resolve(local)
-          Analytics.sendEvent 'project', 'count', 'onLoadLocal', local.length
-        else
-          @_load Chrome.storage.sync, (sync) =>
-            if sync?
-              Log.info 'project loaded from sync.'
-              deferred.resolve(sync)
-              Analytics.sendEvent 'project', 'count', 'onLoadSync', sync.length
-            else
-              Log.info 'project is nothing.'
-              deferred.reject(null)
-              Analytics.sendEvent 'project', 'count', 'onLoadSync', 0
-      return deferred.promise
+      return Chrome.load(Project.PROJECT)
+        .then((projects) =>
+          if not projects
+            Log.info 'Project does not exists, initialized.'
+            projects = {}
+          Analytics.sendEvent 'project', 'count', 'onLoad', projects.length
+          Log.debug "Project.load() loaded"
+          return @._toProjectModels(projects)
+        , () ->
+          Analytics.sendEvent 'project', 'count', 'onLoad', 0
+          Log.debug "Project.load() failed"
+          return $q.reject(null))
 
 
     ###

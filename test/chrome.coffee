@@ -1,12 +1,19 @@
-angular.module('chrome', []).factory 'Chrome', () ->
-  return {
-    storage:
-      local:
-        get: () -> return true
-        set: () -> return true
-      sync:
-        get: () -> return true
-        set: () -> return true
-    runtime:
-      lastError: null
-  }
+chrome = {
+  storage:
+    local:
+      get: (key, callback) ->
+        console.log(key)
+        setTimeout () -> callback true
+      set: (key, callback) ->
+        console.log(key)
+        setTimeout () -> callback true
+    sync:
+      get: (key, callback) ->
+        console.log(key)
+        setTimeout () -> callback true
+      set: (key, callback) ->
+        console.log(key)
+        setTimeout () -> callback true
+  runtime:
+    lastError: null
+}
