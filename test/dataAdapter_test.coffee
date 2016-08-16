@@ -52,14 +52,14 @@ describe 'DataAdapter.coffee', ->
         method = "get" + p
         expect(DataAdapter[method]).exists
 
-    it 'should be return _data[url]["statuses"] on account.', () ->
+    it 'should return _data[url]["statuses"] on account.', () ->
       DataAdapter.setStatuses(_auth.url, TestData.statuses)
       statuses = DataAdapter.getStatuses(_auth.url)
       expect(statuses).to.have.length(TestData.statuses.length)
       for s, index in statuses
         expect(s).to.deep.equal(TestData.statuses[index])
 
-    it 'should be return _data[url]["projects"] on account.', () ->
+    it 'should return _data[url]["projects"] on account.', () ->
       expectPrjs = TestData.prj1.map (p) -> Project.create(p)
       DataAdapter.addProjects(expectPrjs)
       projects = DataAdapter.getProjects(_auth.url)
@@ -67,7 +67,7 @@ describe 'DataAdapter.coffee', ->
       for s, index in projects
         expect(s).to.deep.equal(expectPrjs[index])
 
-    it 'should be return "projects" on all account.', () ->
+    it 'should return "projects" on all account.', () ->
       expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
       expectPrjs2 = TestData.prj2.map (p) -> Project.create(p)
       DataAdapter.addProjects(expectPrjs1)

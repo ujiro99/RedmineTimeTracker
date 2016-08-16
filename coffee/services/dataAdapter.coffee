@@ -386,7 +386,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
             dataModel.account.projects = filtered
 
     ###*
-    # filter project which has opend tickets.
+    # filter project which has opened tickets.
     ###
     _filterProjectsByIssueCount: () ->
       return if not Option.getOptions().hideNonTicketProject

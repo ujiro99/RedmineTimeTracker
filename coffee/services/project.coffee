@@ -89,7 +89,7 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
   class Project
 
-    ## class variables
+    # class variables
     @PROJECT = "PROJECT"
 
     ###
@@ -143,8 +143,8 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
 
     ###
      convert projects to ProjectModel.
-     @param {Object} project object on chrome format.
-     @return {Array} projects - array of ProjectModel
+     @param  {Object} project object on chrome format.
+     @return {Array}  projects - array of ProjectModel
     ###
     _toProjectModels: (projects) ->
       result = []

@@ -55,7 +55,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         return @id? and @pass?
 
     ###
-     update prameters.
+     update parameters.
     ###
     update: (newModel) ->
       @url         = newModel.url
