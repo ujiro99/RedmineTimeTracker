@@ -8,6 +8,7 @@ describe 'DataAdapter.coffee', ->
   Project = null
   Ticket = null
   Option = null
+  Const = null
 
   _props = [
     "Account"
@@ -22,13 +23,14 @@ describe 'DataAdapter.coffee', ->
 
   beforeEach () ->
     angular.mock.module('timeTracker')
-    inject (_DataAdapter_, _TestData_, _Account_, _Project_, _Ticket_, _Option_) ->
+    inject (_DataAdapter_, _TestData_, _Account_, _Project_, _Ticket_, _Option_, _Const_) ->
       DataAdapter = _DataAdapter_
       TestData = _TestData_()
       Account = _Account_
       Project = _Project_
       Ticket = _Ticket_
       Option = _Option_
+      Const = _Const_
 
     auth = [Account.create({
       url:  'http://redmine.com'
@@ -77,6 +79,12 @@ describe 'DataAdapter.coffee', ->
       expect(projects).to.have.length(expectPrjs.length)
       for s, index in projects
         expect(s).to.deep.equal(expectPrjs[index])
+
+    it 'should return empty array on not existing account.', () ->
+      expectPrjs = TestData.prj3.map (p) -> Project.create(p)
+      DataAdapter.addProjects(expectPrjs)
+      projects = DataAdapter.getProjects(expectPrjs[0].url)
+      expect(projects).to.have.length(0)
 
   ###
    test for excludeNonTicketProject(params)
@@ -200,6 +208,15 @@ describe 'DataAdapter.coffee', ->
       DataAdapter.addProjects(expectPrjs)
       expect(DataAdapter.getProjects()).to.have.length(0)
 
+    it "should add 3 projects to existing account.", () ->
+      expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+      expectPrjs3 = TestData.prj3.map (p) -> Project.create(p)
+      DataAdapter.addProjects(expectPrjs1.concat(expectPrjs3))
+      expect(DataAdapter.getProjects(expectPrjs1[0].url)).to.have.length(3)
+      expect(DataAdapter.getProjects(expectPrjs3[0].url)).to.have.length(0)
+      expect(DataAdapter.getProjects()).to.have.length(3)
+
+
   ###
    test for removeProjects
   ###
@@ -213,6 +230,14 @@ describe 'DataAdapter.coffee', ->
       projects = DataAdapter.getProjects()
       expect(projects).to.have.length(0)
 
+    it "should remove 3 projects from existing account.", () ->
+      expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+      DataAdapter.addProjects(expectPrjs1)
+      expectPrjs3 = TestData.prj3.map (p) -> Project.create(p)
+      DataAdapter.removeProjects(expectPrjs3.concat(expectPrjs1))
+      projects = DataAdapter.getProjects()
+      expect(projects).to.have.length(0)
+
     it "should remove 10 projects.", () ->
       expectPrjs1 = TestData.prj10.map (p) -> Project.create(p)
       DataAdapter.addProjects(expectPrjs1)
@@ -220,6 +245,65 @@ describe 'DataAdapter.coffee', ->
       DataAdapter.removeProjects(projects)
       projects = DataAdapter.getProjects()
       expect(projects).to.have.length(0)
+
+
+  ###
+   test for updateProject
+  ###
+  describe "updateProject()", () ->
+
+    describe "_filterProjectsByQuery,", () ->
+
+      it "uses all project if query is empty.", () ->
+        Option.getOptions().hideNonTicketProject = false
+        expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+        DataAdapter.addProjects(expectPrjs1)
+        expect(DataAdapter.accounts[0].projects).to.have.length(3)
+
+      it "uses matched 1 project if query is empty.", () ->
+        Option.getOptions().hideNonTicketProject = false
+        expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+        DataAdapter.projectQuery = "1_1"
+        DataAdapter.addProjects(expectPrjs1)
+        expect(DataAdapter.accounts[0].projects).to.have.length(1)
+
+    describe "_filterProjectsByIssueCount,", () ->
+
+      it "hide all projects if ticket is nothing.", () ->
+        expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+        DataAdapter.addProjects(expectPrjs1)
+        expect(DataAdapter.accounts[0].projects).to.have.length(0)
+
+      it "uses matched 1 project.", () ->
+        expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+        expectPrjs1[2].ticketCount = 1
+        DataAdapter.addProjects(expectPrjs1)
+        expect(DataAdapter.accounts[0].projects).to.have.length(1)
+
+    describe "_updateStarredProjects,", () ->
+
+      it "doesn't use projects.", () ->
+        Option.getOptions().hideNonTicketProject = false
+        Option.getOptions().isProjectStarEnable = true
+        expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+        expectPrjs2 = TestData.prj2.map (p) -> Project.create(p)
+        DataAdapter.addProjects(expectPrjs1.add(expectPrjs2))
+        a = DataAdapter.accounts.find (a) -> a.url is Const.STARRED
+        expect(a).to.be.undefined
+
+      it "uses 2 projects.", () ->
+        Option.getOptions().hideNonTicketProject = false
+        Option.getOptions().isProjectStarEnable = true
+        expectPrjs1 = TestData.prj1.map (p) -> Project.create(p)
+        expectPrjs2 = TestData.prj2.map (p) -> Project.create(p)
+
+        # add star
+        expectPrjs1[0].show = Const.SHOW.SHOW
+        expectPrjs2[2].show = Const.SHOW.SHOW
+
+        DataAdapter.addProjects(expectPrjs1.add(expectPrjs2))
+        expect(DataAdapter.accounts[0].url).to.equals(Const.STARRED)
+        expect(DataAdapter.accounts[0].projects).to.have.length(2)
 
 
   describe "addAccounts(accounts)", () ->

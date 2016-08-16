@@ -127,7 +127,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     @property 'selectedProject',
       get: -> @_selectedProject
       set: (n) ->
-        return if @_selectedProject is n
+        return if not n? or @_selectedProject is n
         @_selectedProject and @_selectedProject.removeEventListener(n.UPDATED, @_notifyProjectUpdated)
         @_selectedProject = n
         @_selectedProject.addEventListener(n.UPDATED, @_notifyProjectUpdated)
@@ -176,9 +176,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       set: (query) ->
         Log.time('projectQuery\t')
         @_projectQuery = query
-        @_filterProjectsByQuery()
-        @_filterProjectsByIssueCount()
-        @_updateStarredProjects()
+        @updateProjects()
         Log.timeEnd('projectQuery\t')
 
     ###*
@@ -214,8 +212,6 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not accounts[0].isValid() then return
       for a in accounts
         @_data[a.url]?.account.update(a)
-        b = @_filteredData.find (b) -> a.url is b.url
-        b and b.update(a)
       @_updateStarredProjects()
       @fireEvent(@ACCOUNT_UPDATED, @, accounts)
 
@@ -245,18 +241,16 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     addProjects: (projects) ->
       if not projects? or projects.length is 0 then return
-      if not @_data[projects[0].url] then return
       @removeProjects(projects, false)
+      firstAdded = null
       projects.map (p) =>
+        if not @_data[p.url] then return
         @_data[p.url].projects.add(p)
-        for a in @_filteredData when a.url is p.url
-          a.projects or a.projects = []
-          a.projects.add(p)
+        firstAdded or firstAdded = p
       for url, dataModel of @_data
         dataModel.account.projectsCount = dataModel.projects.length
-      if not @selectedProject then @selectedProject = projects[0]
-      @_filterProjectsByIssueCount()
-      @_updateStarredProjects()
+      if not @selectedProject then @selectedProject = firstAdded
+      @updateProjects()
       @fireEvent(@PROJECTS_CHANGED, @, projects)
 
     ###*
@@ -266,11 +260,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
     removeProjects: (projects, eventEnable) ->
       if not projects? or projects.length is 0 then return
-      a = @_filteredData.find (a) -> a.url is projects[0].url
       for p in projects when @_data[p.url] and @_data[p.url].projects
         @_data[p.url].projects.remove((n) -> n.equals(p))
-        a.projects and a.projects.remove((n) -> n.equals(p))
-      @_updateStarredProjects()
+      @updateProjects()
       eventEnable and @fireEvent(@PROJECTS_CHANGED, @, projects)
 
     ###*
@@ -424,6 +416,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         methodName = "get" + p.camelize()
         DataAdapter.prototype[methodName] = (url) ->
           if url
+            if not @_data[url] then return []
             res = @_data[url][p]
             if Object.isArray(res)
               return [].concat(res) # return copy
