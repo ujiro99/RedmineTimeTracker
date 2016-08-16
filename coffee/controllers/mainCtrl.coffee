@@ -40,6 +40,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Log.debug "[4] initializeEvents start"
     DataAdapter.addEventListener DataAdapter.ACCOUNT_ADDED, _loadRedmine
     DataAdapter.addEventListener DataAdapter.ACCOUNT_UPDATED, _loadRedmine
+    DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_CHANGED, _syncSelectedProject
     DataAdapter.addEventListener DataAdapter.PROJECTS_CHANGED, () ->
       Project.syncLocal(DataAdapter.getProjects())
     DataAdapter.addEventListener DataAdapter.TICKETS_CHANGED, () ->
@@ -256,7 +257,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     Option.loadOptions()
       .then(_initializeAccount)
       .then(_initializeProject)
-      .then(_initializeIssues)
+      .then(_initializeTicket)
       .then(() ->
         Log.debug "[2] initializeDataFromChrome success."
       , () ->
@@ -277,14 +278,22 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _initializeProject = () ->
     Project.load()
-      .then((projects) -> DataAdapter.addProjects(projects))
+      .then((projects) ->
+        DataAdapter.addProjects(projects)
+        # restore last selected project.
+        Chrome.load(Chrome.SELECTED_PROJECT))
+      .then((selected) ->
+        if not selected? then return
+        projects = DataAdapter.getProjects(selected.url)
+        project = projects.find (p) -> p.equals(selected)
+        DataAdapter.selectedProject = project)
 
   ###
    Initialize issues status.
   ###
-  _initializeIssues = () ->
+  _initializeTicket = () ->
     Ticket.load()
-      .then((tickets) -> DataAdapter.toggleIsTicketShow(tickets))
+      .then((res) -> DataAdapter.toggleIsTicketShow(res.tickets))
 
   ###
    initialize Data from Redmine.
@@ -307,6 +316,17 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       return if not alarm.name is DATA_SYNC
       Ticket.sync(DataAdapter.tickets)
       Project.sync(DataAdapter.getProjects())
+
+  ###
+   Sync a selected project to chrome storage.
+  ###
+  _syncSelectedProject = () ->
+    selected = DataAdapter.selectedProject
+    obj = {
+      url: selected.url
+      id: selected.id
+    }
+    Chrome.save(Chrome.SELECTED_PROJECT, obj)
 
   ###
    Start Initialize.

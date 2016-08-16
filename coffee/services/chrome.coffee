@@ -5,6 +5,9 @@ angular.module('chrome', []).factory 'Chrome', ($q, $log) ->
   ###
   class Chrome extends chrome
 
+    # key on storage
+    @SELECTED_PROJECT: "SELECTED_PROJECT"
+
     ###*
      Load data from `storage`.
      @param storage  {Object}   Storage area on chrome.
@@ -18,6 +21,22 @@ angular.module('chrome', []).factory 'Chrome', ($q, $log) ->
         if chrome.runtime.lastError? then callback(null); return
         if not data[key]? then callback(null); return
         callback(data[key])
+
+    ###*
+     Save data to `storage`.
+     @param storage  {Object}   Storage area on chrome.
+     @param key      {String}   Key of data.
+     @param value    {Object}   Value which to be saved.
+     @param callback {Function} Call on exit.
+    ###
+    @_save: (storage, key, value, callback) ->
+      callback or callback = -> #noop
+      if not storage? then callback(false); return
+      obj = {}
+      obj[key] = value
+      storage.set obj, ->
+        if chrome.runtime.lastError? then callback(false); return
+        callback(true)
 
     ###*
      Load data from chrome storage area.
@@ -40,6 +59,27 @@ angular.module('chrome', []).factory 'Chrome', ($q, $log) ->
             deferred.resolve(sync)
       return deferred.promise
 
+    ###*
+     Save data to chrome storage area.
+     @param key   {String} Key of data.
+     @param value {Object} Value which to be saved.
+    ###
+    @save: (key, value) =>
+      deferred = $q.defer()
+      @_save chrome.storage.local, key, value, (res) =>
+        if res
+          $log.info key + ' saved to local.'
+        else
+          $log.info key + ' failed to save to local.'
+        @_save chrome.storage.sync, key, value, (res) =>
+          if res
+            $log.info key + ' saved to sync.'
+            deferred.resolve()
+          else
+            $log.info key + ' failed to save to sync.'
+            deferred.reject()
+          $log.debug value
+      return deferred.promise
 
   if chrome?
     return Chrome
