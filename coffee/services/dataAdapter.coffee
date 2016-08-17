@@ -305,7 +305,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###*
     # set activities.
     # @param {String} url        - url of redmine server.
-    # @param {Array}  activities - array of activiy. activiy: { id: Number, name: String }.
+    # @param {Array}  activities - array of activity. activity: { id: Number, name: String }.
     ###
     setActivities: (url, activities) ->
       if not url? or not activities? then return
