@@ -192,6 +192,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # @param {Array} accounts - array of AccountModel.
     ###
     addAccounts: (accounts) ->
+      Log.debug("addAccounts() start")
       if not accounts? then return
       accounts = [accounts] if not Array.isArray(accounts)
       if accounts.isEmpty() or not accounts[0].isValid() then return
@@ -201,12 +202,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not @selectedAccount? then @selectedAccount = accounts[0]
       @_filteredData.add(accounts)
       @fireEvent(@ACCOUNT_ADDED, @, accounts)
+      Log.debug("addAccounts() finish")
 
     ###*
     # update accounts
     # @param {Array} accounts - array of AccountModel.
     ###
     updateAccounts: (accounts) ->
+      Log.debug("updateAccounts() start")
       if not accounts? then return
       accounts = [accounts] if not Array.isArray(accounts)
       if not accounts[0].isValid() then return
@@ -214,12 +217,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         @_data[a.url]?.account.update(a)
       @_updateStarredProjects()
       @fireEvent(@ACCOUNT_UPDATED, @, accounts)
+      Log.debug("updateAccounts() finish")
 
     ###*
     # remove accounts
     # @param {Array} accounts - array of AccountModel.
     ###
     removeAccounts: (accounts) ->
+      Log.debug("removeAccounts() start")
       if not accounts? then return
       accounts = [accounts] if not Array.isArray(accounts)
       for a in accounts
@@ -233,6 +238,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         if @selectedTicket and @selectedTicket.url is a.url
           @selectedTicket = @tickets[0]
       @fireEvent(@ACCOUNT_REMOVED, @, accounts)
+      Log.debug("removeAccounts() finish")
 
     ###*
     # add project to account.
@@ -240,6 +246,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # @param {Array} projects - array of ProjectModel.
     ###
     addProjects: (projects) ->
+      Log.debug("addProjects() start")
       if not projects? or projects.length is 0 then return
       @removeProjects(projects, false)
       firstAdded = null
@@ -252,6 +259,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not @selectedProject then @selectedProject = firstAdded
       @updateProjects()
       @fireEvent(@PROJECTS_CHANGED, @, projects)
+      Log.debug("addProjects() finish")
 
     ###*
     # remove project from account.
@@ -259,48 +267,58 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # @param {Bool} eventEnable - is event enable
     ###
     removeProjects: (projects, eventEnable) ->
+      Log.debug("removeProjects() start")
       if not projects? or projects.length is 0 then return
       for p in projects when @_data[p.url] and @_data[p.url].projects
         @_data[p.url].projects.remove((n) -> n.equals(p))
       @updateProjects()
       eventEnable and @fireEvent(@PROJECTS_CHANGED, @, projects)
+      Log.debug("removeProjects() finish")
 
     ###*
     # filter project which has opened tickets.
     ###
     updateProjects: () ->
+      Log.debug("updateProjects() start")
       @_filterProjectsByQuery()
       @_filterProjectsByIssueCount()
       @_updateStarredProjects()
+      Log.debug("updateProjects() finish")
 
     ###*
     # toggle ticket's show/hide status.
     # @param {Array} tickets - array of TicketModel
     ###
     toggleIsTicketShow: (tickets) ->
+      Log.debug("toggleIsTicketShow() start")
       tickets = [tickets] if not Array.isArray(tickets)
       @_tickets.set @_tickets.xor(tickets)
       @_sortTickets(@_tickets)
       if not @selectedTicket or not @_tickets.some((n) => n.equals(@selectedTicket))
         @selectedTicket = @_tickets[0]
       @fireEvent(@TICKETS_CHANGED, @)
+      Log.debug("toggleIsTicketShow() finish")
 
     ###*
     # add tickets to _data.
     # @param {Array} tickets - array of TicketModel
     ###
     addTickets: (tickets) ->
+      Log.debug("addTickets() start")
       tickets = [tickets] if not Array.isArray(tickets)
       tickets.map (n) -> @_data[n.url].tickets.add n
+      Log.debug("addTickets() finish")
 
     ###*
     # clear all tickets.
     ###
     clearTicket: () ->
+      Log.debug("clearTicket() start")
       for url, data of @_data then data.tickets = []
       @_tickets.set []
       @selectedTicket = null
       @fireEvent(@TICKETS_CHANGED, @)
+      Log.debug("clearTicket() finish")
 
     ###*
     # set activities.
