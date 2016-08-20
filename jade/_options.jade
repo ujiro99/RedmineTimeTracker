@@ -71,8 +71,12 @@ div#options.bottom-space-m(ng-controller='OptionCtrl')
         label.control-label Clear Ticket & Project
         div.setting__description
           span Remove all tickets and project from select list.
-      div.setting__options
+      div.setting__options(tooltip="Please finish tracking!",
+                           tooltip-animation="false",
+                           tooltip-enable="state.isAutoTracking || state.isPomodoring",
+                           tooltip-popup-delay='300')
         button.btn.btn-default.btn-sm.loading(ng-click='clearTickets()',
+                                              ng-disabled='state.isAutoTracking || state.isPomodoring',
                                               uz-loading='isSetting',
                                               ga-click='clearTickets')
           span Clear
