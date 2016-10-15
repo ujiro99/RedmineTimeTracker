@@ -20,9 +20,9 @@ class Notification
   ###
    Constructor.
   ###
-  constructor: () ->
-    chrome.notifications.onClicked.addListener (notificationId) =>
-      chrome.notifications.clear(notificationId)
+  constructor: (@_Chrome) ->
+    @_Chrome.notifications.onClicked.addListener (notificationId) =>
+      @_Chrome.notifications.clear(notificationId)
       @_showWindow()
 
 
@@ -53,16 +53,16 @@ class Notification
         { title: "HTTP STATUS", message: status }
       ]
 
-    chrome.notifications.create(null, options)
+    @_Chrome.notifications.create(null, options)
 
 
   ###
    Shows app window if hided, on click notification.
   ###
   _showWindow: () ->
-    currentWindow = chrome.app.window.current()
+    currentWindow = @_Chrome.app.window.current()
     currentWindow.show()
 
 
 # Register this plugin.
-RTT.registerPlugin("Notification", new Notification())
+RTT.registerPlugin("Notification", Notification)
