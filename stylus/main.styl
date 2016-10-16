@@ -525,7 +525,7 @@ input.project-search
 
 #timer
 
-  width_button = 34
+  $width_button = 34px
 
   header
     height: 5em
@@ -562,7 +562,7 @@ input.project-search
     border-radius: $field_border_radius !important
 
   .inputWidhButton
-    padding-right width_button px
+    padding-right $width_button
 
     input
       border-right: solid 1px #f5f5f5
@@ -593,7 +593,7 @@ input.project-search
     top: 0
     right: 0
     bottom: 0
-    width: width_button px
+    width: $width_button
     color: #f5f5f5
     &:hover
       background-color: $color_key_down
@@ -607,25 +607,38 @@ input.project-search
     margin-bottom 0px
     height: $height_input
     border-right: solid 1px #f5f5f5
-    border-radius: 2px 0 0 2px
-
-  .progress-bar
-    width: 100%
-    background-color: $color_key
-    box-shadow: none
-    color: #fafafa
+    border-radius: $field_border_radius 0 0 $field_border_radius
+    color: $color_font_bright
     display: flex
 
-    span
-      line-height: $height_input
+  .progress-bar
+    width: 200%
+    background-color: $color_key
+    box-shadow: none
 
-    & > span
-      text-ellipsis()
-      padding: 0 2px
-      flex: 1
+  .progress-bar--outer
+    position: absolute
+    height: $height_input
+    width: "calc(100% - 1px - %s)" % $width_button
+    overflow: hidden
+    -webkit-clip-path: inset(0% -2% 0% 0% round $field_border_radius)
 
-    timer span
-      padding-right: 7px
+  .progress--label
+    line-height: $height_input
+    z-index: 1
+    text-ellipsis()
+
+  p.progress--label
+    margin: 0
+    padding-left: 4px
+    flex: 1
+
+  timer.progress--label
+    padding-right: 4px
+
+  @keyframes progress-bar-stripes
+    from  { transform: translateX(0px) }
+    to    { transform: translateX(-40px) }
 
   .form-inline
     display: flex

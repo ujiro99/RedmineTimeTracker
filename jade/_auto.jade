@@ -21,9 +21,11 @@ form(action='#', method='POST', name='time_entry')
         i.fa.fa-angle-down
 
       div.progress.progress-striped.active(ng-show="state.isAutoTracking")
-        div.progress-bar(role="progressbar")
+        div.progress-bar--outer(role="progressbar")
+          div.progress-bar(role="progressbar")
+        p.progress--label
           span {{data.selectedTicket.id}} {{data.selectedTicket.text}}
-          timer(autostart='false', interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
+        timer.progress--label(autostart='false', interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
     button.btn(type='button', ng-click='clickSubmitButton()', ga-click='postAuto')
       i.fa(ng-class="{'fa-play': !state.isAutoTracking, 'fa-stop': state.isAutoTracking}")
