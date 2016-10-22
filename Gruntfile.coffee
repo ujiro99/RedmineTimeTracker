@@ -5,6 +5,7 @@ module.exports = (grunt) ->
 
   # set variables
   config =
+    src: 'src',
     app: 'app',
     dist: 'dist',
     manifest: grunt.file.readJSON('app/manifest.json'),
@@ -17,9 +18,9 @@ module.exports = (grunt) ->
     esteWatch:
       options:
         dirs: [
-            'coffee/**/',
-            'stylus/**/',
-            'jade/**/',
+            '<%= config.src %>/coffee/**/',
+            '<%= config.src %>/stylus/**/',
+            '<%= config.src %>/jade/**/',
             'test/**/'
           ]
         livereload:
@@ -42,8 +43,8 @@ module.exports = (grunt) ->
           grunt.config 'coffee.compile.files', [
             nonull: true
             expand: true
-            cwd: 'coffee/'
-            src: path.slice(path.indexOf('/'))
+            cwd: '<%= config.src %>/coffee/'
+            src: path.slice(path.indexOf('/', path.indexOf('/') + 1))
             dest: '<%= config.app %>/scripts/'
             ext: '.js'
           ]
@@ -53,8 +54,8 @@ module.exports = (grunt) ->
         grunt.config 'stylus.compile.files', [
           nonull: true
           expand: true
-          cwd: 'stylus/'
-          src: path.slice(path.indexOf('/'))
+          cwd: '<%= config.src %>/stylus'
+          src: '**/*.styl'
           dest: '<%= config.app %>/css/'
           ext: '.css'
         ]
@@ -65,9 +66,9 @@ module.exports = (grunt) ->
         grunt.config 'jade.compile.files', [
           nonull: true
           expand: true
-          cwd: 'jade/'
+          cwd: '<%= config.src %>/jade'
           ext: '.html'
-          src: path.slice(path.indexOf('/'))
+          src: '**/*.jade'
           dest: '<%= config.app %>/views/'
         ]
         'jade:compile'
@@ -80,19 +81,19 @@ module.exports = (grunt) ->
           join: true
         files: [
           '<%= config.dist %>/scripts/script.js': [
-            'coffee/app.coffee',
-            'coffee/log.coffee',
-            'coffee/state.coffee',
-            'coffee/config.coffee',
-            'coffee/**/*.coffee',
-            '!coffee/chromereload.coffee'
-            '!coffee/plugins/*'
+            '<%= config.src %>/coffee/app.coffee',
+            '<%= config.src %>/coffee/log.coffee',
+            '<%= config.src %>/coffee/state.coffee',
+            '<%= config.src %>/coffee/config.coffee',
+            '<%= config.src %>/coffee/**/*.coffee',
+            '!<%= config.src %>/coffee/chromereload.coffee'
+            '!<%= config.src %>/coffee/plugins/*'
           ]
         ]
       develop:
         files: [
           expand: true
-          cwd: 'coffee/'
+          cwd: '<%= config.src %>/coffee/'
           src: ['**/*.coffee']
           dest: '<%= config.app %>/scripts/'
           ext: '.js'
@@ -110,13 +111,13 @@ module.exports = (grunt) ->
       production:
         files: [
           '<%= config.dist %>/css/main.css': [
-            'stylus/**/*.styl'
+            '<%= config.src %>/stylus/**/*.styl'
           ]
         ]
       develop:
         files: [
           expand: true
-          cwd: 'stylus/'
+          cwd: '<%= config.src %>/stylus/'
           src: ['**/*.styl']
           dest: '<%= config.app %>/css/'
           ext: '.css'
@@ -128,7 +129,7 @@ module.exports = (grunt) ->
           data: (dest, src) -> return { production: true }
         files: [
           expand: true
-          cwd: 'jade/'
+          cwd: '<%= config.src %>/jade/'
           src: ['**/!(_)*.jade']
           dest: '<%= config.dist %>/views/'
           ext: '.html'
@@ -138,7 +139,7 @@ module.exports = (grunt) ->
           data: (dest, src) -> return { production: false }
         files: [
           expand: true
-          cwd: 'jade/'
+          cwd: '<%= config.src %>/jade/'
           src: ['**/!(_)*.jade']
           dest: '<%= config.app %>/views/'
           ext: '.html'
