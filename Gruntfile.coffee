@@ -61,7 +61,10 @@ module.exports = (grunt) ->
         ]
         'stylus:compile'
       jade: (path) ->
-        grunt.config 'jade.options.data', { production: false }
+        jadeOptions = { production: false }
+        jadeOptions["production"] = grunt.option('production');
+        jadeOptions["electron"] = grunt.option('electron');
+        grunt.config 'jade.options.data', jadeOptions
         grunt.config 'jade.options.pretty', true
         grunt.config 'jade.compile.files', [
           nonull: true
@@ -126,7 +129,10 @@ module.exports = (grunt) ->
     jade:
       production:
         options:
-          data: (dest, src) -> return { production: true }
+          data: (dest, src) ->
+            jadeOptions = { production: true}
+            jadeOptions["electron"] = grunt.option('electron')
+            return jadeOptions
         files: [
           expand: true
           cwd: '<%= config.src %>/jade/'
@@ -136,7 +142,11 @@ module.exports = (grunt) ->
         ]
       develop:
         options:
-          data: (dest, src) -> return { production: false }
+          data: (dest, src) ->
+            jadeOptions = { production: false}
+            jadeOptions["production"] = grunt.option('production')
+            jadeOptions["electron"] = grunt.option('electron')
+            return jadeOptions
         files: [
           expand: true
           cwd: '<%= config.src %>/jade/'

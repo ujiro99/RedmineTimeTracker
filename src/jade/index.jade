@@ -19,8 +19,9 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
     // svg
     include ../../app/images/tomato.svg
 
-    script
-      window.jQuery = window.$ = require('../components/jquery/js/jquery.min.js');
+    if electron
+      script.
+        window.jQuery = window.$ = require('../components/jquery/js/jquery.min.js');
 
   body
 
@@ -43,6 +44,8 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
 
     .src
       // bower
+      unless electron
+        script(src='../components/jquery/js/jquery.min.js')
       script(src='../components/angular/js/angular.min.js')
       script(src='../components/angular-route/angular-route.js')
       script(src='../components/angular-animate/js/angular-animate.min.js')
