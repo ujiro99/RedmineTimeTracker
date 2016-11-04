@@ -74,7 +74,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       promises.add a.projectList.map (id) -> redmine.loadProjectById(id)
     # if nothing to fetch...
     if promises.length is 0
-      Message.toast Resource.string("msgCannotFetchProject").format(a.name), 5000
+      Message.toast Resource.string("msgCannotFetchProject", a.name), 5000
       Log.warn "loadProjects: account.numProjects: #{a.numProjects}\taccount.projectList: #{a.projectList}"
       return
     promises = promises.map (p) -> p.then(_successLoadProject, _errorLoadProject)
@@ -88,7 +88,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       _errorLoadProject data
       return null
     data.projects = data.projects or [data.project]
-    Message.toast Resource.string("msgLoadProjectSuccess").format(data.account.name, data.projects.length), 3000
+    Message.toast Resource.string("msgLoadProjectSuccess", [data.account.name, data.projects.length]), 3000
     return data.projects
 
   ###
@@ -97,9 +97,9 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _errorLoadProject = (data) =>
     if data.status is STATUS_CANCEL then return
     if data.targetId
-      message = Resource.string("msgLoadProjectFailId").format(data.account.name, data.targetId) + Resource.string("status").format(data.status)
+      message = Resource.string("msgLoadProjectFailId", [data.account.name, data.targetId]) + Resource.string("status", data.status)
     else
-      message = Resource.string("msgLoadProjectFaild").format(data.account.name, data.account.numProjects or '') + Resource.string("status").format(data.status)
+      message = Resource.string("msgLoadProjectFaild", [data.account.name, data.account.numProjects or '']) + Resource.string("status", data.status)
     Message.toast message, 5000
     return null
 
@@ -151,7 +151,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         DataAdapter.setQueries(data.account.url, data.queries)
       , (data, status) =>
         if status is STATUS_CANCEL then return
-        Message.toast Resource.string("msgLoadQueryFail").format(data.account.name), 3000)
+        Message.toast Resource.string("msgLoadQueryFail", data.account.name), 3000)
 
   ###
    load statuses for account.
@@ -163,7 +163,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         DataAdapter.setStatuses(data.account.url, data.issue_statuses)
       , (data, status) ->
         if status is STATUS_CANCEL then return
-        Message.toast(Resource.string("msgLoadStatusesFail").format(data.account.name), 3000))
+        Message.toast(Resource.string("msgLoadStatusesFail", data.account.name), 3000))
 
   ###
    load issues for account.
@@ -184,7 +184,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     status = statuses.find (n) -> n.id is target.status.id
     if status?.is_closed
       DataAdapter.toggleIsTicketShow(target)
-      Message.toast(Resource.string("msgIssueClosed").format(target.text), 3000)
+      Message.toast(Resource.string("msgIssueClosed", target.text), 3000)
 
   ###
    when issue not found, remove issue.
@@ -192,7 +192,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   _issueNotFound = (target) -> (issue, status) ->
     if status is NOT_FOUND or status is UNAUTHORIZED
       DataAdapter.toggleIsTicketShow(issue)
-      Message.toast(Resource.string("msgIssueMissing").format(target.text, account.name), 3000)
+      Message.toast(Resource.string("msgIssueMissing", [target.text, account.name]), 3000)
 
   ###
    count project's issues count.

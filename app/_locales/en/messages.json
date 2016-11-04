@@ -32,7 +32,7 @@
     "message": "Failed authentication."
   },
   "msgUpdateSuccess": {
-    "message": "Account Infomation updated."
+    "message": "Account Information updated."
   },
   "msgNotFoundError": {
     "message": "Can not find the page on server."
@@ -44,16 +44,16 @@
     "message": "Format of the URL is incorrect."
   },
   "msgAccountRemoved": {
-    "message": "\"{0}\" removed."
+    "message": "{{arg0}} removed."
   },
   "msgLoadIssueFail": {
     "message": "Failed to load issues."
   },
   "msgAdded": {
-    "message": "\"{0}\" added."
+    "message": "\"{{arg0}}\" added."
   },
   "msgRemoved": {
-    "message": "\"{0}\" removed."
+    "message": "\"{{arg0}}\" removed."
   },
   "msgOptionSaved": {
     "message": "Option saved."
@@ -62,13 +62,13 @@
     "message": "Failed to save."
   },
   "msgClearDataSucess": {
-    "message": "{0} cleared."
+    "message": "{{arg0}} cleared."
   },
   "msgClearDataFail": {
     "message": "Clear failed."
   },
   "msgSubmitTimeEntry": {
-    "message": "Submitting {0}: {1}"
+    "message": "Submitting {{arg0}}: {{arg1}}"
   },
   "msgShortTime": {
     "message": "More than one minute is required."
@@ -86,33 +86,33 @@
     "message": "Save failed. "
   },
   "msgCannotFetchProject": {
-    "message": "Projects to get has not been set on {0}. Please check the account settings."
+    "message": "Projects to get has not been set on {{arg0}}. Please check the account settings."
   },
   "msgLoadProjectSuccess": {
-    "message": "Loaded {1} Projects on {0}."
+    "message": "Loaded {{arg1}} Projects on {{arg0}}."
   },
   "msgLoadProjectFail": {
-    "message": "Failed to load {1} Projects on {0}."
+    "message": "Failed to load {{arg1}} Projects on {{arg0}}."
   },
   "msgLoadProjectFailId": {
-    "message": "Failed to load Project(ID: {1}) on {0}."
+    "message": "Failed to load Project(ID: {{arg1}}) on {{arg0}}."
   },
   "msgLoadQueryFail": {
-    "message": "Failed to load custom queries on {0}."
+    "message": "Failed to load custom queries on {{arg0}}."
   },
   "msgLoadStatusesFail": {
-    "message": "Failed to load statuses of issue on {0}."
+    "message": "Failed to load statuses of issue on {{arg0}}."
   },
   "msgIssueClosed": {
-    "message": "\"{0}\" was closed."
+    "message": "\"{{arg0}}\" was closed."
   },
   "msgIssueMissing": {
-    "message": "\"{0}\" was not found on {1}."
+    "message": "\"{{arg0}}\" was not found on {{arg1}}."
   },
   "msgCommentTooLong": {
     "message": "Comment is too long (maximum is 255 characters)"
   },
   "status": {
-    "message": "[status: {0}]"
+    "message": "[status: {{arg0}}]"
   }
 }

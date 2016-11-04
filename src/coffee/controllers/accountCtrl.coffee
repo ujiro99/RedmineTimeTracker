@@ -76,11 +76,11 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
     if status is Const.URL_FORMAT_ERROR
       message = Resource.string("msgUrlFormatError")
     else if status is Const.ACCESS_ERROR
-      message = Resource.string("msgAccessError") + Resource.string("status").format(status)
+      message = Resource.string("msgAccessError") + Resource.string("status", status)
     else if status is Const.NOT_FOUND
-      message = Resource.string("msgNotFoundError") + Resource.string("status").format(status)
+      message = Resource.string("msgNotFoundError") + Resource.string("status", status)
     else
-      message = Resource.string("msgAuthFail") + Resource.string("status").format(status)
+      message = Resource.string("msgAuthFail") + Resource.string("status", status)
     Message.toast message, 3000
     mode = if State.isAddingAccount then 'update' else 'add'
     Analytics.sendEvent 'auth', mode, 'failed', 1
@@ -167,4 +167,4 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
       Log.debug("account removed : " + url)
       Redmine.remove({url: url})
       DataAdapter.removeAccounts({url: url})
-      Message.toast Resource.string("msgAccountRemoved").format(url)
+      Message.toast Resource.string("msgAccountRemoved", url)

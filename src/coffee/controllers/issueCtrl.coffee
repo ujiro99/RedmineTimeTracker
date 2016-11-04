@@ -105,9 +105,9 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   ###
   $scope.onClickItem = (item) ->
     if not $scope.isContained(item)
-      Message.toast Resource.string("msgAdded").format(item.text)
+      Message.toast Resource.string("msgAdded", item.text)
     else
-      Message.toast Resource.string("msgRemoved").format(item.text)
+      Message.toast Resource.string("msgRemoved", item.text)
     DataAdapter.toggleIsTicketShow item
 
 

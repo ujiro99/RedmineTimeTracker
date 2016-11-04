@@ -32,19 +32,19 @@
     "message": "Autoryzacja nie powiodła się."
   },
   "msgAccountRemoved": {
-    "message": "{0} Dodano."
+    "message": "{{arg0}} Dodano."
   },
   "msgLoadIssueFail": {
     "message": "Nie udało się załadować issues."
   },
   "msgIssueTracking": {
-    "message": "{0} jest teraz śledzony."
+    "message": "{{arg0}} jest teraz śledzony."
   },
   "msgAdded": {
-    "message": "{0} dodano."
+    "message": "{{arg0}} dodano."
   },
   "msgRemoved": {
-    "message": "{0} usunięto."
+    "message": "{{arg0}} usunięto."
   },
   "msgOptionSaved": {
     "message": "Ustawienie zapisane."
@@ -53,13 +53,13 @@
     "message": "Nie można zapisać."
   },
   "msgClearDataSucess": {
-    "message": "{0} wyczyszczono."
+    "message": "{{arg0}} wyczyszczono."
   },
   "msgClearDataFail": {
     "message": "Czyszczenie nie powiodło się."
   },
   "msgSubmitTimeEntry": {
-    "message": "Zgłoszono {0}: {1}"
+    "message": "Zgłoszono {{arg0}}: {{arg1}}"
   },
   "msgShortTime": {
     "message": "Wymagana jest więcej niż jedna minuta"
@@ -71,7 +71,7 @@
     "message": "Zapis się nie powiódł."
   },
   "msgLoadProjectSuccess": {
-    "message": "{0} załadowanych."
+    "message": "{{arg0}} załadowanych."
   },
   "msgLoadProjectFail": {
     "message": "Ładowanie nie powiodło się."

@@ -15,20 +15,6 @@ if not ('isBlank' in String.prototype)
 
 
 ###
- format string.
-###
-if not ('format' in String.prototype)
-  String.prototype.format = (arg) ->
-    rep_fn = undefined
-    if typeof arg is "object"
-        rep_fn = (m, k) -> return arg[k]
-    else
-        args = arguments
-        rep_fn = (m, k) ->  return args[parseInt(k)]
-    return this.replace /\{(\w+)\}/g, rep_fn
-
-
-###
  test this string is URL.
 ###
 if not ('isUrl' in String.prototype)

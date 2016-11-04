@@ -44,16 +44,16 @@
     "message": "サーバへアクセス出来ませんでした。"
   },
   "msgAccountRemoved": {
-    "message": "\"{0}\" は削除しました."
+    "message": "\"{{arg0}}\" は削除しました."
   },
   "msgLoadIssueFail": {
     "message": "チケットの読み込みに失敗しました。"
   },
   "msgAdded": {
-    "message": "\"{0}\" を追加"
+    "message": "\"{{arg0}}\" を追加"
   },
   "msgRemoved": {
-    "message": "\"{0}\" を削除"
+    "message": "\"{{arg0}}\" を削除"
   },
   "msgOptionSaved": {
     "message": "オプションを保存しました."
@@ -62,13 +62,13 @@
     "message": "保存に失敗しました。"
   },
   "msgClearDataSucess": {
-    "message": "{0} を消去しました。"
+    "message": "{{arg0}} を消去しました。"
   },
   "msgClearDataFail": {
     "message": "消去に失敗しました。"
   },
   "msgSubmitTimeEntry": {
-    "message": "保存中 {0}: {1}"
+    "message": "保存中 {{arg0}}: {{arg1}}"
   },
   "msgShortTime": {
     "message": "1分以上の計測が必要です。"
@@ -86,28 +86,28 @@
     "message": "保存に失敗しました。"
   },
   "msgCannotFetchProject": {
-    "message": "取得するプロジェクトが {0} に設定されていません。アカウント設定を見直してください。"
+    "message": "取得するプロジェクトが {{arg0}} に設定されていません。アカウント設定を見直してください。"
   },
   "msgLoadProjectSuccess": {
-    "message": "{0} のProject {1}件を読み込みました。"
+    "message": "{{arg0}} のProject {{arg1}}件を読み込みました。"
   },
   "msgLoadProjectFail": {
-    "message": "{0} のProject {1}件の読込に失敗しました。"
+    "message": "{{arg0}} のProject {{arg1}}件の読込に失敗しました。"
   },
   "msgLoadProjectFailId": {
-    "message": "{0} のProject(ID: {1})の読込に失敗しました。"
+    "message": "{{arg0}} のProject(ID: {{arg1}})の読込に失敗しました。"
   },
   "msgLoadQueryFail": {
-    "message": "{0} のカスタムクエリの読み込みに失敗しました。"
+    "message": "{{arg0}} のカスタムクエリの読み込みに失敗しました。"
   },
   "msgLoadStatusesFail": {
-    "message": "{0} のステータスの読み込みに失敗しました。"
+    "message": "{{arg0}} のステータスの読み込みに失敗しました。"
   },
   "msgIssueClosed": {
-    "message": "\"{0}\" はクローズされました."
+    "message": "\"{{arg0}}\" はクローズされました."
   },
   "msgIssueMissing": {
-    "message": "\"{0}\" は {1} で見つかりませんした."
+    "message": "\"{{arg0}}\" は {{arg1}} で見つかりませんした."
   },
   "msgCommentTooLong": {
     "message": "コメント は255文字以内で入力してください。"

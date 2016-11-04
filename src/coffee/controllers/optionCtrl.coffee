@@ -64,7 +64,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   $scope.clearOptions = () ->
     Account.clearAccount (result) ->
       if result
-        Message.toast Resource.string("msgClearDataSucess").format('all data')
+        Message.toast Resource.string("msgClearDataSucess", 'all data')
       else
         Message.toast Resource.string("msgClearDataFail")
 
@@ -79,7 +79,7 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
       $timeout ->
         $scope.isSetting = false
         if result
-          Message.toast Resource.string("msgClearDataSucess").format('ticket')
+          Message.toast Resource.string("msgClearDataSucess", 'ticket')
         else
           Message.toast Resource.string("msgClearDataFail")
       , 1000

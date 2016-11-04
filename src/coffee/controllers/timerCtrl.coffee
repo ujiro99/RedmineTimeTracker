@@ -164,7 +164,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     url = DataAdapter.selectedTicket.url
     account = DataAdapter.getAccount(url)
     Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
-    Message.toast Resource.string("msgSubmitTimeEntry").format(DataAdapter.selectedTicket.text, util.formatMinutes(minutes))
+    Message.toast Resource.string("msgSubmitTimeEntry", [DataAdapter.selectedTicket.text, util.formatMinutes(minutes)])
 
 
   ###
@@ -210,7 +210,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
   submitError = (conf) -> (msg, status) ->
     PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status, DataAdapter.selectedTicket, $scope.mode.name)
-    Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status").format(status), 3000)
+    Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status", status), 3000)
     Log.warn conf
 
 
