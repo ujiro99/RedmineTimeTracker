@@ -1,4 +1,4 @@
-timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Chrome, Log) ->
+timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platform, Log) ->
 
   ###
    Management plugins.
@@ -65,7 +65,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Chrom
      @param pluginClass {Object} Plugin class. Plugin instance is created from this class, and it has event handlers.
     ###
     registerPlugin: (name, pluginClass) =>
-      @_plugins[name] = new pluginClass(Chrome)
+      @_plugins[name] = new pluginClass(Platform)
       @fireEvent(@UPDATED_PLUGIN)
 
 

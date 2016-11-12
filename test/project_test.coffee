@@ -5,8 +5,9 @@ describe 'project.coffee', ->
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   $rootScope = null
+  deferred = null
   Project = null
-  Chrome = null
+  Platform = null
   TestData = null
 
   prjObj = null
@@ -18,10 +19,11 @@ describe 'project.coffee', ->
   beforeEach () ->
     angular.mock.module('timeTracker')
     # underscores are a trick for resolving references.
-    inject (_Project_, _Chrome_, _TestData_, _$rootScope_) ->
+    inject (_Project_, _Platform_, _TestData_, _$rootScope_, _$q_) ->
       $rootScope = _$rootScope_
+      deferred = _$q_.defer()
       Project = _Project_
-      Chrome = _Chrome_
+      Platform = _Platform_
       TestData = _TestData_()
       prjObj = TestData.prjObj
       prj1 = TestData.prj1.map (p) -> Project.create(p)
@@ -30,11 +32,11 @@ describe 'project.coffee', ->
 
 
   it 'shoud have working Project service', (done) ->
-    Chrome.storage.local.get = (arg1, callback) ->
-      setTimeout () ->
-        callback(PROJECT: {})
-        # Propagate promise resolution to 'then' functions using $apply().
-        $rootScope.$apply()
+    stub = sinon.stub(Platform, "load")
+    stub.returns(deferred.promise)
+    setTimeout () ->
+      deferred.resolve({})
+      $rootScope.$apply() # promises are resolved/dispatched only on next $digest cycle
     Project.load()
       .then (projects) ->
         expect(projects).to.be.empty
@@ -58,27 +60,12 @@ describe 'project.coffee', ->
   ###
   describe 'load()', ->
 
-    it 'loads data from local.', (done) ->
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: prjObj
-          $rootScope.$apply()
-      # exec test.
-      Project.load().then (projects) ->
-        expect(projects[0].equals(prj1[0])).to.be.true
-        expect(projects[1].equals(prj2[0])).to.be.true
-        expect(projects[2].equals(prj3[0])).to.be.true
-        done()
-
-    it 'loads data from sync.', (done) ->
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: null
-          $rootScope.$apply()
-      Chrome.storage.sync.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: prjObj
-          $rootScope.$apply()
+    it 'loads data.', (done) ->
+      stub = sinon.stub(Platform, "load")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve(prjObj)
+        $rootScope.$apply()
       # exec test.
       Project.load().then (projects) ->
         expect(projects[0].equals(prj1[0])).to.be.true
@@ -88,14 +75,11 @@ describe 'project.coffee', ->
 
     it 'initialize result to empty array, if data does not exists.', (done) ->
       # put test data.
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: null
-          $rootScope.$apply()
-      Chrome.storage.sync.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: null
-          $rootScope.$apply()
+      stub = sinon.stub(Platform, "load")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve(null)
+        $rootScope.$apply()
       # exec test.
       Project.load().then (projects) ->
         expect(projects).to.be.empty
@@ -106,15 +90,12 @@ describe 'project.coffee', ->
 
     it 'calls error callback, if data does not exists.', (done) ->
       # put test data.
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: null
-          Chrome.runtime.lastError = true
-          $rootScope.$apply()
-      Chrome.storage.sync.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: null
-          $rootScope.$apply()
+      stub = sinon.stub(Platform, "load")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject(null)
+        $rootScope.$apply()
+
       # exec test.
       Project.load()
         .then (projects) ->
@@ -122,16 +103,17 @@ describe 'project.coffee', ->
           done()
         , (projects) ->
           expect(projects).to.be.null
-          Chrome.runtime.lastError = null
           done()
 
     it 'compatibility (version <= 0.5.7): index start changed.', (done) ->
       # put test data.
       # this data is old format (version <= 0.5.7).
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: TestData.prjOldFormat
-          $rootScope.$apply()
+      stub = sinon.stub(Platform, "load")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve(TestData.prjOldFormat)
+        $rootScope.$apply()
+
       Project.load().then (projects) ->
         expect(projects[0].equals(prj1[0])).to.be.true
         expect(projects[1].equals(prj2[0])).to.be.true
@@ -139,12 +121,22 @@ describe 'project.coffee', ->
         done()
 
 
+  getStubPlatformSave = ->
+    stub = sinon.stub(Platform, "save")
+    stub.returns(deferred.promise)
+    setTimeout () ->
+      deferred.resolve(true)
+      $rootScope.$apply()
+    return stub
+
   ###
    test for set(newProjects)
   ###
   describe 'sync(projects)', ->
 
     it '1 project.', (done) ->
+      stub = getStubPlatformSave()
+
       prj = [{
         url: "http://redmine.com"
         urlIndex: 0
@@ -153,61 +145,66 @@ describe 'project.coffee', ->
         show: SHOW.DEFAULT
         queryId: 1
       }]
-      Chrome.storage.sync.set = (arg, callback) ->
-        setTimeout ->
-          obj = arg.PROJECT
-          expect(obj[prj[0].url].index).to.be.equal(prj[0].urlIndex)
-          expect(obj[prj[0].url][prj[0].id].show).to.be.equal(prj[0].show)
-          expect(obj[prj[0].url][prj[0].id].queryId).to.be.equal(prj[0].queryId)
-          callback()
-          $rootScope.$apply()
+
       Project.sync(prj).then (result) ->
+        value = stub.args[0][1]
+        expect(value[prj[0].url].index).to.be.equal(prj[0].urlIndex)
+        expect(value[prj[0].url][prj[0].id].show).to.be.equal(prj[0].show)
+        expect(value[prj[0].url][prj[0].id].queryId).to.be.equal(prj[0].queryId)
         expect(result).to.be.true
         done()
 
     it '3 projects.', (done) ->
-      Chrome.storage.sync.set = (arg, callback) ->
-        obj = arg.PROJECT
+      stub = getStubPlatformSave()
+
+      Project.sync(prj1).then () ->
+        obj = stub.args[0][1]
         prj1.map (p) ->
           expect(obj[p.url].index).to.be.equal(p.urlIndex)
           expect(obj[p.url][p.id].show).to.be.equal(p.show)
           expect(obj[p.url][p.id].queryId).to.be.equal(p.queryId)
         done()
-      Project.sync(prj1)
 
     it '2 different server\'s projects.', (done) ->
+      stub = getStubPlatformSave()
+
       projects = prj1.concat(prj2)
-      Chrome.storage.sync.set = (arg, callback) ->
-        obj = arg.PROJECT
+      Project.sync(projects).then () ->
+        obj = stub.args[0][1]
         projects.map (p) ->
           expect(obj[p.url].index).to.be.equal(p.urlIndex)
           expect(obj[p.url][p.id].show).to.be.equal(p.show)
           expect(obj[p.url][p.id].queryId).to.be.equal(p.queryId)
         done()
-      Project.sync(projects)
 
     it '3 different server\'s project', (done) ->
+      stub = getStubPlatformSave()
+
       projects = prj1.concat(prj2).concat(prj3)
-      Chrome.storage.sync.set = (arg, callback) ->
-        obj = arg.PROJECT
+      Project.sync(projects).then ->
+        obj = stub.args[0][1]
         projects.map (p) ->
           expect(obj[p.url].index).to.be.equal(p.urlIndex)
           expect(obj[p.url][p.id].show).to.be.equal(p.show)
           expect(obj[p.url][p.id].queryId).to.be.equal(p.queryId)
         done()
-      Project.sync(projects)
 
 
   describe 'syncLocal(projects)', ->
     it '3 projects.', (done) ->
-      Chrome.storage.local.set = (arg, callback) ->
-        obj = arg.PROJECT
+      stub = sinon.stub(Platform, "saveLocal")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve(true)
+        $rootScope.$apply()
+
+      Project.syncLocal(prj1).then ->
+        obj = stub.args[0][1]
         prj1.map (p) ->
           expect(obj[p.url].index).to.be.equal(p.urlIndex)
           expect(obj[p.url][p.id].show).to.be.equal(p.show)
           expect(obj[p.url][p.id].queryId).to.be.equal(p.queryId)
         done()
-      Project.syncLocal(prj1)
 
 
   describe 'create(params)', ->

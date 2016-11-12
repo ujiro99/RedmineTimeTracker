@@ -26,7 +26,7 @@ describe 'redmine.coffee', ->
     $httpBackend.verifyNoOutstandingRequest()
 
 
-  it 'shoud have working Ticket service', () ->
+  it 'should have working Redmine service', () ->
     expect(Redmine.get).not.to.equal null
 
 

@@ -12,96 +12,116 @@ describe 'ticket.coffee', ->
   SHOW = { DEFAULT: 0, NOT: 1, SHOW: 2 }
 
   Ticket = null
-  Chrome = null
+  Platform = null
   TestData = null
   $rootScope = null
+  $q = null
 
   beforeEach () ->
     angular.mock.module('timeTracker')
     # initialize object
-    inject (_Ticket_, _Chrome_, _TestData_, _$rootScope_) ->
+    inject (_Ticket_, _Platform_, _TestData_, _$rootScope_, _$q_) ->
       Ticket = _Ticket_
-      Chrome = _Chrome_
+      Platform = _Platform_
       TestData = _TestData_()
       $rootScope = _$rootScope_
+      $q = _$q_
 
 
-  it 'shoud have working Ticket service', () ->
+  it 'should have working Ticket service', () ->
     expect(Ticket.load).not.to.equal null
 
 
   describe 'sync(ticketList)', ->
 
-    _setUpChrome = ->
-      Chrome.runtime.lastError = null # fix state.
-      Chrome.storage.local.set = (arg, callback) ->
-        setTimeout () ->
-          callback true
-          $rootScope.$apply()
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: TestData.prjObj
-          $rootScope.$apply()
-      Chrome.storage.sync.set = (arg, callback) ->
-        setTimeout () ->
-          callback true
-          $rootScope.$apply()
-      Chrome.storage.sync.get = (arg1, callback) ->
-        setTimeout () ->
-          callback PROJECT: TestData.prjObj
-          $rootScope.$apply()
+    getStubPlatformSave = ->
+      deferred = $q.defer()
+      stub = sinon.stub(Platform, "save")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve({})
+        $rootScope.$apply()
+      return stub
 
-    it 'sould sync 1 project, 3 ticket.', (done) ->
-      _setUpChrome()
+    getStubPlatformLoad = ->
+      deferred = $q.defer()
+      stub = sinon.stub(Platform, "load")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve(TestData.prjObj)
+        $rootScope.$apply()
+      return stub
 
-      Chrome.storage.sync.set = (arg, callback) ->
-        obj = arg.TICKET
+
+    it 'should sync 1 project, 3 ticket.', (done) ->
+      stub = getStubPlatformSave()
+      getStubPlatformLoad()
+
+      #exec
+      Ticket.sync(TestData.ticketList).then ->
+        obj = stub.args[0][1]
         expect(obj[0][TICKET_SHOW]).to.equal(SHOW.DEFAULT)
         expect(obj[1][TICKET_SHOW]).to.equal(SHOW.NOT)
         expect(obj[2][TICKET_SHOW]).to.equal(SHOW.SHOW)
         done()
 
-      #exec
-      Ticket.sync(TestData.ticketList)
 
-
-    it 'shuld return error message of Chrome.', (done) ->
-      _setUpChrome()
-      Chrome.storage.sync.set = (arg, callback) ->
-        setTimeout () ->
-          Chrome.runtime.lastError = true
-          callback()
-          $rootScope.$apply()
+    it 'should return error message if projects not found.', (done) ->
+      deferred = $q.defer()
+      stub = sinon.stub(Platform, "load")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject()
+        $rootScope.$apply()
 
       #exec
       Ticket.sync(TestData.ticketList)
-        .then((msg)->
+        .then(()->
           expect(true).to.be.false # failed.
           done()
         , (msg)->
-          expect(msg.message).to.be.exists
+          expect(msg.message).to.equal("Couldn't sync with project.")
           done())
 
 
+    it 'should return error message if failed to sync.', (done) ->
+      deferred = $q.defer()
+      stub = sinon.stub(Platform, "save")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject()
+        $rootScope.$apply()
+      getStubPlatformLoad()
+
+      #exec
+      Ticket.sync(TestData.ticketList)
+      .then(()->
+        expect(true).to.be.false # failed.
+        done()
+      , (msg)->
+        expect(msg.message).to.equal("Couldn't save tickets.")
+        done())
+
+
     it 'should clear old list.', (done) ->
-      _setUpChrome()
+      stub = getStubPlatformSave()
+      getStubPlatformLoad()
 
       # sync old data.
       Ticket.sync(TestData.ticketList).then ->
-
-        Chrome.storage.sync.set = (arg, callback) ->
-          obj = arg.TICKET
+        # sync new data.
+        Ticket.sync(TestData.ticketList2).then ->
+          obj = stub.args[1][1]
           expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
           expect(obj[1][TICKET_URL_INDEX]).to.equal(1)
           expect(obj[2][TICKET_URL_INDEX]).to.equal(2)
           done()
 
-        # sync new data.
-        Ticket.sync(TestData.ticketList2)
-
 
     it 'should return a missing ticket if 1 project not found.', (done) ->
-      _setUpChrome()
+      stub = getStubPlatformSave()
+      getStubPlatformLoad()
+
       tickets = [
         {
           id: 0,
@@ -122,22 +142,19 @@ describe 'ticket.coffee', ->
         }
       ]
 
-      Chrome.storage.sync.set = (arg, callback) ->
-        setTimeout ->
-          obj = arg.TICKET
-          expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
-          expect(obj[1][TICKET_URL_INDEX]).to.not.equal(3)
-          callback()
-          $rootScope.$apply()
-
       Ticket.sync(tickets).then((msg) ->
+        obj = stub.args[0][1]
+        expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
+        expect(obj[1][TICKET_URL_INDEX]).to.not.equal(3)
         expect(msg.message).to.not.be.empty
         expect(msg.missing).to.have.length(1)
         done())
 
 
-    it 'should retrun missing tickets if 2 projects not found.', (done) ->
-      _setUpChrome()
+    it 'should return missing tickets if 2 projects not found.', (done) ->
+      stub = getStubPlatformSave()
+      getStubPlatformLoad()
+
       tickets = [
         {
           id: 0,
@@ -165,16 +182,12 @@ describe 'ticket.coffee', ->
           show: SHOW.NOT
         }
       ]
-      Chrome.storage.sync.set = (arg, callback) ->
-        setTimeout ->
-          obj = arg.TICKET
-          expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
-          expect(obj[1][TICKET_URL_INDEX]).to.not.equal(3)
-          expect(obj[2][TICKET_URL_INDEX]).to.equal(-1)
-          callback()
-          $rootScope.$apply()
 
       Ticket.sync(tickets).then((msg) ->
+        obj = stub.args[0][1]
+        expect(obj[0][TICKET_URL_INDEX]).to.equal(0)
+        expect(obj[1][TICKET_URL_INDEX]).to.not.equal(3)
+        expect(obj[2][TICKET_URL_INDEX]).to.equal(-1)
         expect(msg.message).to.not.be.empty
         expect(msg.missing).to.have.length(2)
         done())
@@ -182,18 +195,20 @@ describe 'ticket.coffee', ->
 
   describe 'load()', ->
 
-    _setUpChrome = () ->
-      Chrome.storage.local.get = (arg, callback) ->
-        setTimeout () ->
-          if arg is TICKET
-            callback TICKET: TestData.ticketOnChrome
-          else if arg is PROJECT
-            callback PROJECT: TestData.prjObj
-          $rootScope.$apply()
+    _setUpPlatform = (ticket, project) ->
+      d1 = $q.defer()
+      d2 = $q.defer()
+      stub = sinon.stub(Platform, "load")
+      stub.withArgs(TICKET).returns(d1.promise)
+      stub.withArgs(PROJECT).returns(d2.promise)
+      setTimeout () ->
+        d1.resolve(ticket)
+        d2.resolve(project)
+        $rootScope.$apply()
 
 
     it 'should return 3 tickets', (done) ->
-      _setUpChrome()
+      _setUpPlatform(TestData.ticketOnChrome, TestData.prjObj)
       Ticket.load().then (obj) ->
         tickets = obj.tickets
         expect(tickets).to.have.length(3)
@@ -203,35 +218,21 @@ describe 'ticket.coffee', ->
         done()
 
 
-    it 'should be return empty array.', (done) ->
-      # setup chrome
-      getData = (arg, callback) ->
-        setTimeout () ->
-          if arg is "TICKET"
-            callback TICKET: null
-          else if arg is "PROJECT"
-            callback PROJECT: TestData.prjObj
-          else
-            callback null
-          $rootScope.$apply()
-      Chrome.storage.local.get = getData
-      Chrome.storage.sync.get = getData
-
+    it 'should return empty array.', (done) ->
+      # setup data
+      _setUpPlatform(null, TestData.prjObj)
       # exec
       Ticket.load().then (obj) ->
         expect(obj.tickets).to.be.empty
         done()
 
 
-    it 'error: project not found.', (done) ->
+    it 'error: if project not found, returns missing tickets.', (done) ->
       # put test data.
-      Chrome.storage.local.get = (arg, callback) ->
-        setTimeout () ->
-          if arg is "TICKET"
-            callback TICKET: TestData.ticketOnChrome.add [[ 0, "ticket4", 3, 0, SHOW.SHOW]]
-          else if arg is "PROJECT"
-            callback PROJECT: TestData.prjObj
-          $rootScope.$apply()
+      _setUpPlatform(
+        TestData.ticketOnChrome.add([[ 0, "ticket4", 3, 0, SHOW.SHOW]]),
+        TestData.prjObj
+      )
       # exec
       Ticket.load().then (obj) ->
         loaded = obj.tickets
@@ -245,13 +246,10 @@ describe 'ticket.coffee', ->
 
     it 'compatibility (version <= 0.5.7): index start changed.', (done) ->
       # put test data.
-      Chrome.storage.local.get = (arg1, callback) ->
-        setTimeout () ->
-          if arg1 is "PROJECT"
-            callback PROJECT: TestData.prjOldFormat
-          else
-            callback TICKET: TestData.ticketOnChromeOld
-          $rootScope.$apply()
+      _setUpPlatform(
+        TestData.ticketOnChromeOld,
+        TestData.prjOldFormat
+      )
       # exec
       Ticket.load().then (obj) ->
         loaded = obj.tickets

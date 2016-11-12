@@ -1,4 +1,4 @@
-timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
+timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
@@ -173,8 +173,8 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
       Log.debug "Account.load() start"
       deferred = $q.defer()
 
-      Chrome.storage.sync.get ACCOUNTS, (item) ->
-        if Chrome.runtime.lastError?
+      Platform.storage.sync.get ACCOUNTS, (item) ->
+        if Platform.runtime.lastError?
           Log.info 'account load failed.'
           deferred.reject()
         else if not item[ACCOUNTS]
@@ -212,8 +212,8 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
         a.encrypt()
       accounts = newArry
       accounts.push account.encrypt()
-      Chrome.storage.sync.set ACCOUNTS: accounts, () ->
-        if Chrome.runtime.lastError?
+      Platform.storage.sync.set ACCOUNTS: accounts, () ->
+        if Platform.runtime.lastError?
           callback false
         else
           for a, i in _accounts when a.url is account.url
@@ -235,8 +235,8 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
       # select other url account
       accounts = for a in accounts when a.url isnt url
         a.encrypt()
-      Chrome.storage.sync.set ACCOUNTS: accounts, () ->
-        if Chrome.runtime.lastError?
+      Platform.storage.sync.set ACCOUNTS: accounts, () ->
+        if Platform.runtime.lastError?
           callback false
         else
           for a, i in _accounts when a.url is url
@@ -252,9 +252,9 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Chrome, Log) ->
     ###
     clearAccount: (callback) ->
       callback = callback or NULLFUNC
-      Chrome.storage.local.clear()
-      Chrome.storage.sync.clear () ->
-        if Chrome.runtime.lastError?
+      Platform.storage.local.clear()
+      Platform.storage.sync.clear () ->
+        if Platform.runtime.lastError?
           callback false
         else
           while _accounts.length > 0

@@ -1,4 +1,4 @@
-timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
+timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
 
   TICKET = "TICKET"
 
@@ -34,7 +34,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
     ###
      compare ticket.
-     true: same / false: defferent
+     true: same / false: different
     ###
     equals: (y) ->
       return @url is y.url and @id is y.id
@@ -62,7 +62,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
 
   ###
-   syncronize tickets and projects using urlIndex.
+   Synchronize tickets and projects using urlIndex.
    @param {Array} tickets - tickets of chrome format.
    @param {Array} projects - ProjectModel.
   ###
@@ -94,51 +94,59 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
 
 
   ###
-   save all tickets to any area.
+   Save all tickets to any area.
+   @param {Array} tickets - Array of TicketModel.
+   @param {Bool}  isLocal - If true, save data to local storage area.
   ###
-  _sync = (tickets, storage) ->
-    if not storage? then return
+  _sync = (tickets, isLocal) ->
 
-    deferred = $q.defer()
     ticketArray = []
     errorTickets = []
 
-    # assign project data
-    Project.load().then (projects) ->
-      for t in tickets
-        prj = projects.find (p) -> p.url is t.url
-        if prj?
-          ticketArray.push [t.id, t.text, prj.urlIndex, t.project.id, t.show]
+    deferred = $q.defer()
+    promise = deferred.promise
+      .then(Project.load)
+      .then((projects) ->
+        for t in tickets
+          prj = projects.find (p) -> p.url is t.url
+          if prj?
+            ticketArray.push [t.id, t.text, prj.urlIndex, t.project.id, t.show]
+          else
+            ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
+            errorTickets.push id: t.id, text: t.text, url: t.url, projectId: t.project.id, show: t.show
+
+        area = if isLocal then "local" else "sync"
+        Log.groupCollapsed "Ticket.sync: " + area
+        Log.table tickets
+        Log.debug "to chrome"
+        Log.table ticketArray
+        Log.groupEnd "Ticket.sync: " + area
+
+        # save to storage
+        if isLocal
+          return Platform.saveLocal(TICKET, ticketArray)
         else
-          ticketArray.push [t.id, t.text, PROJECT_NOT_FOUND, t.project.id, t.show]
-          errorTickets.push id: t.id, text: t.text, url: t.url, projectId: t.project.id, show: t.show
-
-      Log.groupCollapsed "Ticket.sync: " + storage.QUOTA_BYTES
-      Log.table tickets
-      Log.debug "to chrome"
-      Log.table ticketArray
-      Log.groupEnd "Ticket.sync: " + storage.QUOTA_BYTES
-
-      # save to strage
-      storage.set TICKET: ticketArray, () ->
-        if Chrome.runtime.lastError?
-          deferred.reject({message: "Chrome.runtime error."})
-        else if not errorTickets.isEmpty()
+          return Platform.save(TICKET, ticketArray)
+      , () ->
+        $q.reject({message: "Couldn't sync with project."}))
+      .then(() ->
+        if not errorTickets.isEmpty()
           Analytics.sendException("Error: Project not found on Ticket.sync().")
-          deferred.resolve({
+          return {
             message: "Some projects not found."
             missing: errorTickets
-          })
+          }
+      , (res) ->
+        if not res
+          $q.reject {message: "Couldn't save tickets."}
         else
-          deferred.resolve()
-    , () ->
-      deferred.reject({message: "Couldn't sync with project."})
-
-    return deferred.promise
+          $q.reject res)
+    deferred.resolve()
+    return  promise
 
 
   ###
-   fix parameter's status.
+   Fix parameter's status.
   ###
   _sanitize = (params) ->
     if not params.assigned_to then params.assigned_to = NOT_CONFIGED
@@ -151,7 +159,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
     ###
     load: () ->
       Log.debug "Ticket.load() start"
-      return Chrome.load(TICKET)
+      return Platform.load(TICKET)
       .then((tickets) =>
         if not tickets
           Log.info 'Ticket does not exists, initialized.'
@@ -173,7 +181,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
      sync all tickets to chrome sync.
     ###
     sync: (tickets) ->
-      _sync(tickets, Chrome.storage.sync)
+      _sync(tickets)
         .then((res) ->
           Log.info 'ticket synced.'
           Analytics.sendEvent 'ticket', 'sync', 'success', 1
@@ -188,7 +196,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
      save all tickets to local.
     ###
     syncLocal: (tickets) ->
-      _sync tickets, Chrome.storage.local
+      _sync tickets, true
 
 
     ###
@@ -213,9 +221,9 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Chrome, Log) ->
     ###
     clear: (callback) ->
       Log.debug 'Ticket.clear()'
-      Chrome.storage.local.set TICKET: []
-      Chrome.storage.sync.set TICKET: [], () ->
-        if Chrome.runtime.lastError?
+      Platform.storage.local.set TICKET: []
+      Platform.storage.sync.set TICKET: [], () ->
+        if Platform.runtime.lastError?
           callback? false
         else
           callback? true

@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Chrome, Resource, Option, Log, Analytics) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Platform, Resource, Option, Log, Analytics) ->
 
   # chrome alarm identifier key
   DATA_SYNC = "DATA_SYNC"
@@ -281,7 +281,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       .then((projects) ->
         DataAdapter.addProjects(projects)
         # restore last selected project.
-        Chrome.load(Chrome.SELECTED_PROJECT))
+        Platform.load(Platform.SELECTED_PROJECT))
       .then((selected) ->
         if not selected? then return
         projects = DataAdapter.getProjects(selected.url)
@@ -311,8 +311,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     alarmInfo =
       when: Date.now() + 1
       periodInMinutes: MINUTE_5
-    Chrome.alarms.create(DATA_SYNC, alarmInfo)
-    Chrome.alarms.onAlarm.addListener (alarm) ->
+    Platform.alarms.create(DATA_SYNC, alarmInfo)
+    Platform.alarms.onAlarm.addListener (alarm) ->
       return if not alarm.name is DATA_SYNC
       Ticket.sync(DataAdapter.tickets)
       Project.sync(DataAdapter.getProjects())
@@ -326,7 +326,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       url: selected.url
       id: selected.id
     }
-    Chrome.save(Chrome.SELECTED_PROJECT, obj)
+    Platform.save(Platform.SELECTED_PROJECT, obj)
 
   ###
    Start Initialize.

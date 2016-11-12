@@ -4,13 +4,13 @@ timeTracker.config (LogProvider, StateProvider) ->
   LogProvider.options.enable = StateProvider.State.log
   LogProvider.options.level =  StateProvider.State.logLevel
 
-timeTracker.config ($translateProvider) ->
+timeTracker.config ($translateProvider, PlatformProvider) ->
   $translateProvider.useStaticFilesLoader({
     prefix: '../_locales/',
     suffix: '/messages.json'
   })
-  lang = chrome.i18n.getUILanguage()
-  console.log("Language: " + lang)
+  lang = PlatformProvider.getLanguage()
+  console.debug("Language: " + lang)
   $translateProvider.preferredLanguage(lang)
   $translateProvider.fallbackLanguage('en')
   $translateProvider.useSanitizeValueStrategy('escape')

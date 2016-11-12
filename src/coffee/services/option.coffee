@@ -1,4 +1,4 @@
-timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
+timeTracker.factory("Option", ($q, Platform, Const, Log) ->
 
   class Option
 
@@ -51,8 +51,8 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
     loadOptions: () ->
       deferred = $q.defer()
 
-      Chrome.storage.sync.get Const.OPTIONS, (item) ->
-        if Chrome.runtime.lastError?
+      Platform.storage.sync.get Const.OPTIONS, (item) ->
+        if Platform.runtime.lastError?
           deferred.reject()
         else
           Log.info "option loaded."
@@ -71,8 +71,8 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
 
       saveData = {}
       saveData[Const.OPTIONS] = Option._options
-      Chrome.storage.sync.set saveData, () ->
-        if Chrome.runtime.lastError?
+      Platform.storage.sync.set saveData, () ->
+        if Platform.runtime.lastError?
           deferred.reject(false)
         else
           Log.info "option synced."
@@ -88,9 +88,9 @@ timeTracker.factory("Option", ($q, Chrome, Const, Log) ->
       deferred = $q.defer()
 
       callback = callback or Const.NULLFUNC
-      Chrome.storage.local.clear()
-      Chrome.storage.sync.clear () ->
-        if Chrome.runtime.lastError?
+      Platform.storage.local.clear()
+      Platform.storage.sync.clear () ->
+        if Platform.runtime.lastError?
           deferred.reject(false)
         else
           deferred.resolve(true)

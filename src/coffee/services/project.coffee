@@ -1,4 +1,4 @@
-timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
+timeTracker.factory("Project", ($q, Analytics, Platform, Const, Log) ->
 
   ###
    Project data model.
@@ -12,7 +12,7 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
      @class ProjectModel
      @constructor
      @param url {String} Redmine server's url.
-     @param urlIndex {Number} project id's index on Chrome.storage.
+     @param urlIndex {Number} project id's index on Platform.storage.
      @param id {Number} project id.
      @param text {String} project's name.
      @param show {Number} can this project show? (DEFAULT: 0, NOT: 1, SHOW: 2)
@@ -105,20 +105,6 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
     ###
 
     ###
-     save all project to any area.
-    ###
-    _sync: (projects, storage) ->
-      deferred = $q.defer()
-      data = @_toChromeObjects(projects)
-      storage.set PROJECT: data, () ->
-        if Chrome.runtime.lastError?
-          deferred.reject(false)
-        else
-          deferred.resolve(true)
-      return deferred.promise
-
-
-    ###
      convert projects to format of chrome. all projects are unique.
      @param {Array} projects - array of ProjectModel
      @return {Object} project object on chrome format.
@@ -163,16 +149,16 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
     ###*
      load all projects from chrome sync.
     ###
-    load: () ->
+    load: () =>
       Log.debug "Project.load() start"
-      return Chrome.load(Project.PROJECT)
+      return Platform.load(Project.PROJECT)
         .then((projects) =>
           if not projects
             Log.info 'Project does not exists, initialized.'
             projects = {}
           Analytics.sendEvent 'project', 'count', 'onLoad', projects.length
           Log.debug "Project.load() loaded"
-          return @._toProjectModels(projects)
+          return @_toProjectModels(projects)
         , () ->
           Analytics.sendEvent 'project', 'count', 'onLoad', 0
           Log.debug "Project.load() failed"
@@ -183,7 +169,8 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
      sync all projects to chrome sync.
     ###
     sync: (projects) ->
-      @_sync(projects, Chrome.storage.sync)
+      data = @_toChromeObjects(projects)
+      Platform.save(Project.PROJECT, data)
         .then((res) ->
           Log.info 'project synced.'
           Analytics.sendEvent 'project', 'sync', 'success', 1
@@ -198,7 +185,16 @@ timeTracker.factory("Project", ($q, Analytics, Chrome, Const, Log) ->
      save all project to local.
     ###
     syncLocal: (projects) ->
-      @_sync(projects, Chrome.storage.local)
+      data = @_toChromeObjects(projects)
+      Platform.saveLocal(Project.PROJECT, data)
+      .then((res) ->
+        Log.info 'project synced.'
+        Analytics.sendEvent 'project', 'sync', 'success', 1
+        return res
+      , (res) ->
+        Log.info 'project sync failed.'
+        Analytics.sendEvent 'project', 'sync', 'failed', 1
+        return res)
 
 
     ###

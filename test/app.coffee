@@ -1,1 +1,1 @@
-timeTracker = angular.module('timeTracker', ['analytics', 'chrome'])
+timeTracker = angular.module('timeTracker', ['analytics', 'chrome', 'pascalprecht.translate'])
