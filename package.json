@@ -7,11 +7,11 @@
     "electron-debug": "^1.0.0"
   },
   "devDependencies": {
-    "devtron": "^1.1.0",
-    "electron-packager": "^8.0.0",
-    "electron": "^1.3.3",
-    "xo": "^0.16.0",
     "angular-mocks": "^1.4.1",
+    "chai": "~1.8.1",
+    "devtron": "^1.1.0",
+    "electron": "^1.3.3",
+    "electron-packager": "^8.0.0",
     "grunt": "~0.4.1",
     "grunt-bower-task": "^0.4.0",
     "grunt-contrib-clean": "^0.5.0",
@@ -28,14 +28,22 @@
     "grunt-exec": "^0.4.6",
     "grunt-ngmin": "0.0.3",
     "grunt-release": "^0.9.0",
+    "ibrik": "^2.0.0",
+    "karma": "^1.3.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coffee-preprocessor": "^1.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.0",
     "load-grunt-tasks": "^0.4.0",
-    "chai": "~1.8.1",
     "mocha": "~1.14.0",
     "mocha-phantomjs": "^4.0.0-beta1",
-    "sinon": "~1.9.1"
+    "sinon": "~1.9.1",
+    "xo": "^0.16.0"
   },
   "scripts": {
-    "test": "xo",
+    "test": "./node_modules/karma/bin/karma start",
     "start": "electron app",
     "build": "electron-packager . --out=dist --asar --overwrite --all"
   },

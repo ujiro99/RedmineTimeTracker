@@ -1,4 +1,4 @@
-timeTracker.factory("Project", ($q, Analytics, Platform, Const, Log) ->
+timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const, Log) ->
 
   ###
    Project data model.
