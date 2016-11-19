@@ -67,6 +67,7 @@
     }
   },
   "resolutions": {
-    "angular": "~1.2.16"
+    "angular": "~1.2.16",
+    "angular-translate": "^2.12.1"
   }
 }
