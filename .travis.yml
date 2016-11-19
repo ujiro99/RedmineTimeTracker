@@ -6,5 +6,7 @@ before_install:
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
     - npm install grunt-cli -g
+    - npm install
+install:
     - grunt dev
 script: karma start --single-run

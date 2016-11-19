@@ -20,11 +20,11 @@
     "angular-bootstrap": "0.10.0",
     "angular-jquery-timepicker": "2d0a3ade8f909b3590fc2ab3d205ae4ca8733b48",
     "angular-route": "1.2.19",
-    "angular-timer": "git@github.com:ujiro99/angular-timer.git#master",
+    "angular-timer": "https://github.com/ujiro99/angular-timer.git#master",
     "angular-translate": "^2.12.1",
     "angular-translate-loader-static-files": "^2.12.1",
     "angular-translate-storage-local": "^2.12.1",
-    "angular-typeahead": "git://github.com/ujiro99/angular-typeahead.git#master",
+    "angular-typeahead": "https://github.com/ujiro99/angular-typeahead.git#master",
     "bootstrap": "~3.1.1",
     "jquery": "~2.1.0",
     "sugar": "~1.4.1"
