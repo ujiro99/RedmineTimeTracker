@@ -98,17 +98,29 @@ module.exports = function(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity,
 
-    // for Travis CI
-    customLaunchers: {
-      Chrome_travis_ci: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
-    },
-
   });
 
+  // for Travis CI
   if (process.env.TRAVIS) {
-    config.browsers = ['Chrome_travis_ci'];
+    var conf = {
+      customLaunchers: {
+        Chrome_travis_ci: {
+          base: 'Chrome',
+          flags: ['--no-sandbox']
+        }
+      },
+      browsers: ['Chrome_travis_ci'],
+      reporters: ['coverage', 'coveralls'],
+      coverageReporter: {
+        type: 'lcov',
+        instrumenters: {
+          ibrik: require('ibrik')
+        },
+        instrumenter: {
+          '**/*.coffee': 'ibrik'
+        }
+      }
+    }
+    config.set(conf);
   }
 }
