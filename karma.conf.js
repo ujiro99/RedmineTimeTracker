@@ -23,19 +23,8 @@ module.exports = function(config) {
       'src/coffee/log.coffee',
       'src/coffee/state.coffee',
       'test/config.coffee',
-      'src/coffee/services/chrome.coffee',
-      'src/coffee/services/eventDispatcher.coffee',
-      'src/coffee/services/analytics.coffee',
-      'src/coffee/services/base64.coffee',
-      'src/coffee/services/const.coffee',
-      'src/coffee/services/dataAdapter.coffee',
-      'src/coffee/services/message.coffee',
-      'src/coffee/services/option.coffee',
-      'src/coffee/services/account.coffee',
-      'src/coffee/services/project.coffee',
-      'src/coffee/services/redmine.coffee',
-      'src/coffee/services/ticket.coffee',
-      'src/coffee/services/resource.coffee',
+
+      'src/coffee/**/*.coffee',
 
       // test files
       'test/*.coffee'
@@ -43,6 +32,10 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
+      'src/coffee/app.coffee',
+      'src/coffee/chromereload.coffee',
+      'src/coffee/config.coffee',
+      'src/coffee/eventPage.coffee',
     ],
 
     coffeePreprocessor: {

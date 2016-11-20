@@ -65,4 +65,5 @@ class Notification
 
 
 # Register this plugin.
-RTT.registerPlugin("Notification", Notification)
+if RTT?
+  RTT.registerPlugin("Notification", Notification)
