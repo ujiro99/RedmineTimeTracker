@@ -44,11 +44,11 @@ describe 'chrome.coffee', ->
         done(new Error())
       setTimeout -> $rootScope.$apply()
 
-    it 'returns null, if data doesn\'t exists.', (done) ->
+    it 'returns undefined, if data doesn\'t exists.', (done) ->
       stubSync.callsArgWith(1, {})
 
       Platform.load('test').then (res) ->
-        expect(res).to.be.null
+        expect(res).to.be.undefined
         done()
       , () ->
         done(new Error())
