@@ -1,4 +1,5 @@
 chrome = {
+
   storage:
     local:
       get: (key, callback) ->
@@ -14,6 +15,10 @@ chrome = {
       set: (key, callback) ->
         console.log(key)
         setTimeout () -> callback true
+
   runtime:
     lastError: null
+
+  i18n:
+    getUILanguage: -> return 'en'
 }
