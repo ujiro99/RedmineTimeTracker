@@ -14,16 +14,16 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
   timeoutPromise = null
 
 
-  ###
-   restore option, and start watching options.
+  ###*
+   Restore option, and start watching options.
   ###
   initialize = () ->
     Option.onChanged syncOptions
     loadSavedPlugins()
 
 
-  ###
-   if option was changed, save it.
+  ###*
+   If option was changed, save it.
   ###
   syncOptions = (propName) ->
     $timeout.cancel(timeoutPromise)
@@ -32,22 +32,22 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
     , DELAY_TIME
 
 
-  ###
-   show saved message.
+  ###*
+   Show saved message.
   ###
   sucessSyncOptions = (propName) ->
     if propName.startsWith("isCollapse") then return
     Message.toast Resource.string("msgOptionSaved")
 
 
-  ###
-   show save failed message.
+  ###*
+   Show save failed message.
   ###
   failSyncOptions = () ->
     Message.toast Resource.string("msgOptionSaveFailed")
 
 
-  ###
+  ###*
    Load plugins from saved in the Option.
   ###
   loadSavedPlugins = () ->
@@ -58,8 +58,8 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
       PluginManager.loadPluginUrl(url)
 
 
-  ###
-   clear all account data.
+  ###*
+   Clear all account data.
   ###
   $scope.clearOptions = () ->
     Account.clearAccount (result) ->
@@ -69,8 +69,8 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
         Message.toast Resource.string("msgClearDataFail")
 
 
-  ###
-   clear ticket data.
+  ###*
+   Clear ticket data.
   ###
   $scope.clearTickets = () ->
     $scope.isSetting = true

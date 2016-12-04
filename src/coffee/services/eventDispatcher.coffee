@@ -1,21 +1,25 @@
 # http://kimizuka.hatenablog.com/entry/2014/07/06/000000
 
+###*
+ Dispatcher for event.
+ @class EventDispatcher
+###
 class EventDispatcher
 
   _events: {}
 
   ###*
-  #  イベントが登録されているか調べます
-  #  @param  {string} eventName イベント名
+   イベントが登録されているか調べます
+   @param {String} eventName - イベント名
   ###
   hasEventListener: (eventName) ->
     !!@_events[eventName]
 
 
   ###*
-  #  イベントを登録します
-  #  @param  {string}   eventName  イベント名
-  #  @param  {function} callback   追加する関数
+   イベントを登録します
+   @param {String}   eventName - イベント名
+   @param {Function} callback  - 追加する関数
   ###
   addEventListener: (eventName, callback) ->
     if @hasEventListener(eventName)
@@ -29,9 +33,9 @@ class EventDispatcher
 
 
   ###*
-  #  イベントを削除します
-  #  @param  {string}   eventName  イベント名
-  #  @param  {function} callback   削除する関数
+   イベントを削除します
+   @param {String}   eventName - イベント名
+   @param {Function} callback  - 削除する関数
   ###
   removeEventListener: (eventName, callback) ->
     if !@hasEventListener(eventName)
@@ -45,10 +49,10 @@ class EventDispatcher
 
 
   ###*
-  #  イベントを発火します
-  #  @param  {string} eventName  イベント名
-  #  @param  {object} opt_this   thisの値
-  #  @param           opt_arg    引数
+   イベントを発火します
+   @param {String} eventName - イベント名
+   @param {Object} opt_this  - thisの値
+   @param {Object} opt_arg   - 引数
   ###
   fireEvent: (eventName, opt_this, opt_arg) ->
     _copyArray = (array) ->

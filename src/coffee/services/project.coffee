@@ -1,7 +1,8 @@
 timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const, Log) ->
 
-  ###
+  ###*
    Project data model.
+   @class ProjectModel
   ###
   class ProjectModel extends EventDispatcher
 
@@ -9,17 +10,15 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
 
     ###*
      constructor.
-     @class ProjectModel
      @constructor
-     @param url {String} Redmine server's url.
-     @param urlIndex {Number} project id's index on Platform.storage.
-     @param id {Number} project id.
-     @param text {String} project's name.
-     @param show {Number} can this project show? (DEFAULT: 0, NOT: 1, SHOW: 2)
-     @param queryId {Number} Used query ID
-     @param tickets {Array} Array of TicketModel.
+     @param {String} url - Redmine server's url.
+     @param {Number} urlIndex - Project id's index on Platform.storage.
+     @param {Number} id - Project id.
+     @param {String} text - Project's name.
+     @param {Number} show - Can this project show? (DEFAULT: 0, NOT: 1, SHOW: 2)
+     @param {Number} queryId - Used query ID
     ###
-    constructor: (@url, urlIndex, id, @text, show, queryId, tickets) ->
+    constructor: (@url, urlIndex, id, @text, show, queryId) ->
       @id = id - 0
       isNaN(urlIndex) or @urlIndex = urlIndex - 0
       isNaN(show) or @show = show - 0
@@ -28,9 +27,9 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
       @_tickets = []
       @tickets = new Proxy(@_tickets, @updateProperties(@))
 
-    ###
-     update property related to project.
-     @param projectModel {ProjectModel} target project.
+    ###*
+     Update property related to project.
+     @param {ProjectModel} projectModel - target project.
     ###
     updateProperties: (projectModel) ->
 
@@ -48,9 +47,9 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
 
         ###*
          Called on ticket changes.
-         @param tickets {Array} Target object.
-         @param index {String} Property name.
-         @param ticket {TicketModel} New ticket.
+         @param {Array} tickets - Target object.
+         @param {String} index - Property name.
+         @param {TicketModel} ticket - New ticket.
         ###
         set: (tickets, index, ticket) ->
           Log.time("updateProperties #{projectModel.text}\t")
@@ -78,15 +77,21 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
           return true
       }
 
-    ###
-     compare project.
-     true: same / false: different
+    ###*
+     Compare project.
+     @param {ProjectModel} y - Object which will be compared.
+     @return true: same / false: different
     ###
     equals: (y) ->
       return false if not y?
       return @url is y.url and @id is y.id
 
 
+  ###*
+   Class for management ProjectModels.
+   @class Project
+   @constructor
+  ###
   class Project
 
     # class variables
@@ -104,10 +109,10 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
          }
     ###
 
-    ###
-     convert projects to format of chrome. all projects are unique.
+    ###*
+     Convert projects to format of chrome. all projects are unique.
      @param {Array} projects - array of ProjectModel
-     @return {Object} project object on chrome format.
+     @return {Object} Project object on chrome format.
     ###
     _toChromeObjects: (projects) ->
       return {} if not projects
@@ -127,10 +132,10 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
       return result
 
 
-    ###
-     convert projects to ProjectModel.
-     @param  {Object} project object on chrome format.
-     @return {Array}  projects - array of ProjectModel
+    ###*
+     Convert projects to ProjectModel.
+     @param {Object} projects - Project object on chrome format.
+     @return {Array} Array of ProjectModel
     ###
     _toProjectModels: (projects) ->
       result = []
@@ -165,7 +170,7 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
           return $q.reject(null))
 
 
-    ###
+    ###*
      sync all projects to chrome sync.
     ###
     sync: (projects) ->
@@ -181,7 +186,7 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
           return res)
 
 
-    ###
+    ###*
      save all project to local.
     ###
     syncLocal: (projects) ->
@@ -197,7 +202,7 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
         return res)
 
 
-    ###
+    ###*
      create new Model instance.
     ###
     create: (params) ->

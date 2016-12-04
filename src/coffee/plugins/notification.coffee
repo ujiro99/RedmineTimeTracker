@@ -1,9 +1,10 @@
-###
+###*
  The class for handling desktop notification.
+ @class
 ###
 class Notification
 
-  ###
+  ###*
    Notifications default options.
   ###
   DEFAULT_OPTION:
@@ -17,8 +18,9 @@ class Notification
   STATUS_CREATED: 201
 
 
-  ###
+  ###*
    Constructor.
+   @constructor
   ###
   constructor: (@_Platform) ->
     @_Platform.notifications.onClicked.addListener (notificationId) =>
@@ -26,13 +28,13 @@ class Notification
       @_showWindow()
 
 
-  ###
-   On time entry was sended, show desktop notification.
-   @param RTT       {Object} Interface to communicate with app.
-   @param timeEntry {Object} Sended time entry.
-   @param status    {Number} Send result.
-   @param ticket    {Object} Tracked ticket.
-   @param mode      {String} Tracking mode.
+  ###*
+   On time entry was send, show desktop notification.
+   @param {Object} RTT - Interface to communicate with app.
+   @param {Object} timeEntry - Send time entry.
+   @param {Number} status - Send result.
+   @param {Object} ticket - Tracked ticket.
+   @param {String} mode - Tracking mode.
   ###
   onSendedTimeEntry: (RTT, timeEntry, status, ticket, mode) =>
     return if mode isnt "pomodoro"
@@ -56,7 +58,7 @@ class Notification
     @_Platform.notifications.create(null, options)
 
 
-  ###
+  ###*
    Shows app window if hided, on click notification.
   ###
   _showWindow: () ->

@@ -1,7 +1,8 @@
 timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platform, Log) ->
 
-  ###
-   Management plugins.
+  ###*
+   Service for management plugins.
+   @class PluginManager
   ###
   class PluginManager extends EventDispatcher
 
@@ -29,13 +30,11 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
     ###*
      Constructor.
-     @class PluginManager
      @constructor
     ###
     constructor: (@window, @Analytics, @Log) ->
       @initRTT()
       @bindEvents()
-
 
     ###*
      Initialize RTT grobal/internal object.
@@ -61,8 +60,8 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
     ###*
      Register new plugins. This method will be called by plugin first.
-     @param name        {String} Plugin name, must be unique.
-     @param pluginClass {Object} Plugin class. Plugin instance is created from this class, and it has event handlers.
+     @param {String} name - Plugin name, must be unique.
+     @param {Object} pluginClass - Plugin class. Plugin instance is created from this class, and it has event handlers.
     ###
     registerPlugin: (name, pluginClass) =>
       @_plugins[name] = new pluginClass(Platform)
@@ -71,7 +70,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
     ###*
      Unregister plugins. This method will be called by plugin.
-     @param name {String} Plugin name.
+     @param {String} name - Plugin name.
     ###
     unregisterPlugin: (name) =>
       delete @_plugins[name]
@@ -80,9 +79,9 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
     ###*
      List up registered plugins.
-     @return plugins       {Object} Hashmap of plugins.
-     @return plugins.key   {String} Plugin name.
-     @return plugins.value {Object} Plugin object.
+     @return {Object} plugins - Hashmap of plugins.
+     @return {String} plugins.key - Plugin name.
+     @return {Object} plugins.value - Plugin object.
     ###
     listPlugins: () =>
       return @_plugins
@@ -91,8 +90,8 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
     ###*
      Load plugin from url.
      Currently, only in app file is allowed by Chrome app CSP.
-     @param url {String}   Url of plugin's source code.
-     @param cb  {Function} Load completed callback.
+     @param {String} url - Url of plugin's source code.
+     @param {Function} cb - Load completed callback.
     ###
     loadPluginUrl: (url, cb) =>
       script = document.createElement('script')
@@ -112,8 +111,8 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
     ###*
      Notify event to plugins.
-     @param event {String} Event name.
-     @param args  {Any}    Arguments which passed into plugin's event handler.
+     @param {String} event - Event name.
+     @param {Any} args - Arguments which passed into plugin's event handler.
     ###
     notify: (event, args...) =>
       @fireEvent(event, null, event, args...)
@@ -122,8 +121,8 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
     ###*
      Execute plugin's event handlers.
      Handler method which prefixed "on" to eventName is called.
-     @param event {String} Event name.
-     @param args  {Any}    Arguments which passed into plugin's event handler.
+     @param {String} event - Event name.
+     @param {Any} args - Arguments which passed into plugin's event handler.
     ###
     exec: (event, args...) =>
       handlerName = 'on' + event.camelize()

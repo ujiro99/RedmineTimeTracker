@@ -1,7 +1,8 @@
 timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Resource, Const) ->
 
-  ###
-   service for loading issues from redmine.
+  ###*
+   Service for loading issues from redmine.
+   @class IssueLoader
   ###
   class IssueLoader
 
@@ -11,14 +12,15 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
     @QUERY_ALL_ID = 0
 
 
-    ###
+    ###*
      Constructor
+     @constructor
     ###
     constructor: (@$scope) ->
 
 
-    ###
-     clear and load issues
+    ###*
+     Clear and load issues
     ###
     loadIssues: () ->
       @$scope.isLoadingVisible = true
@@ -26,8 +28,8 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
       @loadAllTicketOnProject()
 
 
-    ###
-     on change selected Query, set query to project, and udpate issues.
+    ###*
+     On change selected Query, set query to project, and udpate issues.
     ###
     setQueryAndloadIssues: () ->
       if not DataAdapter.selectedProject then return
@@ -40,8 +42,8 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
       @loadIssues()
 
 
-    ###
-     load all issues from Redmine on selected Project.
+    ###*
+     Load all issues from Redmine on selected Project.
     ###
     loadAllTicketOnProject: () ->
       return if not DataAdapter.selectedProject
@@ -54,7 +56,7 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
         .then(@loadSuccess, @loadError)
 
 
-    ###
+    ###*
      load remaining data.
     ###
     loadRemain: (data) =>
@@ -76,8 +78,8 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
         .getIssuesRange(data.params, data.issues.length, remainCount)
 
 
-    ###
-     update issues.
+    ###*
+     Update issues.
     ###
     loadSuccess: (data) =>
       return if not data
@@ -95,16 +97,16 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
       @$scope.isLoadingVisible = false
 
 
-    ###
-     show error message.
+    ###*
+     Show error message.
     ###
     loadError: (data, status) =>
       if status is IssueLoader.STATUS_CANCEL then return
       Message.toast Resource.string("msgLoadIssueFail")
 
 
-    ###
-     filter issues by searchParam.text and properties.
+    ###*
+     Filter issues by searchParam.text and properties.
     ###
     listFilter: (item) =>
 

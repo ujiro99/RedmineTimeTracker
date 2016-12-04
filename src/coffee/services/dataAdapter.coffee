@@ -2,9 +2,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
 
   ###*
+   Data model of all data in account.
+   @class DataModel
   ###
   class DataModel
 
+    ###*
+     @constructor
+    ###
     constructor: () ->
 
       ###*
@@ -44,6 +49,10 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @statuses = []
 
 
+  ###*
+   Adapter class for GUI and data models.
+   @class DataAdapter
+  ###
   class DataAdapter extends EventDispatcher
 
     # event
@@ -60,6 +69,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # constructor
+    # @constructor
     ###
     constructor: () ->
       @_bindDataModelGetter()
@@ -67,8 +77,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         @_updateStarredProjects()
 
     ###*
-    # all data.
-    # @type {object}
+    # All data.
+    # @type {Object}
     # @prop {DataModel} url of server - DataModel
     ###
     _data: {}

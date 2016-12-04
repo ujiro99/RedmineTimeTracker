@@ -13,13 +13,15 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
   NOT_CONFIGED = { id: -1, name: "Not Assigned"}
 
 
-  ###
+  ###*
    Ticket data model.
+   @class TicketModel
   ###
   class TicketModel
 
-    ###
+    ###*
      constructor.
+     @constructor
     ###
     constructor: (@id,
                   @text,
@@ -32,7 +34,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
                   @tracker,
                   @total) ->
 
-    ###
+    ###*
      compare ticket.
      true: same / false: different
     ###
@@ -61,7 +63,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
   #
 
 
-  ###
+  ###*
    Synchronize tickets and projects using urlIndex.
    @param {Array} tickets - tickets of chrome format.
    @param {Array} projects - ProjectModel.
@@ -93,7 +95,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
     return { tickets: tmp, missing: missing }
 
 
-  ###
+  ###*
    Save all tickets to any area.
    @param {Array} tickets - Array of TicketModel.
    @param {Bool}  isLocal - If true, save data to local storage area.
@@ -145,7 +147,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
     return  promise
 
 
-  ###
+  ###*
    Fix parameter's status.
   ###
   _sanitize = (params) ->
@@ -154,7 +156,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
 
   return {
 
-    ###
+    ###*
      load all tickets from chrome sync.
     ###
     load: () ->
@@ -177,7 +179,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
         return $q.reject(null))
 
 
-    ###
+    ###*
      sync all tickets to chrome sync.
     ###
     sync: (tickets) ->
@@ -192,14 +194,14 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
           $q.reject(res))
 
 
-    ###
+    ###*
      save all tickets to local.
     ###
     syncLocal: (tickets) ->
       _sync tickets, true
 
 
-    ###
+    ###*
      create new TicketModel instance.
     ###
     create: (params) ->
@@ -216,7 +218,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
                              params.total)
 
 
-    ###
+    ###*
      clear ticket data on storage and local.
     ###
     clear: (callback) ->

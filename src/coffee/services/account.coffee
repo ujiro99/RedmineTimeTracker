@@ -5,20 +5,20 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
   NULLFUNC = () ->
 
   ###*
-   Account infomation for login to redmine.
+   Account information for login to redmine.
    @class AccountModel
   ###
   class AccountModel
 
     ###*
      @constructor
-     @param url {String} Redmine server's url.
-     @param apiKey {String} Redmine server's apiKey.
-     @param id {String} User id.
-     @param pass {String} User password.
-     @param name {String} Redmine's name for identify by user.
-     @param numProjects {Number} Number of projects to fetch.
-     @param projectList {Array} Project id which will be fetched.
+     @param {String} url - Redmine server's url.
+     @param {String} apiKey - Redmine server's apiKey.
+     @param {String} id - User id.
+     @param {String} pass - User password.
+     @param {String} name - Redmine's name for identify by user.
+     @param {Number} numProjects - Number of projects to fetch.
+     @param {Array}  projectList - Project id which will be fetched.
     ###
     constructor: (@url, @apiKey, @id, @pass, @name, @numProjects, projectList) ->
       if not @name or @name.isBlank()
@@ -30,8 +30,10 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
         @projectList = projectList
 
 
-    ###
-     set parameters from Object.
+    ###*
+     Create new AccountModel instance from Object with parameters.
+     @param {Object} obj - New parameters.
+     @returns new AccountModel instance.
     ###
     @fromObject: (obj) ->
       return new AccountModel(
@@ -44,8 +46,9 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
         obj.projectList
       )
 
-    ###
-     is valid prameters.
+    ###*
+     Check this model has valid parameters.
+     @return True is valid parameters.
     ###
     isValid: () ->
       return false if not @url?
@@ -54,8 +57,9 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
       else
         return @id? and @pass?
 
-    ###
-     update parameters.
+    ###*
+     Update parameters.
+     @param {Object} newModel - New parameters.
     ###
     update: (newModel) ->
       @url         = newModel.url
@@ -66,7 +70,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
       @numProjects = newModel.numProjects
       @projectList = newModel.projectList
 
-    ###
+    ###*
      JSON formatter for cipherParams.
     ###
     _Json:
@@ -85,19 +89,19 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
         if jsonObj.s then cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
         return cipherParams
 
-    ###
+    ###*
      decrypt object. this is used for compatibility.
     ###
     _decryptObject: (obj) ->
       return CryptoJS.AES.decrypt(obj, PHRASE).toString(CryptoJS.enc.Utf8)
 
-    ###
+    ###*
      decrypt string.
     ###
     _decryptString: (str) ->
       return CryptoJS.AES.decrypt(@_Json.parse(str), PHRASE).toString(CryptoJS.enc.Utf8)
 
-    ###
+    ###*
      decrypt according it type.
     ###
     _decrypt: (any) ->
@@ -106,7 +110,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
       else
         return @_decryptObject(any)
 
-    ###
+    ###*
      decrypt the account data, only to sync on chrome.
     ###
     decrypt: () ->
@@ -120,7 +124,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
         @projectList
       )
 
-    ###
+    ###*
      encrypt the account data, only to sync on chrome.
     ###
     encrypt: () ->
@@ -134,7 +138,7 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
         @projectList
       )
 
-    ###
+    ###*
      parse projectList string to array.
     ###
     parseProjectList: (str) ->
@@ -149,15 +153,16 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
       return res.compact()
 
 
-  ###
+  ###*
    all account.
   ###
   _accounts = []
 
   return {
 
-    ###
-     create new AccountModel instance.
+
+    ###*
+     Create new AccountModel instance.
      @param {Object} param - account parameters.
      @return {AccountModel} created instance.
     ###
@@ -165,9 +170,9 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
       return AccountModel.fromObject(param)
 
 
-    ###
-     load all account data from chrome sync.
-     @return {Array} AccountModel[]
+    ###*
+     Load all account data.
+     @return {Promise.<AccountModel[]>} A promise for result of loaded account data.
     ###
     load: () ->
       Log.debug "Account.load() start"
@@ -190,16 +195,16 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
       return deferred.promise
 
 
-    ###
-     get all account data.
+    ###*
+     Get all account data.
      @return {Array} AccountModel[]
     ###
     getAccounts: () ->
       return _accounts
 
 
-    ###
-     add a account data using chrome sync. url is unique.
+    ###*
+     Add a account data using chrome sync. url is unique.
     ###
     addAccount: (account, callback) ->
       account = AccountModel.fromObject(account)
@@ -225,8 +230,8 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
           Analytics.sendEvent 'account', 'count', 'onAdd', _accounts.length
 
 
-    ###
-     remove by url.
+    ###*
+     Remove by url.
     ###
     removeAccount: (url, callback) ->
       if not url? then callback false; return
@@ -247,8 +252,8 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
           Analytics.sendEvent 'account', 'count', 'onRemove', _accounts.length
 
 
-    ###
-      clear all account data
+    ###*
+     Clear all account data
     ###
     clearAccount: (callback) ->
       callback = callback or NULLFUNC

@@ -2,12 +2,19 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
 
   _redmines = {}
 
+  ###*
+   Service for communicate with Redmine.
+   @class Redmine
+  ###
   class Redmine
 
     @CONTENT_TYPE: "application/json"
     @AJAX_TIME_OUT: 30 * 1000
     @LIMIT_MAX: 100
 
+    ###*
+     @constructor
+    ###
     constructor: (@auth, @$http, @$q, @Ticket, @Project, @Base64, @Analytics, @Log, @State, @Const) ->
       @url = auth.url
 
@@ -21,7 +28,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
     getIssuesCanceler: null
 
 
-    ###
+    ###*
      convert json to xml.
     ###
     @JSONtoXML: (obj, depth) ->
@@ -48,7 +55,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return result
 
 
-    ###
+    ###*
      bind log.
     ###
     _bindDefer: (success, error, mothodName) ->
@@ -69,7 +76,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return success: onSuccess, error: onError, promise: deferred.promise
 
 
-    ###
+    ###*
      set basic configs for $http.
     ###
     _setBasicConfig: (config, auth) ->
@@ -83,7 +90,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return config
 
 
-    ###
+    ###*
      load issues.
     ###
     _getIssues: (params, success, error) ->
@@ -118,7 +125,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return deferred
 
 
-    ###
+    ###*
      load issues.
     ###
     getIssues: (params, success, error) ->
@@ -130,7 +137,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       @getIssuesCanceler.promise
 
 
-    ###
+    ###*
      load issues pararell.
     ###
     getIssuesPararell: (params, success, error) ->
@@ -138,7 +145,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       @_getIssues(params, o.success, o.error).promise
 
 
-    ###
+    ###*
      load issues from `start` to `end`.
     ###
     getIssuesRange: (params, start, end, success, error) ->
@@ -163,7 +170,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return r.promise
 
 
-    ###
+    ###*
      Load tickets associated to user ID.
     ###
     getIssuesOnUser: (success, error) ->
@@ -173,7 +180,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       @_getIssues(params, o.success, o.error).promise
 
 
-    ###
+    ###*
      get any ticket using id.
     ###
     getIssuesById: (issueId, success, error) ->
@@ -201,7 +208,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
           error?(issue, status))
 
 
-    ###
+    ###*
      submit time entry to redmine server.
     ###
     submitTime: (config, success, error) ->
@@ -230,8 +237,8 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
           error(args...))
 
 
-    ###
-     laod time entry. uses promise.
+    ###*
+     Load time entry. uses promise.
     ###
     loadTimeEntries: (params) ->
       r = @_bindDefer(null, null, "loadTimeEntries")
@@ -250,7 +257,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return r.promise
 
 
-    ###
+    ###*
      Load projects on url
     ###
     loadProjects: (params) =>
@@ -283,7 +290,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return r.promise
 
 
-    ###
+    ###*
      load projects from `start` to `end`.
     ###
     loadProjectsRange: (params, start, end) =>
@@ -304,7 +311,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
         , (d) -> return d)
 
 
-    ###
+    ###*
      load projects using id.
     ###
     loadProjectById: (id) ->
@@ -333,7 +340,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return r.promise
 
 
-    ###
+    ###*
      Load user on url associated to auth.
     ###
     _getUser: (success, error) ->
@@ -352,7 +359,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
         .error(error)
 
 
-    ###
+    ###*
      find user recursive.
     ###
     _findUser: (success, error, args...) ->
@@ -363,7 +370,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       @_getUser(success, (msg...) => @_findUser(success, error, msg...))
 
 
-    ###
+    ###*
      find user from url.
     ###
     findUser: (success, error) ->
@@ -377,7 +384,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
         , error or @Const.NULLFUNC)
 
 
-    ###
+    ###*
      Load time entry activities.
     ###
     loadActivities: (success, error) ->
@@ -392,8 +399,8 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
       return r.promise
 
 
-    ###
-     laod queries. uses promise.
+    ###*
+     Load queries. uses promise.
     ###
     loadQueries: (params) ->
       r = @_bindDefer(null, null, "loadQueries")
@@ -409,8 +416,8 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
         .error(r.error)
       return r.promise
 
-    ###
-     laod status. uses promise.
+    ###*
+     load status. uses promise.
     ###
     loadStatuses: () ->
       r = @_bindDefer(null, null, "loadStatuses")
@@ -427,22 +434,21 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
   return {
 
     ###*
-     get redmine instance.
+     Get redmine instance.
      @method get
-     @param auth {Object} Authentication infomation for Redmine.
-     @param auth.url {String} Redmine server's url.
-     @param auth.id {String} ID for redmine account.
-     @param auth.pass {String} Password for redmine account.
-     @param auth.apiKey {String} API Key for redmine account (optional).
-     @param auth.userId {Number} account UserID.
+     @param {Object} auth - Authentication information for Redmine.
+     @param {String} auth.url - Redmine server's url.
+     @param {String} auth.id - ID for redmine account.
+     @param {String} auth.pass - Password for redmine account.
+     @param {String} auth.apiKey - API Key for redmine account (optional).
+     @param {Number} auth.userId - account UserID.
     ###
     get: (auth) ->
       if not _redmines[auth.url]
         _redmines[auth.url] = new Redmine(auth, $http, $q, Ticket, Project, Base64, Analytics, Log, State, Const)
       return _redmines[auth.url]
 
-
-    ###
+    ###*
      remove redmine instance.
     ###
     remove: (auth) ->

@@ -2,6 +2,7 @@ angular.module('chrome', []).provider 'Platform', () ->
 
   ###*
    Platform api wrapper for chrome app.
+   @class Platform
   ###
   class Platform
 
@@ -10,13 +11,20 @@ angular.module('chrome', []).provider 'Platform', () ->
 
     ###*
      @constructor
+     @param {Object} $q - Service for Promise.
+     @param {Object} $log - Service for Log.
     ###
     constructor: (@$q, @$log) ->
 
     ###*
+     @typedef LoadedObject
+     @property {Object} Loaded object.
+    ###
+
+    ###*
      Load data from chrome storage area.
      @param {String} key - Key of data.
-     @return {Object} promise
+     @returns {Promise.<LoadedObject|undefined>} A promise for result of loading .
     ###
     load: (key) =>
       deferred = @$q.defer()
@@ -42,7 +50,7 @@ angular.module('chrome', []).provider 'Platform', () ->
      Save data to both `local` and `sync` chrome storage area.
      @param {String} key - Key of data.
      @param {Object} value - Value which to be saved.
-     @return {Object} promise
+     @return {Promise.<undefined>} A promise for result of saving.
     ###
     save: (key, value) =>
       deferred = @$q.defer()
@@ -70,7 +78,7 @@ angular.module('chrome', []).provider 'Platform', () ->
      Save data to chrome storage `local` area.
      @param {String} key - Key of data.
      @param {Object} value - Value which to be saved.
-     @return {Object} promise
+     @return {Promise.<undefined>} A promise for result of saving.
     ###
     saveLocal: (key, value) =>
       deferred = @$q.defer()
@@ -96,6 +104,7 @@ angular.module('chrome', []).provider 'Platform', () ->
       lang = chrome.i18n.getUILanguage()
       @$log.debug("Language: " + lang)
       return lang
+
 
   return {
     getLanguage: () -> chrome.i18n.getUILanguage()

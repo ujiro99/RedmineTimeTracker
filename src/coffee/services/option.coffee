@@ -1,5 +1,9 @@
 timeTracker.factory("Option", ($q, Platform, Const, Log) ->
 
+  ###*
+   Service for global options.
+   @class Option
+  ###
   class Option
 
     # class variables
@@ -23,20 +27,21 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
     @_events: []
     @_eventsWithKey: {}
 
-    ###
-     constructor.
+    ###*
+     Constructor.
+     @constructor
     ###
     constructor: () ->
       Option._optionProxy = new Proxy(Option._options, @_onChanged)
 
-    ###
-     get all option data.
+    ###*
+     Get all option data.
     ###
     getOptions: () ->
       return Option._optionProxy
 
-    ###
-     add a event listner for change value.
+    ###*
+     Add a event listener for change value.
     ###
     onChanged: (key, f) ->
       if Object.isString(key)
@@ -45,8 +50,8 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
       else
         Option._events.push key # this is function
 
-    ###
-     load all option data.
+    ###*
+     Load all option data.
     ###
     loadOptions: () ->
       deferred = $q.defer()
@@ -63,8 +68,9 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
 
       return deferred.promise
 
-    ###
-     sync all option data.
+    ###*
+     Sync all option data.
+     @prop {String} propName - Property name
     ###
     syncOptions: (propName) ->
       deferred = $q.defer()
@@ -81,24 +87,8 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
 
       return deferred.promise
 
-    ###
-     clear all option data.
-    ###
-    clearAllOptions: (callback) ->
-      deferred = $q.defer()
-
-      callback = callback or Const.NULLFUNC
-      Platform.storage.local.clear()
-      Platform.storage.sync.clear () ->
-        if Platform.runtime.lastError?
-          deferred.reject(false)
-        else
-          deferred.resolve(true)
-
-      return deferred.promise
-
     ###*
-    # on option changed lister.
+     On option changed lister.
     ###
     _onChanged: {
       # @param {Object} options: Target object.
