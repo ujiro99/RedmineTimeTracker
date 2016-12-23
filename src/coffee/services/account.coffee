@@ -2,7 +2,6 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
 
   ACCOUNTS = "ACCOUNTS"
   PHRASE = "hello, redmine time traker."
-  NULLFUNC = () ->
 
   ###*
    Account information for login to redmine.
@@ -143,7 +142,6 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
     ###
     parseProjectList: (str) ->
       return null if not str
-      array = []
       reNum = /\d+/
       tmp = str.split(',')
       res = tmp.map (n) ->
@@ -158,8 +156,14 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
   ###
   _accounts = []
 
-  return {
 
+  ###*
+   Class for managing AccountModels.
+   @class Account
+  ###
+  class Account
+
+    NULLFUNC = ->
 
     ###*
      Create new AccountModel instance.
@@ -172,27 +176,25 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
 
     ###*
      Load all account data.
-     @return {Promise.<AccountModel[]>} A promise for result of loaded account data.
+     @return {Promise.<AccountModel[]>} A promise for result of account data loading.
     ###
     load: () ->
       Log.debug "Account.load() start"
-      deferred = $q.defer()
 
-      Platform.storage.sync.get ACCOUNTS, (item) ->
-        if Platform.runtime.lastError?
-          Log.info 'account load failed.'
-          deferred.reject()
-        else if not item[ACCOUNTS]
+      return Platform.load(ACCOUNTS).then (items) ->
+        Log.debug "Account.load() success."
+        if not items
           Log.info 'account was not created ever.'
-          deferred.resolve()
+          return
         else
           Log.info 'account loaded'
           _accounts.clear()
-          for a in item[ACCOUNTS]
+          for a in items
             _accounts.push AccountModel.fromObject(a).decrypt()
-          deferred.resolve(_accounts)
-
-      return deferred.promise
+          return _accounts
+      , ->
+        Log.debug "Account.load() failed."
+        $q.reject("Platform Error")
 
 
     ###*
@@ -202,69 +204,64 @@ timeTracker.factory("Account", ($rootScope, $q, Analytics, Platform, Log) ->
     getAccounts: () ->
       return _accounts
 
-
     ###*
-     Add a account data using chrome sync. url is unique.
+     Add a account data to storage. A account.url must be unique.
+     @param {Object} account - Account data object.
+     @return {Promise.<AccountModel>} Promise for saved data.
     ###
-    addAccount: (account, callback) ->
+    addAccount: (account) ->
       account = AccountModel.fromObject(account)
-      if not account? then callback false; return
-      callback = callback or NULLFUNC
+      if not account? then $q.reject("Parameter Error"); return
       accounts = @getAccounts() or []
       # merge accounts.
-      newArry = []
-      newArry = for a in accounts when a.url isnt account.url
+      accounts = for a in accounts when a.url isnt account.url
         a.encrypt()
-      accounts = newArry
       accounts.push account.encrypt()
-      Platform.storage.sync.set ACCOUNTS: accounts, () ->
-        if Platform.runtime.lastError?
-          callback false
-        else
-          for a, i in _accounts when a.url is account.url
-            _accounts.splice i, 1
-            break
-          _accounts.push account
-          callback true, account
-          $rootScope.$broadcast 'accountAdded', account
-          Analytics.sendEvent 'account', 'count', 'onAdd', _accounts.length
+      Platform.save(ACCOUNTS, accounts).then () ->
+        for a, i in _accounts when a.url is account.url
+          _accounts.splice i, 1
+          break
+        _accounts.push account
+        $rootScope.$broadcast 'accountAdded', account
+        Analytics.sendEvent 'account', 'count', 'onAdd', _accounts.length
+        return account
+      , ->
+        $q.reject("Platform Error")
 
 
     ###*
-     Remove by url.
+     Remove account by url.
+     @param {String} url - Url of target account.
+     @return {Promise.<undefined>}
     ###
-    removeAccount: (url, callback) ->
-      if not url? then callback false; return
-      callback = callback or NULLFUNC
+    removeAccount: (url) ->
+      if not url? then $q.reject("Parameter Error"); return
       accounts = @getAccounts() or []
       # select other url account
       accounts = for a in accounts when a.url isnt url
         a.encrypt()
-      Platform.storage.sync.set ACCOUNTS: accounts, () ->
-        if Platform.runtime.lastError?
-          callback false
-        else
-          for a, i in _accounts when a.url is url
-            _accounts.splice i, 1
-            break
-          callback true
-          $rootScope.$broadcast 'accountRemoved', url
-          Analytics.sendEvent 'account', 'count', 'onRemove', _accounts.length
+      Platform.save(ACCOUNTS, accounts).then () ->
+        for a, i in _accounts when a.url is url
+          _accounts.splice i, 1
+          break
+        $rootScope.$broadcast 'accountRemoved', url
+        Analytics.sendEvent 'account', 'count', 'onRemove', _accounts.length
+      , () ->
+        $q.reject("Platform Error")
 
 
     ###*
-     Clear all account data
+     Clear all account data.
+     @return {Promise.<undefined>}
     ###
-    clearAccount: (callback) ->
-      callback = callback or NULLFUNC
-      Platform.storage.local.clear()
-      Platform.storage.sync.clear () ->
-        if Platform.runtime.lastError?
-          callback false
-        else
-          while _accounts.length > 0
-            a = _accounts.pop()
-            $rootScope.$broadcast 'accountRemoved', a.url
-          callback true
-  }
+    clearAccount: () ->
+      Platform.save(ACCOUNTS, null)
+      return Platform.save(ACCOUNTS, null).then () ->
+        while _accounts.length > 0
+          a = _accounts.pop()
+          $rootScope.$broadcast 'accountRemoved', a.url
+
+
+  return new Account()
+
 )

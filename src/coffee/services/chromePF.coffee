@@ -96,6 +96,20 @@ angular.module('chrome', []).provider 'Platform', () ->
       return deferred.promise
 
     ###*
+     Clear data on both `local` and `sync` chrome storage area.
+     @return {Promise.<undefined>} A promise for result.
+    ###
+    clear: () =>
+      deferred = @$q.defer()
+      chrome.storage.local.clear()
+      chrome.storage.sync.clear () ->
+        if chrome.runtime.lastError?
+          deferred.reject()
+        else
+          deferred.resolve()
+      return deferred.promise
+
+    ###*
      Gets the browser UI language of the browser.
      @return {String} language
      {@link https://developer.chrome.com/webstore/i18n?csw=1#localeTable Supported Locale}

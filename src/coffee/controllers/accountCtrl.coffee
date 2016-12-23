@@ -49,21 +49,20 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
       if msg.account.apiKey
         delete params.id
         delete params.pass
-      Account.addAccount params, (result, account) ->
-        if result
-          State.isSaving = false
-          if DataAdapter.isAccountExists(account)
-            DataAdapter.updateAccounts(account)
-            Message.toast Resource.string("msgUpdateSuccess"), 3000
-            Analytics.sendEvent 'auth', 'update', 'success', 1
-          else
-            State.isAddingAccount = false
-            State.isCollapseSetting = true
-            DataAdapter.addAccounts(account)
-            Message.toast Resource.string("msgAuthSuccess"), 3000
-            Analytics.sendEvent 'auth', 'add', 'success', 1
+      Account.addAccount(params).then (account) ->
+        State.isSaving = false
+        if DataAdapter.isAccountExists(account)
+          DataAdapter.updateAccounts(account)
+          Message.toast Resource.string("msgUpdateSuccess"), 3000
+          Analytics.sendEvent 'auth', 'update', 'success', 1
         else
-          failAuthentication(null, status)
+          State.isAddingAccount = false
+          State.isCollapseSetting = true
+          DataAdapter.addAccounts(account)
+          Message.toast Resource.string("msgAuthSuccess"), 3000
+          Analytics.sendEvent 'auth', 'add', 'success', 1
+      , () ->
+        failAuthentication(null, status)
     else
       failAuthentication(msg, status)
 
@@ -163,7 +162,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
    remove account from chrome sync.
   ###
   removeAccount = (url) ->
-    Account.removeAccount url, () ->
+    Account.removeAccount(url).then () ->
       Log.debug("account removed : " + url)
       Redmine.remove({url: url})
       DataAdapter.removeAccounts({url: url})

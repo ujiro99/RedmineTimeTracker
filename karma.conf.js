@@ -17,6 +17,7 @@ module.exports = function(config) {
       { pattern: 'app/components/angular-translate/js/angular-translate.min.js', watched: false },
       { pattern: 'app/components/angular-translate-loader-static-files/js/angular-translate-loader-static-files.min.js', watched: false },
       { pattern: 'node_modules/angular-mocks/angular-mocks.js', watched: false },
+      { pattern: 'app/scripts/lib/aes.js', watched: false },
 
       'test/app.coffee',
       'src/coffee/util.coffee',
