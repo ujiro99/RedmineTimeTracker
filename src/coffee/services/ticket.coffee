@@ -62,11 +62,18 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
   #     ticket = [ id, text, project_url_index, project_id, show ]
   #
 
+  ###*
+   @typedef SyncedResult
+   @type {Object}
+   @prop {TicketModel[]} tickets - Synced tickets with project.
+   @prop {TicketModel[]} missing - Missing tickets from project.
+  ###
 
   ###*
    Synchronize tickets and projects using urlIndex.
    @param {Array} tickets - tickets of chrome format.
-   @param {Array} projects - ProjectModel.
+   @param {ProjectModel[]} projects - ProjectModels.
+   @return {SyncedResult} Synced, and missing tickets.
   ###
   _syncWithProject = (tickets, projects) ->
     tmp = []
@@ -80,18 +87,17 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
         break
       if url isnt PROJECT_NOT_FOUND
         projectName = projectModel.text
+        tmp.push new TicketModel(
+          t[TICKET_ID],
+          t[TICKET_TEXT],
+          url,
+          { id: t[TICKET_PRJ_ID], name: projectName},
+          t[TICKET_SHOW])
       else
         missing.push t[TICKET_URL_INDEX]
         projectName = PROJECT_NOT_FOUND_NAME
         Log.error("This ticket cannot synced to project.")
         Log.error(t)
-      tmp.push new TicketModel(
-        t[TICKET_ID],
-        t[TICKET_TEXT],
-        url,
-        { id: t[TICKET_PRJ_ID], name: projectName},
-        t[TICKET_SHOW])
-
     return { tickets: tmp, missing: missing }
 
 
@@ -167,7 +173,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
           Log.info 'Ticket does not exists, initialized.'
           tickets = []
         Project.load().then (projects) ->
-          if not tickets or not projects
+          if not projects or projects.length is 0
             Log.info 'Project does not exists.'
           synced = _syncWithProject tickets, projects
           Analytics.sendEvent 'ticket', 'count', 'onLoad', tickets.length
@@ -219,15 +225,12 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
 
 
     ###*
-     clear ticket data on storage and local.
+     Clear ticket data on storage.
+     @return {Promise.<undefined>}
     ###
-    clear: (callback) ->
+    clear: () ->
       Log.debug 'Ticket.clear()'
-      Platform.storage.local.set TICKET: []
-      Platform.storage.sync.set TICKET: [], () ->
-        if Platform.runtime.lastError?
-          callback? false
-        else
-          callback? true
+      return Platform.save(TICKET, [])
+
   }
 )

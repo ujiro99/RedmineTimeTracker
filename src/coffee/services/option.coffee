@@ -52,40 +52,32 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
 
     ###*
      Load all option data.
+     @return {Promise.<Object>} Promise for loaded options.
     ###
     loadOptions: () ->
-      deferred = $q.defer()
+      return Platform.load(Const.OPTIONS).then (item) ->
+        Log.info "option loaded."
+        Log.debug item
+        options = Object.merge(Option.DEFAULT_OPTION, item)
+        for k, v of options then Option._options[k] = v
+        return Option._options
+      , () ->
+        $q.reject("Platform Error")
 
-      Platform.storage.sync.get Const.OPTIONS, (item) ->
-        if Platform.runtime.lastError?
-          deferred.reject()
-        else
-          Log.info "option loaded."
-          Log.debug item
-          options = Object.merge(Option.DEFAULT_OPTION, item[Const.OPTIONS])
-          for k, v of options then Option._options[k] = v
-          deferred.resolve(Option._options)
-
-      return deferred.promise
 
     ###*
      Sync all option data.
      @prop {String} propName - Property name
+     @return {Promise.<undefined>}
     ###
     syncOptions: (propName) ->
-      deferred = $q.defer()
+      return Platform.save(Const.OPTIONS, Option._options).then () ->
+        Log.info "option synced."
+        Log.debug Option._options
+        return propName
+      , () ->
+        $q.reject("Platform Error")
 
-      saveData = {}
-      saveData[Const.OPTIONS] = Option._options
-      Platform.storage.sync.set saveData, () ->
-        if Platform.runtime.lastError?
-          deferred.reject(false)
-        else
-          Log.info "option synced."
-          Log.debug saveData
-          deferred.resolve(propName)
-
-      return deferred.promise
 
     ###*
      On option changed lister.

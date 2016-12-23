@@ -218,12 +218,22 @@ describe 'ticket.coffee', ->
         done()
 
 
-    it 'should return empty array.', (done) ->
+    it 'should return empty array, if tickets are null.', (done) ->
       # setup data
       _setUpPlatform(null, TestData.prjObj)
       # exec
       Ticket.load().then (obj) ->
         expect(obj.tickets).to.be.empty
+        done()
+
+
+    it 'should return missing array, if projects are null.', (done) ->
+      # setup data
+      _setUpPlatform(TestData.ticketOnChrome, null)
+      # exec
+      Ticket.load().then (obj) ->
+        expect(obj.tickets).to.be.empty
+        expect(obj.missing).to.have.lengthOf(3)
         done()
 
 
@@ -241,6 +251,20 @@ describe 'ticket.coffee', ->
         expect(loaded[1].id).to.equal(TestData.ticketList2[1].id)
         expect(loaded[1].url).to.equal(TestData.ticketList2[1].url)
         expect(obj.missing[0]).to.equal(3)
+        done()
+
+
+    it 'error: should reject if Platform has anything error.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "load").returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject()
+        $rootScope.$apply()
+      # exec
+      Ticket.load().then () ->
+        done(new Error())
+      , (obj) ->
+        expect(obj).to.be.null
         done()
 
 
@@ -262,3 +286,30 @@ describe 'ticket.coffee', ->
         expect(obj.missing).to.have.length(0)
         done()
 
+
+  describe 'clear()', ->
+
+    it 'should delete all tickets.', (done) ->
+      deferred = $q.defer()
+      stub = sinon.stub(Platform, "save")
+      stub.returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve(TestData.prjObj)
+        $rootScope.$apply()
+      # exec
+      Ticket.clear().then () ->
+        done()
+      , () ->
+        done(new Error())
+
+    it 'should reject if Platform has anything error.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "save").returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject()
+        $rootScope.$apply()
+      # exec
+      Ticket.clear().then () ->
+        done(new Error())
+      , () ->
+        done()

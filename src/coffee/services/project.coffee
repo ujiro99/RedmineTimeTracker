@@ -152,7 +152,8 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
 
 
     ###*
-     load all projects from chrome sync.
+     Load all projects from storage.
+     @return {Promise.<ProjectModel[]>} Loaded ProjectModels
     ###
     load: () =>
       Log.debug "Project.load() start"

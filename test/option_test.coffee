@@ -3,6 +3,10 @@ expect = chai.expect
 describe 'option.coffee', ->
 
   Option = null
+  $rootScope = null
+  $q = null
+  Platform = null
+
 
   DEFAULT_OPTION =
     reportUsage: true
@@ -13,8 +17,11 @@ describe 'option.coffee', ->
 
   beforeEach () ->
     angular.mock.module('timeTracker')
-    inject (_Option_) ->
+    inject (_Option_, _$rootScope_, _$q_, _Platform_) ->
       Option = _Option_
+      $rootScope = _$rootScope_
+      $q = _$q_
+      Platform = _Platform_
 
 
   describe 'getOptions()', ->
@@ -75,3 +82,69 @@ describe 'option.coffee', ->
       Option.getOptions().reportUsage = false
       expect(Option.getOptions().reportUsage).to.equals(false)
 
+
+  describe 'loadOptions()', ->
+
+    it 'should load options, and returns options.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "load").returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve()
+        $rootScope.$apply()
+      # exec
+      Option.loadOptions().then (options) ->
+        expect(options.reportUsage).to.be.true
+        done()
+
+    it 'should returns merged options.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "load").returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve({
+          isProjectStarEnable: false  # not default value.
+        })
+        $rootScope.$apply()
+      # exec
+      Option.loadOptions().then (options) ->
+        expect(options.reportUsage).to.be.true
+        expect(options.isProjectStarEnable).to.be.false # should be `false`.
+        done()
+
+    it 'should reject if Platform has anything error.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "load").returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject()
+        $rootScope.$apply()
+      # exec
+      Option.loadOptions().then () ->
+        done(new Error())
+      , () ->
+        done()
+
+
+
+  describe 'syncOptions()', ->
+
+    it 'should sync options.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "save").returns(deferred.promise)
+      setTimeout () ->
+        deferred.resolve()
+        $rootScope.$apply()
+      # exec
+      Option.syncOptions("prop").then (propName) ->
+        expect(propName).to.equal("prop")
+        done()
+
+    it 'should reject if Platform has anything error.', (done) ->
+      deferred = $q.defer()
+      sinon.stub(Platform, "save").returns(deferred.promise)
+      setTimeout () ->
+        deferred.reject()
+        $rootScope.$apply()
+      # exec
+      Option.syncOptions().then () ->
+        done(new Error())
+      , () ->
+        done()
