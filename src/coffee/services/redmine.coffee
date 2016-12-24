@@ -16,7 +16,7 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
      @constructor
     ###
     constructor: (@auth, @$http, @$q, @Ticket, @Project, @Base64, @Analytics, @Log, @State, @Const) ->
-      @url = auth.url
+      @url = @auth.url
 
     _timeEntryData:
       "time_entry":
