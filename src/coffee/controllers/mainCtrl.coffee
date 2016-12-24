@@ -1,9 +1,7 @@
 timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Platform, Resource, Option, Log, Analytics) ->
 
-  # chrome alarm identifier key
-  DATA_SYNC = "DATA_SYNC"
-  # represents 5 minuts
-  MINUTE_5 = 5
+  # represents 5 minuts [msec]
+  MINUTE_5 = 5 * 60 * 1000
   # http status.
   NOT_FOUND = 404
   # http status.
@@ -30,7 +28,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       .then(_initializeDataFromChrome)
       .then(_initializeDataFromRedmine)
       .then(_initializeEvents)
-      .then(_setDataSyncAlarms)
+      .then(_startDataSync)
     deferred.resolve()
 
   ###
@@ -304,18 +302,14 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     $q.all(_loadRedmine(accounts))
       .finally(-> Log.debug "[3] initializeDataFromRedmine success")
 
+  ###*
+   Start data synchronization.
   ###
-   set datasync event to chrome alarms.
-  ###
-  _setDataSyncAlarms = () ->
-    alarmInfo =
-      when: Date.now() + 1
-      periodInMinutes: MINUTE_5
-    Platform.alarms.create(DATA_SYNC, alarmInfo)
-    Platform.alarms.onAlarm.addListener (alarm) ->
-      return if not alarm.name is DATA_SYNC
+  _startDataSync = () ->
+    window.setInterval(() ->
       Ticket.sync(DataAdapter.tickets)
       Project.sync(DataAdapter.getProjects())
+    , MINUTE_5)
 
   ###
    Sync a selected project to chrome storage.
