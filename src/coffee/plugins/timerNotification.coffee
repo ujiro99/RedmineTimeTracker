@@ -2,10 +2,10 @@
  The class for handling desktop notification.
  @class
 ###
-class Notification
+class TimerNotification
 
   ###*
-   Notifications default options.
+   Notification default options.
   ###
   DEFAULT_OPTION:
     type:        "list"
@@ -23,9 +23,9 @@ class Notification
    @constructor
   ###
   constructor: (@_Platform) ->
-    @_Platform.notifications.onClicked.addListener (notificationId) =>
+    @_Platform.notifications.addOnClickedListener (notificationId) =>
       @_Platform.notifications.clear(notificationId)
-      @_showWindow()
+      @_Platform.showAppWindow()
 
 
   ###*
@@ -58,14 +58,6 @@ class Notification
     @_Platform.notifications.create(null, options)
 
 
-  ###*
-   Shows app window if hided, on click notification.
-  ###
-  _showWindow: () ->
-    currentWindow = @_Platform.app.window.current()
-    currentWindow.show()
-
-
-# Register this plugin.
 if RTT?
-  RTT.registerPlugin("Notification", Notification)
+  # Register this plugin.
+  RTT.registerPlugin("TimerNotification", TimerNotification)

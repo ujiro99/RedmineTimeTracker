@@ -25,6 +25,7 @@ module.exports = function(config) {
       'src/coffee/state.coffee',
       'test/config.coffee',
       'test/mockPlugin.js',
+      'app/scripts/plugins/timerNotification.js',
 
       'src/coffee/**/*.coffee',
 

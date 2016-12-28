@@ -120,6 +120,65 @@ angular.module('chrome', []).provider 'Platform', () ->
       return lang
 
 
+    ###*
+     Show the application window.
+    ###
+    showAppWindow: () =>
+      appWindow = chrome.app.window.current()
+      appWindow.show()
+
+
+    ###*
+     Notification namespace.
+     @namespace
+    ###
+    notifications:
+
+      ###*
+       @typedef {object} NotificationOptions
+       @see {@link https://developer.chrome.com/apps/notifications#type-NotificationOptions}
+      ###
+
+      ###*
+       @callback notifications~createCallback
+       @param {string} notificationId
+      ###
+
+      ###*
+       Creates and displays a notification.
+       @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
+       @param {NotificationOptions} options - Contents of the notification.
+       @param {notifications~createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
+      ###
+      create: (notificationId, options, callback) =>
+        chrome.notifications.create(notificationId, options, callback)
+
+      ###*
+       @callback notifications~clearCallback
+       @param {bool} wasCleared
+      ###
+
+      ###*
+       Clears the specified notification.
+       @param {string} notificationId - The id of the notification to be cleared.
+       @param {notifications~clearCallback} [callback] - Called to indicate whether a matching notification existed.
+      ###
+      clear: (notificationId, callback) =>
+        chrome.notifications.clear(notificationId, callback)
+
+      ###*
+       @callback notifications~OnClickedListener
+       @param {string} notificationId
+      ###
+
+      ###*
+       Add on clicked lister to notification.
+       @param {notifications~OnClickedListener} listener - be called when the user clicked in a non-button area of the notification.
+      ###
+      addOnClickedListener: (listener) =>
+        chrome.notifications.onClicked.addListener(listener)
+
+
   return {
     getLanguage: () -> chrome.i18n.getUILanguage()
     $get: ($q, $log) ->

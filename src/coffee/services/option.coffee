@@ -20,7 +20,7 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
       isCollapseOptions: false        # options section collapse
       isCollapsePlugins: false        # plugins section collapse
       plugins: [                      # only app internal path are allowed by CSP.
-        "/scripts/plugins/notification.js"
+        "/scripts/plugins/timerNotification.js"
       ]
     @_options: @DEFAULT_OPTION
     @_optionProxy: null

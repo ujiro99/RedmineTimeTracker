@@ -112,8 +112,67 @@ describe 'chrome.coffee', ->
         $rootScope.$apply()
 
 
+  describe 'clear()', ->
+
+    it 'clears all data.', (done) ->
+      sinon.stub(chrome.storage.local, 'clear')
+      sinon.stub(chrome.storage.sync, 'clear').callsArg(0, {})
+      setTimeout -> $rootScope.$apply()
+
+      Platform.clear().then () ->
+        done()
+      , () ->
+        done(new Error())
+
+
+    it 'rejects, if chrome.runtime has errors.', (done) ->
+      # sinon.stub(chrome.storage.local, 'clear')
+      # sinon.stub(chrome.storage.sync, 'clear').callsArg(0, {})
+      chrome.runtime.lastError = true
+      setTimeout ->
+        chrome.runtime.lastError = null
+        $rootScope.$apply()
+
+      Platform.clear().then () ->
+        done(new Error())
+      , () ->
+        done()
+
+
   describe 'getLanguage()', ->
 
     it 'returns en', () ->
       lang = Platform.getLanguage()
       expect(lang).to.equal('en')
+
+
+  describe 'showAppWindow()', ->
+
+    it 'calls show() on AppWindow.', (done) ->
+      appWindow = {
+        show: () -> done()
+      }
+      sinon.stub(chrome.app.window, 'current').returns(appWindow)
+      Platform.showAppWindow()
+
+
+  describe 'Notification', ->
+
+    it 'calls create(notificationId, options, callback).', () ->
+      mock = sinon.mock(chrome.notifications)
+      mock.expects('create').once()
+      Platform.notifications.create()
+      mock.verify()
+
+    it 'calls clear(notificationId, callback).', () ->
+      mock = sinon.mock(chrome.notifications)
+      mock.expects('clear').once()
+      Platform.notifications.clear()
+      mock.verify()
+
+    it 'calls addOnClickedListener(listener).', () ->
+      mock = sinon.mock(chrome.notifications.onClicked)
+      mock.expects('addListener').once()
+      Platform.notifications.addOnClickedListener()
+      mock.verify()
+
