@@ -52,6 +52,7 @@
     <script src="../app/scripts/services/redmine.js"></script>
     <script src="../app/scripts/services/resource.js"></script>
     <script src="../app/scripts/services/ticket.js"></script>
+    <script src="../app/scripts/services/pluginManager.js"></script>
 
     <!-- test -->
     <script src="testData.js"></script>
@@ -65,11 +66,12 @@
     <script src="dataAdapter_test.js"></script>
     <script src="resource_test.js"></script>
     <script src="chromePF_test.js"></script>
+    <script src="pluginManager_test.js"></script>
 
     <script>
       mocha.checkLeaks();
-      if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
-      else { mocha.run(); }
+      mocha.setup({globals: ['RTT']});
+      mocha.run();
     </script>
   </body>
 </html>

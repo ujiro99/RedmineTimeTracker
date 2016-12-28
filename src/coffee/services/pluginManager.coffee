@@ -33,29 +33,8 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
      @constructor
     ###
     constructor: (@window, @Analytics, @Log) ->
-      @initRTT()
-      @bindEvents()
-
-    ###*
-     Initialize RTT grobal/internal object.
-    ###
-    initRTT: () =>
-      pluginInterface = {
-        registerPlugin:   @registerPlugin
-        unregisterPlugin: @unregisterPlugin
-      }
-      $window.RTT = pluginInterface #grobal
-      @RTT = {} #internal
-
-
-    ###*
-     Bind events and generate eventName.
-    ###
-    bindEvents: () =>
-      @_events.map (event) =>
-        @addEventListener event, @exec
-        key = event.underscore().toUpperCase()
-        @events[key] = event
+      @_initRTT()
+      @_bindEvents()
 
 
     ###*
@@ -119,12 +98,34 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
 
     ###*
+     Initialize RTT global/internal object.
+    ###
+    _initRTT: () =>
+      pluginInterface = {
+        registerPlugin:   @registerPlugin
+        unregisterPlugin: @unregisterPlugin
+      }
+      $window.RTT = pluginInterface #grobal
+      @RTT = {} #internal
+
+
+    ###*
+     Bind events and generate eventName.
+    ###
+    _bindEvents: () =>
+      @_events.map (event) =>
+        @addEventListener event, @_exec
+        key = event.underscore().toUpperCase()
+        @events[key] = event
+
+
+    ###*
      Execute plugin's event handlers.
      Handler method which prefixed "on" to eventName is called.
      @param {String} event - Event name.
      @param {Any} args - Arguments which passed into plugin's event handler.
     ###
-    exec: (event, args...) =>
+    _exec: (event, args...) =>
       handlerName = 'on' + event.camelize()
       @Log.debug("start " + handlerName)
       for name, plugin of @_plugins

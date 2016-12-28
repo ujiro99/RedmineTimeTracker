@@ -24,6 +24,7 @@ module.exports = function(config) {
       'src/coffee/log.coffee',
       'src/coffee/state.coffee',
       'test/config.coffee',
+      'test/mockPlugin.js',
 
       'src/coffee/**/*.coffee',
 
