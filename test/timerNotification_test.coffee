@@ -46,7 +46,8 @@ describe 'timerNotification.coffee', ->
       sinon.stub(Platform.notifications, "addOnClickedListener").returns(undefined)
       mock = sinon.mock(Platform.notifications).expects("create")
       mock.once().withArgs(null, {
-        icon: "/images/icon_notification.png",
+        iconUrl: "/images/icon_notification.png",
+        isClickable: true,
         items: [{ message: "testTicket", title: "Ticket" }, { message: "02:00", title: "Hours" }, { message: "test", title: "Activity" }],
         message: "Pomodoro finished.",
         title: "Tracking finished",
@@ -67,7 +68,8 @@ describe 'timerNotification.coffee', ->
       sinon.stub(Platform.notifications, "addOnClickedListener").returns(undefined)
       mock = sinon.mock(Platform.notifications).expects("create")
       mock.once().withArgs(null, {
-        icon: "/images/icon_notification.png",
+        iconUrl: "/images/icon_notification.png",
+        isClickable: true,
         items: [{ message: "testTicket", title: "Ticket" }, { message: "02:00", title: "Hours" }, { message: 400, title: "HTTP STATUS" }],
         message: "Pomodoro finished.",
         title: "Sending failed...",
