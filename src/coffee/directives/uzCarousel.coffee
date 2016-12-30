@@ -25,7 +25,7 @@ timeTracker.directive 'uzCarousel', ($window, $timeout) ->
 
       ###*
       # get element's duration.
-      # @param {Dom Object} elem - target element
+      # @param {Object} elem - Dom object of target element.
       # @return {Number} animation duration [msec]
       ###
       getTransitionDuration = (elem) ->

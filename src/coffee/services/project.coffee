@@ -97,22 +97,29 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
     # class variables
     @PROJECT = "PROJECT"
 
+    ###*
+     @typedef {Object} ProjectOptions
+     @prop {string} text - Project name.
+     @prop {number} show - Represents whether this project will be shown on this app.
+     @prop {number} queryId - Used query ID in this project.
     ###
-     project object. same as on chrome object.
-     - in chrome sync,
-         project = {
-           value of url:
-             index: project_url_index
-             value of project_id:
-               text: project_name
-               show: DEFAULT: 0, NOT: 1, SHOW: 2
-         }
+
+    ###*
+     @typedef {Object} ProjectData
+     @prop {number} index - The index number of the project at the same URL.
+     @prop {Object.<string, ProjectOptions>} <key> - Project id.
+    ###
+
+    ###*
+     Projects object on storage. ProjectModels are saved on storage using this format.
+     @typedef {Object} ProjectDataSet
+     @prop {Object.<string, ProjectData>} <key> - Project's url.
     ###
 
     ###*
      Convert projects to format of chrome. all projects are unique.
-     @param {Array} projects - array of ProjectModel
-     @return {Object} Project object on chrome format.
+     @param {ProjectModel[]} projects - array of ProjectModel
+     @return {ProjectDataSet} Project object on chrome format.
     ###
     _toChromeObjects: (projects) ->
       return {} if not projects
@@ -172,7 +179,9 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
 
 
     ###*
-     sync all projects to chrome sync.
+     Sync all projects to storage.
+     @param {ProjectModel[]} projects - Array of ProjectModel.
+     @return {Promise.<undefined>} A promise for result of saving.
     ###
     sync: (projects) ->
       data = @_toChromeObjects(projects)
@@ -188,7 +197,9 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
 
 
     ###*
-     save all project to local.
+     Save all projects to local storage area.
+     @param {ProjectModel[]} projects - Array of ProjectModel.
+     @return {Promise.<undefined>} A promise for result of saving.
     ###
     syncLocal: (projects) ->
       data = @_toChromeObjects(projects)

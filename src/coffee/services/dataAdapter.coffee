@@ -20,31 +20,31 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
       ###*
       # @property projects
-      # @type Array of ProjectModel
+      # @type {ProjectModel[]}
       ###
       @projects = []
 
       ###*
       # @property tickets
-      # @type Array of TicketModel
+      # @type {TicketModel[]}
       ###
       @tickets = []
 
       ###*
       # @property Activities
-      # @type Array of ActivityModel
+      # @type {ActivityModel[]}
       ###
       @activities = []
 
       ###*
       # @property Queries
-      # @type Array of QueryModel
+      # @type {QueryModel[]}
       ###
       @queries = []
 
       ###*
       # @property Statuses
-      # @type Array of StatusModel
+      # @type {StatusModel[]}
       ###
       @statuses = []
 
@@ -77,15 +77,14 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         @_updateStarredProjects()
 
     ###*
-    # All data.
-    # @type {Object}
-    # @prop {DataModel} url of server - DataModel
+    # All data. Object key is Url of account.
+    # @type {Object<string, DataModel>}
     ###
     _data: {}
 
     ###
     # filtered data.
-    # @type Array of AccountModel
+    # @type {AccountModel[]}
     ###
     _filteredData: []
     @property 'accounts',
@@ -93,7 +92,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # selectable tickets
-    # @type Array of TicketModel
+    # @type {TicketModel[]}
     ###
     _tickets: []
     @property 'tickets',
@@ -101,7 +100,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # selectable activites
-    # @type Array of ActivityModel
+    # @type {ActivityModel[]}
     ###
     _activities: []
     @property 'activities',
@@ -109,7 +108,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # selectable Queries
-    # @type Array of QueryModel
+    # @type {QueryModel[]}
     ###
     _queries: []
     @property 'queries',
@@ -199,7 +198,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # add accounts
-    # @param {Array} accounts - array of AccountModel.
+    # @param {AccountModel[]} accounts - array of AccountModel.
     ###
     addAccounts: (accounts) ->
       Log.debug("addAccounts() start")
@@ -216,7 +215,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # update accounts
-    # @param {Array} accounts - array of AccountModel.
+    # @param {AccountModel[]} accounts - array of AccountModel.
     ###
     updateAccounts: (accounts) ->
       Log.debug("updateAccounts() start")
@@ -231,7 +230,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # remove accounts
-    # @param {Array} accounts - array of AccountModel.
+    # @param {AccountModel[]} accounts - array of AccountModel.
     ###
     removeAccounts: (accounts) ->
       Log.debug("removeAccounts() start")
@@ -253,7 +252,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###*
     # add project to account.
     # if project is already loaded, overwrites by new project.
-    # @param {Array} projects - array of ProjectModel.
+    # @param {ProjectModel[]} projects - array of ProjectModel.
     ###
     addProjects: (projects) ->
       Log.debug("addProjects() start")
@@ -273,7 +272,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # remove project from account.
-    # @param {Array} projects - array of ProjectModel
+    # @param {ProjectModel[]} projects - array of ProjectModel
     # @param {Bool} eventEnable - is event enable
     ###
     removeProjects: (projects, eventEnable) ->
@@ -297,7 +296,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # toggle ticket's show/hide status.
-    # @param {Array} tickets - array of TicketModel
+    # @param {TicketModel[]} tickets - array of TicketModel
     ###
     toggleIsTicketShow: (tickets) ->
       Log.debug("toggleIsTicketShow() start")
@@ -311,7 +310,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
     ###*
     # add tickets to _data.
-    # @param {Array} tickets - array of TicketModel
+    # @param {TicketModel[]} tickets - array of TicketModel
     ###
     addTickets: (tickets) ->
       Log.debug("addTickets() start")
@@ -331,9 +330,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       Log.debug("clearTicket() finish")
 
     ###*
+     @typedef {Object} Activity
+     @prop {number} id - id of this activity.
+     @prop {string } name - name of this activity
+    ###
+
+    ###*
     # set activities.
-    # @param {String} url        - url of redmine server.
-    # @param {Array}  activities - array of activity. activity: { id: Number, name: String }.
+    # @param {String} url - url of redmine server.
+    # @param {Activity[]} activities - Array of activity to be set.
     ###
     setActivities: (url, activities) ->
       if not url? or not activities? then return
@@ -344,9 +349,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       Log.debug("setActivities: #{url}")
 
     ###*
+     @typedef {Object} Query
+     @prop {number} id - id of this query.
+     @prop {string } name - name of this query
+    ###
+
+    ###*
     # set queries.
-    # @param {String} url      - url of redmine server.
-    # @param {Array}  queries  - array of query. query: { id: Number, name: String }.
+    # @param {String} url - url of redmine server.
+    # @param {Query[]} queries  - Array of query to be set.
     ###
     setQueries: (url, queries) ->
       if not url? or not queries? then return
@@ -356,8 +367,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       Log.debug("setQueries: #{url}")
 
     ###*
-    # set Statuses.
-    # @param {Array} status - array of StatusModel
+     @typedef {Object} Status
+     @prop {number} id - id of this status.
+     @prop {string } name - name of this status
+    ###
+
+    ###*
+    # Set Statuses.
+    # @param {string} url - url of redmine server.
+    # @param {Status[]} statuses - array of Status to be set.
     ###
     setStatuses: (url, statuses) ->
       if not url? or not statuses? then return
