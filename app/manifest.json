@@ -11,7 +11,7 @@
     "background": {
       "scripts": [
         "./scripts/lib/google-analytics-bundle.js",
-        "./scripts/eventPage.js",
+        "./scripts/index_chrome.js",
         "./scripts/chromereload.js"
       ]
     }

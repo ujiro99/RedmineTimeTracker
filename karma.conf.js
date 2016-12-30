@@ -38,7 +38,8 @@ module.exports = function(config) {
       'src/coffee/app.coffee',
       'src/coffee/chromereload.coffee',
       'src/coffee/config.coffee',
-      'src/coffee/eventPage.coffee',
+      'src/coffee/index.coffee',
+      'src/coffee/index_chrome.coffee'
     ],
 
     coffeePreprocessor: {

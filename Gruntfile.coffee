@@ -62,8 +62,8 @@ module.exports = (grunt) ->
         'stylus:compile'
       jade: (path) ->
         jadeOptions = { production: false }
-        jadeOptions["production"] = grunt.option('production');
-        jadeOptions["electron"] = grunt.option('electron');
+        jadeOptions["production"] = grunt.option('production')
+        jadeOptions["electron"] = grunt.option('electron')
         grunt.config 'jade.options.data', jadeOptions
         grunt.config 'jade.options.pretty', true
         grunt.config 'jade.compile.files', [
@@ -89,6 +89,8 @@ module.exports = (grunt) ->
             '<%= config.src %>/coffee/state.coffee',
             '<%= config.src %>/coffee/config.coffee',
             '<%= config.src %>/coffee/**/*.coffee',
+            '!<%= config.src %>/coffee/index.coffee'
+            '!<%= config.src %>/coffee/index_chrome.coffee'
             '!<%= config.src %>/coffee/chromereload.coffee'
             '!<%= config.src %>/coffee/plugins/*'
           ]
@@ -174,8 +176,8 @@ module.exports = (grunt) ->
       production:
         files: [
           '<%= config.dist %>/scripts/script.js': '<%= config.dist %>/scripts/script.js'
-          '<%= config.dist %>/scripts/eventPage.js': '<%= config.dist %>/scripts/eventPage.js'
-          '<%= config.dist %>/scripts/plugins/notification.js': '<%= config.dist %>/scripts/plugins/notification.js'
+          '<%= config.dist %>/scripts/index_chrome.js': '<%= config.dist %>/scripts/index_chrome.js'
+          '<%= config.dist %>/scripts/plugins/timerNotification.js': '<%= config.dist %>/scripts/plugins/timerNotification.js'
         ]
 
     cssmin:
@@ -191,7 +193,7 @@ module.exports = (grunt) ->
         options:
           buildnumber: false
           background:
-            target: 'scripts/eventPage.js'
+            target: 'scripts/index_chrome.js'
             exclude: [
               'scripts/chromereload.js'
             ]
@@ -226,7 +228,7 @@ module.exports = (grunt) ->
             "!images/icon_128_gray.png"
             "scripts/lib/*.js"
             "scripts/plugins/*.js"
-            "scripts/eventPage.js"
+            "scripts/index_chrome.js"
             "views/template/**/*.html"
           ]
         ]
