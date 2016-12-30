@@ -64,6 +64,7 @@ module.exports = (grunt) ->
         jadeOptions = { production: false }
         jadeOptions["production"] = grunt.option('production')
         jadeOptions["electron"] = grunt.option('electron')
+        jadeOptions["version"] = config.manifest.version
         grunt.config 'jade.options.data', jadeOptions
         grunt.config 'jade.options.pretty', true
         grunt.config 'jade.compile.files', [
@@ -134,6 +135,7 @@ module.exports = (grunt) ->
           data: (dest, src) ->
             jadeOptions = { production: true}
             jadeOptions["electron"] = grunt.option('electron')
+            jadeOptions["version"] = config.manifest.version
             return jadeOptions
         files: [
           expand: true
@@ -148,6 +150,7 @@ module.exports = (grunt) ->
             jadeOptions = { production: false}
             jadeOptions["production"] = grunt.option('production')
             jadeOptions["electron"] = grunt.option('electron')
+            jadeOptions["version"] = config.manifest.version
             return jadeOptions
         files: [
           expand: true
@@ -282,13 +285,13 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'release-minor', [
-    'production',
     'release:minor',
+    'production',
     'compress'
   ]
 
   grunt.registerTask 'release-patch', [
-    'production',
     'release:patch',
+    'production',
     'compress'
   ]

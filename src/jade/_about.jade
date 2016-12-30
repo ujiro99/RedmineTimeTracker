@@ -1,11 +1,12 @@
-#about(ng-controller='AboutCtrl')
+#about
 
   div.caption
     span Redmine
     span Time
     span Tracker
   div.version
-    span version {{version}}
+    - var ver = "Version " + version
+    span= ver
 
   footer
     p.muted
