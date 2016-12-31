@@ -129,54 +129,48 @@ angular.module('chrome', []).provider 'Platform', () ->
 
 
     ###*
-     Notification namespace.
-     @namespace
+     @typedef {object} NotificationOptions
+     @see {@link https://developer.chrome.com/apps/notifications#type-NotificationOptions}
     ###
-    notifications:
 
-      ###*
-       @typedef {object} NotificationOptions
-       @see {@link https://developer.chrome.com/apps/notifications#type-NotificationOptions}
-      ###
+    ###*
+     @callback createCallback
+     @param {string} notificationId
+    ###
 
-      ###*
-       @callback createCallback
-       @param {string} notificationId
-      ###
+    ###*
+     Creates and displays a notification.
+     @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
+     @param {NotificationOptions} options - Contents of the notification.
+     @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
+    ###
+    createNotification: (notificationId, options, callback) =>
+      chrome.notifications.create(notificationId, options, callback)
 
-      ###*
-       Creates and displays a notification.
-       @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
-       @param {NotificationOptions} options - Contents of the notification.
-       @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
-      ###
-      create: (notificationId, options, callback) =>
-        chrome.notifications.create(notificationId, options, callback)
+    ###*
+     @callback clearCallback
+     @param {bool} wasCleared
+    ###
 
-      ###*
-       @callback clearCallback
-       @param {bool} wasCleared
-      ###
+    ###*
+     Clears the specified notification.
+     @param {string} notificationId - The id of the notification to be cleared.
+     @param {clearCallback} [callback] - Called to indicate whether a matching notification existed.
+    ###
+    clearNotification: (notificationId, callback) =>
+      chrome.notifications.clear(notificationId, callback)
 
-      ###*
-       Clears the specified notification.
-       @param {string} notificationId - The id of the notification to be cleared.
-       @param {clearCallback} [callback] - Called to indicate whether a matching notification existed.
-      ###
-      clear: (notificationId, callback) =>
-        chrome.notifications.clear(notificationId, callback)
+    ###*
+     @callback onClickedListener
+     @param {string} notificationId
+    ###
 
-      ###*
-       @callback onClickedListener
-       @param {string} notificationId
-      ###
-
-      ###*
-       Add on clicked lister to notification.
-       @param {onClickedListener} listener - be called when the user clicked in a non-button area of the notification.
-      ###
-      addOnClickedListener: (listener) =>
-        chrome.notifications.onClicked.addListener(listener)
+    ###*
+     Add on clicked lister to notification.
+     @param {onClickedListener} listener - be called when the user clicked in a non-button area of the notification.
+    ###
+    addOnClickedListener: (listener) =>
+      chrome.notifications.onClicked.addListener(listener)
 
 
   return {

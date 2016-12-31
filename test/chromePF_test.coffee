@@ -1,6 +1,6 @@
 expect = chai.expect
 
-describe 'chrome.coffee', ->
+describe 'chromePF.coffee', ->
 
   Platform = null
   $rootScope = null
@@ -161,18 +161,18 @@ describe 'chrome.coffee', ->
     it 'calls create(notificationId, options, callback).', () ->
       mock = sinon.mock(chrome.notifications)
       mock.expects('create').once()
-      Platform.notifications.create()
+      Platform.createNotification()
       mock.verify()
 
     it 'calls clear(notificationId, callback).', () ->
       mock = sinon.mock(chrome.notifications)
       mock.expects('clear').once()
-      Platform.notifications.clear()
+      Platform.clearNotification()
       mock.verify()
 
     it 'calls addOnClickedListener(listener).', () ->
       mock = sinon.mock(chrome.notifications.onClicked)
       mock.expects('addListener').once()
-      Platform.notifications.addOnClickedListener()
+      Platform.addOnClickedListener()
       mock.verify()
 

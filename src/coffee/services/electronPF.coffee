@@ -102,76 +102,74 @@ angular.module('electron', []).provider 'Platform', () ->
       win = require('electron').remote.getCurrentWindow()
       win.show()
 
+    ###*
+     Message which used on type = list.
+     @typedef {object} listMessage
+     @prop {string} title - list message title.
+     @prop {string} message - list message body.
+    ###
 
     ###*
-     Notification namespace.
-     @namespace
+     @typedef {object} NotificationOptions
+     @prop {string} type - Notification type.
+     @prop {string} iconUrl - Icon's url.
+     @prop {string} title - Notification title.
+     @prop {bool} isClickable - Has clicked event.
+     @prop {listMessage[]} items - messages.
     ###
-    notifications:
 
-      ###*
-       Message which used on type = list.
-       @typedef {object} listMessage
-       @prop {string} title - list message title.
-       @prop {string} message - list message body.
-      ###
+    ###*
+     @callback createCallback
+    ###
 
-      ###*
-       @typedef {object} NotificationOptions
-       @prop {string} type - Notification type.
-       @prop {string} iconUrl - Icon's url.
-       @prop {string} title - Notification title.
-       @prop {bool} isClickable - Has clicked event.
-       @prop {listMessage[]} items - messages.
-      ###
+    ###*
+     Creates and displays a notification.
+     @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
+     @param {NotificationOptions} options - Contents of the notification.
+     @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
+    ###
+    createNotification: (notificationId, options, callback) =>
+      options.icon = options.iconUrl
+      delete options.iconUrl
+      delete options.isClickable
+      options.body = options.message
+      for item in options.items
+        options.body += "\n#{item.title}: #{item.message}"
+      @_notification =  new Notification(options.title, options)
+      callback and callback()
 
-      ###*
-       @callback createCallback
-      ###
+    ###*
+     @callback clearCallback
+     @param {bool} wasCleared
+    ###
 
-      ###*
-       Creates and displays a notification.
-       @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
-       @param {NotificationOptions} options - Contents of the notification.
-       @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
-      ###
-      create: (notificationId, options, callback) =>
-        options.icon = options.iconUrl
-        delete options.iconUrl
-        delete options.isClickable
-        options.body = options.message
-        for item in options.items
-          options.body += "\n#{item.title}: #{item.message}"
-        @_notification =  new Notification(options.title, options)
-        callback()
-
-      ###*
-       @callback clearCallback
-       @param {bool} wasCleared
-      ###
-
-      ###*
-       Clears the specified notification.
-       @param {string} notificationId - The id of the notification to be cleared.
-       @param {clearCallback} [callback] - Called to indicate whether a matching notification existed.
-      ###
-      clear: (notificationId, callback) =>
+    ###*
+     Clears the specified notification.
+     @param {string} notificationId - The id of the notification to be cleared.
+     @param {clearCallback} [callback] - Called to indicate whether a matching notification existed.
+    ###
+    clearNotification: (notificationId, callback) =>
+      if @_notification?
+        @_notification.onclick = undefined
         @_notification.close()
-        callback(true)
+        @_notification = null
+        callback and callback(true)
+      else
+        @$log.log("Notification doesn't exist.")
 
-      ###*
-       @callback onClickedListener
-      ###
+    ###*
+     @callback onClickedListener
+    ###
 
-      ###*
-       Add on clicked lister to notification.
-       @param {onClickedListener} listener - be called when the user clicked in a non-button area of the notification.
-      ###
-      addOnClickedListener: (listener) =>
-        if @_notification?
-          @_notification.onclick = listener
-        else
-          @$log.log("Notification doesn't exist.")
+    ###*
+     Add on clicked lister to notification.
+     @param {onClickedListener} listener - be called when the user clicked in a non-button area of the notification.
+    ###
+    addOnClickedListener: (listener) =>
+      if @_notification?
+        @_notification.onclick = listener
+      else
+        @$log.log("Notification doesn't exist.")
 
 
   return {

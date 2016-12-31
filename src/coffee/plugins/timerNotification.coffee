@@ -23,9 +23,6 @@ class TimerNotification
    @constructor
   ###
   constructor: (@_Platform) ->
-    @_Platform.notifications.addOnClickedListener (notificationId) =>
-      @_Platform.notifications.clear(notificationId)
-      @_Platform.showAppWindow()
 
 
   ###*
@@ -39,7 +36,7 @@ class TimerNotification
   onSendedTimeEntry: (RTT, timeEntry, status, ticket, mode) =>
     return if mode isnt "pomodoro"
     options = Object.merge(@DEFAULT_OPTION, {})
-    options.message = "Pomodoro finished." # will be ignored by chrome
+    options.message = ""
 
     if (status is @STATUS_OK) or (status is @STATUS_CREATED)
       options.items = [
@@ -55,9 +52,15 @@ class TimerNotification
         { title: "HTTP STATUS", message: status }
       ]
 
-    @_Platform.notifications.create(null, options)
+    @_Platform.createNotification(null, options)
+    @_Platform.addOnClickedListener (notificationId) =>
+      @_Platform.clearNotification(notificationId)
+      @_Platform.showAppWindow()
 
 
 if RTT?
   # Register this plugin.
   RTT.registerPlugin("TimerNotification", TimerNotification)
+else
+  window.addEventListener("rtt_initialized", () =>
+    RTT.registerPlugin("TimerNotification", TimerNotification))

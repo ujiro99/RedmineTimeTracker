@@ -6,6 +6,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
   ###
   class PluginManager extends EventDispatcher
 
+    INITIALIZED:    "rtt_initialized"
     UPDATED_PLUGIN: "update_plugin"
     LOAD_FAILED:    "load_failed"
     EXEC_FAILED:    "exec_failed"
@@ -45,6 +46,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
     registerPlugin: (name, pluginClass) =>
       @_plugins[name] = new pluginClass(Platform)
       @fireEvent(@UPDATED_PLUGIN)
+      @Log.debug("Registered: " + name)
 
 
     ###*
@@ -54,6 +56,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
     unregisterPlugin: (name) =>
       delete @_plugins[name]
       @fireEvent(@UPDATED_PLUGIN)
+      @Log.debug("Unregistered: " + name)
 
 
     ###*
@@ -104,9 +107,13 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
       pluginInterface = {
         registerPlugin:   @registerPlugin
         unregisterPlugin: @unregisterPlugin
+        listPlugins: @listPlugins
       }
       $window.RTT = pluginInterface #grobal
       @RTT = {} #internal
+      event = new Event(@INITIALIZED)
+      $window.dispatchEvent(event)
+      @Log.debug("RTT initialized.")
 
 
     ###*

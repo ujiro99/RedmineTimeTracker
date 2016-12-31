@@ -18,7 +18,7 @@ describe 'timerNotification.coffee', ->
 
   describe 'constructor', ->
     it 'create instance.', (done) ->
-      sinon.stub(Platform.notifications, "addOnClickedListener").returns(undefined)
+      sinon.stub(Platform, "addOnClickedListener").returns(undefined)
 
       PluginManager.loadPluginUrl(url, () ->
         plugin = PluginManager.listPlugins()["TimerNotification"]
@@ -43,13 +43,13 @@ describe 'timerNotification.coffee', ->
     it 'shows a notification: success.', (done) ->
       status = 200
 
-      sinon.stub(Platform.notifications, "addOnClickedListener").returns(undefined)
-      mock = sinon.mock(Platform.notifications).expects("create")
+      sinon.stub(Platform, "addOnClickedListener").returns(undefined)
+      mock = sinon.mock(Platform).expects("createNotification")
       mock.once().withArgs(null, {
         iconUrl: "/images/icon_notification.png",
         isClickable: true,
         items: [{ message: "testTicket", title: "Ticket" }, { message: "02:00", title: "Hours" }, { message: "test", title: "Activity" }],
-        message: "Pomodoro finished.",
+        message: "",
         title: "Tracking finished",
         type: "list"
       })
@@ -65,13 +65,13 @@ describe 'timerNotification.coffee', ->
     it 'shows a notification: failed.', (done) ->
       status = 400
 
-      sinon.stub(Platform.notifications, "addOnClickedListener").returns(undefined)
-      mock = sinon.mock(Platform.notifications).expects("create")
+      sinon.stub(Platform, "addOnClickedListener").returns(undefined)
+      mock = sinon.mock(Platform).expects("createNotification")
       mock.once().withArgs(null, {
         iconUrl: "/images/icon_notification.png",
         isClickable: true,
         items: [{ message: "testTicket", title: "Ticket" }, { message: "02:00", title: "Hours" }, { message: 400, title: "HTTP STATUS" }],
-        message: "Pomodoro finished.",
+        message: "",
         title: "Sending failed...",
         type: "list"
       })
