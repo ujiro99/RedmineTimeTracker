@@ -1,5 +1,6 @@
 'use strict'
 electron = require('electron')
+storage = require('electron-json-storage')
 app = electron.app
 
 # adds debug features like hotkeys for triggering dev tools and reload
