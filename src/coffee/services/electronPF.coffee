@@ -17,6 +17,7 @@ angular.module('electron', []).provider 'Platform', () ->
      @param {Object} $log - Service for Log.
     ###
     constructor: (@$q, @$log) ->
+      @_notification = null
 
     ###*
      @typedef LoadedObject
@@ -35,7 +36,7 @@ angular.module('electron', []).provider 'Platform', () ->
         if not err?
           @$log.info key + ' loaded.'
           @$log.debug local
-          deferred.resolve(local[key])
+          deferred.resolve(local)
         else
           @$log.debug err
           deferred.reject()
@@ -109,13 +110,23 @@ angular.module('electron', []).provider 'Platform', () ->
     notifications:
 
       ###*
+       Message which used on type = list.
+       @typedef {object} listMessage
+       @prop {string} title - list message title.
+       @prop {string} message - list message body.
+      ###
+
+      ###*
        @typedef {object} NotificationOptions
-       @see {@link https://developer.chrome.com/apps/notifications#type-NotificationOptions}
+       @prop {string} type - Notification type.
+       @prop {string} iconUrl - Icon's url.
+       @prop {string} title - Notification title.
+       @prop {bool} isClickable - Has clicked event.
+       @prop {listMessage[]} items - messages.
       ###
 
       ###*
        @callback createCallback
-       @param {string} notificationId
       ###
 
       ###*
@@ -125,7 +136,14 @@ angular.module('electron', []).provider 'Platform', () ->
        @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
       ###
       create: (notificationId, options, callback) =>
-        chrome.notifications.create(notificationId, options, callback)
+        options.icon = options.iconUrl
+        delete options.iconUrl
+        delete options.isClickable
+        options.body = options.message
+        for item in options.items
+          options.body += "\n#{item.title}: #{item.message}"
+        @_notification =  new Notification(options.title, options)
+        callback()
 
       ###*
        @callback clearCallback
@@ -138,11 +156,11 @@ angular.module('electron', []).provider 'Platform', () ->
        @param {clearCallback} [callback] - Called to indicate whether a matching notification existed.
       ###
       clear: (notificationId, callback) =>
-        chrome.notifications.clear(notificationId, callback)
+        @_notification.close()
+        callback(true)
 
       ###*
        @callback onClickedListener
-       @param {string} notificationId
       ###
 
       ###*
@@ -150,7 +168,10 @@ angular.module('electron', []).provider 'Platform', () ->
        @param {onClickedListener} listener - be called when the user clicked in a non-button area of the notification.
       ###
       addOnClickedListener: (listener) =>
-        chrome.notifications.onClicked.addListener(listener)
+        if @_notification?
+          @_notification.onclick = listener
+        else
+          @$log.log("Notification doesn't exist.")
 
 
   return {
