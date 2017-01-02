@@ -124,6 +124,7 @@ angular.module('electron', []).provider 'Platform', () ->
     createNotification: (options) =>
       # options.icon = options.icon or options.iconUrl
       # options.icon = __dirname + "/.." + options.icon
+      options.body = ""
       for item in options.items
         options.body += "\n#{item.title}: #{item.message}"
       @_notification = new Notification(options.title, options)
