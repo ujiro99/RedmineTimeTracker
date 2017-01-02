@@ -3,7 +3,7 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
 
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
-    title {{state.title}}
+    title(ng-bind="state.title")
     // bower
     link(rel='stylesheet', href='../components/angular/css/angular-csp.css')
     link(rel='stylesheet', href='../components/bootstrap/css/bootstrap.min.css')
