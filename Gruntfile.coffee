@@ -8,7 +8,6 @@ module.exports = (grunt) ->
     src: 'src',
     app: 'app',
     dist: 'dist',
-    manifest: grunt.file.readJSON('app/manifest.json'),
 
   # configure
   grunt.initConfig
@@ -64,7 +63,7 @@ module.exports = (grunt) ->
         jadeOptions = { production: false }
         jadeOptions["production"] = grunt.option('production')
         jadeOptions["electron"] = grunt.option('electron')
-        jadeOptions["version"] = config.manifest.version
+        jadeOptions["version"] = grunt.file.readJSON(config.app + '/package.json').version
         grunt.config 'jade.options.data', jadeOptions
         grunt.config 'jade.options.pretty', true
         grunt.config 'jade.compile.files', [
@@ -72,7 +71,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: '<%= config.src %>/jade'
           ext: '.html'
-          src: '**/*.jade'
+          src: ['**/!(_)*.jade']
           dest: '<%= config.app %>/views/'
         ]
         'jade:compile'
@@ -90,10 +89,21 @@ module.exports = (grunt) ->
             '<%= config.src %>/coffee/state.coffee',
             '<%= config.src %>/coffee/config.coffee',
             '<%= config.src %>/coffee/**/*.coffee',
-            '!<%= config.src %>/coffee/index.coffee'
-            '!<%= config.src %>/coffee/index_chrome.coffee'
+            '!<%= config.src %>/coffee/index.coffee',
+            '!<%= config.src %>/coffee/index_chrome.coffee',
             '!<%= config.src %>/coffee/chromereload.coffee'
-            '!<%= config.src %>/coffee/plugins/*'
+          ]
+        ]
+      chrome:
+        files: [
+          '<%= config.dist %>/scripts/index_chrome.js': [
+            '<%= config.src %>/coffee/index_chrome.coffee'
+          ]
+        ]
+      electron:
+        files: [
+          '<%= config.dist %>/scripts/index.js': [
+            '<%= config.src %>/coffee/index.coffee'
           ]
         ]
       develop:
@@ -135,7 +145,7 @@ module.exports = (grunt) ->
           data: (dest, src) ->
             jadeOptions = { production: true}
             jadeOptions["electron"] = grunt.option('electron')
-            jadeOptions["version"] = config.manifest.version
+            jadeOptions["version"] = grunt.file.readJSON(config.dist + '/manifest.json').version
             return jadeOptions
         files: [
           expand: true
@@ -150,7 +160,7 @@ module.exports = (grunt) ->
             jadeOptions = { production: false}
             jadeOptions["production"] = grunt.option('production')
             jadeOptions["electron"] = grunt.option('electron')
-            jadeOptions["version"] = config.manifest.version
+            jadeOptions["version"] = grunt.file.readJSON(config.app + '/manifest.json').version
             return jadeOptions
         files: [
           expand: true
@@ -176,20 +186,16 @@ module.exports = (grunt) ->
         dest: '<%= config.dist %>/scripts/script.js'
 
     uglify:
-      production:
+      chrome:
         files: [
           '<%= config.dist %>/scripts/script.js': '<%= config.dist %>/scripts/script.js'
           '<%= config.dist %>/scripts/index_chrome.js': '<%= config.dist %>/scripts/index_chrome.js'
-          '<%= config.dist %>/scripts/plugins/timerNotification.js': '<%= config.dist %>/scripts/plugins/timerNotification.js'
         ]
-
-    cssmin:
-      minify:
-        expand: true
-        src:  '*.css'
-        cwd:  '<%= config.dist %>/css/'
-        dest: '<%= config.dist %>/css/'
-        ext:  '.css'
+      electron:
+        files: [
+          '<%= config.dist %>/scripts/script.js': '<%= config.dist %>/scripts/script.js'
+          '<%= config.dist %>/scripts/index.js': '<%= config.dist %>/scripts/index.js'
+        ]
 
     chromeManifest:
       dist:
@@ -230,8 +236,6 @@ module.exports = (grunt) ->
             "images/*.png"
             "!images/icon_128_gray.png"
             "scripts/lib/*.js"
-            "scripts/plugins/*.js"
-            "scripts/index_chrome.js"
             "views/template/**/*.html"
           ]
         ]
@@ -250,7 +254,7 @@ module.exports = (grunt) ->
     compress:
       dist:
         options:
-          archive: "package/chrome-<%= grunt.file.readJSON(config.dist + '/manifest.json').version %>.zip"
+          archive: "release/chrome/chrome-<%= grunt.file.readJSON(config.dist + '/manifest.json').version %>.zip"
         files: [
           expand: true
           cwd: "dist/"
@@ -260,23 +264,24 @@ module.exports = (grunt) ->
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
-  grunt.registerTask 'minify', ['ngmin', 'uglify', 'cssmin']
-  grunt.registerTask 'test', ['exec:test']
 
   grunt.registerTask 'dev', [
     'bower:install',
     'coffee:develop',
     'jade:develop',
-    'stylus:develop']
+    'stylus:develop'
+  ]
 
   grunt.registerTask 'production', [
     'clean',
     'bower:install',
     'copy:dist',
     'coffee:production',
+    'coffee:chrome',
     'jade:production',
     'stylus:production',
-    'minify'
+    'ngmin',
+    'uglify:chrome'
   ]
 
   grunt.registerTask 'release-minor', [
