@@ -22,17 +22,17 @@ div#options.bottom-space-m(ng-controller='OptionCtrl')
       div.setting__labels
         label.control-label Manual time step [minutes]
         div.setting__description
-          span min: 10, max: 60
+          span min: 1, max: 60
       div.setting__options
-        input.form-control.input-sm.setting__input(type="number", name="stepTime", max="60", min="10", ng-model="options.stepTime")
+        input.form-control.input-sm.setting__input(type="number", name="stepTime", max="60", min="1", ng-model="options.stepTime")
 
     div.setting__section.form-group
       div.setting__labels
         label.control-label Pomodoro time [minutes]
         div.setting__description
-          span min: 10, max: 60
+          span min: 1, max: 60
       div.setting__options
-        input.form-control.input-sm.setting__input(type="number", name="pomodoroTime", max="60", min="10", ng-model="options.pomodoroTime")
+        input.form-control.input-sm.setting__input(type="number", name="pomodoroTime", max="60", min="1", ng-model="options.pomodoroTime")
 
     div.setting__section.form-group
       div.setting__labels
