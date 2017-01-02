@@ -9,10 +9,12 @@ describe 'chromePF.coffee', ->
 
   beforeEach () ->
     angular.mock.module('timeTracker')
-    inject (_Platform_, _$rootScope_, _$q_) ->
-      Platform = _Platform_
+    inject (_$rootScope_, _$q_) ->
       $rootScope = _$rootScope_
       $q = _$q_
+
+    inj = angular.injector(['ng', 'chrome'])
+    Platform = inj.get('Platform')
 
 
   describe 'load(key)', ->

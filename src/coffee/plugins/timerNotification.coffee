@@ -52,7 +52,7 @@ class TimerNotification
         { title: "HTTP STATUS", message: status }
       ]
 
-    @_Platform.createNotification(null, options)
+    @_Platform.createNotification(options)
     @_Platform.addOnClickedListener (notificationId) =>
       @_Platform.clearNotification(notificationId)
       @_Platform.showAppWindow()
@@ -62,5 +62,5 @@ if RTT?
   # Register this plugin.
   RTT.registerPlugin("TimerNotification", TimerNotification)
 else
-  window.addEventListener("rtt_initialized", () =>
+  window.addEventListener("rtt_initialized", () ->
     RTT.registerPlugin("TimerNotification", TimerNotification))

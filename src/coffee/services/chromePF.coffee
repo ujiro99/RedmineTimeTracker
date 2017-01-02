@@ -119,14 +119,12 @@ angular.module('chrome', []).provider 'Platform', () ->
       @$log.debug("Language: " + lang)
       return lang
 
-
     ###*
      Show the application window.
     ###
     showAppWindow: () =>
       appWindow = chrome.app.window.current()
       appWindow.show()
-
 
     ###*
      @typedef {object} NotificationOptions
@@ -140,11 +138,11 @@ angular.module('chrome', []).provider 'Platform', () ->
 
     ###*
      Creates and displays a notification.
-     @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
      @param {NotificationOptions} options - Contents of the notification.
+     @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
      @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
     ###
-    createNotification: (notificationId, options, callback) =>
+    createNotification: (options, notificationId, callback) =>
       chrome.notifications.create(notificationId, options, callback)
 
     ###*

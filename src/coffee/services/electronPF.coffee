@@ -111,49 +111,30 @@ angular.module('electron', []).provider 'Platform', () ->
 
     ###*
      @typedef {object} NotificationOptions
-     @prop {string} type - Notification type.
-     @prop {string} iconUrl - Icon's url.
+     @prop {string} icon - Icon's url.
+     @prop {string} iconUrl - Alias for icon.
      @prop {string} title - Notification title.
-     @prop {bool} isClickable - Has clicked event.
      @prop {listMessage[]} items - messages.
     ###
 
     ###*
-     @callback createCallback
-    ###
-
-    ###*
      Creates and displays a notification.
-     @param {string} [notificationId] - Identifier of the notification. If not set or empty, an ID will automatically be generated.
      @param {NotificationOptions} options - Contents of the notification.
-     @param {createCallback} [callback] - Returns the notification id (either supplied or generated) that represents the created notification.
     ###
-    createNotification: (notificationId, options, callback) =>
-      options.icon = options.iconUrl
-      delete options.iconUrl
-      delete options.isClickable
-      options.body = options.message
+    createNotification: (options) =>
+      options.icon = options.icon or options.iconUrl
       for item in options.items
         options.body += "\n#{item.title}: #{item.message}"
-      @_notification =  new Notification(options.title, options)
-      callback and callback()
+      @_notification = new Notification(options.title, options)
 
     ###*
-     @callback clearCallback
-     @param {bool} wasCleared
+     Clears the notification.
     ###
-
-    ###*
-     Clears the specified notification.
-     @param {string} notificationId - The id of the notification to be cleared.
-     @param {clearCallback} [callback] - Called to indicate whether a matching notification existed.
-    ###
-    clearNotification: (notificationId, callback) =>
+    clearNotification: () =>
       if @_notification?
         @_notification.onclick = undefined
         @_notification.close()
         @_notification = null
-        callback and callback(true)
       else
         @$log.log("Notification doesn't exist.")
 

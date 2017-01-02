@@ -47,9 +47,6 @@ describe 'PluginManager.coffee', ->
 
 
   describe 'listPlugins()', ->
-    it 'should returns empty object, if not registered.', () ->
-      expect(PluginManager.listPlugins()).to.be.empty
-
     it 'should returns a plugin.', () ->
       pluginName = 'mockPlugin'
       RTT.registerPlugin(pluginName, testPlugin)
