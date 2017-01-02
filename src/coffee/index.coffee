@@ -23,7 +23,6 @@ createMainWindow = ->
     height: 400
   })
   win.loadURL 'file://' + __dirname + '/../views/index.html'
-  win.webContents.openDevTools()
   win.on 'closed', onClosed
   return win
 
@@ -40,3 +39,7 @@ app.on 'activate', ->
 app.on 'ready', ->
   mainWindow = createMainWindow()
   return
+
+exports.openDevTools = () ->
+  if mainWindow?
+    mainWindow.webContents.openDevTools()

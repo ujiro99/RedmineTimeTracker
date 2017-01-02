@@ -1,6 +1,7 @@
-timeTracker.config (LogProvider, StateProvider) ->
-  if not StateProvider.State.debug
+timeTracker.config (LogProvider, StateProvider, PlatformProvider) ->
+  if StateProvider.State.debug
     console.dir StateProvider.State
+    PlatformProvider.openDevTools()
   LogProvider.options.enable = StateProvider.State.log
   LogProvider.options.level =  StateProvider.State.logLevel
 

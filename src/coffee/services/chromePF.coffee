@@ -173,6 +173,7 @@ angular.module('chrome', []).provider 'Platform', () ->
 
   return {
     getLanguage: () -> chrome.i18n.getUILanguage()
+    openDevTools: () -> console.log("No support DevTools.")
     $get: ($q, $log) ->
       if chrome?
         return new Platform($q, $log)

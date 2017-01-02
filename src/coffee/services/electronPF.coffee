@@ -154,8 +154,8 @@ angular.module('electron', []).provider 'Platform', () ->
       else
         @$log.log("Notification doesn't exist.")
 
-
   return {
     getLanguage: () -> return require('electron').remote.app.getLocale()
+    openDevTools: () -> require('electron').remote.require('./scripts/index').openDevTools()
     $get: ($q, $log) -> return new Platform($q, $log)
   }
