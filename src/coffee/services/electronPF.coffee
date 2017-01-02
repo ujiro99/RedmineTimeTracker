@@ -122,7 +122,8 @@ angular.module('electron', []).provider 'Platform', () ->
      @param {NotificationOptions} options - Contents of the notification.
     ###
     createNotification: (options) =>
-      options.icon = options.icon or options.iconUrl
+      # options.icon = options.icon or options.iconUrl
+      # options.icon = __dirname + "/.." + options.icon
       for item in options.items
         options.body += "\n#{item.title}: #{item.message}"
       @_notification = new Notification(options.title, options)
