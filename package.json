@@ -1,7 +1,7 @@
 {
-  "name": "RedmineTimeTracking",
+  "name": "RedmineTimeTracker",
   "version": "0.7.15",
-  "description": "Time Tracking tool for Redmine on GoogleChrome",
+  "description": "Time Tracking tool for Redmine",
   "main": "index.js",
   "dependencies": {
     "electron-debug": "^1.0.0",
@@ -46,7 +46,7 @@
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
     "start": "electron app",
-    "build": "electron-packager . --out=dist --asar --overwrite --all"
+    "build": "electron-packager app --out=electron --asar --overwrite --all"
   },
   "xo": {
     "esnext": true,
