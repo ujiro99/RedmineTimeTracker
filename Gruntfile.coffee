@@ -258,11 +258,6 @@ module.exports = (grunt) ->
           dest: ""
         ]
 
-    # Excec test.
-    exec:
-      test: "./node_modules/.bin/mocha-phantomjs -p ./node_modules/mocha-phantomjs/node_modules/phantomjs2/bin/phantomjs test/test.html"
-
-
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
   grunt.registerTask 'minify', ['ngmin', 'uglify', 'cssmin']
