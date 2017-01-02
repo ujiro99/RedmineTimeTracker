@@ -1,6 +1,6 @@
 {
   "name": "RedmineTimeTracker",
-  "version": "0.7.15",
+  "version": "0.7.16",
   "description": "Time Tracking tool for Redmine",
   "main": "index.js",
   "dependencies": {
