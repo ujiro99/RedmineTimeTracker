@@ -3,6 +3,8 @@
   "version": "0.7.15",
   "description": "Time Tracking tool for Redmine",
   "main": "index.js",
+  "copyright": "Copyright © 2013 Yujiro Takeda",
+  "productName": "RedmineTimeTracker",
   "dependencies": {
     "electron-debug": "^1.0.0",
     "electron-json-storage": "^2.1.0"

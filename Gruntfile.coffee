@@ -63,7 +63,7 @@ module.exports = (grunt) ->
         jadeOptions = { production: false }
         jadeOptions["production"] = grunt.option('production')
         jadeOptions["electron"] = grunt.option('electron')
-        jadeOptions["version"] = grunt.file.readJSON(config.app + '/package.json').version
+        jadeOptions["version"] = grunt.file.readJSON('./package.json').version
         grunt.config 'jade.options.data', jadeOptions
         grunt.config 'jade.options.pretty', true
         grunt.config 'jade.compile.files', [
@@ -140,12 +140,30 @@ module.exports = (grunt) ->
         ]
 
     jade:
-      production:
+      chrome:
         options:
           data: (dest, src) ->
-            jadeOptions = { production: true}
-            jadeOptions["electron"] = grunt.option('electron')
-            jadeOptions["version"] = grunt.file.readJSON(config.dist + '/manifest.json').version
+            jadeOptions = {
+              production: true,
+              electron: false
+            }
+            jadeOptions["version"] = grunt.file.readJSON('./package.json').version
+            return jadeOptions
+        files: [
+          expand: true
+          cwd: '<%= config.src %>/jade/'
+          src: ['**/!(_)*.jade']
+          dest: '<%= config.dist %>/views/'
+          ext: '.html'
+        ]
+      electron:
+        options:
+          data: (dest, src) ->
+            jadeOptions = {
+              production: true,
+              electron: true 
+            }
+            jadeOptions["version"] = grunt.file.readJSON('./package.json').version
             return jadeOptions
         files: [
           expand: true
@@ -160,7 +178,7 @@ module.exports = (grunt) ->
             jadeOptions = { production: false}
             jadeOptions["production"] = grunt.option('production')
             jadeOptions["electron"] = grunt.option('electron')
-            jadeOptions["version"] = grunt.file.readJSON(config.app + '/manifest.json').version
+            jadeOptions["version"] = grunt.file.readJSON('./package.json').version
             return jadeOptions
         files: [
           expand: true
@@ -219,6 +237,7 @@ module.exports = (grunt) ->
             "!<%= config.dist %>/manifest.json"
           ]
         ]
+      manifest: [ "<%= config.dist %>/manifest.json" ]
 
     # Copies remaining files to places other tasks can use
     copy:
@@ -239,6 +258,11 @@ module.exports = (grunt) ->
             "views/template/**/*.html"
           ]
         ]
+      electron:
+        files: [
+          { src: '<%= config.app %>/package.json', dest: '<%= config.dist %>/package.json' }
+          { src: '<%= config.app %>/index.js', dest: '<%= config.dist %>/index.js' }
+        ]
 
     release:
       options:
@@ -254,7 +278,7 @@ module.exports = (grunt) ->
     compress:
       dist:
         options:
-          archive: "release/chrome/chrome-<%= grunt.file.readJSON(config.dist + '/manifest.json').version %>.zip"
+          archive: "release/chrome/chrome-<%= grunt.file.readJSON('./package.json').version %>.zip"
         files: [
           expand: true
           cwd: "dist/"
@@ -272,26 +296,42 @@ module.exports = (grunt) ->
     'stylus:develop'
   ]
 
-  grunt.registerTask 'production', [
+  grunt.registerTask 'build-chrome', [
     'clean',
     'bower:install',
     'copy:dist',
     'coffee:production',
     'coffee:chrome',
-    'jade:production',
+    'jade:chrome',
     'stylus:production',
     'ngmin',
     'uglify:chrome'
   ]
 
+  grunt.registerTask 'build-electron', [
+    'clean',
+    'clean:manifest',
+    'bower:install',
+    'copy:dist',
+    'copy:electron',
+    'coffee:production',
+    'coffee:electron',
+    'jade:electron',
+    'stylus:production',
+    'ngmin',
+    'uglify:electron'
+  ]
+
   grunt.registerTask 'release-minor', [
     'release:minor',
-    'production',
-    'compress'
+    'build-chrome',
+    'compress',
+    'build-electron'
   ]
 
   grunt.registerTask 'release-patch', [
     'release:patch',
-    'production',
-    'compress'
+    'build-chrome',
+    'compress',
+    'build-electron'
   ]

@@ -2,7 +2,7 @@
   "name": "RedmineTimeTracker",
   "version": "0.7.16",
   "description": "Time Tracking tool for Redmine",
-  "main": "index.js",
+  "main": "app/index.js",
   "dependencies": {
     "electron-debug": "^1.0.0",
     "electron-json-storage": "^2.1.0"
@@ -46,7 +46,26 @@
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
     "start": "electron app",
-    "build": "electron-packager app --out=release/electron --asar --overwrite --icon=resources/icon.icns --all"
+    "build": "electron-packager app --out=release/electron --asar --overwrite --icon=resources/icon.icns --all",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "com.electron.RedmineTimeTracker",
+    "files": [
+      "dist",
+      "node_modules"
+    ],
+    "directories": {
+      "output": "release/electron",
+      "app": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "iconUrl": "https://raw.githubusercontent.com/ujiro99/RedmineTimeTracker/master/resources/icon.ico"
+    }
   },
   "xo": {
     "esnext": true,
