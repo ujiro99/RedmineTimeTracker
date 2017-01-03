@@ -112,16 +112,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
 
 
   ###
-   open link on other window.
-  ###
-  $scope.openLink = (url) ->
-    a = document.createElement('a')
-    a.href = url
-    a.target='_blank'
-    a.click()
-
-
-  ###
    calculate tooltip position.
   ###
   $scope.onMouseMove = (e) ->

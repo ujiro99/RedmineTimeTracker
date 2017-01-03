@@ -96,7 +96,7 @@ div#issue(ng-controller='IssueCtrl')
               span.icon-plus
             div.btn(ng-show='isContained(item)')
               span.icon-minus
-            button.btn.external-link(type='button', ng-click="openLink(item.url + '/issues/' + item.id)", ga-click='issueLink')
+            button.btn.external-link(type='button', uz-open-link='item.url + \'/issues/\' + item.id', ga-click='issueLink')
               span.icon-question
 
     // page

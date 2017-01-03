@@ -16,6 +16,14 @@ angular.module('chrome', []).provider 'Platform', () ->
     ###
     constructor: (@$q, @$log) ->
 
+
+    ###*
+     Returns platform name.
+     @return {string} platform name.
+    ###
+    getPlarform: () -> return 'chrome'
+
+
     ###*
      @typedef LoadedObject
      @property {Object} Loaded object.

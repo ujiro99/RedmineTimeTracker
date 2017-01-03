@@ -1,5 +1,6 @@
 angular.module('electron', []).provider 'Platform', () ->
 
+  shell = require('electron').shell
   storage = require('electron-json-storage')
 
   ###*
@@ -18,6 +19,14 @@ angular.module('electron', []).provider 'Platform', () ->
     ###
     constructor: (@$q, @$log) ->
       @_notification = null
+
+
+    ###*
+     Returns platform name.
+     @return {string} platform name.
+    ###
+    getPlarform: () -> return 'electron'
+
 
     ###*
      @typedef LoadedObject
@@ -153,6 +162,16 @@ angular.module('electron', []).provider 'Platform', () ->
         @_notification.onclick = listener
       else
         @$log.log("Notification doesn't exist.")
+
+
+    ###*
+     Open url to external browser application.
+     @param {string} url - Url to be opened.
+    ###
+    openExternalLink: (url) ->
+      return @$log.log("Invalid url.") if not url?
+      shell.openExternal(url)
+
 
   return {
     getLanguage: () -> return require('electron').remote.app.getLocale()
