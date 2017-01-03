@@ -2,17 +2,33 @@
   "name": "RedmineTimeTracker",
   "version": "0.7.16",
   "description": "Time Tracking tool for Redmine",
-  "main": "app/index.js",
-  "dependencies": {
-    "electron-debug": "^1.0.0",
-    "electron-json-storage": "^2.1.0"
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start",
+    "start": "electron app",
+    "build": "electron-packager app --out=release/electron --asar --overwrite --icon=resources/icon.icns --all"
   },
+  "postinstall": "install-app-deps",
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ujiro99/RedmineTimeTracker.git"
+  },
+  "keywords": [
+    "redmine",
+    "electron-app",
+    "chrome-app"
+  ],
   "devDependencies": {
     "angular-mocks": "^1.4.1",
     "chai": "~1.8.1",
     "devtron": "^1.1.0",
     "electron": "^1.3.3",
-    "electron-builder": "^10.16.0",
     "electron-packager": "^8.0.0",
     "grunt": "~0.4.1",
     "grunt-bower-task": "^0.4.0",
@@ -43,46 +59,6 @@
     "sinon": "~1.9.1",
     "xo": "^0.16.0"
   },
-  "scripts": {
-    "test": "./node_modules/karma/bin/karma start",
-    "start": "electron app",
-    "build": "electron-packager app --out=release/electron --asar --overwrite --icon=resources/icon.icns --all",
-    "pack": "build --dir",
-    "dist": "build"
-  },
-  "build": {
-    "appId": "com.electron.RedmineTimeTracker",
-    "files": [
-      "dist",
-      "node_modules"
-    ],
-    "directories": {
-      "output": "release/electron",
-      "app": "dist"
-    },
-    "mac": {
-      "category": "public.app-category.developer-tools"
-    },
-    "win": {
-      "iconUrl": "https://raw.githubusercontent.com/ujiro99/RedmineTimeTracker/master/resources/icon.ico"
-    }
-  },
-  "xo": {
-    "esnext": true,
-    "envs": [
-      "node",
-      "browser"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ujiro99/RedmineTimeTracker.git"
-  },
-  "keywords": [
-    "redmine",
-    "electron-app",
-    "chrome-app"
-  ],
   "author": "Yujiro Takeda",
   "license": "MIT",
   "bugs": {
