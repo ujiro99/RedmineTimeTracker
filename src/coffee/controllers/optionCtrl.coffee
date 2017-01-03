@@ -77,11 +77,10 @@ timeTracker.controller 'OptionCtrl', ($scope, $timeout, Message, Ticket, Account
     Ticket.clear().then (result) ->
       $timeout ->
         $scope.isSetting = false
-        if result
-          Message.toast Resource.string("msgClearDataSucess", 'ticket')
-        else
-          Message.toast Resource.string("msgClearDataFail")
+        Message.toast Resource.string("msgClearDataSucess", 'ticket')
       , 1000
+    , () ->
+      Message.toast Resource.string("msgClearDataFail")
 
 
   initialize()
