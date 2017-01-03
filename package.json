@@ -46,7 +46,7 @@
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
     "start": "electron app",
-    "build": "electron-packager app --out=electron --asar --overwrite --all"
+    "build": "electron-packager app --out=release/electron --asar --overwrite --icon=resources/icon.icns --all"
   },
   "xo": {
     "esnext": true,
