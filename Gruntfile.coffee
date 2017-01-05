@@ -260,8 +260,9 @@ module.exports = (grunt) ->
         ]
       electron:
         files: [
-          { src: '<%= config.app %>/package.json', dest: '<%= config.dist %>/package.json' }
-          { src: '<%= config.app %>/index.js', dest: '<%= config.dist %>/index.js' }
+          { src: '<%= config.app %>/package.json', dest: '<%= config.dist %>/package.json' },
+          { src: '<%= config.app %>/index.js', dest: '<%= config.dist %>/index.js' },
+          { expand: true,  cwd: '<%= config.app %>/node_modules', src: '**', dest: '<%= config.dist %>/node_modules/' }
         ]
 
     release:

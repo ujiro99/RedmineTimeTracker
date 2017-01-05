@@ -5,9 +5,9 @@ set -eux
 cd `dirname $0`
 
 # 出力ディレクトリの生成
-icondir="icon.iconset"
+icondir="assets/icon.iconset"
 mkdir -p $icondir
-resdir="resources"
+resdir="assets"
 
 # 変換元ファイル
 BASE_FILE="${resdir}/icon_1024x1024.png"
@@ -94,10 +94,10 @@ resize_png icon_16x16 16
 #----------------------------------------------------------------------
 
 # create icns (mac)
-iconutil -c icns ${icondir} --output ${resdir}/icon.icns
+iconutil -c icns ${icondir} --output ${resdir}/osx/icon.icns
 
 # create ico (windows)
-convert ${BASE_FILE} -define icon:auto-resize ${resdir}/icon.ico
+convert ${BASE_FILE} -define icon:auto-resize ${resdir}/win/icon.ico
 
 # for chrome app
 rm app/images/icon_128.png

@@ -6,7 +6,7 @@ bower_components
 package
 fonts
 app/components
-/icon.iconset
+assets/icon.iconset
 *.js
 *.css
 *.html
