@@ -1,16 +1,35 @@
 sudo: required
 dist: trusty
-language: node_js
-node_js:
-    - 6.1
+language: objective-c
+cache:
+  directories:
+    - node_modules
+env:
+    - NODE_VERSION="6.1"
 before_install:
-    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - sudo dpkg -i google-chrome*.deb
     - npm install grunt-cli -g
     - npm install
-    - export CHROME_BIN=/usr/bin/google-chrome
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
 install:
     - grunt dev
-script: karma start --single-run
+script:
+    - karma start --single-run
+before_deploy:
+    - brew update
+    - brew install wine
+    - wine --version
+    - brew install makensis
+    - ./build.sh
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  skip_cleanup: true
+  file:
+    - release/chrome/chrome-app.zip
+    - release/electron/darwin-x64.zip
+    - release/electron/win32-ia32.zip
+    - release/electron/win32-x64.zip
+  on:
+    all_branches: true
+    tags: true

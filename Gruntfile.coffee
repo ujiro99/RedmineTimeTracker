@@ -286,6 +286,15 @@ module.exports = (grunt) ->
           src: ["**"]
           dest: ""
         ]
+      ci:
+        options:
+          archive: "release/chrome/chrome-app.zip"
+        files: [
+          expand: true
+          cwd: "dist/"
+          src: ["**"]
+          dest: ""
+        ]
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
@@ -326,13 +335,13 @@ module.exports = (grunt) ->
   grunt.registerTask 'release-minor', [
     'release:minor',
     'build-chrome',
-    'compress',
+    'compress:dist',
     'build-electron'
   ]
 
   grunt.registerTask 'release-patch', [
     'release:patch',
     'build-chrome',
-    'compress',
+    'compress:dist',
     'build-electron'
   ]
