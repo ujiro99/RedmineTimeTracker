@@ -4,10 +4,12 @@ set -eux
 #このシェルスクリプトを実行した場所をカレントディレクトリにする
 cd `dirname $0`
 
+resdir="../assets"
+appdir="../app"
+
 # 出力ディレクトリの生成
-icondir="assets/icon.iconset"
-mkdir -p $icondir
-resdir="assets"
+icondir="${resdir}/icon.iconset"
+mkdir -p ${icondir}
 
 # 変換元ファイル
 BASE_FILE="${resdir}/icon_1024x1024.png"
@@ -100,12 +102,12 @@ iconutil -c icns ${icondir} --output ${resdir}/osx/icon.icns
 convert ${BASE_FILE} -define icon:auto-resize ${resdir}/win/icon.ico
 
 # for chrome app
-rm app/images/icon_128.png
-cp ${icondir}/icon_128x128.png app/images/icon_128.png
-rm app/images/icon_notification.png
-cp ${icondir}/icon_128x128.png app/images/icon_notification.png
+rm ${appdir}/images/icon_128.png
+cp ${icondir}/icon_128x128.png ${appdir}/images/icon_128.png
+rm ${appdir}/images/icon_notification.png
+cp ${icondir}/icon_128x128.png ${appdir}/images/icon_notification.png
 
 # create gray scale icon (for develop)
-rm app/images/icon_128_gray.png
-convert ${icondir}/icon_128x128.png -colorspace Gray app/images/icon_128_gray.png
+rm ${appdir}/images/icon_128_gray.png
+convert ${icondir}/icon_128x128.png -colorspace Gray ${appdir}/images/icon_128_gray.png
 
