@@ -296,6 +296,9 @@ module.exports = (grunt) ->
           dest: ""
         ]
 
+    exec:
+      install_electron_deps: "cd app && npm install"
+
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
 
@@ -320,6 +323,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build-electron', [
     'clean',
+    'exec:install_electron_deps'
     'clean:manifest',
     'bower:install',
     'copy:dist',
