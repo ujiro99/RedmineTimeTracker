@@ -3,19 +3,23 @@ cache:
   directories:
     - bower_components
     - node_modules
+    - app/node_modules
+    - cache
 before_install:
+    - travis/brew_restore.sh
+    - brew update
+    - brew install wine makensis
+    - brew cleanup
     - brew cask install google-chrome
     - npm install grunt-cli -g
     - npm install
+    - travis/brew_cache.sh
 install:
     - grunt dev
 script:
     - npm test
 before_deploy:
-    - brew update
-    - brew install wine makensis
-    - wine --version
-    - ./build.sh
+    - travis/build.sh
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
