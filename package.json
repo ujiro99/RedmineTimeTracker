@@ -3,7 +3,7 @@
   "version": "0.7.16",
   "description": "Time Tracking tool for Redmine",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start",
+    "test": "karma start --single-run",
     "start": "electron ./app",
     "clean": "rm -rf ./release/electron",
     "pack": "npm run pack:osx && npm run pack:win32 && npm run pack:win64",

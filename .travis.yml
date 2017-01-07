@@ -9,7 +9,7 @@ before_install:
 install:
     - grunt dev
 script:
-    - Xvfb :1337 & export DISPLAY=:1337 & karma start --single-run
+    - Xvfb :1337 & export DISPLAY=:1337 & npm test
 before_deploy:
     - brew update
     - brew install wine makensis
