@@ -296,6 +296,22 @@ module.exports = (grunt) ->
           src: ["**"]
           dest: ""
         ]
+      win32:
+        options:
+          archive: 'release/electron/win32-ia32.zip'
+        files: [
+          expand: true
+          cwd: 'release/electron/RedmineTimeTracker-win32-ia32-setup/'
+          src: '**'
+        ]
+      win64:
+        options:
+          archive: 'release/electron/win32-x64.zip'
+        files: [
+          expand: true
+          cwd: 'release/electron/RedmineTimeTracker-win32-x64-setup/'
+          src: '**'
+        ]
 
     exec:
       install_electron_deps: "cd app && npm install"

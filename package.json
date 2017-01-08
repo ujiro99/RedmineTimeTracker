@@ -6,11 +6,9 @@
     "test": "karma start --single-run",
     "start": "electron ./app",
     "clean": "rm -rf ./release/electron",
-    "pack": "npm run pack:osx && npm run pack:win32 && npm run pack:win64",
     "pack:osx": "electron-packager ./dist $npm_package_name --out=release/electron/ --platform=darwin --arch=x64 --icon=assets/osx/icon.icns --overwrite",
     "pack:win32": "electron-packager ./dist $npm_package_name --out=release/electron/ --platform=win32 --arch=ia32 --icon=assets/win/icon.ico --overwrite",
     "pack:win64": "electron-packager ./dist $npm_package_name --out=release/electron/ --platform=win32 --arch=x64 --icon=assets/win/icon.ico --overwrite",
-    "build": "npm run clean && npm run build:osx && npm run build:win32 && npm run build:win64",
     "build:osx": "npm run pack:osx && electron-builder release/electron/$npm_package_name-darwin-x64/$npm_package_name.app --platform=osx --out=release/electron/$npm_package_name-darwin-x64-setup --config=build-config.json",
     "build:win32": "npm run pack:win32 && gulp nsi-template && electron-builder release/electron/$npm_package_name-win32-ia32 --platform=win --out=release/electron/$npm_package_name-win32-ia32-setup --config=build-config.json",
     "build:win64": "npm run pack:win64 && gulp nsi-template && electron-builder release/electron/$npm_package_name-win32-x64 --platform=win --out=release/electron/$npm_package_name-win32-x64-setup --config=build-config.json"

@@ -1,0 +1,37 @@
+version: '{build}'
+os: unstable
+cache:
+  - bower_components
+  - node_modules
+  - app/node_modules
+environment:
+  matrix:
+    - nodejs_version: 6
+install:
+  - choco install googlechrome
+  - ps: Install-Product node $env:nodejs_version
+  - set CI=true
+  - npm install -g npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm install -g grunt-cli
+  - npm install
+matrix:
+  fast_finish: true
+build:
+  - grunt build-electron
+shallow_clone: true
+clone_depth: 1
+test_script:
+  - npm test
+before-deploy:
+  - npm run clean
+  - npm run build:win32
+  - npm run build:win64
+  - grunt compress:win32
+  - grunt compress:win64
+deploy:
+  provider: GitHub
+  artifact:
+    - release/electron/*.zip
+  on:
+    appveyor_repo_tag: true
