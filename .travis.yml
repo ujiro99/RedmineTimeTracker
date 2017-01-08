@@ -4,16 +4,11 @@ cache:
     - bower_components
     - node_modules
     - app/node_modules
-    - cache
 before_install:
-    - travis/brew_restore.sh
     - brew update
-    - brew install wine makensis
-    - brew cleanup
     - brew cask install google-chrome
     - npm install grunt-cli -g
     - npm install
-    - travis/brew_cache.sh
 install:
     - grunt dev
 script:
@@ -27,8 +22,6 @@ deploy:
   file:
     - release/chrome/chrome-app.zip
     - release/electron/darwin-x64.zip
-    - release/electron/win32-ia32.zip
-    - release/electron/win32-x64.zip
   on:
     all_branches: true
     tags: true

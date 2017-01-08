@@ -271,6 +271,7 @@ module.exports = (grunt) ->
         npm: false
         additionalFiles: [
           'bower.json',
+          'app/package.json'
           'app/manifest.json'
           'dist/manifest.json'
         ]
