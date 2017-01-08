@@ -32,7 +32,8 @@ before_deploy:
   - grunt compress:win64
 deploy:
   - provider: GitHub
-    artifacts:
+    auth_token:
+      secure: +rD8EayrPxpJ4TLIwPupv+M+dHEQuf1MgdGFdQSXz0SUFpDUxCmm34Vw1sFLNjBl
     artifact: release/electron/*.zip
     on:
       appveyor_repo_tag: true
