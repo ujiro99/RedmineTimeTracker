@@ -30,8 +30,8 @@ before_deploy:
   - grunt compress:win32
   - grunt compress:win64
 deploy:
-  provider: GitHub
-  artifact:
-    - release/electron/*.zip
-  on:
-    appveyor_repo_tag: true
+  - provider: GitHub
+    artifacts:
+    artifact: release/electron/*.zip
+    on:
+      appveyor_repo_tag: true
