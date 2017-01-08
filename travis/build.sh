@@ -10,6 +10,6 @@ grunt compress:ci
 grunt build-electron
 npm run clean
 npm run build:osx
-cd release/electron
+cd ../release/electron
 zip -j darwin-x64.zip "RedmineTimeTracker-darwin-x64-setup/RedmineTimeTracker.dmg"
 cd -
