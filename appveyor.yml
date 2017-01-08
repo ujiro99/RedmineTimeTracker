@@ -7,10 +7,6 @@ cache:
 environment:
   matrix:
     - nodejs_version: 6
-artifacts:
-  - path: release\electron\*.zip
-    name: RedmineTimeTrackerInstaller
-    type: zip
 install:
   - choco install googlechrome
   - ps: Install-Product node $env:nodejs_version
@@ -28,6 +24,8 @@ shallow_clone: true
 clone_depth: 1
 test_script:
   - npm test
+artifacts:
+  - path: release\electron\*.zip
 before_deploy:
   - npm run clean
   - npm run build:win32
@@ -38,6 +36,5 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: +rD8EayrPxpJ4TLIwPupv+M+dHEQuf1MgdGFdQSXz0SUFpDUxCmm34Vw1sFLNjBl
-    artifact: /.*\.zip/
     on:
       appveyor_repo_tag: true
