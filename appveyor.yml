@@ -18,6 +18,7 @@ install:
 matrix:
   fast_finish: true
 build_script:
+  - grunt dev
   - grunt build-electron
 shallow_clone: true
 clone_depth: 1
