@@ -23,7 +23,7 @@ shallow_clone: true
 clone_depth: 1
 test_script:
   - npm test
-before-deploy:
+before_deploy:
   - npm run clean
   - npm run build:win32
   - npm run build:win64
