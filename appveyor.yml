@@ -1,4 +1,4 @@
-version: '{build}'
+version: '1.0.{build}'
 os: unstable
 cache:
   - bower_components
@@ -17,7 +17,7 @@ install:
   - npm install
 matrix:
   fast_finish: true
-build:
+before_build:
   - grunt build-electron
 shallow_clone: true
 clone_depth: 1
