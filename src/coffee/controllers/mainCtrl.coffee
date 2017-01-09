@@ -244,7 +244,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       serviceName:   "RedmineTimeTracker"
       analyticsCode: "UA-32234486-7"
     }
-    Analytics.sendView("/app/")
+    Analytics.sendView(Platform.getPlarform())
     Log.debug "[1] initializeGoogleAnalytics success"
 
   ###
