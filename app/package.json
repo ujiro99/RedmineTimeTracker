@@ -1,6 +1,6 @@
 {
   "name": "RedmineTimeTracker",
-  "version": "0.7.15",
+  "version": "0.7.17",
   "description": "Time Tracking tool for Redmine",
   "main": "index.js",
   "copyright": "Copyright © 2013 Yujiro Takeda",
