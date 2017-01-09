@@ -9,9 +9,9 @@ require('electron-debug')()
 mainWindow = undefined
 
 BOUND = "BOUND"
-DEFAULT_BOUNDS = { width: 250, height: 550, x: 0, y: 0 }
+DEFAULT_BOUNDS = { width: 250, height: 550 }
 
-_bound = null
+_bound = {}
 
 ###*
  On closed listener.
@@ -70,7 +70,12 @@ app.on 'ready', ->
  @return {BrowserWindow} Main window instance.
 ###
 createMainWindow = (bound) ->
-  bound = bound or _bound or DEFAULT_BOUNDS
+  if bound.width
+    bound = bound
+  else if _bound.width
+    bound = _bound
+  else
+    bound = DEFAULT_BOUNDS
   win = new (BrowserWindow)({
     width: bound.width
     height: bound.height
