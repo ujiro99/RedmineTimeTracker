@@ -13,8 +13,6 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
 
   # List for toast Message.
   $rootScope.messages = []
-  # Window title
-  State.title = "RedmineTimeTracker"
   # Global state
   $scope.state = State
 

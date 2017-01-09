@@ -143,7 +143,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.$on 'timer-tick', (e, time) ->
     if (not State.isAutoTracking) and (not State.isPomodoring)
       return
-    State.title = util.formatMillis(time.millis)
     $scope.time.min = Math.floor(time.millis / (60000))
 
 
@@ -237,7 +236,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       return if preCheck() isnt CHECK.OK
       if State.isAutoTracking
         State.isAutoTracking = false
-        State.title = Resource.string("extName")
         checkResult = checkEntry($scope.time.min)
         if checkResult is CHECK.CANCEL
           $scope.$broadcast 'timer-clear'
@@ -278,7 +276,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
       return if preCheck() isnt CHECK.OK
       if State.isPomodoring
         State.isPomodoring = false
-        State.title = Resource.string("extName")
         checkResult = checkEntry(($scope.countDownSec / 60) - ($scope.time.min + 1))
         if checkResult is CHECK.CANCEL
           $scope.$broadcast 'timer-clear'
@@ -294,7 +291,6 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
         @trackedTime = time
       else
         State.isPomodoring = false
-        State.title = Resource.string("extName")
         postEntry(Math.round(($scope.countDownSec / 60) - Math.round(time.millis / 1000 / 60)))
 
 
