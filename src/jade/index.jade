@@ -25,7 +25,7 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
 
   body
 
-    div.wrap
+    div.wrap(ng-cloak)
       section.header
         include _header
       div.content.bottom-space-m
@@ -42,7 +42,7 @@ html(ng-app='timeTracker', ng-csp="", ng-controller='MainCtrl')
       section
         include _message
 
-    .src
+    div.src
       // bower
       unless electron
         script(src='../components/jquery/js/jquery.min.js')
