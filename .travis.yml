@@ -16,6 +16,7 @@ addons:
   apt:
     packages:
       - icnsutils
+      - graphicsmagick
 before_install:
   - ./scripts/install_chrome.sh
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CHROME_BIN=/usr/bin/google-chrome && export DISPLAY=:99.0; fi
