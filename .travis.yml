@@ -17,7 +17,8 @@ addons:
     packages:
       - icnsutils
 before_install:
-  - source ./scripts/install_chrome.sh
+  - ./scripts/install_chrome.sh
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CHROME_BIN=/usr/bin/google-chrome && export DISPLAY=:99.0; fi
   - npm install grunt-cli -g
   - npm install
 install:
