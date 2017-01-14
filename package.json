@@ -93,7 +93,7 @@
     "sinon": "~1.9.1",
     "xo": "^0.16.0"
   },
-  "author": "Yujiro Takeda",
+  "author": "Yujiro Takeda <siro.cola@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ujiro99/RedmineTimeTracker/issues"

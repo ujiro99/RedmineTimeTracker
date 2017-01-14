@@ -4,8 +4,8 @@ set -eux
 #このシェルスクリプトを実行した場所をカレントディレクトリにする
 cd `dirname $0`
 
-resdir="./build"
-appdir="./app"
+resdir="../build"
+appdir="../app"
 
 # 出力ディレクトリの生成
 icondir="${resdir}/icon.iconset"
