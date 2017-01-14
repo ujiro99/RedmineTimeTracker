@@ -17,7 +17,7 @@ addons:
     packages:
       - icnsutils
 before_install:
-  - ./script/install_chrome.sh
+  - ./scripts/install_chrome.sh
   - npm install grunt-cli -g
   - npm install
 install:
