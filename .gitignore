@@ -1,8 +1,8 @@
 node_modules
 bower_components
-/dist
+/out
+!out/manifest.json
 /coverage
-!dist/manifest.json
 package
 fonts
 app/components

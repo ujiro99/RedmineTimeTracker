@@ -7,7 +7,8 @@ module.exports = (grunt) ->
   config =
     src: 'src',
     app: 'app',
-    dist: 'dist',
+    dist: 'out',
+    release: 'release'
 
   # configure
   grunt.initConfig
@@ -260,9 +261,7 @@ module.exports = (grunt) ->
         ]
       electron:
         files: [
-          { src: '<%= config.app %>/package.json', dest: '<%= config.dist %>/package.json' },
           { src: '<%= config.app %>/index.js', dest: '<%= config.dist %>/index.js' },
-          { expand: true,  cwd: '<%= config.app %>/node_modules', src: '**', dest: '<%= config.dist %>/node_modules/' }
         ]
 
     release:
@@ -271,50 +270,30 @@ module.exports = (grunt) ->
         npm: false
         additionalFiles: [
           'bower.json',
-          'app/package.json'
-          'app/manifest.json'
-          'dist/manifest.json'
+          '<%= config.app %>/manifest.json'
+          '<%= config.dist %>/manifest.json'
         ]
 
     # Compress files in dist to make Chromea Apps package
     compress:
       dist:
         options:
-          archive: "release/chrome/chrome-<%= grunt.file.readJSON('./package.json').version %>.zip"
+          archive: "<%= config.release %>/chrome/chrome-<%= grunt.file.readJSON('./package.json').version %>.zip"
         files: [
           expand: true
-          cwd: "dist/"
+          cwd: "<%= config.dist %>/"
           src: ["**"]
           dest: ""
         ]
       ci:
         options:
-          archive: "release/chrome/chrome-app.zip"
+          archive: "<%= config.release %>/chrome/chrome-app.zip"
         files: [
           expand: true
-          cwd: "dist/"
+          cwd: "<%= config.dist %>/"
           src: ["**"]
           dest: ""
         ]
-      win32:
-        options:
-          archive: 'release/electron/win32-ia32.zip'
-        files: [
-          expand: true
-          cwd: 'release/electron/RedmineTimeTracker-win32-ia32-setup/'
-          src: '**'
-        ]
-      win64:
-        options:
-          archive: 'release/electron/win32-x64.zip'
-        files: [
-          expand: true
-          cwd: 'release/electron/RedmineTimeTracker-win32-x64-setup/'
-          src: '**'
-        ]
-
-    exec:
-      install_electron_deps: "cd app && npm install"
 
   # tasks
   grunt.registerTask 'watch', ['esteWatch']
@@ -327,7 +306,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'build-chrome', [
-    'clean',
+    'clean:dist',
     'bower:install',
     'copy:dist',
     'coffee:production',
@@ -339,8 +318,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'build-electron', [
-    'clean',
-    'exec:install_electron_deps'
+    'clean:dist',
     'clean:manifest',
     'bower:install',
     'copy:dist',
@@ -351,18 +329,4 @@ module.exports = (grunt) ->
     'stylus:production',
     'ngmin',
     'uglify:electron'
-  ]
-
-  grunt.registerTask 'release-minor', [
-    'release:minor',
-    'build-chrome',
-    'compress:dist',
-    'build-electron'
-  ]
-
-  grunt.registerTask 'release-patch', [
-    'release:patch',
-    'build-chrome',
-    'compress:dist',
-    'build-electron'
   ]

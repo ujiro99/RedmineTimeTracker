@@ -4,8 +4,8 @@ set -eux
 #このシェルスクリプトを実行した場所をカレントディレクトリにする
 cd `dirname $0`
 
-resdir="../assets"
-appdir="../app"
+resdir="./build"
+appdir="./app"
 
 # 出力ディレクトリの生成
 icondir="${resdir}/icon.iconset"
@@ -96,10 +96,10 @@ resize_png icon_16x16 16
 #----------------------------------------------------------------------
 
 # create icns (mac)
-iconutil -c icns ${icondir} --output ${resdir}/osx/icon.icns
+iconutil -c icns ${icondir} --output ${resdir}/icon.icns
 
 # create ico (windows)
-convert ${BASE_FILE} -define icon:auto-resize ${resdir}/win/icon.ico
+convert ${BASE_FILE} -define icon:auto-resize ${resdir}/icon.ico
 
 # for chrome app
 rm ${appdir}/images/icon_128.png

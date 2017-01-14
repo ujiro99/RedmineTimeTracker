@@ -3,7 +3,8 @@ cache:
   directories:
     - bower_components
     - node_modules
-    - app/node_modules
+    - $HOME/.electron
+    - $HOME/.cache
 before_install:
     - brew update
     - brew cask install google-chrome
@@ -14,14 +15,13 @@ install:
 script:
     - npm test
 before_deploy:
-    - travis/build.sh
+    - npm run release
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   skip_cleanup: true
   file:
     - release/chrome/chrome-app.zip
-    - release/electron/darwin-x64.zip
   on:
     all_branches: true
     tags: true

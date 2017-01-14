@@ -3,7 +3,8 @@ os: unstable
 cache:
   - bower_components
   - node_modules
-  - app/node_modules
+  - '%APPDATA%\npm-cache'
+  - '%USERPROFILE%\.electron'
 environment:
   matrix:
     - nodejs_version: 6
@@ -18,19 +19,13 @@ install:
 matrix:
   fast_finish: true
 build_script:
-  - grunt dev
-  - grunt build-electron
-  - npm run clean
-  - npm run build:win32
-  - npm run build:win64
-  - grunt compress:win32
-  - grunt compress:win64
+  - npm run release
 shallow_clone: true
 clone_depth: 1
 test_script:
   - npm test
 artifacts:
-  - path: release\electron\*.zip
+  - path: release\electron\*.exe
 deploy:
   - provider: GitHub
     auth_token:
