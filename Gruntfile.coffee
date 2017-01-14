@@ -268,6 +268,7 @@ module.exports = (grunt) ->
       options:
         file: 'package.json'
         npm: false
+        tagName: 'v<%= version %>'
         additionalFiles: [
           'bower.json',
           '<%= config.app %>/manifest.json'
