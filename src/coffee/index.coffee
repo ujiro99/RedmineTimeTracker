@@ -46,7 +46,7 @@ app.on 'ready', ->
     mainWindow = createMainWindow(bound)
   return
 
-autoUpdater.on 'update-downloaded' (event, releaseNotes, releaseName) ->
+autoUpdater.on 'update-downloaded', (event, releaseNotes, releaseName) ->
   index = dialog.showMessageBox({
     message: "Update Available."
     detail: releaseName + "\n\n" + releaseNotes
