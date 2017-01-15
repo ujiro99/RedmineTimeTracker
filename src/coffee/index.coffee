@@ -107,6 +107,7 @@ createMainWindow = (bound) ->
     width: bound.width
     height: bound.height
   })
+  win.setMenu(null)
   if bound.x? and bound.y?
     win.setPosition(bound.x, bound.y)
   win.loadURL 'file://' + __dirname + '/../views/index.html'
