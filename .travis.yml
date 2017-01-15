@@ -27,7 +27,7 @@ install:
 script:
   - npm test
 before_deploy:
-  - npm run dist:chrome
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; npm run dist:chrome; fi
   - npm run dist:electron
 deploy:
   provider: releases
@@ -36,5 +36,6 @@ deploy:
   file:
     - release/chrome/chrome-app.zip
   on:
+    condition: "$TRAVIS_OS_NAME == osx"
     all_branches: true
     tags: true
