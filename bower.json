@@ -1,6 +1,6 @@
 {
   "name": "RedmineTimeTracker.git",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "homepage": "https://github.com/ujiro99/RedmineTimeTracker",
   "author": "Yujiro Takeda",
   "description": "Time Tracking tool for Redmine on GoogleChrome",
