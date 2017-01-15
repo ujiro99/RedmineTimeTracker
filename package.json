@@ -21,8 +21,8 @@
     "release": "npm run dist:electron"
   },
   "build": {
-    "appId": "org.develar.onshape",
-    "category": "public.app-category.graphics-design",
+    "appId": "org.ujiro99.redminetimetracker",
+    "category": "public.app-category.developer-tools",
     "files": [
       "out",
       "node_modules"
