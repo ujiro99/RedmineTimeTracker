@@ -33,7 +33,6 @@ deploy:
   provider: releases
   api_key: $GH_TOKEN
   skip_cleanup: true
-  draft: true
   file:
     - release/chrome/chrome-app.zip
   on:
