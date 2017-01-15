@@ -16,6 +16,15 @@
   "dialogRemoveAccountConfirmRedmine": {
     "message": "Data on the redmine server does not change."
   },
+  "dialogLoginConfirm": {
+    "message": "Please enter authentication information of Network Proxy."
+  },
+  "dialogLoginUsername": {
+    "message": "Username"
+  },
+  "dialogLoginPassword": {
+    "message": "Password"
+  },
   "msgRequestAddAccount_0": {
     "message": "First, please set your Redmine account."
   },

@@ -178,6 +178,13 @@ angular.module('chrome', []).provider 'Platform', () ->
     addOnClickedListener: (listener) =>
       chrome.notifications.onClicked.addListener(listener)
 
+    ###*
+     Get path.
+     @param {string} path - Platform specified path.
+    ###
+    getPath: (path) ->
+      return path
+
 
   return {
     getLanguage: () -> chrome.i18n.getUILanguage()

@@ -1,5 +1,6 @@
 angular.module('electron', []).provider 'Platform', () ->
 
+  index = require('electron').remote.require('./scripts/index')
   shell = require('electron').shell
   storage = require('electron-json-storage')
 
@@ -165,6 +166,14 @@ angular.module('electron', []).provider 'Platform', () ->
 
 
     ###*
+     Get path.
+     @param {string} path - Platform specified path.
+    ###
+    getPath: (path) ->
+      return __dirname + "../../" + path
+
+
+    ###*
      Open url to external browser application.
      @param {string} url - Url to be opened.
     ###
@@ -172,9 +181,16 @@ angular.module('electron', []).provider 'Platform', () ->
       return @$log.log("Invalid url.") if not url?
       shell.openExternal(url)
 
+    ###*
+     Set proxy login event lister.
+     @param {function} func - Function which will be called when fired app's 'login' event.
+    ###
+    setLoginLister: (func) ->
+      index.onLogin(func)
+
 
   return {
     getLanguage: () -> return require('electron').remote.app.getLocale()
-    openDevTools: () -> require('electron').remote.require('./scripts/index').openDevTools()
+    openDevTools: () -> index.openDevTools()
     $get: ($q, $log) -> return new Platform($q, $log)
   }

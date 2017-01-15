@@ -13,10 +13,14 @@ else
 # prevent window being garbage collected
 mainWindow = undefined
 
+LOGIN = "login"
 BOUND = "bound"
+PROXY_AUTH = "proxy_auth"
 DEFAULT_BOUNDS = { width: 250, height: 550 }
 
 _bound = {}
+_event = {}
+_triedSavedAccount = false
 
 ###*
  On closed listener.
@@ -47,6 +51,28 @@ app.on 'ready', ->
   getWindowBounds (bound) ->
     mainWindow = createMainWindow(bound)
   return
+
+app.on 'login', (event, webContents, request, authInfo, callback) ->
+  if authInfo.isProxy
+    event.preventDefault()
+
+    # If proxy password is already exists, use it.
+    storage.get PROXY_AUTH, (err, auth) ->
+      # console.log(auth)
+      if err
+        console.log('Failed to get auth.')
+      else if not _triedSavedAccount and auth? and auth.password?
+        callback(auth.username, auth.password)
+        _triedSavedAccount = true
+      else
+        func = _event[LOGIN]
+        return callback(null, null) if not func?
+        func (auth) ->
+          callback(auth.username, auth.password)
+          _triedSavedAccount = false
+          storage.set PROXY_AUTH, auth, (err) ->
+            return if not err
+            console.log('Failed to set window bounds.')
 
 autoUpdater.on 'update-downloaded', (event, releaseNotes, releaseName) ->
   index = dialog.showMessageBox({
@@ -134,4 +160,23 @@ template = [{
 exports.openDevTools = () ->
   if mainWindow?
     mainWindow.webContents.openDevTools()
+
+###*
+ @callback onInputEndListener
+ @param {object} auth - Login information
+ @param {string} auth.username - Username.
+ @param {string} auth.password - Login password.
+###
+
+###*
+ @callback onLoginListener
+ @param {onInputEndListener} func - Function which will be called when user inputted login information.
+###
+
+###*
+ Set proxy login event lister.
+ @param {onLoginListener} func - Function which will be called when fired app's 'login' event.
+###
+exports.onLogin = (func) ->
+  _event[LOGIN] = func
 

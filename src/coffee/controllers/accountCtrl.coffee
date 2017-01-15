@@ -1,4 +1,4 @@
-timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Option, Const, Log) ->
+timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Account, Project, Ticket, DataAdapter, Message, State, Resource, Analytics, Option, Const, Log, Platform) ->
 
   ID_PASS = 'id_pass'
   API_KEY = 'api_key'
@@ -139,7 +139,7 @@ timeTracker.controller 'AccountCtrl', ($scope, $timeout, $modal, Redmine, Accoun
   ###
   $scope.openRemoveAccount = (url) ->
     modal = $modal.open
-      templateUrl: '/views/removeAccount.html'
+      templateUrl: Platform.getPath('/views/removeAccount.html')
       controller: removeAccountCtrl
     modal.result.then () ->
       removeAccount(url)

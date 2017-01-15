@@ -1,0 +1,22 @@
+div.modal-header
+  h4 Proxy Authentication
+
+div.modal-body
+  p
+    span {{R.string("dialogLoginConfirm")}}
+
+  div.setting__section.form-group
+    div.setting__labels
+      label.control-label {{R.string("dialogLoginUsername")}}
+    div.setting__options
+      input.form-control.input-sm.setting__input(type="text", name="username", ng-model="username", required)
+
+  div.setting__section.form-group
+    div.setting__labels
+      label.control-label {{R.string("dialogLoginPassword")}}
+    div.setting__options
+      input.form-control.input-sm.setting__input(type="password", name="password", ng-model="password", required)
+
+div.modal-footer
+  button.btn.btn-default(ng-click="ok()", ga-click="proxyLoginOk") OK
+  button.btn.btn-default(ng-click="cancel()", ga-click="proxyLoginCancel") Cancel

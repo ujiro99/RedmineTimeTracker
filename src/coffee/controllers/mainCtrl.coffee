@@ -22,6 +22,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   init = () ->
     deferred = $q.defer()
     deferred.promise
+      .then(_setLoginLister)
       .then(_initializeGoogleAnalytics)
       .then(_initializeDataFromChrome)
       .then(_initializeDataFromRedmine)
@@ -309,7 +310,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       Project.sync(DataAdapter.getProjects())
     , MINUTE_5)
 
-  ###
+  ###*
    Sync a selected project to chrome storage.
   ###
   _syncSelectedProject = () ->
@@ -319,6 +320,36 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       id: selected.id
     }
     Platform.save(Platform.SELECTED_PROJECT, obj)
+
+  ###*
+   Set proxy login event lister.
+  ###
+  _setLoginLister = () ->
+    return if 'electron' isnt Platform.getPlarform()
+    Platform.setLoginLister (callback) ->
+      modal = $modal.open {
+        templateUrl: Platform.getPath('/views/proxyLogin.html')
+        controller: loginCtrl
+      }
+      modal.result.then (auth) ->
+        callback(auth)
+      , () ->
+        callback(null) # canceled
+
+  ###*
+   Controller for input login infomation dialog.
+  ###
+  loginCtrl = ($scope, $modalInstance, Resource) ->
+    $scope.R = Resource
+    $scope.ok = () ->
+      $modalInstance.close {
+        username: this.username
+        password: this.password
+      }
+    $scope.cancel = () ->
+      $modalInstance.dismiss 'canceled.'
+  loginCtrl.$inject = ['$scope', '$modalInstance', 'Resource']
+
 
   ###
    Start Initialize.
