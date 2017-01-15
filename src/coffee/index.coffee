@@ -1,9 +1,12 @@
 'use strict'
 { app, BrowserWindow, Menu } = require('electron')
+{ autoUpdater } = require("electron-auto-updater")
 storage = require('electron-json-storage')
 
 # adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')()
+
+autoUpdater.checkForUpdates()
 
 # prevent window being garbage collected
 mainWindow = undefined
@@ -43,17 +46,14 @@ app.on 'ready', ->
     mainWindow = createMainWindow(bound)
   return
 
-# app.on 'will-finish-launching', ->
-#   console.log('will-finish-launching')
-#
-# app.on 'before-quit', ->
-#   console.log('before-quit')
-#
-# app.on 'will-quit', ->
-#   console.log('will-quit')
-#
-# app.on 'quit', ->
-#   console.log('quit')
+autoUpdater.on 'update-downloaded' (event, releaseNotes, releaseName) ->
+  index = dialog.showMessageBox({
+    message: "Update Available."
+    detail: releaseName + "\n\n" + releaseNotes
+    buttons: ["Update now", "Later"]
+  })
+  if index is 0
+    autoUpdater.quitAndInstall()
 
 
 ###*
