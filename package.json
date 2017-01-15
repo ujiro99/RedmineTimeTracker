@@ -2,7 +2,15 @@
   "name": "RedmineTimeTracker",
   "version": "0.8.1",
   "description": "Time Tracking tool for Redmine",
+  "author": "Yujiro Takeda <siro.cola@gmail.com>",
+  "license": "MIT",
   "main": "./out/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ujiro99/RedmineTimeTracker.git"
+  },
+  "bugs": { "url": "https://github.com/ujiro99/RedmineTimeTracker/issues" },
+  "keywords": [ "redmine", "electron-app", "chrome-app" ],
   "scripts": {
     "postinstall": "install-app-deps",
     "test": "karma start --single-run",
@@ -12,22 +20,6 @@
     "dist:electron": "grunt build-electron && npm run clean && npm prune && build",
     "release": "npm run dist:electron"
   },
-  "xo": {
-    "esnext": true,
-    "envs": [
-      "node",
-      "browser"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ujiro99/RedmineTimeTracker.git"
-  },
-  "keywords": [
-    "redmine",
-    "electron-app",
-    "chrome-app"
-  ],
   "build": {
     "appId": "org.develar.onshape",
     "category": "public.app-category.graphics-design",
@@ -40,16 +32,8 @@
     },
     "dmg": {
       "contents": [
-        {
-          "x": 192,
-          "y": 344
-        },
-        {
-          "x": 448,
-          "y": 344,
-          "type": "link",
-          "path": "/Applications"
-        }
+        { "x": 192, "y": 344 },
+        { "x": 448, "y": 344, "type": "link", "path": "/Applications" }
       ]
     },
     "linux": {
@@ -58,6 +42,10 @@
         "deb"
       ]
     }
+  },
+  "dependencies": {
+    "electron-debug": "^1.0.0",
+    "electron-json-storage": "^2.1.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.1",
@@ -93,9 +81,11 @@
     "sinon": "~1.9.1",
     "xo": "^0.16.0"
   },
-  "author": "Yujiro Takeda <siro.cola@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ujiro99/RedmineTimeTracker/issues"
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
   }
 }
