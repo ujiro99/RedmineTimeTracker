@@ -27,7 +27,7 @@ install:
 script:
   - npm test
 before_deploy:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; npm run dist:chrome; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run dist:chrome; fi
   - npm run dist:electron
 deploy:
   provider: releases
