@@ -28,11 +28,12 @@ script:
   - npm test
 before_deploy:
   - npm run dist:chrome
-  - npm run release
+  - npm run dist:electron
 deploy:
   provider: releases
   api_key: $GH_TOKEN
   skip_cleanup: true
+  draft: true
   file:
     - release/chrome/chrome-app.zip
   on:

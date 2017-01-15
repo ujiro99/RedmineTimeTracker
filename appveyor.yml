@@ -25,7 +25,7 @@ install:
   - npm install
 build_script:
   - grunt dev
-  - npm run release
+  - npm run dist:electron
 test_script:
   - npm test
 artifacts:
