@@ -1,17 +1,19 @@
 'use strict'
 { app, BrowserWindow, Menu } = require('electron')
 { autoUpdater } = require("electron-auto-updater")
+isDev = require('electron-is-dev')
 storage = require('electron-json-storage')
 
-# adds debug features like hotkeys for triggering dev tools and reload
-require('electron-debug')()
-
-autoUpdater.checkForUpdates()
+if isDev
+  # adds debug features like hotkeys for triggering dev tools and reload
+  require('electron-debug')()
+else
+  autoUpdater.checkForUpdates()
 
 # prevent window being garbage collected
 mainWindow = undefined
 
-BOUND = "BOUND"
+BOUND = "bound"
 DEFAULT_BOUNDS = { width: 250, height: 550 }
 
 _bound = {}
@@ -54,7 +56,6 @@ autoUpdater.on 'update-downloaded', (event, releaseNotes, releaseName) ->
   })
   if index is 0
     autoUpdater.quitAndInstall()
-
 
 ###*
  Rectangle Object
