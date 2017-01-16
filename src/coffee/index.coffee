@@ -10,6 +10,11 @@ if isDev
 else
   autoUpdater.checkForUpdates()
 
+# Show DevTools if set debug mode.
+storage.get 'debug', (err, debug) ->
+  if debug
+    require('electron-debug')({ showDevTools: true })
+
 # prevent window being garbage collected
 mainWindow = undefined
 
