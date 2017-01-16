@@ -4,6 +4,7 @@
 isDev = require('electron-is-dev')
 storage = require('electron-json-storage')
 
+
 if isDev
   # adds debug features like hotkeys for triggering dev tools and reload
   require('electron-debug')()
@@ -15,17 +16,18 @@ storage.get 'debug', (err, debug) ->
   if debug
     require('electron-debug')({ showDevTools: true })
 
-# prevent window being garbage collected
-mainWindow = undefined
 
 LOGIN = "login"
 BOUND = "bound"
 PROXY_AUTH = "proxy_auth"
 DEFAULT_BOUNDS = { width: 250, height: 550 }
 
+# prevent window being garbage collected
+_mainWindow = undefined
 _bound = {}
 _event = {}
 _triedSavedAccount = false
+
 
 ###*
  On closed listener.
@@ -33,7 +35,7 @@ _triedSavedAccount = false
 onClosed = () ->
   # console.log('closed')
   # derefernece the window.
-  mainWindow = null
+  _mainWindow = null
   return
 
 app.on 'window-all-closed', ->
@@ -45,16 +47,16 @@ app.on 'window-all-closed', ->
 
 app.on 'activate', ->
   # console.log('activate')
-  return if mainWindow
+  return if _mainWindow
   getWindowBounds (bound) ->
-    mainWindow = createMainWindow(bound)
+    _mainWindow = createMainWindow(bound)
   return
 
 app.on 'ready', ->
   # console.log('ready')
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
   getWindowBounds (bound) ->
-    mainWindow = createMainWindow(bound)
+    _mainWindow = createMainWindow(bound)
   return
 
 app.on 'login', (event, webContents, request, authInfo, callback) ->
@@ -123,8 +125,8 @@ createMainWindow = (bound) ->
  Save bounds of main window to storage.
 ###
 saveWindowBounds = (callback) ->
-  return if not mainWindow?
-  bound = mainWindow.getContentBounds()
+  return if not _mainWindow?
+  bound = _mainWindow.getContentBounds()
   # console.log(bound)
   storage.set BOUND, bound, (err) ->
     if err
@@ -164,8 +166,8 @@ template = [{
 ]
 
 exports.openDevTools = () ->
-  if mainWindow?
-    mainWindow.webContents.openDevTools()
+  if _mainWindow?
+    _mainWindow.webContents.openDevTools()
 
 ###*
  @callback onInputEndListener
