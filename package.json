@@ -23,7 +23,7 @@
     "start": "electron ./app",
     "clean": "rimraf ./release/electron",
     "dist:chrome": "grunt build-chrome && grunt compress:ci",
-    "dist:electron": "grunt build-electron && npm run clean && npm prune && build",
+    "dist:electron": "grunt build-electron && npm run clean && npm prune && build --x64 --ia32",
     "release": "npm run dist:electron"
   },
   "build": {
