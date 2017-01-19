@@ -1,4 +1,4 @@
-timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Platform, Resource, Option, Log, Analytics) ->
+timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $anchorScroll, $window, $q, $modal, Ticket, Project, Redmine, Account, State, DataAdapter, Message, Platform, Resource, Option, Log, Analytics) ->
 
   # represents 5 minuts [msec]
   MINUTE_5 = 5 * 60 * 1000
