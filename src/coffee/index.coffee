@@ -27,6 +27,7 @@ _mainWindow = undefined
 _bound = {}
 _event = {}
 _triedSavedAccount = false
+_proxyAuthCallback = null
 
 
 ###*
@@ -62,6 +63,11 @@ app.on 'ready', ->
 app.on 'login', (event, webContents, request, authInfo, callback) ->
   if authInfo.isProxy
     event.preventDefault()
+    if _proxyAuthCallback?
+      _proxyAuthCallback = callback
+      return
+
+    _proxyAuthCallback = callback
 
     # If proxy password is already exists, use it.
     storage.get PROXY_AUTH, (err, auth) ->
@@ -69,14 +75,16 @@ app.on 'login', (event, webContents, request, authInfo, callback) ->
       if err
         console.log('Failed to get auth.')
       else if not _triedSavedAccount and auth? and auth.password?
-        callback(auth.username, auth.password)
+        _proxyAuthCallback(auth.username, auth.password)
+        _proxyAuthCallback = null
         _triedSavedAccount = true
       else
         func = _event[LOGIN]
-        return callback(null, null) if not func?
+        return _proxyAuthCallback(null, null) if not func?
         func (auth) ->
           return if not auth?
-          callback(auth.username, auth.password)
+          _proxyAuthCallback(auth.username, auth.password)
+          _proxyAuthCallback = null
           _triedSavedAccount = false
           storage.set PROXY_AUTH, auth, (err) ->
             return if not err
