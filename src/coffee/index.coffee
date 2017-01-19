@@ -75,6 +75,7 @@ app.on 'login', (event, webContents, request, authInfo, callback) ->
         func = _event[LOGIN]
         return callback(null, null) if not func?
         func (auth) ->
+          return if not auth?
           callback(auth.username, auth.password)
           _triedSavedAccount = false
           storage.set PROXY_AUTH, auth, (err) ->
