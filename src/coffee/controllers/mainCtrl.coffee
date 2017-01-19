@@ -326,14 +326,19 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _setLoginLister = () ->
     return if 'electron' isnt Platform.getPlarform()
+    isShowingModal = false
     Platform.setLoginLister (callback) ->
+      return if isShowingModal
+      isShowingModal = true
       modal = $modal.open {
         templateUrl: Platform.getPath('/views/proxyLogin.html')
         controller: loginCtrl
       }
       modal.result.then (auth) ->
+        isShowingModal = false
         callback(auth)
       , () ->
+        isShowingModal = false
         callback(null) # canceled
 
   ###*
