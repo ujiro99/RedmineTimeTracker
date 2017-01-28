@@ -30,13 +30,13 @@ div#accounts(ng-controller='AccountCtrl')
 
         // Auth way
         div.btn-group.select-mode
-          button.btn.btn-xs.select-mode__button(
+          button.btn.select-mode__button(
             type='radio',
             ng-model='authWay',
             btn-radio="'id_pass'",
             ng-disabled="state.isSaving",
             ng-class="{isSaving: state.isSaving}") ID/Pass
-          button.btn.btn-xs.select-mode__button(
+          button.btn.select-mode__button(
             type='radio',
             ng-model='authWay',
             btn-radio="'api_key'",
@@ -68,7 +68,7 @@ div#accounts(ng-controller='AccountCtrl')
         // Buttons
         div.account-setting__buttons
           // Add Button
-          button.btn.btn-sm.btn-color.account-setting__buttons--add(
+          button.btn.btn-color.account-setting__buttons--add(
             ng-click='findAccount()',
             ga-click='findAccount',
             uz-loading='state.isSaving',
@@ -76,7 +76,7 @@ div#accounts(ng-controller='AccountCtrl')
             span Add
 
           // Save Button
-          button.btn.btn-sm.btn-color.account-setting__buttons--save(
+          button.btn.btn-color.account-setting__buttons--save(
             ng-click='findAccount()',
             ga-click='findAccount',
             uz-loading='state.isSaving',
@@ -84,7 +84,7 @@ div#accounts(ng-controller='AccountCtrl')
             span Save
 
           // Remove Button
-          button.btn.btn-sm.btn-color.account-setting__buttons--remove(
+          button.btn.btn-color.account-setting__buttons--remove(
             ng-click='openRemoveAccount(authParams.url)',
             ga-click='openRemoveAccount',
             ng-show="state.isSetting",

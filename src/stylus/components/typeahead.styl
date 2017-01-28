@@ -13,13 +13,14 @@
 
 .tt-input
 .tt-hint
+  width: 100%
   border: 0
   border-radius: $field_border_radius !important
   outline: none
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+  box-shadow: inset 0 0 0 .1rem rgba(0,0,0,.1)
   &:hover,
   &:focus
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
+    box-shadow: inset 0 0 0 .1rem rgba(0,0,0,.2)
   text-ellipsis()
 
 .tt-hint
@@ -27,15 +28,15 @@
 
 .tt-dropdown-menu
   width: 100%
-  margin-top: 5px
-  padding: 5px 0
+  margin-top: .5rem
+  padding: .5rem 0
   background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: .1rem solid rgba(0, 0, 0, 0.2);
   border-radius: $field_border_radius
-  box-shadow: 0 5px 10px rgba(0,0,0,.2)
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.2)
 
 .tt-suggestion
-  padding: 0px 8px
+  padding: 0 .8rem
   height: $height_input
   line-height: $height_input
   text-ellipsis()

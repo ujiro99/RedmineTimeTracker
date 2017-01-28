@@ -75,10 +75,10 @@ div#options.bottom-space-m(ng-controller='OptionCtrl')
                            tooltip-animation="false",
                            tooltip-enable="state.isAutoTracking || state.isPomodoring",
                            tooltip-popup-delay='300')
-        button.btn.btn-default.btn-sm.loading(ng-click='clearTickets()',
-                                              ng-disabled='state.isAutoTracking || state.isPomodoring',
-                                              uz-loading='isSetting',
-                                              ga-click='clearTickets')
+        button.btn.btn-sm.btn-default.loading(ng-click='clearTickets()',
+                                       ng-disabled='state.isAutoTracking || state.isPomodoring',
+                                       uz-loading='isSetting',
+                                       ga-click='clearTickets')
           span Clear
 
     div.clear(ng-show='state.debug')

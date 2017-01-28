@@ -14,24 +14,25 @@
 html, body
   height: 100%
   font-weight: 400
-  font-size: 0.88em
+  font-size: 62.5%
   color: $color_font
   font-family: mplus-2c-regular
   -webkit-user-select: none
 
 
 input.input-sm
-  height $height_input
+  height: $height_input
+  font-size: 1.2rem
 
 input[type=number]::-webkit-inner-spin-button
   -webkit-appearance: none
 
 .form-control
   border: none
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.1)
+  box-shadow: inset 0 0 0 .1rem rgba(0,0,0,.1)
   &:hover,
   &:focus
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.2)
+    box-shadow: inset 0 0 0 .1rem rgba(0,0,0,.2)
 
 
 .wrap
@@ -39,16 +40,17 @@ input[type=number]::-webkit-inner-spin-button
   overflow-y: scroll
   display: flex
   flex-direction: column
+  font-size: 1.2rem
 
   #issue header .caption .title .icon
-    margin: 3px 8px 0 0
+    margin: .3rem .8rem 0 0
 
   #options, #accounts, #issue
     header
       a, a:hover
         text-decoration: none
     .caption__icon
-      margin-left: 14px
+      margin-left: 1.4rem
 
   .caption
     align-center()
@@ -56,28 +58,28 @@ input[type=number]::-webkit-inner-spin-button
     color: $color_key
   .caption__title
     margin: 0
-    font-size: 1.05em
+    font-size: 1.3rem
     flex: 1
     align-center()
   .caption__subtitle
-    font-size: .95em
-    margin: 0.1em -1em 0 0.7em
+    font-size: .95rem
+    margin: 0.1rem -1rem 0 0.7rem
   .caption__icon
-    font-size: 1.4em
-    margin-right: 0.4em
+    font-size: 1.8rem
+    margin-right: 0.8rem
   .caption__icon--tomato
-    width: 23px
-    height: 23px
-    margin-right: 0.3em
+    width: 2.3rem
+    height: 2.3rem
+    margin-right: 0.3rem
   .caption__icon--slide
-    padding: 0 4px
-    font-size: 1.4em
+    padding: 0 .4rem
+    font-size: 1.4rem
     opacity: 0
     transition: opacity 0.2s ease
   .caption__icon--collapse
-    font-size: 1.4em
+    font-size: 1.8rem
     position: relative
-    left: 18px
+    left: 1.8rem
     opacity: 0
     visibility: hidden
     transition: 0.2s ease
@@ -93,10 +95,10 @@ input[type=number]::-webkit-inner-spin-button
   flex-shrink: 0
 
   & > section
-    padding: 10px
+    padding: 1rem
 
 .searchform
-  margin-bottom: 5px
+  margin-bottom: .5rem
 
 .animate-switch-container
   position: relative
@@ -106,15 +108,17 @@ input[type=number]::-webkit-inner-spin-button
   width: 100%
 
 .searchform-icon
-  margin-right -5px
-  padding-right 5px
+  margin-right -0.5rem
+  padding-right .5rem
   position: relative
+  .input-sm
+    padding-right: 2.4rem
   i
     opacity: .5
     position: absolute
-    top: 8px
-    right: 12px
-    padding-left: 2px
+    top: .8rem
+    right: 1.2rem
+    padding-left: .2rem
     transition: opacity .3s ease
     pointer-events: none
   &:hover i
@@ -151,7 +155,7 @@ input[type=number]::-webkit-inner-spin-button
   color #aaa
 
 .project-label
-  padding: 0 1em 0 .5em
+  padding: 0 1rem 0 .5rem
   max-width: 80%
   display: inline-block
   vertical-align: bottom
@@ -167,17 +171,17 @@ input[type=number]::-webkit-inner-spin-button
   outline: none
   z-index: $z-index-project-title
   .fa
-    font-size: 1.3em
+    font-size: 1.3rem
     color #ccc
     transition: color .2s ease
   &:hover .fa
     color #666
 
 input.project-search
-  height: 3em
+  height: 3rem
 
 .project-search
-  padding-left: 16px
+  padding-left: 1.6rem
   position: absolute
   transition: left .3s ease
   left: 40%
@@ -195,7 +199,7 @@ input.project-search
   position: fixed
   width: 100%
   max-height: 90%
-  min-height: 5px
+  min-height: .5rem
   top: -100%
   background-color: #fff
   card(3)
@@ -203,20 +207,20 @@ input.project-search
   overflow-y: scroll
 
 .project-content.active
-  top: 2.5em
+  top: 3rem
 
 .numbered-list
   margin: 0
   padding-left: 0
 
 .numbered-list--clickable
-  padding-left: 4px
+  padding-left: .4rem
   .number
     transition: padding-left ease .2s
 
   & > li
     counter-increment: account
-    margin-bottom: 0.5em
+    margin-bottom: 0.5rem
     cursor: pointer
     align-items: center
 
@@ -225,12 +229,12 @@ input.project-search
 
     & > .number:before
       content: counter(account)
-      padding-right: 10px
+      padding-right: 1rem
       color: #aaa
 
     &:hover
       .number
-        padding-left: 5px
+        padding-left: .5rem
       span
       .btn
         width: auto
@@ -253,26 +257,26 @@ input.project-search
 .numbered, .starred
   &>.numbered-label
     line-height: $height_input
-    margin: -12px 0 0 0.5em
-    padding-left: 0.2em
-    border-bottom: solid 1px #ccc
+    margin: -1.2rem 0 0 0.5rem
+    padding-left: 0.2rem
+    border-bottom: solid .1rem #ccc
 .numbered
   counter-increment: account
   &>.numbered-label:before
     content: counter(account)
-    padding-right: 0.4em
+    padding-right: 0.4rem
     color #aaa
 .starred
   &>.numbered-label:before
     content: "★"
-    padding-right: 0.5em
+    padding-right: 0.5rem
     color #aaa
 
 .project-list
   padding-left: 0
   &>li
     display: flex
-    padding-left: 1em
+    padding-left: 1rem
     list-style-type: none
     & span:nth-child(1)
       transition: margin-left .2s ease
@@ -281,12 +285,12 @@ input.project-search
       & span
         color: #fff
       & span:nth-child(1)
-        margin-left: 0.5em
+        margin-left: 0.5rem
       .star__enable
         color: $color_key
     .numbered-label
       width: 100%
-      height: 24px
+      height: 2.4rem
 
 .input-and-btn
   display: flex
@@ -298,10 +302,10 @@ input.project-search
       color: $color_key
 
 .input-and-btn__plus-btn
-  margin: 0 0 0 7px
+  margin: 0 0 0 .7rem
   height: $height_input
   line-height: $height_input
-  font-size: 16px
+  font-size: 1.6rem
 
 @keyframes slide-in-left
   from {left: 100%}
@@ -335,29 +339,29 @@ input.project-search
   transform: rotate(360deg)
 
 .top-space-l
-  padding-top: 25px
+  padding-top: 2.5rem
 
 .top-space-m
-  padding-top: 10px
+  padding-top: 1rem
 
 .top-space-s
-  padding-top: 5px
+  padding-top: .5rem
 
 .bottom-space-l
-  padding-bottom: 25px
+  padding-bottom: 2.5rem
 
 .bottom-space-m
-  padding-bottom: 10px
+  padding-bottom: 1rem
 
 .bottom-space-s
-  padding-bottom: 5px
+  padding-bottom: .5rem
 
 .curor-pointer
   cursor: pointer
 
 .property-list
-  border-bottom: solid 1px $color_border
-  padding: 0px 9px 0px 10px
+  border-bottom: solid .1rem $color_border
+  padding: 0 .9rem 0 1rem
   height: $height_property_list
   transition: background .2s ease
   &:hover
@@ -387,33 +391,33 @@ input.project-search
 
   input.switch
     position: relative
-    left: 6px
+    left: .6rem
 
   .input-sm
     font-size: $font_size_selected
     color: $color_font_selected
 
   .input-sm[type=select]
-    padding-right: 22px
+    padding-right: 2.2rem
 
   .input-sm:not([type=select])
-    padding: 0 0 0 10px
+    padding: 0 0 0 1rem
 
   .fa.fa-asterisk
-    font-size: 1em
+    font-size: 1rem
     width: 0
     color: $color_key
     opacity: 0.8
-    margin-left: 0.2em
+    margin-left: 0.2rem
 
 .property-list__first
 .well > .property-list:first-child
-  border-top: solid 1px $color_border
+  border-top: solid .1rem $color_border
 
 .property-list
 .property-list__selected
   .fa
-    font-size: 18px
+    font-size: 1.8rem
 
 .property-list__tab
   position: relative
@@ -423,14 +427,15 @@ input.project-search
   margin: 0
   z-index: $z-index-tab-list
   &>li
-    padding-left: 10px
-    line-height: $height_property_list - 1
-    border-bottom: 1px solid $color_border
+    padding-left: 1rem
+    height: $height_property_list
+    line-height: $height_property_list - 0.1
+    border-bottom: .1rem solid $color_border
     transition: background .2s ease
     &:hover, &.hover, &.active
       background-color: $color_back_hover
   &>li.active a
-    width: calc(6.5em  - 9px)
+    width: 7rem
     display: inline-block
     background-color: $color_back_hover
     position: relative
@@ -469,23 +474,22 @@ input.project-search
   z-index: $z-index-property-list
   ul
     height: $height_property_list
-    border-bottom: solid 1px $color_border
     margin: 0
-    padding: 0 20px 0 0
+    padding: 0 2.2rem 0 0
     justify-content: flex-end
     cursor: pointer
   li
     list-style-type: none
     font-size: $font_size_selected
-    margin-right: 0.6em
+    margin-right: .5rem
     color: $color_font_selected
     text-ellipsis()
     &:not(:last-child):after
       content: ', '
   i
-    line-height: $height_property_list - 1
+    line-height: $height_property_list
     position: absolute
-    right: 10px
+    right: 1rem
 
 .property-list__selection
   width: 100%
@@ -493,25 +497,25 @@ input.project-search
   text-align: right
   color: $color_font
   margin: 0
-  padding: 5px 0
+  padding: .5rem 0
   position: relative
   left: 200%
   transition: left .2s ease
   background-color: $color_back_hover
   &.property-list
-    border-left: 1px solid $color_border
+    border-left: .1rem solid $color_border
   &>li
     list-style-type: none
-    line-height: 1.8em
+    line-height: 1.8rem
   &>li:hover
     background-color: #f0f0f0
   label
     width: 100%
-    padding-right: 10px
+    padding-right: 1rem
     cursor: pointer
   span
     display: inline-block
-    width: calc(100% - 1.6em)
+    width: calc(100% - 1.6rem)
     text-ellipsis()
 
 .loading
@@ -520,12 +524,12 @@ input.project-search
 .loading:after
   fa()
   content: "\f110"
-  font-size: 1.4em
+  font-size: 1.4rem
   line-height: inherit
   animation: spin 1.4s infinite linear
   position: absolute
   top: 0
-  left: calc(50% - 0.4em)
+  left: calc(50% - 0.4rem)
 
 .setting__section
   display: flex
@@ -536,26 +540,27 @@ input.project-search
 
 .setting__labels
   flex: 1
-  margin-bottom: 3px
+  margin-bottom: .3rem
 
 .setting__description
-  margin-left: 5px
+  margin-left: .5rem
   color: #999
 
 .setting__options
   .btn-sm
+    font-size: .8rem
     color: $color_font
-    margin: 0 0 0 5px
-    padding: 3px 6px
+    margin: 0 0 0 .5rem
+    padding: .3rem .6rem
     &.loading
       background-color: #eee !important
       border-color: #adadad
 
 .setting__button
-  margin-right: -6px
+  margin-right: -0.6rem
 
 .setting__input
-  width: 3.7em
+  width: 3.7rem
   text-align: right
 
 .modal-dialog
@@ -564,7 +569,7 @@ input.project-search
 
   .setting__labels
     margin-bottom: 0
-    margin-right: 1em
+    margin-right: 1rem
 
   .setting__input
     width: 100%
@@ -573,11 +578,11 @@ input.project-search
 
 #timer
 
-  $width_button = 34px
+  $width_button = 3.4rem
 
   header
-    height: 5em
-    margin-top: -10px
+    height: 6rem
+    margin-top: -1rem
 
   .caption
     cursor: pointer
@@ -585,7 +590,7 @@ input.project-search
 
   .caption__title
     width: 100%
-    height: 18px
+    height: 1.8rem
     position: absolute
     top: 36%
     left: 0
@@ -613,7 +618,7 @@ input.project-search
     padding-right $width_button
 
     input
-      border-right: solid 1px #f5f5f5
+      border-right: solid .1rem #f5f5f5
       border-radius: $field_border_radius 0 0 $field_border_radius !important
       box-shadow: none
       background-color: $color_key
@@ -623,38 +628,39 @@ input.project-search
       color: rgba(255, 255, 255, 0.9)
 
     .searchform-icon i
-      font-size: 1.3em
+      font-size: 1.8rem
       opacity: .7
       color: #fff
-      top: 6px
-      right: 14px
+      top: .6rem
+      right: 1.4rem
 
     .searchform-icon:hover i
       opacity: .9
 
 
   .btn
-    margin-left: 4px
     border: none
+    width: $width_button
+    color: #f5f5f5
+    font-size: 1.4rem
     display: inline-block
     position: absolute
     top: 0
     right: 0
     bottom: 0
-    width: $width_button
-    color: #f5f5f5
+    margin-left: .4rem
     &:hover
       background-color: $color_key_down
       color: #ffffff
 
     img
-      width: 24px
-      height: 24px
+      width: 2.4rem
+      height: 2.4rem
 
   .progress
-    margin-bottom 0px
+    margin-bottom 0
     height: $height_input
-    border-right: solid 1px #f5f5f5
+    border-right: solid .1rem #f5f5f5
     border-radius: $field_border_radius 0 0 $field_border_radius
     color: $color_font_bright
     display: flex
@@ -667,7 +673,7 @@ input.project-search
   .progress-bar--outer
     position: absolute
     height: $height_input
-    width: "calc(100% - 1px - %s)" % $width_button
+    width: "calc(100% - .1rem - %s)" % $width_button
     overflow: hidden
     -webkit-clip-path: inset(0% -2% 0% 0% round $field_border_radius)
 
@@ -678,37 +684,38 @@ input.project-search
 
   p.progress--label
     margin: 0
-    padding-left: 4px
+    padding-left: .4rem
     flex: 1
 
   timer.progress--label
-    padding-right: 4px
+    padding-right: .4rem
 
   @keyframes progress-bar-stripes
-    from  { transform: translateX(0px) }
-    to    { transform: translateX(-40px) }
+    from  { transform: translateX(0) }
+    to    { transform: translateX(-4rem) }
 
   .form-inline
     display: flex
-    margin: 10px 0 0 0
+    margin: 1rem 0 0 0
     height: $height_input
 
   .select-activity
     flex: 5
 
   .separater
-    width: 5px
+    width: .5rem
 
   .time
     flex: 3
     input
+      width: 100%
       text-align: right
-      padding: 0 22px 0 10px
+      padding: 0 2.2rem 0 1rem
       &:hover+span
         color: #888
     .ui-timepicker-list li
       text-align: right
-      padding-right: 22px
+      padding-right: 2.2rem
     span
       line-height: $height_input
       color: #aaa
@@ -720,22 +727,22 @@ input.project-search
     text-ellipsis()
 
   .comment
-    margin: 10px 0 0 0
+    margin: 1rem 0 0 0
 
     textarea
-      margin 6px 0 0 0px
+      font-size: 1.4rem
+      margin 0 -3.6rem 0 0
       border-radius: $field_border_radius !important
+      display: inline-block
 
     div
-      height: 0
+      display: inline-block
 
     span
-      position: relative
-      top: -15px
       opacity: 0.8
       float: right
 
-  container_height = 190px
+  container_height = 19rem
   .animate-switch-container
     height: container_height
     transition-duration: .3s
@@ -743,19 +750,19 @@ input.project-search
     &:before
       content: ""
       background-color: #fff
-      width: 10px
+      width: 1rem
       height: container_height
       position: relative
-      left: -10px
+      left: -1rem
       float: left
       z-index: $z-index-side
     &:after
       content: ""
       background-color: #fff
-      width: 10px
+      width: 1rem
       height: container_height
       position: relative
-      right: -10px
+      right: -1rem
       float: right
       z-index: $z-index-side
 
@@ -776,7 +783,7 @@ input.project-search
 
   .select-issues
     .tt-dropdown-menu
-      padding: 0 0 5px 0
+      padding: 0 0 .5rem 0
     .tt-suggestion
       height: auto
       padding: 0
@@ -785,16 +792,16 @@ input.project-search
 
   .select-issues__project
     display: block
-    height: 3em
+    height: 3rem
     width: 100%
-    font-size: 0.9em
+    font-size: .9rem
     text-ellipsis()
-    margin: 0 0.5em
-    padding: 0.4em 0 0 0.3em
-    border-bottom: solid 1px #ccc
+    margin: 0 .5rem
+    padding: .4rem 0 0 .3rem
+    border-bottom: solid .1rem #ccc
 
   .numbered-label__number
-    margin-left: 0.6em
+    margin-left: 0.6rem
     transition: margin-left .2s ease
 
   .tt-cursor
@@ -803,7 +810,7 @@ input.project-search
     .numbered-label
       background-color: $color_key_weak
     .numbered-label__number
-      margin-left: 1em
+      margin-left: 1rem
       color: #fff
     .numbered-label__label
       color: #fff
@@ -815,16 +822,16 @@ input.project-search
     transition: height .32s ease
 
   .input-and-btn .btn
-    margin: -6px 0 0 6px
-    font-size: 1.7em
+    margin: -0.6rem 0 0 .6rem
+    font-size: 2rem
     .fa
       position: relative
-      top: -2px
+      top: -0.2rem
 
   .issue-list
 
     .active .numbered-label, .active .numbered-label:hover
-      margin-left: 5px
+      margin-left: .5rem
       color: #fff
       span
         color #fff
@@ -832,6 +839,7 @@ input.project-search
     .numbered-label
       span:nth-child(1)
         transition: margin-left .2s ease
+        vertical-align: middle
     .numbered-label:hover
       span
       .btn
@@ -839,24 +847,24 @@ input.project-search
         .icon-minus
           background-image: -webkit-gradient(linear, left center, right center, from($color_key), to($color_key));
       &>span:nth-child(1)
-        margin-left: 0.5em
+        margin-left: 0.5rem
 
       .tooltip-inner span
         color: $color_font
 
   .issue-list__content
-    padding-left: 0px
+    padding-left: 0
     margin: 0
     &.loading:after
       color: #999
-      font-size: 1.8em
-      margin: 5px 0
+      font-size: 1.8rem
+      margin: .5rem 0
       position: relative
       top: 0
-      left: calc(50% - 0.4em - 2px)
+      left: calc(50% - 0.6rem)
 
   .issue-list__content--empty
-    margin-bottom: 0px
+    margin-bottom: 0
 
   .issue-list__content--empty:after
     content: "not found ..."
@@ -870,15 +878,17 @@ input.project-search
     display: flex
 
     .btn
+      font-size: 1.4rem
       border: none
       color: #aaa
+      line-height: 1
 
     .btn.external-link:hover
       color: $color_key
 
     &.active
       background-color: $color_key
-      border-radius: 10px
+      border-radius: 1rem
       transition: background-color ease 0.2s
 
   .issue-list__content.paging
@@ -904,7 +914,7 @@ input.project-search
 
   @keyframes fade-in
     from
-      height: 0px
+      height: 0
       opacity: 0
     to
       height: $height_issue_list_item
@@ -915,7 +925,7 @@ input.project-search
       height: $height_issue_list_item
       opacity: 1
     to
-      height: 0px
+      height: 0
       opacity: 0
 
 #accounts
@@ -929,7 +939,7 @@ input.project-search
 
   .account-setting
     position: relative
-    height: 16em
+    height: 20.2rem
     .animate-switch
       &.ng-enter
       &.ng-leave
@@ -947,24 +957,28 @@ input.project-search
     display: flex
     justify-content: center
 
+    .btn
+      font-size: 1.2rem
+
     .account-setting__buttons--add
-      height: $height_input - 4
-      width 12em
-      margin 0 2.5em
+      height: $height_input - .4
+      width 12rem
+      margin 0 2.5rem
 
     .account-setting__buttons--save
     .account-setting__buttons--remove
-      height: $height_input - 4
-      width 7em
-      margin 0 0.25em
+      height: $height_input - .4
+      width 8rem
+      margin 0 0.25rem
 
   .select-mode
     align-center()
-    margin: 0 2.5em 1.2em 2.5em
+    margin: 0 2.5rem 1.5rem 2.5rem
 
   .select-mode__button
-    width: 10em
-    height: $height_input - 4
+    height: $height_input - .6
+    width: 10rem
+    font-size: .9rem
     border-color: $color_key_weak
     color: $color_key_weak
     transition: all .2s ease
@@ -981,25 +995,25 @@ input.project-search
 
   .clear
     align-center()
-    padding: 15px 0
+    padding: 1.5rem 0
     button
-      padding: 2px 15px
+      padding: .2rem 1.5rem
       color: $color_key
       i
-        padding-right 6px
-        font-size: 1.3em
+        padding-right .6rem
+        font-size: 1.3rem
       i, span
         vertical-align: middle
 
 #about
   color: #fff
   background-color: rgba(247,80,90, 1)
-  padding: 40px 10px 5px 10px
+  padding: 4rem 1rem .5rem 1rem
   font-family: mplus-2c-thin
 
   .caption
     text-align: center
-    font-size: 1.7em
+    font-size: 2rem
     color: #fff
 
   .version
@@ -1008,12 +1022,12 @@ input.project-search
     span
       position: relative
       left: 50%
-      margin-left: 5em
+      margin-left: 5rem
 
   footer
-    padding: 30px 0 0 0
+    padding: 3rem 0 0 0
     text-align: right
     p
       margin: 0
-      font-size: 0.8em
+      font-size: 0.8rem
 
