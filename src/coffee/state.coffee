@@ -4,7 +4,7 @@ timeTracker.provider("State", (LogProvider) ->
     debug:             false
     log:               true
     logLevel:          LogProvider.Level.INFO
-    title:             ""
+    title:             "RedmineTimeTracker"
     isAutoTracking:    false
     isPomodoring:      false
     isAddingAccount:   false
