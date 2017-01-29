@@ -27,7 +27,8 @@
     "angular-typeahead": "https://github.com/ujiro99/angular-typeahead.git#master",
     "bootstrap": "~3.1.1",
     "jquery": "~2.1.0",
-    "sugar": "~1.4.1"
+    "sugar": "~1.4.1",
+    "simple-line-icons": "^2.4.1"
   },
   "exportsOverride": {
     "jquery": {
@@ -64,6 +65,10 @@
     },
     "angular-translate-storage-local": {
       "js": "**/*.min.js"
+    },
+    "simple-line-icons": {
+      "fonts": "**/fonts/*",
+      "css": "**/simple-line-icons.css"
     }
   },
   "resolutions": {
