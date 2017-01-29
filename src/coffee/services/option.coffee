@@ -15,6 +15,7 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
       itemsPerPage: 20
       stepTime: 15                    # minutes
       pomodoroTime: 25                # minutes
+      fontSize: 62.5                  # %
       isCollapseIssues: false         # issue section collapse
       isCollapseAccounts: false       # accounts section collapse
       isCollapseOptions: false        # options section collapse

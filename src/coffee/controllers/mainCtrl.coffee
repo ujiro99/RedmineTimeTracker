@@ -15,6 +15,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   $rootScope.messages = []
   # Global state
   $scope.state = State
+  # Root font size
+  $scope.options = Option.getOptions()
 
   ###
    Initialize.

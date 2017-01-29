@@ -36,6 +36,14 @@ div#options.bottom-space-m(ng-controller='OptionCtrl')
 
     div.setting__section.form-group
       div.setting__labels
+        label.control-label Font size
+        div.setting__description
+          span min: 50, max: 100
+      div.setting__options
+        input.form-control.input-sm.setting__input(type="number", name="fontSize", max="100", min="50", ng-model="options.fontSize")
+
+    div.setting__section.form-group
+      div.setting__labels
         label.control-label Enable Project's Star
         div.setting__description
           span Use star in Project Select list.
