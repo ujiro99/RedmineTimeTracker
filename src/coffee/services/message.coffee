@@ -2,16 +2,21 @@ timeTracker.factory "Message", ($rootScope, $timeout) ->
 
   MESSAGE_DURATION = 1500
   ANIMATION_DURATION = 1000
-  W_PADDING = 40
   H_PADDING = 8
   STYLE_HIDDEN = 'height': 0
 
+  _ruler = document.querySelector("#ruler")
+  _message_ruler = document.querySelector(".message__ruler span")
+
   _strScale = (str) ->
-    e = $("#ruler")
-    width = e.text(str).get(0).offsetWidth
-    height = e.text(str).get(0).offsetHeight
-    e.empty()
+    _ruler.textContent = str
+    width = _ruler.offsetWidth
+    height = _ruler.offsetHeight
+    _ruler.textContent = null
     return w: width, h: height
+
+  _getMessageWidth = ->
+    return _message_ruler.offsetWidth
 
   return {
 
@@ -25,7 +30,7 @@ timeTracker.factory "Message", ($rootScope, $timeout) ->
         style: STYLE_HIDDEN
       }
       scale = _strScale(text)
-      rows = Math.ceil(scale.w / ($(window).width() - W_PADDING))
+      rows = Math.ceil(scale.w / _getMessageWidth())
 
       $rootScope.messages.push msg
       $timeout ->
