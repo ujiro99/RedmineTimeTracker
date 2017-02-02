@@ -28,7 +28,7 @@ script:
   - npm test
 before_deploy:
   - npm run dist:chrome
-  - npm run dist:electron
+  - npm run release
 deploy:
   provider: releases
   api_key: $GH_TOKEN
