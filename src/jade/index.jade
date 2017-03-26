@@ -63,6 +63,10 @@ html(ng-app='timeTracker', ng-csp="", style="font-size:{{options.fontSize}}%", n
       script(src='../scripts/lib/aes.js')
       if electron
         script(src='../scripts/lib/analytics.js')
+      else if browser
+        script.
+          window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        script(async src='https://www.google-analytics.com/analytics.js')
       else
         script(src='../scripts/lib/google-analytics-bundle.js')
 
@@ -77,6 +81,8 @@ html(ng-app='timeTracker', ng-csp="", style="font-size:{{options.fontSize}}%", n
         script(src='../scripts/services/base64.js')
         if electron
           script(src='../scripts/services/electronPF.js')
+        else if browser
+          script(src='../scripts/services/browserPF.js')
         else
           script(src='../scripts/services/chromePF.js')
         script(src='../scripts/services/account.js')

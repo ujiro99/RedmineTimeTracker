@@ -241,10 +241,10 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _initializeGoogleAnalytics = () ->
     Log.debug "[1] initializeGoogleAnalytics start"
-    Analytics.init {
+    Analytics.init(Platform.getPlarform(), {
       serviceName:   "RedmineTimeTracker"
       analyticsCode: "UA-32234486-7"
-    }
+    })
     Analytics.sendView(Platform.getPlarform())
     Log.debug "[1] initializeGoogleAnalytics success"
 

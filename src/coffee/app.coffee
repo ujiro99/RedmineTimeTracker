@@ -1,5 +1,3 @@
-pf = 'electron'
-if typeof chrome isnt "undefined" then pf = 'chrome'
 timeTracker = angular.module('timeTracker',
   ['ui.bootstrap',
    'ui.timepicker',
@@ -8,6 +6,6 @@ timeTracker = angular.module('timeTracker',
    'timer',
    'analytics',
    'siyfion.sfTypeahead',
-   pf,
+   'browser',
    'pascalprecht.translate'
   ])

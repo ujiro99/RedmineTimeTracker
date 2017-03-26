@@ -63,6 +63,7 @@ module.exports = (grunt) ->
       jade: (path) ->
         jadeOptions = { production: false }
         jadeOptions["production"] = grunt.option('production')
+        jadeOptions["browser"] = grunt.option('browser')
         jadeOptions["electron"] = grunt.option('electron')
         jadeOptions["version"] = grunt.file.readJSON('./package.json').version
         grunt.config 'jade.options.data', jadeOptions
@@ -179,6 +180,7 @@ module.exports = (grunt) ->
             jadeOptions = { production: false}
             jadeOptions["production"] = grunt.option('production')
             jadeOptions["electron"] = grunt.option('electron')
+            jadeOptions["browser"] = grunt.option('browser')
             jadeOptions["version"] = grunt.file.readJSON('./package.json').version
             return jadeOptions
         files: [
