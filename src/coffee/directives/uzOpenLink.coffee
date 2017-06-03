@@ -11,7 +11,7 @@ timeTracker.directive 'uzOpenLink', (Platform) ->
           Platform.openExternalLink(scope.link)
         else
           a = document.createElement('a')
-          a.href = url
+          a.href = scope.link
           a.target='_blank'
           a.click()
   }
