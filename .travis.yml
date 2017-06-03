@@ -1,34 +1,31 @@
 matrix:
   include:
     - os: osx
+      addons:
+        chrome: beta
     - os: linux
-      sudo: required
       dist: trusty
-      env: CC=clang CXX=clang++ npm_config_clang=1
-      compiler: clang
+      node_js: '7'
+      addons:
+        - chrome: stable
 cache:
   directories:
     - bower_components
     - node_modules
+    - yarn
     - $HOME/.electron
-    - $HOME/.cache
-addons:
-  apt:
-    packages:
-      - icnsutils
-      - graphicsmagick
 before_install:
-  - ./scripts/install_chrome.sh
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CHROME_BIN=/usr/bin/google-chrome && export DISPLAY=:99.0; fi
-  - npm install grunt-cli -g
-  - npm install
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
+  - npm install yarn -g
+  - yarn global add grunt-cli
+  - yarn install --ignore-engines
 install:
   - grunt dev
 script:
-  - npm test
+  - yarn test
 before_deploy:
-  - npm run dist:chrome
-  - npm run release
+  - yarn run dist:chrome
+  - yarn run release
 deploy:
   provider: releases
   api_key: $GH_TOKEN

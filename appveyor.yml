@@ -12,17 +12,16 @@ cache:
 install:
   - choco install googlechrome
   - ps: Install-Product node 6 x64
-  - npm install -g npm
-  - set PATH=%APPDATA%\npm;%PATH%
-  - npm install -g grunt-cli
-  - npm install
+  - npm install -g yarn grunt-cli
+  - set PATH=%APPDATA%\yarn;%PATH%
+  - yarn install
 
 build_script:
   - grunt dev
-  - npm run dist:electron
+  - yarn run dist:electron
 
 test_script:
-  - npm test
+  - yarn test
 
 artifacts:
   - path: release\electron\*.exe
