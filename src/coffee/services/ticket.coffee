@@ -158,6 +158,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
   ###
   _sanitize = (params) ->
     if not params.assigned_to then params.assigned_to = NOT_CONFIGED
+    params.total = Math.floor(params.total * 100) / 100
 
 
   return {
