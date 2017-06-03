@@ -40,11 +40,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
   init = () ->
     initializeSearchform()
-    initializePicker()
+    initializePicker(options.stepTime)
     auto = new Auto()
     pomodoro = new Pomodoro()
     manual = new Manual()
     $scope.mode = auto
+    Option.onChanged('stepTime', initializePicker)
 
 
   ###*
@@ -87,14 +88,13 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
    Initialize time picker options.
   ###
-  initializePicker = () ->
-    step = options.stepTime
-    if step is 60
+  initializePicker = (newStep) ->
+    if newStep is 60
       minTime = '01:00'
     else
-      minTime = '00:' + step
+      minTime = '00:' + newStep
     $scope.timePickerOptions =
-      step: step,
+      step: newStep,
       minTime: minTime
       timeFormat: 'H:i',
       show2400: true
@@ -305,7 +305,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     trackedTime: {}
 
     onChanged: () =>
-      initializePicker()
+      initializePicker(options.stepTime)
 
     onNextMode: (direction) =>
       if direction > 0

@@ -18,7 +18,7 @@
     "angular": "~1.2.16",
     "angular-animate": "~1.2.16",
     "angular-bootstrap": "0.10.0",
-    "angular-jquery-timepicker": "2d0a3ade8f909b3590fc2ab3d205ae4ca8733b48",
+    "angular-jquery-timepicker": "https://github.com/ujiro99/angular-jquery-timepicker.git#master",
     "angular-route": "1.2.19",
     "angular-timer": "https://github.com/ujiro99/angular-timer.git#master",
     "angular-translate": "^2.12.1",
