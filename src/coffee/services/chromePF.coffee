@@ -7,7 +7,7 @@ angular.module('chrome', []).provider 'Platform', () ->
   class Platform
 
     # key on storage
-    @SELECTED_PROJECT: "SELECTED_PROJECT"
+    SELECTED_PROJECT: "SELECTED_PROJECT"
 
     ###*
      @constructor
