@@ -64,7 +64,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
   initializeSearchform = () ->
     $scope.ticketData =
-      displayKey: 'text'
+      displayKey: (ticket) -> ticket.id + " " + ticket.text
       source: util.substringMatcher(DataAdapter.tickets, ['text', 'id', 'project.name'], groupByProject)
       templates:
         suggestion: (n) ->
