@@ -73,7 +73,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
                         <span class='numbered-label__label'>#{n.text}</span>
                       </div>"
           if n.groupTop
-            template = template.insert("<div><span class='select-issues__project'>#{n.project.name}</span></div>", 0)
+            template = template.insert("<div><span class='select-issues__project'>#{n.project.id} #{n.project.name}</span></div>", 0)
           return template
     $scope.activityData =
       displayKey: 'name'
