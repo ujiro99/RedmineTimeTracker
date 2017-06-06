@@ -15,8 +15,8 @@ form(action='#', method='POST', name='time_entry')
         input.sfTypeahead.form-control.input-sm(type="text"
           options="typeaheadOptions"
           datasets="ticketData"
-          ng-model="data.selectedTicket"
-          ng-click="data.selectedTicket = null"
+          ng-model="word.ticket"
+          ng-click="word.ticket = null"
           placeholder='Select issue...')
         i.fa.fa-angle-down
 
@@ -30,8 +30,8 @@ form(action='#', method='POST', name='time_entry')
       input.sfTypeahead.form-control.input-sm(type="text"
         options="typeaheadOptions"
         datasets="activityData"
-        ng-model="data.selectedActivity"
-        ng-click="data.selectedActivity = null"
+        ng-model="word.activity"
+        ng-click="word.activity = null"
         placeholder='Select activity...')
       i.fa.fa-angle-down
 

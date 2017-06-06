@@ -14,7 +14,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
       ###*
       # @property account
-      # @type AccountModel
+      # @type {AccountModel}
       ###
       @account = {}
 
@@ -50,6 +50,38 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
 
   ###*
+   Class representing the search word entered.
+   @class SearchKeyword
+  ###
+  class SearchKeyword
+
+    constructor: (@data) ->
+
+    ###*
+     Selected Ticket Model or inputted search word.
+     @type {TicketModel|String}
+    ###
+    _ticket: null
+    @property 'ticket',
+      get: -> return @_ticket
+      set: (val) ->
+        @_ticket = val
+        if val is null or !!val.id # not String
+          @data.selectedTicket = val
+
+    ###*
+     Selected Activity Model or inputted search word.
+     @type {ActivityModel|String}
+    ###
+    _activity: null
+    @property 'activity',
+      get: -> return @_activity
+      set: (val) ->
+        @_activity = val
+        if val is null or !!val.id
+          @data.selectedActivity = val
+
+  ###*
    Adapter class for GUI and data models.
    @class DataAdapter
   ###
@@ -72,6 +104,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # @constructor
     ###
     constructor: () ->
+      @searchKeyword = new SearchKeyword(@)
       @_bindDataModelGetter()
       Option.onChanged "isProjectStarEnable", () =>
         @_updateStarredProjects()
@@ -157,8 +190,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       set: (n) ->
         return if @_selectedTicket is n
         @_selectedTicket = n
+        @searchKeyword._ticket = n
         @_activities.set @_data[n.url].activities if n and @_data[n.url]
-        @_selectedActivity = @_activities[0]
+        @selectedActivity = @_activities[0]
         @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
         Log.debug("selectedTicket set: " + n?.text)
         Log.debug("selectedActivity set: " + @_selectedActivity?.name)
@@ -167,7 +201,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     _selectedActivity: null
     @property 'selectedActivity',
       get: -> @_selectedActivity
-      set: (n) -> @_selectedActivity = n
+      set: (n) ->
+        @_selectedActivity = n
+        @searchKeyword._activity = n
 
     # selected query.
     _selectedQuery: null
@@ -345,7 +381,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @_data[url].activities = activities
       if @selectedTicket and @selectedTicket.url is url
         @_activities.set activities
-        @_selectedActivity = activities[0]
+        @selectedActivity = activities[0]
       Log.debug("setActivities: #{url}")
 
     ###*

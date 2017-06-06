@@ -29,6 +29,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   $scope.typeaheadOptions = { highlight: true, minLength: 0 }
   # jquery-timepicker options
   $scope.timePickerOptions = null
+  # keyword which inputted on search form.
+  $scope.searchKeyword = null
   # mode state objects
   auto = pomodoro = manual = null
   # Application options
@@ -45,6 +47,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     pomodoro = new Pomodoro()
     manual = new Manual()
     $scope.mode = auto
+    $scope.word = DataAdapter.searchKeyword
     Option.onChanged('stepTime', initializePicker)
 
 
@@ -114,12 +117,12 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    Workaround for restore selected state on switching view.
   ###
   restoreSelected = () ->
-    return if not DataAdapter.selectedTicket
-    tmpTicket   = DataAdapter.selectedTicket
-    tmpActivity = DataAdapter.selectedActivity
+    return if not DataAdapter.searchKeyword.ticket
+    tmpTicket   = DataAdapter.searchKeyword.ticket
+    tmpActivity = DataAdapter.searchKeyword.activity
     $timeout () ->
-      DataAdapter.selectedTicket   = tmpTicket
-      DataAdapter.selectedActivity = tmpActivity
+      DataAdapter.searchKeyword.ticket   = tmpTicket
+      DataAdapter.searchKeyword.activity = tmpActivity
     , SWITCHING_TIME / 2
 
 
