@@ -1,4 +1,4 @@
-timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
+timeTracker.factory("Ticket", ($q, Task, Project, Analytics, Platform, Log, Const) ->
 
   TICKET = "TICKET"
 
@@ -17,7 +17,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
    Ticket data model.
    @class TicketModel
   ###
-  class TicketModel
+  class TicketModel extends Task
 
     ###*
      constructor.
@@ -33,15 +33,7 @@ timeTracker.factory("Ticket", ($q, Project, Analytics, Platform, Log) ->
                   @status,
                   @tracker,
                   @total) ->
-
-    ###*
-     compare ticket.
-     true: same / false: different
-    ###
-    equals: (y) ->
-      return @url is y.url and @id is y.id
-
-    hash: () -> return @url + @id
+      super(id, text, url, project.id, total, Const.TASK_TYPE.ISSUE)
 
 
   #

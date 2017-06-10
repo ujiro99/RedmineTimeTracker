@@ -18,13 +18,6 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
     constructor: (@auth, @$http, @$q, @Ticket, @Project, @Base64, @Analytics, @Log, @State, @Const) ->
       @url = @auth.url
 
-    _timeEntryData:
-      "time_entry":
-        "issue_id": 0
-        "hours": 0
-        "activity_id": 8
-        "comments": ""
-
     getIssuesCanceler: null
 
 
@@ -214,23 +207,27 @@ timeTracker.factory "Redmine", ($http, $q, Base64, Ticket, Project, Analytics, L
     submitTime: (config, success, error) ->
       success = success or @Const.NULLFUNC
       error = error or @Const.NULLFUNC
-      @_timeEntryData.time_entry.issue_id    = config.issueId
-      @_timeEntryData.time_entry.hours       = config.hours
-      @_timeEntryData.time_entry.comments    = config.comment
-      @_timeEntryData.time_entry.activity_id = config.activityId
+      timeEntry = {}
+      if config.type is @Const.TASK_TYPE.ISSUE
+        timeEntry.issue_id   = config.id
+      else
+        timeEntry.project_id = config.id
+      timeEntry.hours        = config.hours
+      timeEntry.comments     = config.comment
+      timeEntry.activity_id  = config.activityId
       config =
         method: "POST"
-        url: @auth.url + "/issues/#{@_timeEntryData.time_entry.issue_id}/time_entries.json"
-        data: Redmine.JSONtoXML @_timeEntryData
+        data: Redmine.JSONtoXML { time_entry: timeEntry }
+        url: @auth.url + "/time_entries.json"
       config = @_setBasicConfig config, @auth
       config.headers = "Content-Type": "application/xml"
       @$http(config)
         .success((args...) =>
-          @Log.info("Time Entry Posted.\t account:#{@auth.name}\tid:#{@_timeEntryData.time_entry.issue_id}\thours:#{@_timeEntryData.time_entry.hours}")
+          @Log.info("Time Entry Posted.\t account:#{@auth.name}\tissue_id:#{timeEntry.issue_id}\tproject_id:#{timeEntry.project_id}\thours:#{timeEntry.hours}")
           @Analytics.sendEvent 'timeEntry', 'post', 'success', 1
           success(args...))
         .error((args...) =>
-          @Log.info("Time Entry Post Failed.\t account:#{@auth.name}\tid:#{@_timeEntryData.time_entry.issue_id}\thours:#{@_timeEntryData.time_entry.hours}")
+          @Log.info("Time Entry Post Failed.\t account:#{@auth.name}\tissue_id:#{timeEntry.issue_id}\tproject_id:#{timeEntry.project_id}\thours:#{timeEntry.hours}")
           @Log.debug args
           @Analytics.sendEvent 'timeEntry', 'post', 'failed', 1
           @Analytics.sendException("Error: submitTime\tstatus: " + args[1])

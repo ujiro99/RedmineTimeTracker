@@ -1,4 +1,4 @@
-timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Option, Log, PluginManager) ->
+timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket, DataAdapter, Message, State, Resource, Option, Log, PluginManager, Const) ->
 
   # comment charactor max
   COMMENT_MAX = 255
@@ -30,7 +30,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   # jquery-timepicker options
   $scope.timePickerOptions = null
   # keyword which inputted on search form.
-  $scope.searchKeyword = null
+  $scope.word = null
   # mode state objects
   auto = pomodoro = manual = null
   # Application options
@@ -51,33 +51,25 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     Option.onChanged('stepTime', initializePicker)
 
 
-  ###*
-   @param matches {Array}  Array of issues which matched.
-  ###
-  groupByProject = (matches) ->
-    obj = {}
-    for m in matches
-      if not obj[m.url] then obj[m.url] = {}
-      m.groupTop = not obj[m.url][m.project.id]
-      obj[m.url][m.project.id] = true
-
-
   ###
    Initialize search form.
   ###
   initializeSearchform = () ->
     $scope.ticketData =
       displayKey: (ticket) -> ticket.id + " " + ticket.text
-      source: util.substringMatcher(DataAdapter.tickets, ['text', 'id', 'project.name'], groupByProject)
+      source: util.substringMatcher(DataAdapter.tasks, ['text', 'id', 'project.name'])
       templates:
         suggestion: (n) ->
-          template = "<div class='numbered-label'>
-                        <span class='numbered-label__number'>#{n.id}</span>
-                        <span class='numbered-label__label'>#{n.text}</span>
-                      </div>"
-          if n.groupTop
-            template = template.insert("<div><span class='select-issues__project'>#{n.project.id} #{n.project.name}</span></div>", 0)
-          return template
+          if n.type is Const.TASK_TYPE.ISSUE
+            return "<div class='numbered-label'>
+                      <span class='numbered-label__number'>#{n.id}</span>
+                      <span class='numbered-label__label'>#{n.text}</span>
+                    </div>"
+          else
+            return "<div class='numbered-label select-issues__project'>
+                      <span class='numbered-label__number'>#{n.id}</span>
+                      <span class='numbered-label__label'>#{n.text}</span>
+                    </div>"
     $scope.activityData =
       displayKey: 'name'
       source: util.substringMatcher(DataAdapter.activities, ['name', 'id'])
@@ -117,11 +109,11 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    Workaround for restore selected state on switching view.
   ###
   restoreSelected = () ->
-    return if not DataAdapter.searchKeyword.ticket
-    tmpTicket   = DataAdapter.searchKeyword.ticket
+    return if not DataAdapter.searchKeyword.task
+    tmpTask = DataAdapter.searchKeyword.task
     tmpActivity = DataAdapter.searchKeyword.activity
     $timeout () ->
-      DataAdapter.searchKeyword.ticket   = tmpTicket
+      DataAdapter.searchKeyword.task     = tmpTask
       DataAdapter.searchKeyword.activity = tmpActivity
     , SWITCHING_TIME / 2
 
@@ -155,25 +147,26 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   postEntry = (minutes) ->
     hours = Math.floor(minutes / 60 * 100) / 100 # 0.00
     postParam = { hours: hours , comment: $scope.comment.text }
-    PluginManager.notify(PluginManager.events.SEND_TIME_ENTRY, postParam, DataAdapter.selectedTicket, $scope.mode.name)
-    total = DataAdapter.selectedTicket.total + postParam.hours
-    DataAdapter.selectedTicket.total = Math.floor(total * 100) / 100
+    PluginManager.notify(PluginManager.events.SEND_TIME_ENTRY, postParam, DataAdapter.selectedTask, $scope.mode.name)
+    total = DataAdapter.selectedTask.total + postParam.hours
+    DataAdapter.selectedTask.total = Math.floor(total * 100) / 100
     conf =
-      issueId:    DataAdapter.selectedTicket.id
+      id:         DataAdapter.selectedTask.id
       hours:      postParam.hours
       comment:    postParam.comment
       activityId: DataAdapter.selectedActivity.id
-    url = DataAdapter.selectedTicket.url
+      type:       DataAdapter.selectedTask.type
+    url = DataAdapter.selectedTask.url
     account = DataAdapter.getAccount(url)
     Redmine.get(account).submitTime(conf, submitSuccess, submitError(conf))
-    Message.toast Resource.string("msgSubmitTimeEntry", [DataAdapter.selectedTicket.text, util.formatMinutes(minutes)])
+    Message.toast Resource.string("msgSubmitTimeEntry", [DataAdapter.selectedTask.text, util.formatMinutes(minutes)])
 
 
   ###
    check time entry before starting track.
   ###
   preCheck = () ->
-    if not DataAdapter.selectedTicket
+    if not DataAdapter.selectedTask
       Message.toast Resource.string("msgSelectTicket"), 2000
       return CHECK.NG
     if not DataAdapter.selectedActivity
@@ -201,7 +194,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
   ###
   submitSuccess = (msg, status) ->
     if msg?.time_entry?.id?
-      PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY,  msg.time_entry, status, DataAdapter.selectedTicket, $scope.mode.name)
+      PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY,  msg.time_entry, status, DataAdapter.selectedTask, $scope.mode.name)
       Message.toast Resource.string("msgSubmitTimeSuccess")
     else
       submitError(msg, status)
@@ -211,7 +204,7 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
    show failed message.
   ###
   submitError = (conf) -> (msg, status) ->
-    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status, DataAdapter.selectedTicket, $scope.mode.name)
+    PluginManager.notify(PluginManager.events.SENDED_TIME_ENTRY, msg, status, DataAdapter.selectedTask, $scope.mode.name)
     Message.toast(Resource.string("msgSubmitTimeFail") + Resource.string("status", status), 3000)
     Log.warn conf
 

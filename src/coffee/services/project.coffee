@@ -1,10 +1,10 @@
-timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const, Log) ->
+timeTracker.factory("Project", ($q, Task, Analytics, Platform, Const, Log) ->
 
   ###*
    Project data model.
    @class ProjectModel
   ###
-  class ProjectModel extends EventDispatcher
+  class ProjectModel extends Task
 
     UPDATED: "updated"
 
@@ -19,6 +19,7 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
      @param {Number} queryId - Used query ID
     ###
     constructor: (@url, urlIndex, id, @text, show, queryId) ->
+      super(id, text, url, id, 0, Const.TASK_TYPE.PROJECT)
       @id = id - 0
       isNaN(urlIndex) or @urlIndex = urlIndex - 0
       isNaN(show) or @show = show - 0
@@ -76,15 +77,6 @@ timeTracker.factory("Project", ($q, EventDispatcher, Analytics, Platform, Const,
           projectModel.fireEvent(projectModel.UPDATED, projectModel)
           return true
       }
-
-    ###*
-     Compare project.
-     @param {ProjectModel} y - Object which will be compared.
-     @return true: same / false: different
-    ###
-    equals: (y) ->
-      return false if not y?
-      return @url is y.url and @id is y.id
 
 
   ###*

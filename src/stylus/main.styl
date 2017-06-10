@@ -793,23 +793,26 @@ input.project-search
     display: block
     height: 3rem
     width: 100%
-    font-size: 1.2rem
-    text-ellipsis()
     margin: 0 .5rem
-    padding: .4rem 0 0 .3rem
+    padding: .4rem 0 0 0
     border-bottom: solid .1rem #ccc
+    text-ellipsis()
+
+    .numbered-label__number
+      margin-left: .2rem
+      padding-right: 0.1rem
 
   .numbered-label__number
-    margin-left: 0.6rem
+    margin-left: .8rem
     transition: margin-left .2s ease
 
   .tt-cursor
-    .select-issues__project
-      color: $color_font
+    .select-issues__project .numbered-label__number
+      margin-left: .6rem
     .numbered-label
       background-color: $color_key_weak
     .numbered-label__number
-      margin-left: 1rem
+      margin-left: 1.2rem
       color: #fff
     .numbered-label__label
       color: #fff

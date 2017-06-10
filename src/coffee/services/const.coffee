@@ -12,6 +12,6 @@ timeTracker.factory "Const", () ->
     UNAUTHORIZED:     401
     ACCESS_ERROR:     0
     URL_FORMAT_ERROR: -1
+    TASK_TYPE:        { ISSUE: 1, PROJECT: 2 }
 
   return obj
-

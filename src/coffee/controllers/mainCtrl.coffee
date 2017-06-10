@@ -122,7 +122,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
         DataAdapter.selectedProject.text = p.text
 
     # update
-    DataAdapter.removeProjects(saved)
+    DataAdapter.removeProjects(saved, false)
     DataAdapter.addProjects(projects)
 
   ###
@@ -170,12 +170,12 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _loadIssues = (account) -> () ->
     for t in DataAdapter.tickets when account.url is t.url
-      Redmine.get(account).getIssuesById t.id, _upsateIssue(t), _issueNotFound(t)
+      Redmine.get(account).getIssuesById t.id, _updateIssue(t), _issueNotFound(t)
 
   ###
    when issue found, update according to it.
   ###
-  _upsateIssue = (target) -> (issue) ->
+  _updateIssue = (target) -> (issue) ->
     for k, v of issue then target[k] = v
     return if not Option.getOptions().removeClosedTicket
     # remove closed issues.

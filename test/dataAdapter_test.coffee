@@ -417,7 +417,7 @@ describe 'DataAdapter.coffee', ->
 
       # check
       expect(DataAdapter.selectedProject.url).to.equals(auth[1].url)
-      expect(DataAdapter.selectedTicket.url).to.equals(TestData.ticketList2[1].url)
+      expect(DataAdapter.selectedTask.url).to.equals(TestData.ticketList2[1].url)
 
     it "should remove two account.", () ->
       auth = DataAdapter.getAccount()

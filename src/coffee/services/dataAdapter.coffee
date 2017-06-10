@@ -58,16 +58,16 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     constructor: (@data) ->
 
     ###*
-     Selected Ticket Model or inputted search word.
-     @type {TicketModel|String}
+     Selected TaskModel or inputted search word.
+     @type {TaskModel|String}
     ###
-    _ticket: null
-    @property 'ticket',
-      get: -> return @_ticket
+    _task: null
+    @property 'task',
+      get: -> return @_task
       set: (val) ->
-        @_ticket = val
+        @_task = val
         if val is null or !!val.id # not String
-          @data.selectedTicket = val
+          @data.selectedTask = val
 
     ###*
      Selected Activity Model or inputted search word.
@@ -96,7 +96,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     SELECTED_ACCOUNT_CHANGED: "selected_account_changed"
     SELECTED_PROJECT_CHANGED: "selected_project_changed"
     SELECTED_PROJECT_UPDATED: "selected_project_updated"
-    SELECTED_TICKET_CHANGED:  "selected_ticket_changed"
+    SELECTED_TASK_CHANGED:    "selected_task_changed"
     SELECTED_QUERY_CHANGED:   "selected_query_changed"
 
     ###*
@@ -124,7 +124,15 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       get: -> @_filteredData
 
     ###*
-    # selectable tickets
+    # selectable task
+    # @type {TaskModel[]}
+    ###
+    _tasks: []
+    @property 'tasks',
+      get: -> @_tasks
+
+    ###*
+    # selectable ticket
     # @type {TicketModel[]}
     ###
     _tickets: []
@@ -175,7 +183,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
         @_selectedProject.addEventListener(n.UPDATED, @_notifyProjectUpdated)
         @selectedAccount  = @_data[n.url].account
         @queries          = @_data[n.url].queries
-        @_sortTickets(@_tickets)
+        @_sortTasks(@_tasks)
         @fireEvent(@SELECTED_PROJECT_CHANGED, @, n)
         Log.debug("selectedProject set: " + n.text)
 
@@ -184,17 +192,17 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       @fireEvent(@SELECTED_PROJECT_UPDATED, @)
 
     # selected ticket.
-    _selectedTicket: null
-    @property 'selectedTicket',
-      get: -> @_selectedTicket
+    _selectedTask: null
+    @property 'selectedTask',
+      get: -> @_selectedTask
       set: (n) ->
-        return if @_selectedTicket is n
-        @_selectedTicket = n
-        @searchKeyword._ticket = n
+        return if @_selectedTask is n or (n and not n.text)
+        @_selectedTask = n
+        @searchKeyword._task = n
         @_activities.set @_data[n.url].activities if n and @_data[n.url]
         @selectedActivity = @_activities[0]
-        @fireEvent(@SELECTED_TICKET_CHANGED, @, n)
-        Log.debug("selectedTicket set: " + n?.text)
+        @fireEvent(@SELECTED_TASK_CHANGED, @, n)
+        Log.debug("selectedTask set: " + n?.text)
         Log.debug("selectedActivity set: " + @_selectedActivity?.name)
 
     # selected activity.
@@ -275,13 +283,13 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       for a in accounts
         delete @_data[a.url]
         @_filteredData.remove((n) -> return n.url is a.url)
-        @tickets.remove((n) -> return n.url is a.url)
+        @tasks.remove((n) -> return n.url is a.url)
         @_updateStarredProjects()
         if @selectedProject and @selectedProject.url is a.url
           account = @_filteredData.find (n) -> n.projects.length > 0
           @selectedProject = account.projects[0] if account
-        if @selectedTicket and @selectedTicket.url is a.url
-          @selectedTicket = @tickets[0]
+        if @selectedTask and @selectedTask.url is a.url
+          @selectedTask = @tasks[0]
       @fireEvent(@ACCOUNT_REMOVED, @, accounts)
       Log.debug("removeAccounts() finish")
 
@@ -302,6 +310,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       for url, dataModel of @_data
         dataModel.account.projectsCount = dataModel.projects.length
       if not @selectedProject then @selectedProject = firstAdded
+      @_addProjectsToTasks()
+      if not @selectedTask then @selectedTask = @_tasks[0]
       @updateProjects()
       @fireEvent(@PROJECTS_CHANGED, @, projects)
       Log.debug("addProjects() finish")
@@ -316,7 +326,9 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       if not projects? or projects.length is 0 then return
       for p in projects when @_data[p.url] and @_data[p.url].projects
         @_data[p.url].projects.remove((n) -> n.equals(p))
-      @updateProjects()
+        @tasks.remove((n) -> n.equals(p))
+        if @selectedTask?.equals(p) then @selectedTask = null
+      eventEnable and @updateProjects()
       eventEnable and @fireEvent(@PROJECTS_CHANGED, @, projects)
       Log.debug("removeProjects() finish")
 
@@ -331,18 +343,26 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
       Log.debug("updateProjects() finish")
 
     ###*
-    # toggle ticket's show/hide status.
-    # @param {TicketModel[]} tickets - array of TicketModel
+     toggle ticket's show/hide status.
+     @param {TicketModel[]} tickets - array of TicketModel
     ###
     toggleIsTicketShow: (tickets) ->
       Log.debug("toggleIsTicketShow() start")
+      Log.time('toggleIsTicketShow\t')
+
+      # toggle tickets.
       tickets = [tickets] if not Array.isArray(tickets)
       @_tickets.set @_tickets.xor(tickets)
-      @_sortTickets(@_tickets)
-      if not @selectedTicket or not @_tickets.some((n) => n.equals(@selectedTicket))
-        @selectedTicket = @_tickets[0]
+      @_addProjectsToTasks()
+
+      # update selectedTask.
+      if not @selectedTask or not @_tasks.some((n) => n.equals(@selectedTask))
+        @selectedTask = @_tasks[0]
+
       @fireEvent(@TICKETS_CHANGED, @)
+      Log.timeEnd('toggleIsTicketShow\t')
       Log.debug("toggleIsTicketShow() finish")
+
 
     ###*
     # add tickets to _data.
@@ -360,8 +380,8 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     clearTicket: () ->
       Log.debug("clearTicket() start")
       for url, data of @_data then data.tickets = []
-      @_tickets.set []
-      @selectedTicket = null
+      @_tasks.set []
+      @selectedTask = null
       @fireEvent(@TICKETS_CHANGED, @)
       Log.debug("clearTicket() finish")
 
@@ -379,7 +399,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     setActivities: (url, activities) ->
       if not url? or not activities? then return
       @_data[url].activities = activities
-      if @selectedTicket and @selectedTicket.url is url
+      if @selectedTask and @selectedTask.url is url
         @_activities.set activities
         @selectedActivity = activities[0]
       Log.debug("setActivities: #{url}")
@@ -409,30 +429,44 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     ###
 
     ###*
-    # Set Statuses.
-    # @param {string} url - url of redmine server.
-    # @param {Status[]} statuses - array of Status to be set.
+     Set Statuses.
+     @param {string} url - url of redmine server.
+     @param {Status[]} statuses - array of Status to be set.
     ###
     setStatuses: (url, statuses) ->
       if not url? or not statuses? then return
       @_data[url].statuses = statuses
       Log.debug("setStatuses: #{url}")
 
+
     ###*
-    # sort tickets.
-    #  order: account -> project -> ticket
+     Add projects to @tasks if tickets exists.
     ###
-    _sortTickets: (tickets) ->
-      tickets.sort (a, b) =>
+    _addProjectsToTasks: () ->
+      projects = @tickets.map((n) -> {url: n.url, id: n.project.id}).unique()
+      projectModels = projects.map((p) => @_data[p.url]?.projects?.find(p)).compact()
+      @_tasks.set @tickets.concat(projectModels)
+      @_sortTasks(@_tasks)
+
+
+    ###*
+     sort tasks.
+     order: selected -> url -> project -> type -> ticket
+     @param {TaskModel[]} tasks - task array to be sorted.
+    ###
+    _sortTasks: (tasks) ->
+      tasks.sort (a, b) =>
         if @selectedProject
-          isAselected = a.url is @selectedProject.url and a.project.id is @selectedProject.id
-          isBselected = b.url is @selectedProject.url and b.project.id is @selectedProject.id
-          if isAselected then return -1
-          if isBselected then return  1
+          isAselected = a.url is @selectedProject.url and a.projectId is @selectedProject.id
+          isBselected = b.url is @selectedProject.url and b.projectId is @selectedProject.id
+          if isAselected and not isBselected then return -1
+          if isBselected and not isAselected then return  1
         if a.url > b.url then return  1
         if a.url < b.url then return -1
-        if a.project.id > b.project.id then return  1
-        if a.project.id < b.project.id then return -1
+        if a.projectId > b.projectId then return  1
+        if a.projectId < b.projectId then return -1
+        if a.type > b.type then return -1
+        if a.type < b.type then return  1
         if a.id > b.id then return  1
         if a.id < b.id then return -1
         return 0

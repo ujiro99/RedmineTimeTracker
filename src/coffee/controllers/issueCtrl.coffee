@@ -94,10 +94,10 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
 
 
   ###
-   check item was contained in selectableTickets.
+   check item was contained in selectable Tasks.
   ###
   $scope.isContained = (item) ->
-    return DataAdapter.tickets.some (e) -> item.equals e
+    return DataAdapter.tasks.some (e) -> item.equals e
 
 
   ###

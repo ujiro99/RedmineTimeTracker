@@ -15,8 +15,8 @@ form(action='#', method='POST', name='time_entry')
         input.sfTypeahead.form-control.input-sm(type="text"
           options="typeaheadOptions"
           datasets="ticketData"
-          ng-model="word.ticket"
-          ng-click="word.ticket = null"
+          ng-model="word.task"
+          ng-click="word.task = null"
           placeholder='Select issue...')
         i.fa.fa-angle-down
 
@@ -24,7 +24,7 @@ form(action='#', method='POST', name='time_entry')
         div.progress-bar--outer(role="progressbar")
           div.progress-bar(role="progressbar")
         p.progress--label
-          span {{data.selectedTicket.id}} {{data.selectedTicket.text}}
+          span {{data.selectedTask.id}} {{data.selectedTask.text}}
         timer.progress--label(autostart='false', interval="1000") {{hours|numLength:2}}:{{minutes|numLength:2}}:{{seconds|numLength:2}}
 
     button.btn(type='button', ng-click='clickSubmitButton()', ga-click='postAuto')
@@ -46,7 +46,7 @@ form(action='#', method='POST', name='time_entry')
     div.separater
 
     div.time.time__total
-      span {{data.selectedTicket.total}} hr
+      span {{data.selectedTask.total}} hr
 
 
   // comment

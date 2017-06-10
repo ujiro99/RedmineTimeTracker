@@ -88,7 +88,7 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
 
       # merge issues status.
       for issue in data.issues
-        saved = DataAdapter.tickets.find (n) -> n.equals(issue)
+        saved = DataAdapter.tasks.find (n) -> n.equals(issue)
         saved and issue.show = saved.show
 
       # merge arrays and set.
