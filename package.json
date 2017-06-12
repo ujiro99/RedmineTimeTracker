@@ -1,6 +1,6 @@
 {
   "name": "RedmineTimeTracker",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Time Tracking tool for Redmine",
   "author": "Yujiro Takeda <siro.cola@gmail.com>",
   "license": "MIT",
