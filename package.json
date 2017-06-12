@@ -23,18 +23,19 @@
     "start": "electron ./app",
     "clean": "rimraf ./release/electron",
     "dist:chrome": "grunt build-chrome && grunt compress:ci",
-    "dist:electron": "grunt build-electron && yarn run clean && build --x64 --ia32",
-    "release": "yarn run dist:electron"
+    "dist:electron": "grunt build-electron && yarn run clean && build --x64 --ia32"
   },
   "build": {
     "appId": "org.ujiro99.redminetimetracker",
-    "category": "public.app-category.developer-tools",
     "files": [
       "out",
       "node_modules"
     ],
     "directories": {
       "output": "release/electron"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools"
     },
     "dmg": {
       "contents": [
@@ -52,30 +53,31 @@
     },
     "win": {
       "target": [
-        "portable",
-        "squirrel"
+        "nsis",
+        "portable"
       ]
     },
     "linux": {
+      "category": "Development",
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "icon": "build/icon.iconset"
     }
   },
   "dependencies": {
-    "electron-auto-updater": "^1.0.0",
     "electron-debug": "^1.0.0",
     "electron-is-dev": "^0.1.2",
-    "electron-json-storage": "^2.1.0"
+    "electron-json-storage": "^2.1.0",
+    "electron-updater": "^2.1.2"
   },
   "devDependencies": {
     "angular-mocks": "1.4.1",
     "chai": "~1.8.1",
     "devtron": "^1.1.0",
-    "electron": "^1.3.3",
+    "electron": "^1.6.10",
     "electron-builder": "^18.8.1",
-    "electron-builder-squirrel-windows": "^11.3.0",
     "grunt": "~0.4.1",
     "grunt-bower-task": "^0.4.0",
     "grunt-contrib-clean": "^0.5.0",

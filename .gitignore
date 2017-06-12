@@ -3,10 +3,7 @@ bower_components
 /out
 !out/manifest.json
 /coverage
-package
-fonts
 app/components
-assets/icon.iconset
 *.js
 *.css
 *.html

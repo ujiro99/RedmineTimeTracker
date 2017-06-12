@@ -1,5 +1,3 @@
-version: '1.0.{build}'
-
 platform:
   - x64
 
@@ -11,10 +9,9 @@ cache:
 
 install:
   - choco install googlechrome
-  - ps: Install-Product node 6 x64
-  - npm install -g yarn grunt-cli
-  - set PATH=%APPDATA%\yarn;%PATH%
-  - yarn install
+  - ps: Install-Product node 8 x64
+  - yarn global add grunt-cli
+  - yarn
 
 build_script:
   - grunt dev

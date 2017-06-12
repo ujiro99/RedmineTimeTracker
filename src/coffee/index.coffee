@@ -1,6 +1,6 @@
 'use strict'
 { app, BrowserWindow, Menu } = require('electron')
-{ autoUpdater } = require("electron-auto-updater")
+{ autoUpdater } = require("electron-updater")
 isDev = require('electron-is-dev')
 storage = require('electron-json-storage')
 

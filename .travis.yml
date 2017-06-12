@@ -5,27 +5,34 @@ matrix:
         chrome: beta
     - os: linux
       dist: trusty
-      node_js: '7'
       addons:
         - chrome: stable
+
+language: c
+
 cache:
   directories:
     - bower_components
     - node_modules
     - yarn
     - $HOME/.electron
+
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
   - npm install yarn -g
   - yarn global add grunt-cli
   - yarn install --ignore-engines
+
 install:
   - grunt dev
+
 script:
   - yarn test
+
 before_deploy:
   - yarn run dist:chrome
-  - yarn run release
+  - yarn run dist:electron
+
 deploy:
   provider: releases
   api_key: $GH_TOKEN
