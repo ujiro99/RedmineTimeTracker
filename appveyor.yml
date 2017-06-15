@@ -21,4 +21,15 @@ test_script:
   - yarn test
 
 artifacts:
-  - path: release\electron\*.exe
+  - path: release\electron\*.exe,latest.yml
+
+deploy:
+  description: 'Release'
+  provider: GitHub
+  auth_token:
+    secure: v5qEZPfyCd2WwTjoIKRfotA4atyU6PSPEztHcs3FTkr07WnGHNFOT0NA82aqVjWq
+  artifact: release\electron\*.exe,latest.yml
+  on:
+    branch: master
+    appveyor_repo_tag: true
+

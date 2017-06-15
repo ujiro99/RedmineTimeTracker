@@ -39,6 +39,9 @@ deploy:
   skip_cleanup: true
   file:
     - release/chrome/chrome-app.zip
+    - release/electron/RedmineTimeTracker-*
+    - release/electron/latest-mac.yml
   on:
     all_branches: true
     tags: true
+
