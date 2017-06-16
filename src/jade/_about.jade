@@ -5,8 +5,13 @@
     span Time
     span Tracker
   div.version
-    - var ver = "Ver. " + version
-    span= ver
+    if electron == true
+      - var $edition = "Electron edition"
+    else
+      - var $edition = "Chrome app edition"
+    - var $ver = "Ver. " + version
+    span= $edition
+    span= $ver
 
   footer
     p.muted
