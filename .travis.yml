@@ -37,10 +37,9 @@ deploy:
   provider: releases
   api_key: $GH_TOKEN
   skip_cleanup: true
+  draft: true
   file:
     - release/chrome/chrome-app.zip
-    - release/electron/RedmineTimeTracker-*
-    - release/electron/latest-mac.yml
   on:
     all_branches: true
     tags: true
