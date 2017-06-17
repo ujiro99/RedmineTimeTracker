@@ -7,16 +7,17 @@ timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const, Option) ->
   # is header dropdown active?
   $scope.isActive = false
 
-  ###
-   select project.
+  ###*
+   Select project.
    @param {projectModel} project - clicked object.
   ###
   $scope.selectProject = (project) ->
     DataAdapter.selectedProject = project
     $scope.isActive = false
 
-  ###
+  ###*
    Toggle star on project.
+   @param {projectModel} project - clicked object.
   ###
   $scope.toggleStar = (project) ->
     if project.show is Const.SHOW.DEFAULT
@@ -24,3 +25,9 @@ timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const, Option) ->
     else
       project.show = project.show % 2 + 1
     DataAdapter.addProjects([project])
+
+  ###*
+   Reload project and tickets.
+  ###
+  $scope.reload = () ->
+    console.log("reload")

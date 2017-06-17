@@ -4,14 +4,17 @@ div#header(ng-controller="headerCtrl")
 
     div.project
 
-      button.project-toggle.project-title(type="button",
-        ng-click="isActive = true",
-        uz-focus=".project-search")
-        span.project-id
-          {{data.selectedProject.id}}
-        span.project-label
-          {{data.selectedProject.text}}
-        i.fa.fa-angle-down
+      div.project--title
+
+        button.project--select(type="button", ng-click="isActive = true", uz-focus=".project-search")
+          span.project-id
+            {{data.selectedProject.id}}
+          span.project-label
+            {{data.selectedProject.text}}
+          i.fa.fa-angle-down
+
+        button.project--reload(type="button", ng-click="reload()")
+          i.icon-reload
 
       input.form-control.input-sm.project-search.icon-search(
         type="search",

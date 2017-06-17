@@ -161,24 +161,41 @@ input[type=number]::-webkit-inner-spin-button
   vertical-align: bottom
   text-ellipsis()
 
-.project-title
+.project--title
+  display: flex
   width: 100%
-  border: none
   padding: 0
   height: $height_header
   background-color: #fff
   position: absolute
-  outline: none
   z-index: $z-index-project-title
+
+.project--select
+.project--reload
+  border: none
+  outline: none
+  background: none
+
+.project--select
+  flex: 1
+  &:hover .fa
+    color #666
   .fa
     font-size: 1.3rem
     color #ccc
     transition: color .2s ease
-  &:hover .fa
-    color #666
+  .project-id
+    padding-left: 2.5rem
+
+.project--reload
+  line-height: $height_header
+  color: $color_icon_light
+  transition: color .2s ease
+  &:hover
+    color: $color_key
 
 input.project-search
-  height: 3rem
+  height: $height_header
 
 .project-search
   padding-left: 1.6rem
