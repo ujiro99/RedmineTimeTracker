@@ -1,4 +1,4 @@
-timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, IssueLoader, Const, State, Message, Resource) ->
+timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Option, Analytics, RedmineLoader, Const, State, Message, Resource) ->
 
   # data
   $scope.data = DataAdapter
@@ -21,7 +21,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   # property filter's tab state.
   $scope.tabState = {}
   # provide functions for issue loading.
-  $scope.loader = new IssueLoader($scope)
+  $scope.loader = RedmineLoader
   # global state.
   $scope.state = State
 
@@ -33,10 +33,10 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
     initializeSearchform()
     # on change selected Project, load issues and queries.
     DataAdapter.addEventListener DataAdapter.SELECTED_PROJECT_CHANGED, () ->
-      $scope.loader.loadIssues()
+      $scope.loader.fetchIssues()
     # on change selected Query, set query to project, and load issues.
     DataAdapter.addEventListener DataAdapter.SELECTED_QUERY_CHANGED, () ->
-      $scope.loader.setQueryAndloadIssues()
+      $scope.loader.setQueryAndFetchIssues()
 
 
   ###*
@@ -88,7 +88,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   ###
   $scope.$watch 'pageParam.currentPage', ->
     State.isLoadingVisible = false
-    $scope.loader.loadAllTicketOnProject()
+    $scope.loader.fetchAllTicketOnProject()
 
 
   ###
