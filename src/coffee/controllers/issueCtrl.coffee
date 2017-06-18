@@ -121,6 +121,28 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
       $scope.tooltipPlace = 'bottom'
 
 
+  ###*
+   Filter issues by searchParam.text and properties.
+   @param {TicketModel} item - Issue to be judged.
+   @return {bool} true: show, false: hide
+  ###
+  $scope.listFilter = (item) ->
+
+    if $scope.searchParam.onlyContained
+      return if not $scope.isContained(item)
+
+    match = Const.ISSUE_PROPS.all (p) ->
+      DataAdapter.selectedProject[p].some (n) ->
+        return true if n.name is "All" and n.checked
+        return false if not n.checked
+        return item[p].id is (n.id|0)
+    return false if not match
+
+    if $scope.searchParam.text.isBlank() then return true
+    return (item.id + "").contains($scope.searchParam.text) or
+           item.text.toLowerCase().contains($scope.searchParam.text.toLowerCase())
+
+
   ###
    Start Initialize.
   ###

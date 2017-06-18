@@ -84,7 +84,7 @@ div#issue(ng-controller='IssueCtrl')
     div.issue-list
       ul.issue-list__content(ng-class="{'issue-list__content--empty':!data.selectedProject.tickets.length && !state.isLoadingIssue}",
                              uz-loading="isLoadingVisible && state.isLoadingIssue")
-        li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:loader.listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (pageParam.currentPage - 1) * options.itemsPerPage',
+        li.issue-list__item(ng-repeat='item in filtered = (data.selectedProject.tickets | filter:listFilter) | orderBy:"id" | limitTo:options.itemsPerPage : (pageParam.currentPage - 1) * options.itemsPerPage',
           ng-mousemove='onMouseMove($event)')
           button.numbered-label(type='button', ng-click="onClickItem(item)", ga-click='issueItem')
             span.numbered-label__number {{item.id}}
