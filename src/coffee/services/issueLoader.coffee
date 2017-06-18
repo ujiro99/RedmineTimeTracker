@@ -1,4 +1,4 @@
-timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Resource, Const) ->
+timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Resource, Const, State) ->
 
   ###*
    Service for loading issues from redmine.
@@ -16,14 +16,14 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
      Constructor
      @constructor
     ###
-    constructor: (@$scope) ->
+    constructor: () ->
 
 
     ###*
      Clear and load issues
     ###
     loadIssues: () ->
-      @$scope.isLoadingVisible = true
+      State.isLoadingVisible = true
       DataAdapter.selectedProject.tickets.clear()
       @loadAllTicketOnProject()
 
@@ -94,7 +94,7 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
       # merge arrays and set.
       tickets = DataAdapter.selectedProject.tickets.union(data.issues)
       DataAdapter.selectedProject.tickets.set(tickets)
-      @$scope.isLoadingVisible = false
+      State.isLoadingVisible = false
 
 
     ###*
@@ -102,6 +102,7 @@ timeTracker.factory "IssueLoader", ($window, Redmine, DataAdapter, Message, Reso
     ###
     loadError: (data, status) =>
       if status is IssueLoader.STATUS_CANCEL then return
+      State.isLoadingVisible = false
       Message.toast Resource.string("msgLoadIssueFail")
 
 

@@ -14,8 +14,6 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
   $scope.tooltipPlace = 'top'
   # is search field collapse.
   $scope.isCollapseParameters = true
-  # flag for loading icon.
-  $scope.isLoadingVisible = true
   # typeahead data.
   $scope.queryData = null
   # typeahead options
@@ -89,7 +87,7 @@ timeTracker.controller 'IssueCtrl', ($scope, $window, Project, DataAdapter, Opti
    on change currentPage, start loading.
   ###
   $scope.$watch 'pageParam.currentPage', ->
-    $scope.isLoadingVisible = false
+    State.isLoadingVisible = false
     $scope.loader.loadAllTicketOnProject()
 
 

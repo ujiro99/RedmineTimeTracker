@@ -10,6 +10,7 @@ timeTracker.provider("State", (LogProvider) ->
     isAddingAccount:   false
     isSaving:          false
     isLoadingIssue:    false
+    isLoadingVisible:  true   # flag for issue loading icon.
     isCollapseSetting: true
 
   return {
