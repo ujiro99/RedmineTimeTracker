@@ -86,9 +86,9 @@ timeTracker.factory("Option", ($q, Platform, Const, Log) ->
       # @param {String} propName: Property name which will be change.
       # @param {Object} value: New value.
       set: (options, propName, value) ->
+        options[propName] = value
         Option._events.map (f) -> f(propName, value, options[propName])
         Option._eventsWithKey[propName]?.map (f) -> f(value, options[propName])
-        options[propName] = value
         return true
     }
 

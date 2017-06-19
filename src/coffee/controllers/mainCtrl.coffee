@@ -45,8 +45,8 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
   ###
   _toggleProjectHidden = (enableHide) ->
     if enableHide
-      for a in Account.getAccounts()
-        _loadIssueCount(a)()
+      promises = for a in Account.getAccounts()
+        RedmineLoader.fetchTicketsCount(a)()
     else
       DataAdapter.updateProjects()
 

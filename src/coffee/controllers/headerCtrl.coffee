@@ -1,4 +1,4 @@
-timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const, Option) ->
+timeTracker.controller 'headerCtrl', ($scope, DataAdapter, RedmineLoader, Const, Option, State) ->
 
   # data
   $scope.data = DataAdapter
@@ -6,6 +6,9 @@ timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const, Option) ->
   $scope.options = Option.getOptions()
   # is header dropdown active?
   $scope.isActive = false
+  # global state.
+  $scope.state = State
+
 
   ###*
    Select project.
@@ -14,6 +17,7 @@ timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const, Option) ->
   $scope.selectProject = (project) ->
     DataAdapter.selectedProject = project
     $scope.isActive = false
+
 
   ###*
    Toggle star on project.
@@ -26,8 +30,10 @@ timeTracker.controller 'headerCtrl', ($scope, DataAdapter, Const, Option) ->
       project.show = project.show % 2 + 1
     DataAdapter.addProjects([project])
 
+
   ###*
    Reload project and tickets.
   ###
   $scope.reload = () ->
-    console.log("reload")
+    accounts = DataAdapter.getAccount()
+    RedmineLoader.fetchAllData(accounts)

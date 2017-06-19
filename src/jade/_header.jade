@@ -13,7 +13,11 @@ div#header(ng-controller="headerCtrl")
             {{data.selectedProject.text}}
           i.fa.fa-angle-down
 
-        button.project--reload(type="button", ng-click="reload()")
+        button.project--reload(type="button",
+            ng-click="reload()",
+            ng-class="{rotate__infinite: state.isLoadingAllData}"
+            ng-disabled="state.isLoadingAllData",
+            ga-click='projectReload')
           i.icon-reload
 
       input.form-control.input-sm.project-search.icon-search(

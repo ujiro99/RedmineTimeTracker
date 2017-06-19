@@ -172,6 +172,7 @@ input[type=number]::-webkit-inner-spin-button
 
 .project--select
 .project--reload
+  line-height: $height_header
   border: none
   outline: none
   background: none
@@ -188,11 +189,12 @@ input[type=number]::-webkit-inner-spin-button
     padding-left: 2.5rem
 
 .project--reload
-  line-height: $height_header
   color: $color_icon_light
   transition: color .2s ease
+  transform: scale(-1, 1) // Transform reload icon to clockwise.
   &:hover
     color: $color_key
+
 
 input.project-search
   height: $height_header
@@ -338,11 +340,18 @@ input.project-search
   from {right: 0}
   to   {right: -100%}
 
+@keyframes spin-reverse
+  from { transform: scale(-1, 1) rotate(359deg) }
+  to { transform: scale(-1, 1) rotate(0deg) }
+
 .rotate__fast
   transition: transform .25s ease
 
 .rotate__slow
   transition: transform .5s ease
+
+.rotate__infinite
+  animation: spin-reverse 1.4s infinite linear
 
 .rotate180
   transform: rotate(180deg)

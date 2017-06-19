@@ -30,12 +30,16 @@ timeTracker.factory "RedmineLoader", ($window, $q, Redmine, DataAdapter, Message
     ###
     fetchAllData: (accounts) ->
       Log.debug("fetchAllData() start")
+      State.isLoadingAllData = true
       for a in accounts
         @_fetchActivities(a)
         @_fetchQueries(a)
         $q.all([@_fetchProjects(a), @_fetchStatuses(a)])
           .then(@_fetchSavedIssues(a))
-          .then(@_fetchIssueCount(a))
+          .then(@fetchTicketsCount(a))
+          .then(()->
+            State.isLoadingAllData = false
+            Log.debug("fetchAllData() finish"))
 
 
     ###*
@@ -76,6 +80,29 @@ timeTracker.factory "RedmineLoader", ($window, $q, Redmine, DataAdapter, Message
         .getIssues(params)
         .then(@_fetchRemainingTickets, @_errorFetchTickets)
         .then(@_successFetchTickets, @_errorFetchTickets)
+
+
+    ###
+     Update project's issues count.
+     @param {AccountModel} account - Account to be fetched.
+     @return {Promise<undefined>} To be resolved when all count fetched.
+    ###
+    fetchTicketsCount: (account) -> () ->
+      Log.debug("fetchTicketsCount() start:\t#{account.name}")
+      return if not Option.getOptions().hideNonTicketProject
+      projects = DataAdapter.getProjects(account.url)
+      promises = projects.map (p) ->
+        params = limit: 1, project_id: p.id, status_id: "open"
+        Redmine.get(account).getIssuesPararell(params)
+          .then((d) -> p.ticketCount = d.total_count)
+      $q.all(promises)
+        .then(() -> DataAdapter.updateProjects())
+        .then(() ->
+           projects = DataAdapter.getProjects(account.url)
+           Log.groupCollapsed "fetchTicketsCount() #{account.url}"
+           for p in projects
+             Log.debug("  project: " + p.text + "\tticketCount: " + p.ticketCount)
+           Log.groupEnd "fetchTicketsCount() #{account.url}" )
 
 
     ###*
@@ -170,29 +197,6 @@ timeTracker.factory "RedmineLoader", ($window, $q, Redmine, DataAdapter, Message
       if status is RedmineLoader.NOT_FOUND or status is RedmineLoader.UNAUTHORIZED
         DataAdapter.toggleIsTicketShow(issue)
         Message.toast(Resource.string("msgIssueMissing", [target.text, account.name]), 3000)
-
-
-    ###
-     Update project's issues count.
-     @param {AccountModel} account - Account to be fetched.
-     @return {Promise<undefined>} To be resolved when all count fetched.
-    ###
-    _fetchIssueCount: (account) -> () ->
-      Log.debug("_fetchIssueCount() start:\t#{account.name}")
-      return if not Option.getOptions().hideNonTicketProject
-      projects = DataAdapter.getProjects(account.url)
-      promises = projects.map (p) ->
-        params = limit: 1, project_id: p.id, status_id: "open"
-        Redmine.get(account).getIssuesPararell(params)
-          .then((d) -> p.ticketCount = d.total_count)
-      $q.all(promises)
-        .then(() -> DataAdapter.updateProjects())
-        .then(() ->
-           projects = DataAdapter.getProjects(account.url)
-           Log.groupCollapsed "_fetchIssueCount() #{account.url}"
-           for p in projects
-             Log.debug("  project: " + p.text + "\tticketCount: " + p.ticketCount)
-           Log.groupEnd "_fetchIssueCount() #{account.url}" )
 
 
     ###*

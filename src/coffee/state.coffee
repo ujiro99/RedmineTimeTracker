@@ -9,6 +9,7 @@ timeTracker.provider("State", (LogProvider) ->
     isPomodoring:      false
     isAddingAccount:   false
     isSaving:          false
+    isLoadingAllData:  false  # flag for reload button.
     isLoadingIssue:    false
     isLoadingVisible:  true   # flag for issue loading icon.
     isCollapseSetting: true
