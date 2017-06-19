@@ -153,6 +153,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
     obj = {
       url: selected.url
       id: selected.id
+      type: selected.type
     }
     Platform.save(Platform.SELECTED_PROJECT, obj)
 
