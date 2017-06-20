@@ -28,7 +28,7 @@ timeTracker.factory "RedmineLoader", ($window, $q, Redmine, DataAdapter, Message
      @param {AccountModel[]} accounts - Account to be fetched data.
      @return {Promise[]<undefined>} To be resolved when all fetching finished.
     ###
-    fetchAllData: (accounts) ->
+    fetchAllData: (accounts) =>
       Log.debug("fetchAllData() start")
       State.isLoadingAllData = true
       for a in accounts
