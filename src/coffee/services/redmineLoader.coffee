@@ -230,7 +230,7 @@ timeTracker.factory "RedmineLoader", ($window, $q, Redmine, DataAdapter, Message
     ###
     _successFetchProject: (data) =>
       if not data.project and (not data.projects or data.projects.length is 0)
-        _errorFetchProject data
+        @_errorFetchProject data
         return null
       data.projects = data.projects or [data.project]
       Message.toast Resource.string("msgLoadProjectSuccess", [data.account.name, data.projects.length]), 3000
