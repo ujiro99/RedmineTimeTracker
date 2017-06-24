@@ -67,8 +67,7 @@
       "js": "**/*.min.js"
     },
     "simple-line-icons": {
-      "fonts": "**/fonts/*",
-      "css": "**/simple-line-icons.css"
+      "fonts": "**/fonts/*.woff2"
     }
   },
   "resolutions": {
