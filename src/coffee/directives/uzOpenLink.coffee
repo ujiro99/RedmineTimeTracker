@@ -5,7 +5,7 @@ timeTracker.directive 'uzOpenLink', (Platform) ->
       link: "=uzOpenLink"
     }
     link: (scope, element, attrs) ->
-      isElectron = Platform.getPlarform() is 'electron'
+      isElectron = Platform.getPlatform() is 'electron'
       element.on 'click', () ->
         if isElectron
           Platform.openExternalLink(scope.link)

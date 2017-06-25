@@ -23,6 +23,14 @@ describe 'electronPF.js', ->
   afterEach () ->
     stub and stub.restore()
 
+
+  describe 'getPlatform()', ->
+
+    it 'returns platform name `electron`.', () ->
+      platform = Platform.getPlatform()
+      expect(platform).to.equal("electron")
+
+
   describe 'load(key)', ->
 
     data = { test: true }

@@ -78,7 +78,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
       serviceName:   "RedmineTimeTracker"
       analyticsCode: "UA-32234486-7"
     }
-    Analytics.sendView(Platform.getPlarform())
+    Analytics.sendView(Platform.getPlatform())
     Log.debug "[1] initializeGoogleAnalytics success"
 
   ###
@@ -161,7 +161,7 @@ timeTracker.controller 'MainCtrl', ($rootScope, $scope, $timeout, $location, $an
    Set proxy login event lister.
   ###
   _setLoginLister = () ->
-    return if 'electron' isnt Platform.getPlarform()
+    return if 'electron' isnt Platform.getPlatform()
     isShowingModal = false
     Platform.setLoginLister (callback) ->
       return if isShowingModal

@@ -17,6 +17,13 @@ describe 'chromePF.coffee', ->
     Platform = inj.get('Platform')
 
 
+  describe 'getPlatform()', ->
+
+    it 'returns platform name `chrome`.', () ->
+      platform = Platform.getPlatform()
+      expect(platform).to.equal("chrome")
+
+
   describe 'load(key)', ->
 
     data = { test: true }

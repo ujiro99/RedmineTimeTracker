@@ -21,7 +21,7 @@ angular.module('chrome', []).provider 'Platform', () ->
      Returns platform name.
      @return {string} platform name.
     ###
-    getPlarform: () -> return 'chrome'
+    getPlatform: () -> return 'chrome'
 
 
     ###*

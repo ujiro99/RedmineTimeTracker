@@ -26,7 +26,7 @@ angular.module('electron', []).provider 'Platform', () ->
      Returns platform name.
      @return {string} platform name.
     ###
-    getPlarform: () -> return 'electron'
+    getPlatform: () -> return 'electron'
 
 
     ###*
