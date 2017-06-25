@@ -87,6 +87,17 @@ describe 'electronPF.js', ->
       setTimeout -> $rootScope.$apply()
 
 
+  describe 'saveLocal()', ->
+
+    it 'saves data to storage.', (done) ->
+      stub = sinon.stub(storage, 'set').callsArg(2)
+      Platform.saveLocal('test', 'testdata').then () ->
+        done()
+      , () ->
+        done(new Error('Expect resolve, but rejected.'))
+      setTimeout -> $rootScope.$apply()
+
+
   describe 'clear()', ->
 
     it 'clears all data.', (done) ->
@@ -166,4 +177,13 @@ describe 'electronPF.js', ->
       Platform.addOnClickedListener(spy)
       notify.onclick()
       expect(spy.called).to.be.false
+
+
+  describe 'getPath()', ->
+
+    it 'returns relative path.', () ->
+      orgPath  = "any_path"
+      global.__dirname = "current_dir"
+      path = Platform.getPath(orgPath)
+      expect(path).to.equal(__dirname + "../../" + orgPath)
 

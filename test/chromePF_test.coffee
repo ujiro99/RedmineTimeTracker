@@ -185,3 +185,11 @@ describe 'chromePF.coffee', ->
       Platform.addOnClickedListener()
       mock.verify()
 
+
+  describe 'getPath()', ->
+
+    it 'returns path(not change).', () ->
+      orgPath  = "any_path"
+      path = Platform.getPath(orgPath)
+      expect(path).to.equal(orgPath)
+
