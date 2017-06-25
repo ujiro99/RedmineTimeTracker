@@ -365,22 +365,13 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
 
 
     ###*
-    # add tickets to _data.
-    # @param {TicketModel[]} tickets - array of TicketModel
-    ###
-    addTickets: (tickets) ->
-      Log.debug("addTickets() start")
-      tickets = [tickets] if not Array.isArray(tickets)
-      tickets.map (n) -> @_data[n.url].tickets.add n
-      Log.debug("addTickets() finish")
-
-    ###*
     # clear all tickets.
     ###
     clearTicket: () ->
       Log.debug("clearTicket() start")
       for url, data of @_data then data.tickets = []
       @_tasks.set []
+      @_tickets.set []
       @selectedTask = null
       @fireEvent(@TICKETS_CHANGED, @)
       Log.debug("clearTicket() finish")

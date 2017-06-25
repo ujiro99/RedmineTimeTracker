@@ -425,6 +425,25 @@ describe 'DataAdapter.coffee', ->
       expect(DataAdapter.getAccount()).to.have.length(0)
 
 
+  describe "clearTicket()", () ->
+
+    it "removes tickets from selectable tickets and tasks.", () ->
+      # add project
+      projects1 = TestData.prj1.map (p) -> Project.create(p)
+      projects2 = TestData.prj2.map (p) -> Project.create(p)
+      projects1[0].ticketCount = 1
+      projects2[0].ticketCount = 1
+      DataAdapter.addProjects(projects1)
+      DataAdapter.addProjects(projects2)
+      # add ticket
+      tickets = TestData.ticketList2.map (n) -> Ticket.create(n)
+      DataAdapter.toggleIsTicketShow tickets
+      # exec
+      DataAdapter.clearTicket()
+      expect(DataAdapter.tickets).to.have.length(0)
+      expect(DataAdapter.tasks).to.have.length(0)
+
+
   describe "isAccountExists(account)", () ->
 
     it "should be true.", () ->
