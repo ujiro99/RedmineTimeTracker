@@ -16,6 +16,7 @@ timeTracker.factory("Task", (EventDispatcher) ->
      @param {Number} type - Task type.
     ###
     constructor: (id, @text, @url, @projectId, @total, @type) ->
+      super()
       @id = id - 0
 
 

@@ -17,7 +17,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
 
 
     # If events fired, plugin's event handler will be called.
-    _events: [
+    _defaultEvents: [
       "sendTimeEntry"
       "sendedTimeEntry"
     ]
@@ -34,6 +34,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
      @constructor
     ###
     constructor: (@window, @Analytics, @Log) ->
+      super()
       @_initRTT()
       @_bindEvents()
 
@@ -120,7 +121,7 @@ timeTracker.factory "PluginManager", ($window, EventDispatcher, Analytics, Platf
      Bind events and generate eventName.
     ###
     _bindEvents: () =>
-      @_events.map (event) =>
+      @_defaultEvents.map (event) =>
         @addEventListener event, @_exec
         key = event.underscore().toUpperCase()
         @events[key] = event

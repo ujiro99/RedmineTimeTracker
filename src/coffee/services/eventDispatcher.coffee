@@ -6,7 +6,12 @@
 ###
 class EventDispatcher
 
-  _events: {}
+  ###*
+   @constructor
+  ###
+  constructor: () ->
+    @_events = {}
+
 
   ###*
    イベントが登録されているか調べます
@@ -41,10 +46,13 @@ class EventDispatcher
     if !@hasEventListener(eventName)
       return
     else
-      events = @_events[eventName]
-      for event, i in events when event is callback
-        events.splice i, 1
-        break
+      if not callback?
+        delete @_events[eventName]
+      else
+        events = @_events[eventName]
+        for event, i in events when event is callback
+          events.splice i, 1
+          break
     return
 
 

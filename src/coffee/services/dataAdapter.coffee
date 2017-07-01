@@ -104,6 +104,7 @@ timeTracker.factory("DataAdapter", (Analytics, EventDispatcher, Const, Option, L
     # @constructor
     ###
     constructor: () ->
+      super()
       @searchKeyword = new SearchKeyword(@)
       @_bindDataModelGetter()
       Option.onChanged "isProjectStarEnable", () =>
