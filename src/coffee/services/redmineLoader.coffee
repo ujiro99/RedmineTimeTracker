@@ -37,7 +37,7 @@ timeTracker.factory "RedmineLoader", ($window, $q, Redmine, DataAdapter, Message
         $q.all([@_fetchProjects(a), @_fetchStatuses(a)])
           .then(@_fetchSavedIssues(a))
           .then(@fetchTicketsCount(a))
-          .then(()->
+          .finally(()->
             State.isLoadingAllData = false
             Log.debug("fetchAllData() finish"))
 
