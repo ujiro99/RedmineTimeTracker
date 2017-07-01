@@ -6,6 +6,8 @@
 ###
 class EventDispatcher
 
+  _toArray = (array) -> return [].slice.call(array)
+
   ###*
    @constructor
   ###
@@ -14,76 +16,68 @@ class EventDispatcher
 
 
   ###*
-   イベントが登録されているか調べます
-   @param {String} eventName - イベント名
+   Check if an event listener is registered.
+   @param {String} eventName - event name
+   @return true: registered / false: not registered
   ###
   hasEventListener: (eventName) ->
     !!@_events[eventName]
 
 
   ###*
-   イベントを登録します
-   @param {String}   eventName - イベント名
-   @param {Function} callback  - 追加する関数
+   Register the listener to the event.
+   If it is already registered, do not register the listener.
+   @param {String} eventName - event name
+   @param {Function} listener - listener function to be registered.
   ###
-  addEventListener: (eventName, callback) ->
+  addEventListener: (eventName, listener) ->
     if @hasEventListener(eventName)
       events = @_events[eventName]
-      # すでに登録されているときはしない
-      for event in events when event is callback then return
-      events.push callback
+      # if already registered, does not register.
+      for event in events when event is listener then return
+      events.push listener
     else
-      @_events[eventName] = [ callback ]
+      @_events[eventName] = [ listener ]
     return
 
 
   ###*
-   イベントを削除します
-   @param {String}   eventName - イベント名
-   @param {Function} callback  - 削除する関数
+   Remove the listener from the event.
+   @param {String} eventName - event name
+   @param {Function} [listener] - listener function to be removed.
+                                  If omitted, delete all listeners including events.
   ###
-  removeEventListener: (eventName, callback) ->
+  removeEventListener: (eventName, listener) ->
     if !@hasEventListener(eventName)
       return
     else
-      if not callback?
+      if not listener?
         delete @_events[eventName]
       else
         events = @_events[eventName]
-        for event, i in events when event is callback
+        for event, i in events when event is listener
           events.splice i, 1
           break
     return
 
 
   ###*
-   イベントを発火します
-   @param {String} eventName - イベント名
-   @param {Object} opt_this  - thisの値
-   @param {Object} opt_arg   - 引数
+   Fire the event.
+   @param {String} eventName - event name
+   @param {Object} [_this] - value of `this` to be used by listeners.
+   @param {Object} [_arg] - value of arguments to be used by listeners.
   ###
-  fireEvent: (eventName, opt_this, opt_arg) ->
-    _copyArray = (array) ->
-      newArray = []
-      i = 0
-      try
-        newArray = [].slice.call(array)
-      catch e
-        while i < array.length
-          newArray.push array[i]
-          i++
-      newArray
-
+  fireEvent: (eventName, _this, _arg) ->
     if !@hasEventListener(eventName)
       return
     else
       events = @_events[eventName]
-      copyEvents = _copyArray(events)
-      # eventNameとopt_thisを削除
-      arg = _copyArray(arguments)
+      copyEvents = _toArray(events)
+      # remove eventName and _this from `arguments`.
+      arg = _toArray(arguments)
       arg.splice 0, 2
       for events in copyEvents
-        events.apply opt_this or this, arg
+        events.apply _this or this, arg
     return
 
 
