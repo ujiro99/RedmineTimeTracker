@@ -49,6 +49,8 @@ timeTracker.controller 'TimerCtrl', ($scope, $timeout, Redmine, Project, Ticket,
     $scope.mode = auto
     $scope.word = DataAdapter.searchKeyword
     Option.onChanged('stepTime', initializePicker)
+    window.toggleTracking = () ->
+      $scope.$apply($scope.clickSubmitButton)
 
 
   ###
